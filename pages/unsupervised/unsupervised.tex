@@ -1,0 +1,54 @@
+In this class we will address the problem of \emph{unsupervised} learning of linguistic structures, namely 
+\emph{parts-of-speech}. 
+In this setting we are not given any labeled data. Instead, all we get to see is a set of natural language sentences.  
+The underlying question is: 
+
+\begin{quote}
+Can we learn something from raw text?
+\end{quote}
+
+This task is particularly challenging since the process by which linguistic structures are generated is not always clear 
+and even when it is, it is normally too complex to be
+formally expressed. Nevertheless, unsupervised learning has been applied to a
+wide range of natural language processing tasks, such as: 
+\pos\ Induction  \citep{schutze1995distributional,merialdo1994tet,clark03combining},
+Dependency Grammar Induction \citep{klein2004acl,smith2006annealing}, Constituency Grammar Induction \citep{klein2004acl}, Statistical Word Alignments 
+\citep{brown94mathematic} and Anaphora Resolution \citep{charniak2009works}, just to name a few. 
+
+Different motivations have pushed research in this area. From both a linguistic and cognitive point of view, 
+unsupervised learning is useful as a tool to study language acquisition. 
+From a machine learning point of view, unsupervised learning is a fertile ground for testing new learning methods, 
+where significant improvements can yet be made. 
+From a more pragmatic perspective, unsupervised learning is required
+since annotated corpora is a scarce resource for different reasons. Independently of the reason, unsupervised learning is an increasing active field of research.
+
+A first problem with unsupervised learning, since we don't observe any labeled data (i.e., 
+the training set is now $\mathcal{D} = \{x_1,\ldots, x_M\}$), 
+is that most of the methods studied so far (Perceptron, Mira, SVMs) cannot be used since we cannot compare 
+the true output with the predicted output. 
+Note also that a direct minimization of the \emph{complete negative log-likelihood} of the data, $\log P_{\theta}(\mathcal{D})$, 
+is very challenging, since it would require marginalizing out (\emph{i.e.}, summing over) all possible hidden variables:
+\begin{equation}
+ \log P_{\theta}(\mathcal{D}) =  \sum_{m=1}^M \log \sum_{y \in \mathcal{Y}} P_{\theta} (x_m,y).
+\end{equation}
+Note also that the objective above is \emph{non-convex} even for a linear model: hence, it may have local minima, which makes optimization much 
+more difficult. 
+
+Another observation is that normally we are restricted to generative models, 
+with some remarkable exceptions~\citep{smith2005acl}, since the objective of discriminative models when no labels are observed are 
+meaningless ($\sum_{y_m } P(y^m |x^m) = 1$); this rules out, for instance, Maximum Entropy classifiers.  
+
+The most common optimization method in the presence of hidden (latent) variables is the Expectation Maximization (EM) algorithm. Note that this algorithm is a generic optimization routine that does not depend on a particular model. The next section will explain the EM algorithm. On Section \ref{posi} we will apply the EM algorithm to the task of part-of-speech induction, where one is given raw text and a number of clusters and the task is to cluster words that behave similarly in a grammatical sense. 
+
+\section{\label{em}Expectation Maximization Algorithm}
+\input{pages/unsupervised/em.tex}
+
+\section{\label{posi}Part of Speech Induction}
+\input{pages/unsupervised/pos-induction.tex}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../guide"
+%%% End: 

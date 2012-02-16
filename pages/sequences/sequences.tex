@@ -1,0 +1,108 @@
+
+
+In this class, we relax the assumption that
+datapoints are independently and identically distributed (i.i.d.) 
+by moving to a scenario of \emph{structured prediction}, where the inputs are assumed to have
+temporal or spacial dependencies. We start by 
+considering sequential models, which correspond to a \emph{chain structure}: for instance,
+the words in a sentence. In this lecture, we will use part-of-speech
+tagging as our example task.  
+
+The problem setting is the following:
+let $\X = \{\sent^1, \ldots, \sent^D\}$ be a training set of independent
+and identically-distributed random variables. In this work $\sent^d$
+(for notation simplicity we will drop the superscript $d$ when
+considering an isolated example) corresponds to a sentence in natural
+language and decomposes as a sequence of observations of length $N$: $\sent = \obs_1 \ldots
+\obs_N$. Each $\obs_n$ is a discrete
+random variable (a \emph{word}),  taking a value $\vv$ from a
+finite vocabulary $\vocab$. Each $\sent$ has an unknown hidden
+structure $\hseq$  that we want to predict. The
+structures are sequences $\hseq = \hs_1 \ldots \hs_N$ of the same
+length $N$ as the observations. Each hidden state $\hs_n$ is a discrete
+random variable and can take a value $\hv$ from a discrete vocabulary $\hvocab$. 
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{Notation}\\
+\hline
+\hline
+$\X$ & training set \\
+\hline
+$D$  & number of training examples \\
+\hline
+$\sent = \bx_1 \ldots \bx_N$  & observation sequence \\
+\hline
+$N  $& size of the observation sequence \\
+\hline
+$\obs_i$ &  observation at position $i$ in the sequence\\
+\hline
+$\vocab$ & observation values set\\
+\hline 
+$|\vocab|$ & number of distinct observation types\\
+\hline 
+$\vv_i$ & particular observation, $i \in |\vocab|$\\
+\hline 
+$\hseq = \hs_1 \ldots \hs_N$  & hidden state sequence \\
+\hline
+$\hs_i$ &  hidden state at position $i$ in the sequence\\
+\hline
+$\hvocab$ & hidden states value set \\
+\hline
+$|\hvocab|$ & number of distinct hidden value types \\
+\hline
+$\hv_i$ & particular hidden value, $i \in |\hvocab|$\\
+\hline 
+\end{tabular}
+\end{center}
+\caption{General notation used in this class}
+\end{table}
+
+We focus on the well known Hidden Markov Model (HMM) on section
+\ref{hmm}, where we describe how to estimate its parameters from labeled data
+\ref{ml}. We will then move to how to find the most likely hidden sequence
+(decoding) given an observation sequence and a parameter set
+\ref{decoding}. This section will explain the required inference
+algorithms (Viterbi and Forward-Backward) for sequence models. These
+inference algorithms will be fundamental for the rest of this lecture,
+as well as for the next lecture on \emph{discriminative} training of sequence
+models. Finally, section \ref{pos-tagging} will describe the task of 
+part-of-speech tagging, and how HMM are suitable for this task.
+
+
+
+
+
+
+\section{\label{hmm} Hidden Markov Models}
+\input{pages/sequences/hmm.tex}
+
+
+
+
+
+\section{\label{ml} Finding the Maximum Likelihood Parameters}
+\input{pages/sequences/ml.tex}
+
+
+
+\section{\label{decoding} Finding the most likely sequence - Decoding}
+\input{pages/sequences/decoding.tex}
+
+\section{\label{pos-tagging} Part-of-Speech Tagging (POS)}
+\input{pages/sequences/pos.tex}
+
+
+%\section{\label{hmm_special_state} HMM Initial and Final State}
+%\input{pages/sequences/init_final_hmm.tex}
+
+\section{\label{hmm} Second order HMM}
+\input{pages/sequences/second_order_hmm.tex}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../guide.tex"
+%%% End: 

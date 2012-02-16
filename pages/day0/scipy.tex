@@ -1,0 +1,219 @@
+
+\subsubsection{IPython}
+
+You can access and run Python interactively, simply by running the
+\texttt{python} command. Alternatively, you can save your programme to a file
+and run python on it:
+
+\begin{verbatim}
+python yourfile.py
+\end{verbatim}
+
+In these lab sessions, we are going to be using Python in interactive mode
+several times. The standard Python interface is not very friendly, though.
+IPython, which stands for \emph{interactive Python}, is an improved Python
+shell. It saves your command history between sessions, has basic auto-complete,
+and has internal support for interacting with graphs through matplotlib.
+
+IPython is also designed to facilitate running parallel code of clusters of
+machines, but we will not make use of that functionality.
+
+To run ipython, simply run \texttt{ipython} on your command line. For
+interactive numeric use, the \texttt{-pylab} flag imports numpy and matplotlib
+for you and sets up interactive graphs:
+
+\begin{verbatim}
+ipython -pylab
+\end{verbatim}
+
+The IPython website has more information on it~\citep{PER-GRA:2007}.
+\footnote{\url{http://ipython.scipy.org/moin/}}
+
+\subsection{Matplotlib}
+
+
+\subsection{Numpy}
+
+As discussed in the lecture, there are many helpful functions in numpy. For
+basic mathematical operations, we have \code{np.log}, \code{np.exp},
+\code{np.cos},\ldots with the expected meaning. These operate both on single
+arguments and on arrays (where they will behave element wise).
+
+\begin{python}
+import matplotlib.pyplot as plt
+import numpy as np
+X = np.linspace(0, 4 * np.pi, 1000)
+C = np.cos(X)
+S = np.sin(X)
+
+plt.plot(X, C)
+plt.plot(X, S)
+\end{python}
+
+Other functions take a whole array and compute a single value from it. For
+example, \code{np.sum}, \code{np.mean},\ldots These are available as both free
+functions and as methods on arrays.
+
+\begin{python}
+import numpy as np
+A = np.arange(100)
+print np.mean(A)
+print A.mean()
+
+C = np.cos(A)
+print C.ptp()
+\end{python}
+
+\begin{exercise}
+Run the above example and lookup the \code{ptp} function/method.
+\end{exercise}
+
+\begin{exercise}
+Consider the following approximation to compute an integral
+
+\[
+\int_0^{1} f(x)dx \approx \sum_{i = 0}^{999} \frac{f(i/1000)}{1000}.
+\]
+
+Use numpy to implement this for $f(x) = x^2$. You should not need to use any
+loops.
+\end{exercise}
+
+\begin{exercise}
+\begin{enumerate}
+\item Consider the function $f(x) = (x+2)^2 - 16 \exp\left( -(x-2)^2 \right)$.
+Draw a plot around the $x \in [-8,8]$ region.
+\item What is $\pd{f}{x}$?
+\item Use gradient descent to find a local minimum starting from $x_0 = -4$ and
+$x_0 = +4$, with $\eta = .01$. Plot all of the intermediate estimates that you
+obtain in the same plot.
+\end{enumerate}
+\begin{python}
+import numpy as np
+import matplotlib.pyplot as plt
+X = np.linspace(-8, 8, 1000)
+Y = (X+2)**2 - 16*np.exp(-((X-2)**2))
+
+# derivative of the function f
+def get_Y_dev(x):
+    return (2*x+4)-16*(-2*x + 4)*np.exp(-((x-2)**2))
+
+def grad_desc(start_x, eps, prec):
+    '''
+    runs the gradient descent algorithm and returns the list of estimates
+
+    example of use grad_desc(X, 0.01, 0.00001)
+    '''
+    x_new = start_x
+    x_old = start_x + prec * 2
+    res = [x_new]
+    while abs(x_old-x_new) > prec:
+        x_old = x_new
+        x_new = x_old - eps * get_Y_dev(x_new)
+        res.append(x_new)
+    return np.array(res)
+\end{python}
+\end{exercise}
+
+Over the next couple of exercises we will make use of the Galton dataset, a
+dataset of heights of fathers and sons from the 1877 paper that first discussed
+the ``regression to the mean'' phenomenon.
+
+\begin{exercise}
+\begin{itemize}
+\item Use the \texttt{load()} function in the \texttt{galton.py} file to load
+the dataset.
+\item What are the mean height and standard deviation of all the people in the
+sample? What is the mean height of the fathers and of the sons?
+\item Plot a histogram of all the heights (you might want to use the
+\texttt{plt.hist} function and the \texttt{ravel} method on arrays).
+\item Plot the height of the father versus the height of the son.
+\item You should notice that there are several points that are exactly the same
+(e.g., there are 21 pairs with the values 68.5 and 70.2). Use the \texttt{?}
+command in ipython to read the documentation for the \texttt{numpy.random.rand}
+function and add random jitter (i.e., move the point a little bit) to the
+points before displaying them. Does your impression of the data change?
+\end{itemize}
+\end{exercise}
+
+\begin{exercise}
+Consider the linear regression problem (ordinary least squares), with a
+single response variable
+
+\[
+y = x^T w + \varepsilon
+\]
+
+The \emph{linear regression problem} is, given a set $\{ y^{(i)} \}_i$ of
+samples of $y$ and the corresponding $\vect{x}^{(i)}$ vectors, estimate
+$\vect{w}$ to minimise the sum of the $\varepsilon$ variables. Traditionally
+this is solved analytically to obtain a closed form solution (although this is
+\textbf{not the way in which it should be computed}, linear algebra packages
+have an optimised solver, with numpy, use \code{numpy.linalg.lstsq}).
+
+Alternatively, we can define the error function for each possible $\vect{w}$:
+
+\[
+e(\vect{w}) = \sum_i \left( {\vect{x}^{(i)}}^T \vect{w} - y^{(i)} \right)^2.
+\]
+
+\begin{enumerate}
+\item Derive the gradient of the error $\pd{e}{w_j}$.
+\item Implement a solver based on this for two dimensional problems (i.e.,
+$\vect{w} \in R^2$).
+\item Use this method on the Galton dataset from the previous exercise to
+estimate the relationship between father and son's height. Try two formulas
+\begin{equation}
+s = f w_1 + \varepsilon,
+\label{}
+\end{equation}
+where $s$ is the son's height, and $f$ is the father heights; and
+\begin{equation}
+s = f w_1 + 1w_0 + \varepsilon
+\label{}
+\end{equation}
+where the input variable is now two dimensional: $(f,1)$. This allows the
+intercept to be non-zero.
+\item Plot the regression line you obtain with the points from the previous
+exercise.
+\item Use the \texttt{np.linalg.lstsq} function and compare to your solution.
+\end{enumerate}
+\end{exercise}
+
+\subsection{Debugging}
+
+There are a few options for debugging Python programmes. Given that we are
+using ipython, we will explore its internal methods.
+
+When you run a programme in ipython and there is an unhandled error (uncaught
+expection), you can type \code{debug} to enter the debugger (alternatively, you
+could have ran the code inside the debugger).
+
+Once inside the debugger, you can run debugging commands such as \code{step},
+\code{continue}, \code{up}/\code{down} (to move up and down the stack); or
+Python commands by prefixing them with \code{!}. The most common Python command
+you'll want to use is, of course, \code{print} to inspect the value of some
+variables and expressions.
+
+
+\begin{exercise}
+Use the debugger to debug the \texttt{buggy.py} script which attempts to
+repeatedly perform the following computation:
+
+\begin{enumerate}
+\item Start $x_0 = 0$
+\item Iterate
+
+\begin{enumerate}
+\item $x'_{t+1} = x_t + r$, where $r$ is a random variable.
+\item if $x'_{t+1} >= 1.$, then stop.
+\item if $x'_{t+1} <= 0.$, then $x_{t+1} = 0$
+\item else $x_{t+1} = x'_{t+1}$.
+\end{enumerate}
+\item Return the number of iterations.
+\end{enumerate}
+
+Having repeated this computation a number of times, the programme prints the
+average. Unfortunately, the program has a few bugs, which you need to fix.
+\end{exercise}
+

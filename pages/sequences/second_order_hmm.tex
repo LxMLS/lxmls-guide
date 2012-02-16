@@ -1,0 +1,42 @@
+
+\subsection{State Expansion}
+
+The ideia here is to expand the states and use the same inference
+procedures as those of the HMM.
+
+
+
+\subsection{Modelling second order}
+
+Here we use the original states and we derive new inference procedures....
+
+\begin{eqnarray*}
+\alpha_{t=2}(1) &=& P(y_{t=2} = 1,x_0,x_1,x_2) = \sum_{b \in \hvocab}
+\sum_{a\in \hvocab} P(y_{t=2} = 1,x_0,x_1,x_2, y_{t=0}=a,y_{t=1}=b)\\
+\alpha_{t=2}(1) &=& \sum_{b \in \hvocab}
+\sum_{a\in \hvocab}
+p(x_2 |  y_{t=2}) p(y_{t=2} | y_{t=1} =b ,y_{t=0}=a)  p(x_1 |  y_{t=1}
+=b) p(y_{t=1} =b| y_{t=0}=a)\\
+&*&  p(x_0 |  y_{t=0}=a) p(y_{t=0}=a) \\
+\alpha_{t=2}(1) &=& \sum_{b \in \hvocab}
+\sum_{a\in \hvocab}
+p(x_2 |  y_{t=2}) p(y_{t=2} | y_{t=1} = b,y_{t=0} = a)  p(x_1 |
+y_{t=1} = b) p(y_{t=1} = b| y_{t=0} = a)  \mathbf{p(x_0 ,  y_{t=0} = a) }\\
+\alpha_{t=2}(1) &=& \sum_{b \in \hvocab}
+\sum_{a\in \hvocab}
+p(x_2 |  y_{t=2}) p(y_{t=2} | y_{t=1} = b,y_{t=0} = a)  p(x_1 |
+y_{t=1} = b) p(y_{t=1} = b| y_{t=0} = a)  \alpha_{t=0}(a) \\
+\alpha_{t=2}(1) &=& \sum_{b \in \hvocab}
+\sum_{a\in \hvocab}
+p(x_2 |  y_{t=2}) p(y_{t=2} | y_{t=1} = b,y_{t=0} = a)  p(x_1 ,
+y_{t=1} = b | y_{t=0} = a)  \alpha_{t=0}(a) \\
+\alpha_{t=2}(1) &=& \sum_{b \in \hvocab}
+\sum_{a\in \hvocab}
+p(x_2 |  y_{t=2}) p(y_{t=2} | y_{t=1} = b,y_{t=0} = a)  \mathbf{p(x_1 ,
+y_{t=1} = b ,x_0 ,  y_{t=0} = a) }
+\end{eqnarray*}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../guide"
+%%% End: 

@@ -1,0 +1,510 @@
+In this class, we will continue to focus on sequence classification,
+but instead of following a \emph{generative} approach (like in the previous
+chapter) we move towards \emph{discriminative} approaches.
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
+
+\multicolumn{1}{|c|}{\textbf{Classification}} & \multicolumn{1}{|c|}{\textbf{Sequences}} \\
+\hline
+\multicolumn{2}{|c|}{\emph{Generative}}\\
+\hline
+Na\"{i}ve Bayes~\ref{s::naiveBayes} & Hidden Markov Models~\ref{hmm} \\
+\hline
+\multicolumn{2}{|c|}{\emph{Discriminative}}\\
+\hline
+Perceptron \ref{s:perceptron} & Structured Perceptron \ref{s:spercetron}\\
+\hline
+Maximum Entropy \ref{s:me} & Conditional Random Fields \ref{s:crf}\\
+\hline
+\end{tabular}
+\caption{\label{disc_seq_summary}Summary of the methods that we will be covering this lecture.}
+\end{table}
+
+Table \ref{disc_seq_summary} shows how the models for classification 
+have counterparts in \emph{sequential} classification. In fact, in
+the last chapter we discussed the Hidden Markov model, which can be seen as a
+generalization of the Na\"{i}ve Bayes model for sequences. 
+In this chapter, we will see a generalization of the
+Perceptron algorithm for sequence problems (yielding the Structured
+Perceptron, \citealt{collins2002discriminative}) and a generalization of
+Maximum Entropy model for sequences (yielding Conditional Random Fields, \citealt{lafferty2001conditional}). 
+Note that both these generalizations are  not specific for sequences
+and can be applied to a wide range of models (we will see in tomorrow's
+lecture how these methods can be applied to parsing).
+Although we will not cover all the methods described in
+Chapter \ref{day:classification}, bear in mind that all of those have a structured counterpart. 
+It should be intuitive after this lecture how those methods could be
+extended to structured problems, given the perceptron example.
+Before we explain the particular methods, the next section will talk a
+bit about feature representation for sequences. 
+
+
+\begin{equation}
+\argmax_{\hseq} = p_{\theta} (\hseq | \sent ) = \theta \cdot  f(\sent,\hseq) \label{eq::struc_pred} 
+\end{equation}
+
+As in the previous section, $\hseq$ is a sequence so the maximization
+is over an exponential number of objects, making it intractable. Again
+we will assume a first order markov independence assumption, and so the
+features will decompose as the model. So Equation
+~\ref{eq::struc_pred} can be written as:
+
+\begin{equation}
+\argmax_{\hseq} = \sum_N \sum_{\hseq} \theta \cdot
+f(n,\hs_n,\sent_n)  + \sum_N \sum_{\hs_n \in \hvocab} \theta \cdot f(n,\hs_n,\hs_{n-1},\sent_n)\label{eq::struc_pred_decompose} 
+\end{equation}
+
+
+
+\section{\label{seq::features} Feature Extraction}
+
+In this section we will define two simple feature sets. The first one
+will only use identity features, and will mimic the features used by
+the HMM model from the previous section. This will allow to directly
+compare the performance of a generative vs a discriminative
+approach. Note that although not required, all the features we will use
+in this section are binary features (0-1), indicating the presence or
+absence of a given condition. 
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Condition & Name\\
+\hline
+$\hs_i = l \text{  } \& \text{  } t =0 $& Initial State \\
+\hline
+$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m$& Transition Features \\
+\hline
+$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
+\hline
+$\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
+\hline
+\end{tabular}
+\caption{\label{id-features} IDFeatures feature set. This set
+  replicates the features used by the HMM model.}
+\end{center}
+\end{table}
+
+\begin{example}
+Simple ID Feature set containing the same features as an HMM model.
+\begin{python}
+0 Ms./NOUN NF: id:Ms.::NOUN init_tag:NOUN 
+1 Haag/NOUN NF: id:Haag::NOUN EF: prev_tag:NOUN::NOUN 
+2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
+3 Elianti/NOUN NF: id:Elianti::NOUN EF: prev_tag:VERB::NOUN 
+4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
+\end{python}
+\end{example}
+
+Table~\ref{id-features} depicts the features that are implicit in the HMM, which was the subject of 
+the previous chapter. These features are indicators of initial, final, observation and transition events. 
+The fact that we were using a generative model has forced us (in some sense) to 
+make strong independence assumptions. 
+However, since we now move to a discriminative approach, where we model $P(\hseq|\sent)$ rather than $P(\sent,\hseq)$, we are not tied anymore to 
+some of these assumptions. In particular: 
+\begin{itemize}
+\item We may use ``overlapping'' features, \emph{e.g.}, features that fire simultaneously for many instances. 
+For example, we can use a feature for a word and another for prefixes and suffixes of that word. 
+This would lead to an awkward model if we wanted to insist on a generative approach. 
+\item We may use features that depend arbitrarily on the entire \emph{input} sequence $\sent$. On the other hand, 
+we still need to resort to ``local'' features with respect to the \emph{outputs} (\emph{e.g.} looking only at consecutive state pairs), 
+otherwise decoding algorithms will become more expensive.  
+\end{itemize}
+Table~\ref{ex-features} shows examples of features that are traditionally used in POS tagging with discriminative models.  
+Of course, we could have much more complex features, looking arbitrarily to 
+the input sequence. We are not going to have them in this
+exercise only for performance reasons (to have less features and smaller caches).
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Condition & Name\\
+\hline
+$\hs_i = l \text{  } \& \text{  } t =0 $& Initial State \\
+\hline
+$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m$& Transition Features \\
+\hline
+$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
+\hline
+$\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
+\hline
+$\sent_i = a \text{  } \& \text{ $a$ is uppercased} \text{  } \& \text{  } \hs_i = l$& Uppercase Features
+\\
+\hline
+$\sent_i = a \text{  } \& \text{ $a$ contains digit} \text{  } \& \text{  } \hs_i = l$& Digit Features
+\\
+\hline
+$\sent_i = a \text{  } \& \text{ $a$ contains hyphen} \text{  } \& \text{  } \hs_i = l$& Hyphen Features
+\\
+\hline
+$\sent_i = a \text{  } \& \text{  } a_{[0..i]} \forall i \in [1,2,3]
+\text{  } \and \text{  } \hs_i = l$& Prefix Features \\
+\hline
+$\sent_i = a \text{  } \& \text{  } a_{[N-i..N]} \forall i \in [1,2,3] \text{  } \& \text{  } \hs_i = l$& Suffix Features \\
+\hline
+\end{tabular}
+\caption{\label{ex-features} Extended feature set. Some features in this set could not be included in the HMM model.}
+\end{center}
+\end{table}
+
+
+\begin{example}
+
+\begin{python}
+0 Ms./NOUN NF: id:Ms.::NOUN uppercased::NOUN suffix:.::NOUN suffix:s.::NOUN prefix:M::NOUN prefix:Ms::NOUN init_tag:NOUN 
+1 Haag/NOUN NF: id:Haag::NOUN uppercased::NOUN suffix:g::NOUN suffix:ag::NOUN suffix:aag::NOUN prefix:H::NOUN prefix:Ha::NOUN prefix:Haa::NOUN rare::NOUN EF: prev_tag:NOUN::NOUN 
+2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
+3 Elianti/NOUN NF: id:Elianti::NOUN uppercased::NOUN suffix:i::NOUN suffix:ti::NOUN suffix:nti::NOUN prefix:E::NOUN prefix:El::NOUN prefix:Eli::NOUN rare::NOUN EF: prev_tag:VERB::NOUN 
+4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
+\end{python}
+\end{example}
+
+We consider two kinds of features: \emph{node features}, which form a vector $\boldsymbol{f}_N(\sent,\hv_i)$, 
+and \emph{edge features}, which form a vector $\boldsymbol{f}_E(\sent,\hv_i,\hv_{i-1})$.% 
+\footnote{To make things simpler, we will assume later on that edge features do not depend on the input $\sent$---but they could, without 
+changing at all the decoding algorithm.} %
+These feature vectors will receive parameter vectors $\boldsymbol{\theta}_N$ and  $\boldsymbol{\theta}_E$. 
+Similarly as in the previous chapter, we consider:
+\begin{itemize}
+\item\emph{Node Potentials.} These are scores for a state at a particular position. 
+ They are given by 
+ \begin{equation}\label{dis_node_potentials}
+ \psi_V(\sent,\hs_i) = \exp(\boldsymbol{\theta}_V \cdot \boldsymbol{f}_V(\sent,\hs_i)).
+ \end{equation}
+\item\emph{Edge Potentials.} These are scores for the transitions. They are given by 
+ \begin{equation}\label{dis_edge_potentials}
+\psi_E(\sent,\hs_i,\hs_{i-1}) = \exp(\boldsymbol{\theta}_E \cdot \boldsymbol{f}_E(\sent,\hs_i,\hs_{i-1})). 
+ \end{equation}
+\end{itemize}
+
+Let $\boldsymbol{\theta} = (\boldsymbol{\theta}_N, \boldsymbol{\theta}_E)$. 
+The conditional probability $P(\hseq|\sent)$ is then defined as follows: 
+\begin{eqnarray}
+P(\hseq|\sent) &=& \frac{1}{Z(\boldsymbol{\theta},\sent)}\exp\left(\sum_i \boldsymbol{\theta}_V \cdot \boldsymbol{f}_V(\sent_i,\hs_i) + 
+\sum_i\boldsymbol{\theta}_E \cdot
+\boldsymbol{f}_E(\sent_i,\hs_i,\hs_{i-1})\right) \label{eq:disc_formula}\\
+&=& \frac{1}{Z(\boldsymbol{\theta},x)} \prod_i\psi_V(\sent_i,\hs_i) \psi_E(\sent_i,\hs_i,\hs_{i-1}),
+\end{eqnarray}
+where
+\begin{eqnarray}
+Z(\boldsymbol{\theta},x) = \sum_{\hs \in \hvocab} \prod_i \psi_V(\sent_i,\hs_i) \psi_E(\sent_i,\hs_i,\hs_{i-1})
+\end{eqnarray}
+is the partition function. 
+
+There are three important problems that need to be solved: 
+\begin{enumerate}
+\item Given $\sent$, computing the most likely output sequence $\hseq$ (the one which maximizes $P(\hseq|\sent)$. 
+\item Compute the posterior marginals $P(\hs_i|\sent)$ at each position $i$.
+\item Compute the partition function. 
+\end{enumerate}
+Interestingly, all these problems can be solved by using the same
+algorithms (just changing the potentials) that were 
+already implemented for HMMs: the Viterbi algorithm (for 1) and the forward-backward algorithm (for 2--3).
+
+
+
+
+
+
+
+
+\section{\label{s:spercetron}Structured Perceptron}
+
+The structured perceptron \citep{collins2002discriminative}, namely its averaged version is a very simple
+algorithm that relies on Viterbi decoding and very simple additive
+updates. In practice this algorithm is very easy to implement and
+behaves remarkably well in a variety of problems. These two
+characteristics make the structured perceptron algorithm a natural
+first choice to try and test a new problem or a new feature set. 
+
+Recall what you learned from \S\ref{s:perceptron} on the
+perceptron algorithm and compare it against the structured perceptron
+(Algorithm \ref{alg:structured-perceptron}). 
+
+\begin{algorithm}[t]
+   \caption{Averaged Structured perceptron \label{alg:structured-perceptron}}
+\begin{algorithmic}[1]
+   \STATE {\bfseries input:} dataset $\mathcal{D}$, number of rounds $T$
+   \STATE initialize $\boldsymbol{w}^1 = \mathbf{0}$
+	\FOR{$t=1$ {\bfseries to} $T$}
+	\STATE choose $m = m(t)$ randomly
+	\STATE take training pair $(\sent^m, \hseq^m)$ and predict using the current model: 
+	$$\hat{\hseq}  \leftarrow \argmax_{\hseq'} \boldsymbol{w}^t \cdot \boldsymbol{f}(\sent^m,\hseq')$$
+	\STATE update the model: 
+	$\boldsymbol{w}^{t+1} \leftarrow \boldsymbol{w}^{t} + \boldsymbol{f}(\sent^m,\hseq^m) - \boldsymbol{f}(\sent^m,\hat{\hseq})$
+	\ENDFOR
+   \STATE \textbf{output:} the averaged model $\hat{\boldsymbol{w}} \leftarrow \frac{1}{T}\sum_{t=1}^T \boldsymbol{w}^t$
+\end{algorithmic}
+\end{algorithm}
+
+There are only two differences:
+\begin{itemize}
+\item Instead of finding $\argmax_{y'\in\mathcal{Y}}$ for a given
+  variable, it finds the $\argmax_{\hseq}$, the best sequence. We can
+  do this by using the Viterbi algorithm with the node and edge potentials 
+  (actually, the $\log$ of those potentials) defined in Eqs.~\ref{dis_node_potentials}--\ref{dis_edge_potentials}, 
+  along with the assumption that the features
+  decompose as the model, as explained in the previous section.
+\item Instead of updating the features for the entire $y'$ (in this
+  case $\hseq$) we update the features only at the positions were the
+  labels are different. 
+\end{itemize}
+
+
+\begin{exercise}\label{exer:strucperc1}
+In this exercise you will test the structured perceptron algorithm
+using different feature sets for \pos\ Tagging.
+
+Start by loading the corpus and creating an IDFeature class. Next
+initialize the perceptron and train the algorithm. 
+
+\begin{python}
+import sys
+sys.path.append("readers/" )
+sys.path.append("sequences/" )
+
+import pos_corpus as pcc
+import id_feature as idfc
+
+import structured_perceptron as spc
+
+
+posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
+id_f = idfc.IDFeatures(posc)
+id_f.build_features()
+sp = spc.StructuredPercetron(posc,id_f)
+sp.nr_rounds = 20
+sp.train_supervised(posc.train.seq_list)
+
+Epoch: 0 Accuracy: 0.617797
+Epoch: 1 Accuracy: 0.797775
+Epoch: 2 Accuracy: 0.864115
+Epoch: 3 Accuracy: 0.901794
+Epoch: 4 Accuracy: 0.925644
+Epoch: 5 Accuracy: 0.932659
+Epoch: 6 Accuracy: 0.938872
+Epoch: 7 Accuracy: 0.946087
+Epoch: 8 Accuracy: 0.949193
+Epoch: 9 Accuracy: 0.950696
+Epoch: 10 Accuracy: 0.952701
+Epoch: 11 Accuracy: 0.952600
+Epoch: 12 Accuracy: 0.956910
+Epoch: 13 Accuracy: 0.956108
+Epoch: 14 Accuracy: 0.956408
+Epoch: 15 Accuracy: 0.958413
+Epoch: 16 Accuracy: 0.957110
+Epoch: 17 Accuracy: 0.959014
+Epoch: 18 Accuracy: 0.959315
+Epoch: 19 Accuracy: 0.960216
+\end{python}
+
+Now evaluate the learned model on both the development and test set.
+\begin{python}
+pred_train = sp.viterbi_decode_corpus(posc.train.seq_list)
+pred_dev = sp.viterbi_decode_corpus(posc.dev.seq_list)
+pred_test = sp.viterbi_decode_corpus(posc.test.seq_list)
+eval_train = sp.evaluate_corpus(posc.train.seq_list,pred_train)
+eval_dev = sp.evaluate_corpus(posc.dev.seq_list,pred_dev)
+eval_test = sp.evaluate_corpus(posc.test.seq_list,pred_test)
+print "Structured Percetron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+
+Out[]: Structured Percetron - ID Features Accuracy Train: 0.867 Dev: 0.831 Test: 0.790
+
+
+\end{python}
+
+Compare with the results achieved with the HMM model.
+
+\begin{python}
+Best Smoothing 1.000000 --  Test Set Accuracy: Posterior Decode 0.809, Viterbi Decode: 0.777
+\end{python}
+\end{exercise}
+
+Even using a similar feature set the perceptron yields better
+results. Perform some error analysis and figure out what are the main
+errors the perceptron is making. Compare them with the errors made
+by the HMM model. (Hint: use the methods developed in the previous
+lecture to help you with the error analysis).
+
+
+\begin{exercise}\label{exer:strucperc2}
+Repeat the previous exercise using the extended feature set. Compare the results.
+
+\begin{python}
+import extended_feature as exfc
+
+ex_f = exfc.ExtendedFeatures(posc)
+ex_f.build_features()
+sp = spc.StructuredPercetron(posc,ex_f)
+sp.nr_rounds = 20
+sp.train_supervised(posc.train.seq_list)
+
+Epoch: 0 Accuracy: 0.638741
+Epoch: 1 Accuracy: 0.807596
+Epoch: 2 Accuracy: 0.876541
+Epoch: 3 Accuracy: 0.907406
+Epoch: 4 Accuracy: 0.921836
+Epoch: 5 Accuracy: 0.939974
+Epoch: 6 Accuracy: 0.940575
+Epoch: 7 Accuracy: 0.948893
+Epoch: 8 Accuracy: 0.948893
+Epoch: 9 Accuracy: 0.950095
+Epoch: 10 Accuracy: 0.954404
+Epoch: 11 Accuracy: 0.957110
+Epoch: 12 Accuracy: 0.954605
+Epoch: 13 Accuracy: 0.956910
+Epoch: 14 Accuracy: 0.956509
+Epoch: 15 Accuracy: 0.956609
+Epoch: 16 Accuracy: 0.958012
+Epoch: 17 Accuracy: 0.959014
+Epoch: 18 Accuracy: 0.957411
+Epoch: 19 Accuracy: 0.958413
+
+pred_train = sp.viterbi_decode_corpus(posc.train.seq_list)
+pred_dev = sp.viterbi_decode_corpus(posc.dev.seq_list)
+pred_test = sp.viterbi_decode_corpus(posc.test.seq_list)
+
+eval_train = sp.evaluate_corpus(posc.train.seq_list,pred_train)
+eval_dev = sp.evaluate_corpus(posc.dev.seq_list,pred_dev)
+eval_test = sp.evaluate_corpus(posc.test.seq_list,pred_test)
+
+print "Structured Percetron - Extended Features Accuracy Train: %.3f  Dev: %.3f Test:   %.3f"%(eval_train,eval_dev,eval_test)
+
+Structured Percetron - Extended Features Accuracy Train: 0.946  Dev: 0.868 Test:   0.840
+
+\end{python}
+
+
+Compare the errors obtained with the two different feature
+sets. Perform some feature analysis, what errors were correct by using
+more features? Can you think of other features to use to solve the
+errors found?
+\end{exercise}
+
+
+
+
+\section{\label{s:crf}Conditional Random Fields}
+
+Conditional Random Fields (CRF)~\citep{lafferty2001conditional} can be seen
+as an extension of the Maximum Entropy (ME) models to structured problems.%
+\footnote{An earlier, less successful, attempt to perform such an extension was via Maximum Entropy Markov
+models (MEMM)~\citep{mccallum2000maximum}. There each factor (a node or edge) 
+is a \emph{locally} normalized maximum entropy model. A shortcoming of MEMMs is its 
+so-called \emph{labeling bias} \citep{Bottou1991}, which makes them biased towards states
+with few successor states (see \cite{lafferty2001conditional} for more information).}
+
+CRFs are \emph{globally} normalized models: the probability of a given
+sentence is given by Equation \ref{eq:disc_formula}. 
+Going from a maximum entropy model (in multi-class classification) 
+to a CRF mimics the transition discussed above from 
+perceptron to structured perceptron: 
+\begin{itemize}
+\item Instead of finding the posterior marginal $P(y'|x)$ for a given
+  variable, it finds the posterior marginals for all factors (nodes and edges), 
+  $P(\hseq_i | \sent)$ and  $P(\hseq_i, \hseq_{i-1}| \sent)$. 
+  We can compute this quantities by using the forward-backward algorithm with the node and edge potentials 
+  defined in Eqs.~\ref{dis_node_potentials}--\ref{dis_edge_potentials}, 
+  along with the assumption that the features
+  decompose as the model, as explained in the previous section.
+\item The features are updated factor wise (i.e., for each node and edge). 
+\end{itemize}
+
+Algorithm
+\ref{alg:crf_batch} shows the pseudo code to optimize a CRF with a batch 
+gradient method (in the exercise, we will use a quasi-Newton method, L-BFGS). 
+Again, we can also take an online approach to
+optimization, but here we will stick with the batch one. 
+
+\begin{algorithm}[t]
+   \caption{Batch Gradient Descent for Conditional Random Fields \label{alg:crf_batch}}
+\begin{algorithmic}[1]
+   \STATE {\bfseries input:} $\mathcal{D}$, $\lambda$, number of rounds $T$,
+   learning rate sequence $(\eta_t)_{t = 1,\ldots,T}$
+   \STATE initialize $\boldsymbol{\theta}^1 = \mathbf{0}$
+	\FOR{$t=1$ {\bfseries to} $T$}
+	\FOR{$m=1$ {\bfseries to} $M$}
+	\STATE take training pair $(x^m, y^m)$ and compute conditional
+        probabilities using the current model, for each $\hseq$:
+$$P_{\boldsymbol{\theta}^t}(\hseq|\sent) = \frac{1}{Z(\boldsymbol{\theta}^t,\sent)}\exp\left(\sum_i \boldsymbol{\theta}^t_V \cdot 
+\boldsymbol{f}_V(\sent,\hs_i) + 
+\sum_i\boldsymbol{\theta}^t_E \cdot
+\boldsymbol{f}_E(\sent,\hs_i,\hs_{i-1})\right)$$
+
+	\STATE compute the feature vector expectation:  
+	$$E_{\boldsymbol{\theta}^t}[\boldsymbol{f}(\sent^m,\hseq^m)] = \sum_{\hseq} P_{\boldsymbol{\theta}^t}(\hseq^m|\sent^m) \boldsymbol{f}(\sent^m,\hseq^m)$$
+	\ENDFOR
+	\STATE choose the stepsize $\eta_t$ using, \emph{e.g.}, Armijo's rule
+	\STATE update the model: 
+	$$\boldsymbol{\theta}^{t+1} \leftarrow (1-\lambda \eta_t) \boldsymbol{\theta}^{t} + \eta_t M^{-1} \sum_{m=1}^M \left( \boldsymbol{f}(\sent^m,\hseq^m) 
+	- E_{\boldsymbol{\theta}^t}[\boldsymbol{f}(\sent^m,\hseq^m)]\right)$$
+	\ENDFOR
+   \STATE \textbf{output:} $\hat{\boldsymbol{\theta}} \leftarrow \boldsymbol{\theta}^{T+1}$
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{exercise}
+Repeat Exercises~\ref{exer:strucperc1}--\ref{exer:strucperc2} using a CRF model instead of the perceptron algorithm. 
+Report the results. 
+
+Here is the code for the simple feature set:
+
+\begin{python}
+import crf_batch as crfc
+posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
+id_f = idfc.IDFeatures(posc)
+id_f.build_features()
+
+
+crf = crfc.CRF_batch(posc,id_f)
+crf.train_supervised(posc.train.seq_list)
+
+pred_train = crf.viterbi_decode_corpus(posc.train.seq_list)
+pred_dev = crf.viterbi_decode_corpus(posc.dev.seq_list)
+pred_test = crf.viterbi_decode_corpus(posc.test.seq_list)
+
+eval_train = crf.evaluate_corpus(posc.train.seq_list,pred_train)
+eval_dev = crf.evaluate_corpus(posc.dev.seq_list,pred_dev)
+eval_test = crf.evaluate_corpus(posc.test.seq_list,pred_test)
+
+print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+Out[]: CRF - ID Features Accuracy Train: 0.920 Dev: 0.863 Test: 0.830
+\end{python}
+
+Here is the code for the extended feature set:
+
+\begin{python}
+
+posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
+ex_f = exfc.ExtendedFeatures(posc)
+ex_f.build_features()
+
+
+crf = crfc.CRF_batch(posc,ex_f)
+crf.train_supervised(posc.train.seq_list)
+
+pred_train = crf.viterbi_decode_corpus(posc.train.seq_list)
+pred_dev = crf.viterbi_decode_corpus(posc.dev.seq_list)
+pred_test = crf.viterbi_decode_corpus(posc.test.seq_list)
+
+eval_train = crf.evaluate_corpus(posc.train.seq_list,pred_train)
+eval_dev = crf.evaluate_corpus(posc.dev.seq_list,pred_dev)
+eval_test = crf.evaluate_corpus(posc.test.seq_list,pred_test)
+
+print "CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+
+Out[]: CRF - Extended Features Accuracy Train: 0.924 Dev: 0.872 Test: 0.831
+\end{python}
+
+\end{exercise}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../guide"
+%%% End: 

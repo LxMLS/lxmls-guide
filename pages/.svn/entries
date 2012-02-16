@@ -1,0 +1,72 @@
+10
+
+dir
+228
+svn://camoes.lx.it.pt:4000/share/svnshare/LxMLS/guide/pages
+svn://camoes.lx.it.pt:4000/share/svnshare/LxMLS
+
+
+
+2011-07-25T07:21:39.440788Z
+224
+fernando.batista
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+eade323b-ed16-4af3-9f26-162387751313
+
+seq_discriminative
+dir
+
+parsing
+dir
+
+appendix
+dir
+
+classification
+dir
+
+intro
+dir
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+svn://camoes.lx.it.pt:4000/share/svnshare/LxMLS/guide/intro
+1
+
+sequences
+dir
+
+unsupervised
+dir
+
+day0
+dir
+

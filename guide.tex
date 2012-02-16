@@ -1,0 +1,119 @@
+\documentclass{report}
+
+\usepackage{url}
+
+\usepackage{palatino}
+\usepackage{mathpazo}
+\linespread{1.05}         % Palatino needs more leading (space between lines)
+
+\usepackage[procnames]{listings}
+\usepackage{bm}
+\input{pythonlisting}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsmath}
+\usepackage{eucal}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[algo2e,boxed,linesnumbered]{algorithm2e}
+\usepackage{natbib}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+
+\usepackage{multirow}
+%%% VER
+\usepackage{fancybox}
+%Hyper ref must be the last import
+\usepackage{qtree}
+
+
+\input{listings_def}
+\input{math}
+
+\newtheorem{theorem}{\textbf{Theorem}}[chapter]
+\newtheorem{definition}{\textbf{Definition}}[chapter]
+
+\newtheorem{example}{\textbf{Example}}[chapter]
+
+\newtheorem{remark}{\textbf{Remark}}[chapter]
+\newtheorem{exercise}{\textbf{Exercise}}[chapter]
+
+\newcommand{\afm}[1]{{\textcolor{blue}{\bf [{\sc afm:} #1]}}}
+\newcommand{\jg}[1]{{\textcolor{red}{\bf [{\sc jg:} #1]}}}
+\newcommand{\gka}[1]{{\textcolor{green}{\bf [{\sc gka:} #1]}}}
+
+
+\newcommand{\posi}{Part-of-Speech induction}
+\newcommand{\pos}{Part-of-Speech}
+
+\newcommand*{\code}[1]{\texttt{#1}}
+
+
+\newcommand*{\pd}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand*{\pdd}[2]{\frac{\partial^2 #1}{\partial #2^2}} 
+\newcommand*{\vect}[1]{\ensuremath{\bm{#1}}}
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}} 
+
+\begin{document}
+
+
+%\author{Jo\~{a}o Gra\c{c}a \and Andr\'{e} Martins \and Luis Sarmento}
+\title{LxMLS - Lab Guide}
+
+\maketitle
+
+\renewcommand{\chaptername}{Day}
+\setcounter{chapter}{-1}
+
+%\chapter{Introduction}
+\chapter{Basic Tutorials}
+\input{pages/intro/intro.tex}
+
+% \section*{Related Exercises in Python}
+
+% %\input{pages/day0/ipython}
+
+% \section{Scipy and NumPy and Matplotlib}
+
+% \input{pages/day0/scipy}
+
+
+
+
+
+\chapter{\label{day:classification}Classification}
+\input{pages/classification/classification.tex}
+
+
+\chapter{\label{day:seq}Sequence Models}
+\input{pages/sequences/sequences.tex}
+
+\chapter{\label{day:seq_disc}Learning Structured Predictors}
+\input{pages/seq_discriminative/seq_discriminative.tex}
+
+\chapter{Syntax and Parsing}
+
+\input{pages/parsing/parsing.tex}
+
+\chapter{Unsupervised Learning}
+\input{pages/unsupervised/unsupervised.tex}
+
+
+% \appendix
+
+% \chapter{Installation Guide}
+% \input{pages/appendix/installation}
+% \chapter{Data Sets}
+% \input{pages/appendix/data-sets}
+
+
+%\bibliographystyle{plain}
+\bibliographystyle{apalike}
+\bibliography{guide}
+\end{document}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
