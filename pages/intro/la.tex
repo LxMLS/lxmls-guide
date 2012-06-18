@@ -239,12 +239,12 @@ no vector can be represented as a linear combination of the remaining vectors. C
 belonging to the set can be represented as a linear combination of the remaining vectors, then the 
 vectors are said to be {\bf linearly dependent}. That is, if 
 \begin{equation*}
-x_{n}=\sum\limits_{i=1}^{n-1}\alpha_{i}x_{i}
+x_{j}=\sum\limits_{i\neq j}\alpha_{i}x_{i}
 \end{equation*}
-for some scalar values $\alpha_{1}, \ldots, \alpha_{n-1} \in \mathbb{R}$. 
+for some $j \in \{1,\ldots,n\}$ and some scalar values $\alpha_{1}, \ldots, \alpha_{i-1}, \alpha_{i+1}, \ldots, \alpha_{n} \in \mathbb{R}$. 
 
 \begin{itemize}
-\item The {\bf rank} of a matrix is the number of linearly independent columns. 
+\item The {\bf rank} of a matrix is the number of linearly independent columns, which is always equal to the number of linearly independent rows. 
 \item For $A \in R^{m\times n}$, rank$(A) \leq$ min$(m,n)$. If rank$(A)=$min$(m,n)$, then $A$ is said
 to be  {\bf full rank}.
 \item  For $A \in R^{m\times n}$, rank$(A)$=rank$(A^{T})$.
@@ -252,7 +252,7 @@ to be  {\bf full rank}.
 \item  For $A,B \in R^{m\times n}$, rank$(A+B) \leq$ rank$(A)$ + rank$(B)$.
 
 
-\item Two vectors $x,y \in \mathbb{R}^{n}$ {\bf orthogonal} if $x^{T}y=0$. A square matrix $U \in \mathbb{R}^{n\times n}$
+\item Two vectors $x,y \in \mathbb{R}^{n}$ are {\bf orthogonal} if $x^{T}y=0$. A square matrix $U \in \mathbb{R}^{n\times n}$
 is orthogonal if all its columns are orthogonal to each other and are normalized ($\|x\|_{2} = 1$), It follows that
 \begin{equation*}
 U^{T}U=I=UU^{T}.

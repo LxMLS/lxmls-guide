@@ -1,13 +1,13 @@
 
 
-Most problems in machine learning require minimization/maximization of functions (likelihoods, risk, energy, entropy, etc.,). 
+Most problems in machine learning require minimization/maximization of functions (likelihoods, risk, energy, entropy, etc.,). Let $x^*$ be the value of $x$ which minimizes the value of some function $f(x)$. Mathematically, this is written as
 
 \begin{equation*}
 x^* = \argmin_x f(x)
 \end{equation*}
 
 In a few special cases, we can solve this minimization problem analytically in closed form (solving for optimal $x^{*}$ in  $\nabla_{x}f(x^{*})=0$), 
-but in most cases such a solutions does not exist. In this section we will cover some basic notions of numerical optimization. The goal is to provide the intuitions behind the methods that will be used in the rest of the school. There are plenty of good textbooks in the subject that you can consult for more information \citep{Nocedal1999,bertsekas1995np,boyd2004convex}.
+but in most cases it is too cumbersome (or impossible) to solve these equations analytically, and they must be tackled numerically. In this section we will cover some basic notions of numerical optimization. The goal is to provide the intuitions behind the methods that will be used in the rest of the school. There are plenty of good textbooks in the subject that you can consult for more information \citep{Nocedal1999,bertsekas1995np,boyd2004convex}.
 
 The most common way to solve the problems when no closed form solution is available is to resort to an iterative algorithm. In this Section, we will see some 
 of these iterative optimization techniques. These iterative algorithms compute a sequence of points $x^{(0)},x^{(1)},\ldots \in \text{domain}(f)$ such that hopefully $x^t = x^*$.
@@ -16,7 +16,7 @@ Such a sequence is called the {\bf minimizing sequence} for the problem.
 
 \subsection{Convex Functions}
 
-One important concept of the function $f(x)$ is if it is \textbf{convex function} (in the shape of a bowl) or a \textbf{non-convex-function}. Figures \ref{fig:convexfn} and \ref{fig:nonconvexfn} show an example of a convex and a non-convex function. Convex functions are particular useful since you are guarantee that the minimizing sequence converges to the true global minimum of the function, while in non-convex functions you can only guarantee to reach a local minimum. 
+One important property of a function $f(x)$ is whether it is a \textbf{convex function} (in the shape of a bowl) or a \textbf{non-convex function}. Figures \ref{fig:convexfn} and \ref{fig:nonconvexfn} show an example of a convex and a non-convex function. Convex functions are particularly useful since you can guarantee that the minimizing sequence converges to the true global minimum of the function, while in non-convex functions you can only guarantee that it will reach a local minimum. 
 
 
  \begin{figure}[h]
@@ -32,10 +32,10 @@ One important concept of the function $f(x)$ is if it is \textbf{convex function
 Intuitively, imagine dropping a ball on either side of 
 Figure
 \ref{fig:convexfn}, the ball will role to the bottom of the bowl
-independently from where it is dropped. This is the main benefits of a
-convex functions. On the other hand if you drop a ball from the left
+independently from where it is dropped. This is the main benefit of a
+convex function. On the other hand, if you drop a ball from the left
 side of Figure \ref{fig:nonconvexfn} it will reach a
-different position than if you drop a ball from its right side. Moreover, dropping it from the left side will lead you to a much better place than if you drop the ball from the right side. This is the main problem with non-convex function, there are no guarantees about the quality of the local minimum you find.
+different position than if you drop a ball from its right side. Moreover, dropping it from the left side will lead you to a much better (\emph{i.e.}, lower) place than if you drop the ball from the right side. This is the main problem with non-convex functions: there are no guarantees about the quality of the local minimum you find.
 
 More formally, some concepts to understand about convex functions are:
 
@@ -62,9 +62,9 @@ for all $x,y \in \text{domain of } f$, $0 \leq \theta \leq 1$
 \subsection{Derivative and Gradient}
 
 The \textbf{derivative} of a function is a measure of how the function varies with its input variables. 
-Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average of the function in that interval. 
+Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval. 
 \begin{equation}
-\frac{f(a) - f(b)}{a-b} 
+\frac{f(b) - f(a)}{b-a} 
 \end{equation}
 The derivative can be seen as the limit as the interval goes to zero, and it gives us the slope of the function at that point.
 \begin{equation}
@@ -94,7 +94,7 @@ $\frac{1}{x}$ & $-\frac{1}{x^{2}}$\\
 \caption{\label{tb::derivatives}Some derivative examples}
 \end{table}
 
-An important rule of derivation is the chain. Consider $h=f\circ g$, and $u=g(x)$, then:
+An important rule of derivation is the chain rule. Consider $h=f\circ g$, and $u=g(x)$, then:
 
 \begin{equation}
 \frac{\partial h}{\partial x}=\frac{\partial f}{\partial u}\cdot\frac{\partial g}{\partial x}
@@ -148,14 +148,14 @@ for i in k:
 
 The \textbf{gradient} of a function is a generalization of the 
 derivative concept we just saw before, for several dimensions. Lets
-assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$ so can be seen as
-a pair $x = {x_1,x_2}$ then the gradient measures the slope of the
-function in both directions. $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
+assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as
+a pair $x = {x_1,x_2}$. Then, the gradient measures the slope of the
+function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
 
 
 \subsection{Gradient Based Methods}
 
-Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods use in this class 
+Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods used in this class 
 will make use of the function value $f(x)$ as well as the gradient of the function $\nabla_{x} f(x)$. 
 The simplest method is the {\bf Gradient descent} method, an unconstrained first-order optimization algorithm. 
 
@@ -163,26 +163,27 @@ The intuition of this method is as follows: You start at a given point
 $x_0$ and compute the gradient at that point $\nabla_{x_0} f(x)$. You
 then take a step of length $\eta$ on the direction of the negative
 gradient to find a new point: $x_1$ = $x_0 - \eta \nabla_{x_{0}}
-f(x)$. You proceed until the algorithm until you have reached a minimum (local or global). Recall from the previous subsection that you can identify the minimum by testing if the norm of the gradient is zero $|\nabla f(x)| = 0$.
+f(x)$. Then, you compute the gradient at this new point, $\nabla_{x_1} f(x)$, and take a step of length $\eta$ on the direction of the negative
+gradient to find a new point: $x_2$ = $x_1 - \eta \nabla_{x_{1}} f(x)$. You proceed until you have reached a minimum (local or global). Recall from the previous subsection that you can identify the minimum by testing if the norm of the gradient is zero: $||\nabla f(x)|| = 0$.
 
-There are several practical concerns even with this basic algorithm to ensure both that the algorithm converges (reaches the minimum) and that it does so in fast way (by fast we mean the number of function and gradient evaluations). 
+There are several practical concerns even with this basic algorithm to ensure both that the algorithm converges (reaches the minimum) and that it does so in a fast way (by fast we mean the number of function and gradient evaluations). 
 \begin{itemize}
 \item \textbf{Step Size $\eta$} A first question is how to find the step length $\eta$. One condition is that $eta$ should guarantee sufficient decrease in the function value. We will not cover these methods here but the most common ones are \textbf{Backtracking line search} or the \textbf{Wolf Line Search} \citep{Nocedal1999}.
-\item \textbf{Descent Direction}  A second problem is that using the negative gradient as direction can lead to a very slow convergence. Different methods that change the descent direction by multiplying the gradient by a matrix $\beta$ have been proposed that guarantee a faster convergence. Two notable methods are the Conjugate Gradient (CG) and the Limited Memory Quasi Newton methods(LBFGS) \citep{Nocedal1999}. 
-\item \textbf{Stopping Criteria} Finally, it will normally not be possible to reach full convergence either because it will be too slow, or because of numerical issues (computers cannot perform exact arithmetic). So normally we need to define a stopping criteria for the algorithm. Three common criteria (that are normally used together) are: a maximum number of iterations; the gradient norm be smaller than a given threshold   $|\nabla f(x)| \leq \eta_1$, or the normalized difference in the function value be smaller than a given threshold $\frac{|f(x_t) - f(x_{t-1})|}{\max(|f(x_t)|,|f(x_{t-1})|)} \leq \eta_2$
+\item \textbf{Descent Direction}  A second problem is that using the negative gradient as direction can lead to a very slow convergence. Different methods that change the descent direction by multiplying the gradient by a matrix $\beta$ have been proposed that guarantee a faster convergence. Two notable methods are the Conjugate Gradient (CG) and the Limited Memory Quasi Newton methods (LBFGS) \citep{Nocedal1999}. 
+\item \textbf{Stopping Criteria} Finally, it will normally not be possible to reach full convergence either because it will be too slow, or because of numerical issues (computers cannot perform exact arithmetic). So normally we need to define a stopping criteria for the algorithm. Three common criteria (that are normally used together) are: a maximum number of iterations; the gradient norm be smaller than a given threshold   $||\nabla f(x)|| \leq \eta_1$, or the normalized difference in the function value be smaller than a given threshold $\frac{|f(x_t) - f(x_{t-1})|}{\max(|f(x_t)|,|f(x_{t-1})|)} \leq \eta_2$
 \end{itemize}
 
-Algorithm \ref{alg:graddescent} shows the general gradient based algorithm. Note that for the simple gradient descent algorithm $\beta$ is the identity matrix and the descent direction is just the negative gradient of the function $|-\nabla f(x)|$. Figure \ref{fig:graddescent} shows an illustration of the gradient descent algorithm.
+Algorithm \ref{alg:graddescent} shows the general gradient based algorithm. Note that for the simple gradient descent algorithm $\beta$ is the identity matrix and the descent direction is just the negative gradient of the function, $\beta = -\nabla f(x)$. Figure \ref{fig:graddescent} shows an illustration of the gradient descent algorithm.
 
 \begin{algorithm}[h]
 \caption{Gradient Descent\label{alg:graddescent}}
 \begin{algorithmic}[1]
 \STATE {\bf given} a starting point $x_{0}, i=0$
 \STATE {\bf repeat}
-\STATE Compute step size $\eta$
-\STATE Compute descent direction $\beta$
-\STATE $x_{i+1} \leftarrow x_{i} + \eta\beta\nabla f(x_{i})$
-\STATE $i \leftarrow i + 1$
+\STATE \quad Compute step size $\eta$
+\STATE \quad Compute descent direction $- \beta\nabla f(x_{i})$.
+\STATE \quad $x_{i+1} \leftarrow x_{i} - \eta\beta\nabla f(x_{i})$
+\STATE \quad $i \leftarrow i + 1$
 \STATE {\bf until} stopping criterion is satisfied.
 \end{algorithmic}
 \end{algorithm}
@@ -190,7 +191,7 @@ Algorithm \ref{alg:graddescent} shows the general gradient based algorithm. Note
 \begin{figure}[h]
 \begin{center}
    \includegraphics[width=0.6\columnwidth]{figs/intro/graddescent.png}
- \caption{\label{fig:graddescent} Illustration of gradient descent. The blue circles correspond to the function values at different points, while the red lines correspond to steps taken in the negative gradient direction.}
+ \caption{\label{fig:graddescent} Illustration of gradient descent. The blue circles correspond to contours of the function (each blue circle is a set of points which have the same function value), while the red lines correspond to steps taken in the negative gradient direction.}
 \end{center}
 \end{figure}
 
@@ -217,8 +218,9 @@ Draw a plot around $x \in [-8,8]$.
 
 \begin{python}
 x = np.arange(-8,8,0.001)
-y = map(lambda l: get_y(l),x)
-plot(x,y)
+y = map(lambda u: get_y(u),x)
+plt.plot(x,y)
+plt.show()
 \end{python}
 
 Calculate the derivative of the function $f(x)$, implement the function \emph{get\_grad(x)}.
@@ -247,8 +249,8 @@ def gradient_descent(start_x,func,grad):
         f_x_new = get_y(x_new)
         f_x_old = get_y(x_old)
         res.append([x_new,f_x_new])
-        if(abs(f_x_new -f_x_old) < prec):
-            print "change in function values to small, leaving"
+        if(abs(f_x_new - f_x_old) < prec):
+            print "change in function values too small, leaving"
             return np.array(res)
     print "exceeded maximum number of iterations, leaving"
     return np.array(res)
@@ -259,7 +261,8 @@ Run the gradient descent algorithm starting from $x_0 = -8$ and plot the minimiz
 \begin{python}
 x_0 = -8
 res = gradient_descent(x_0,get_y,get_grad)
-plot(res[:,0],res[:,1],'+')
+plt.plot(res[:,0],res[:,1],'+')
+plt.show()
 \end{python}
 
 
@@ -303,7 +306,7 @@ that now the algorithm converged to the global minimum. However, note
 that to get to the global minimum the sequence of points jumped from one side of the minimum to the other. This is a consequence of using a wrong step size (in this case too large).
 
 
-Repeat the previous exercise changing both the values of the step-size and the precision. What do you observe.
+Repeat the previous exercise changing both the values of the step-size and the precision. What do you observe?
 \end{exercise}
 
 During this school we will rely on the numerical optimization methods provided by Scipy (scientific computing library in python), which are very efficient implementations.
