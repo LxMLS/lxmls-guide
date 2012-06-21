@@ -169,8 +169,11 @@ the class-conditional means' estimates are the sample means.
 Start by importing all the libraries necessary for this lab through the following preamble: 
 \begin{python}
 import sys
-sys.path.append("readers/" )
-sys.path.append("classifiers/" )
+import matplotlib.pyplot as plt
+sys.path.append("readers/")
+sys.path.append("classifiers/")
+sys.path.append("distributions/")
+sys.path.append("util/")
 
 import simple_data_set as sds
 import linear_classifier as lcc
@@ -192,6 +195,8 @@ You can visualize your data and see the Bayes optimal surface boundary by typing
 \begin{python}
 fig,axis = sd.plot_data()
 \end{python}
+
+Note: you might need to type {\tt plt.show()} in order to show the figure.
 
 Now, run na\"ive Bayes on this dataset. To do that, use the class {\tt GaussianNaiveBayes}, 
 which is defined in the file {\tt GaussianNaiveBayes.py} under the
@@ -329,7 +334,7 @@ It is useful to think about each  $x \in \mathcal{X}$ as an abstract object,
 which is subject to a set of descriptions or measurements, which are called \emph{features}.  
 A feature is simply a real number that describes the value of some
 property of $x$. 
-For instance in the toy examples described above you can think of X
+For instance in the toy examples described above you can think of $\mathcal{X}$
 as a set of points and the features to be its 2D coordinates.
 Let $g_1(x),\ldots,g_J(x)$ be $J$ features of $x$. We call the vector
 \begin{equation}
@@ -547,7 +552,7 @@ hold for $m = 1,\ldots,M$. A dataset $\mathcal{D}$ is \emph{separable}
 if such a weight vector exists (in general, $\boldsymbol{w}$ is not unique). 
 A very important property of the perceptron algorithm is the following: 
 if $\mathcal{D}$ is separable, then the 
-number of mistakes made by the perceptron algorithm is \emph{finite}.  
+number of mistakes made by the perceptron algorithm until it finds a separating hyperplane is \emph{finite}.  
 This means that under this assumption, the perceptron will eventually reach a separating hyperplane $\boldsymbol{w}$. 
 
 
@@ -555,7 +560,7 @@ There are other variants of the perceptron (e.g., with regularization) which we 
 
 \begin{exercise}
 We provide an implementation of the perceptron algorithm in the class {\tt Perceptron} 
-(file {\tt Perceptron.py}).  
+(file {\tt perceptron.py}).  
 \begin{enumerate}
 \item Run the perceptron algorithm on the simple dataset
 previously generated and report its train and test set accuracy: 
@@ -814,7 +819,7 @@ through the following updates until convergence:
 Convergence is ensured for suitable stepsizes $\eta_t$. Monotonic decrease of the objective value can also be ensured if $\eta_t$ is chosen 
 with a suitable line search method, such as Armijo's rule \citep{Nocedal1999}. 
 In practice, more sophisticated methods exist for optimizing Eq.~\ref{eq:maxent}, such as conjugate gradient or L-BFGS. The latter is an 
-example of a quasi-Newton method, which only requires gradient information, but use past 
+example of a quasi-Newton method, which only requires gradient information, but uses past 
 gradients to try to 
 construct second order (Hessian) approximations. 
 
@@ -852,8 +857,8 @@ construct second order (Hessian) approximations.
 
  
 
-In large-scale problems (very large $M$) batch methods are slow, 
-\emph{online} or \emph{stochastic} optimization make attractive alternative methods. Stochastic gradient methods make ``noisy'' gradient updates 
+In large-scale problems (very large $M$) batch methods are slow. 
+\emph{Online} or \emph{stochastic} optimization are attractive alternative methods. Stochastic gradient methods make ``noisy'' gradient updates 
 by considering only a single instance at the time. The resulting algorithm is shown as Alg.~\ref{alg:maxent_sgd}. 
 At each round $t$, an instance $m(t)$ is chosen, either randomly  (stochastic variant) or by cycling through the dataset (online variant). 
 The stepsize sequence must decrease with $t$: typically, $\eta_t = \eta_0 t^{-\alpha}$ for some $\eta_0 > 0$ and $\alpha \in [1, 2]$, tuned 
@@ -985,7 +990,7 @@ For the $0/1$-cost, the problem in Eq.~\ref{eq:svm} is equivalent to:
 \text{s.t.} & \boldsymbol{w} \cdot \boldsymbol{f}(x^m,y^m) \ge \boldsymbol{w} \cdot \boldsymbol{f}(x^m,\tilde{y}^m) + 1 - \xi_m, \quad \forall m, \tilde{y}^m \in \mathcal{Y}\setminus \{y^m\}.
 \end{eqnarray} 
 Geometrically, we are trying to choose the linear classifier that yields the largest possible separation margin, 
-while we allow some violations, penalizing the amount of slack via extra variables $\xi_1,\ldots,\xi_m$. 
+while we allow some violations, penalizing the amount of slack via extra variables $\xi_1,\ldots,\xi_m$. There is now a trade-off: increasing the slack variables $\xi_m$ makes it easier to satisfy the constraints, but it will also increase the value of the cost function.
 
 Problem \ref{eq:svm} does not have a closed form solution. Moreover, unlike maximum entropy models, 
 here the objective function is non-differentiable, hence 
@@ -1118,7 +1123,7 @@ Hyperparameters to tune				& 1 (smoothing) & 0 & 1 & 1 & 1\\
   \emph{run\_all\_classifiers} in file \emph{labs/run\_all\_classifiers.py} which receives a
   dataset and plots all decisions boundaries and accuracies. What can
   you say about the methods when the amount of data increases? What
-  about when the classes become too unbalanced.
+  about when the classes become too unbalanced?
 \end{itemize}
 \end{exercise}
 
