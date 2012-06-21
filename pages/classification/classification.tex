@@ -93,13 +93,13 @@ Generative models assume data are generated according to the following generativ
 \end{enumerate}
 Training a generative model 
 amounts to \emph{estimating} these probabilities using the dataset $\mathcal{D}$, yielding estimates 
-$\hat{P}(y)$ and $\hat{P}(x|y)$. 
+$\hat{P}(y)$ and $\hat{P}(x|y)$. This is usually called training time.
 
-At test time, given a new input $x \in \mathcal{X}$, a prediction is made according to  
+At test time, we are given a new input $x \in \mathcal{X}$, and we want to make a prediction according to  
 \begin{eqnarray}
-{\hat y} &=& \arg\max_{y \in \mathcal{Y}} \hat{P}(y) \hat{P}(x|y).
+{\hat y} &=& \arg\max_{y \in \mathcal{Y}} \hat{P}(y) \hat{P}(x|y),
 \end{eqnarray}
-We are left with two important problems:
+using the probabilities estimated at training time. We are left with two important problems:
 \begin{enumerate}
 \item How should the distributions ${\hat P}(Y)$ and ${\hat P}(X|Y)$ be ``defined'' 
 (i.e., what kind of independence assumptions should they state, or how should they factor?)
@@ -115,7 +115,7 @@ P(X|Y) &=& \prod_{j=1}^J P(X_j|Y).
 \end{eqnarray}
 Note that this independence assumption greatly reduces the number of parameters to be estimated (degrees of freedom) 
 from $O(\exp(J))$ to $O(J)$, 
-hence estimation of ${\hat P}(Y)$ and ${\hat P}(X|Y)$ becomes much simpler, as we shall see. 
+hence estimation of ${\hat P}(X|Y)$ becomes much simpler, as we shall see. 
 It also makes the overall computation much more efficient 
 (in particular for large $J$) and it decreases the risk of overfitting the data. 
 On the other hand, if the assumption is over-simplistic it may increase the risk 
@@ -141,11 +141,11 @@ According to the na\"ive Bayes assumption, ${\hat P}(X_1,X_2|Y) = {\hat P}(X_1|Y
 is equivalent to assuming that 
 the $\boldsymbol{\Sigma}_y$ are diagonal!). For simplicity, we also assume that the two classes have unit variance. Then, we have 
 ${\hat P}(X_1|Y=y) = \mathcal{N}(\mu_{y1}, 1.0)$ 
-and ${\hat P}(X_2|Y=y) = \mathcal{N}(\mu_{y2}, 1.0)$ (Figure
+and ${\hat P}(X_2|Y=y) = \mathcal{N}(\mu_{y2}, 1.0)$. Figure
 \ref{simpleDataSet} shows an example a dataset of two gaussians with unit
-variance. Where $\mu_{y1} = [-1,-1]$ and $\mu_{y1} = [1,1]$. Figure
+variance, where $\mu_{y1} = [-1,-1]$ and $\mu_{y1} = [1,1]$. Figure
 \ref{simpleDataSet_bo} shows the same example but where both
-gaussian have $\Sigma = 0.5$, together with the Bayes optimal decision boundary). 
+gaussians have $\Sigma = 0.5$, together with the Bayes optimal decision boundary. 
 The parameters that need to be estimated are the class-conditional means $\mu_{11},\mu_{12},\mu_{21},\mu_{22}$ and 
 the class priors ${\hat P}(Y=1)$ and ${\hat P}(Y=2)$. Given a training sample $\mathcal{D} = \{(x^{1},y^{1}),\ldots,(x^{M},y^{M})\}$, 
 denote by $\mathcal{I}_1\subseteq \{1,\ldots,M\}$ the indices of those instances belonging to class $1$, and 
@@ -290,7 +290,7 @@ This will load the data in a bag-of-words representation where rare words (occur
 \begin{python}
 import multinomial_naive_bayes as mnbb
 
-mnbb = mnb.MultinomialNaiveBayes()
+mnb = mnbb.MultinomialNaiveBayes()
 params_nb_sc = mnb.train(scr.train_X,scr.train_y)
 y_pred_train = mnb.test(scr.train_X,params_nb_sc)
 acc_train = mnb.evaluate(scr.train_y, y_pred_train)
@@ -329,7 +329,7 @@ It is useful to think about each  $x \in \mathcal{X}$ as an abstract object,
 which is subject to a set of descriptions or measurements, which are called \emph{features}.  
 A feature is simply a real number that describes the value of some
 property of $x$. 
-For instance in the toy examples described above you can thing of X
+For instance in the toy examples described above you can think of X
 as a set of points and the features to be its 2D coordinates.
 Let $g_1(x),\ldots,g_J(x)$ be $J$ features of $x$. We call the vector
 \begin{equation}
