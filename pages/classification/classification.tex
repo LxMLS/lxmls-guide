@@ -992,8 +992,7 @@ For the $0/1$-cost, the problem in Eq.~\ref{eq:svm} is equivalent to:
 Geometrically, we are trying to choose the linear classifier that yields the largest possible separation margin, 
 while we allow some violations, penalizing the amount of slack via extra variables $\xi_1,\ldots,\xi_m$. There is now a trade-off: increasing the slack variables $\xi_m$ makes it easier to satisfy the constraints, but it will also increase the value of the cost function.
 
-Problem \ref{eq:svm} does not have a closed form solution. Moreover, unlike maximum entropy models, 
-here the objective function is non-differentiable, hence 
+Problem \ref{eq:svm} does not have a closed form solution. Moreover, unlike maximum entropy models, the objective function in \ref{eq:svm} is non-differentiable, hence 
 smooth optimization is not possible. However, it is still convex, which ensures that any local optimum is the global optimum. 
 Despite not being differentiable, we can still define a \emph{subgradient} of the objective function (which generalizes the 
 concept of gradient), which enables us to apply subgradient-based methods. 
