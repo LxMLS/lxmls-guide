@@ -309,7 +309,10 @@ print "Multinomial Naive Bayes Amazon Sentiment Accuracy train: %f test: %f"%(ac
 To solve this problem, apply a simple \emph{add-one} smoothing technique: replace the expression in Eq.~\ref{eq:mlemultinomial} 
 for the estimation of the conditional probabilities 
 by
-$${\hat P}(w_j|c_k) = \frac{1+\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{J + |\mathcal{I}_k|}.$$
+$${\hat P}(w_j|c_k) = \frac{1+\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{J + \sum_ {m} n_j(x^m)}.$$
+%$${\hat P}(w_j|c_k) = \frac{1+\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{J + |\mathcal{I}_k|}.$$
+
+
 where $J$ is the number of distinct words. 
 
 This is a widely used smoothing strategy which has a Bayesian interpretation: it corresponds to choosing a uniform prior 
