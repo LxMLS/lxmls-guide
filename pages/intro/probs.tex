@@ -252,14 +252,14 @@ called a conjugate family, or a family of {\bf conjugate priors}, for $\mathcal{
 %\gka{An example here for conjugate families}
 
 \subsection{Maximum Likelihood Estimation}
-Until now, we assumed that, for every distribution, the parameters $\theta$ are known and are used we calculate $p(x|\theta)$.
+Until now, we assumed that, for every distribution, the parameters $\theta$ are known and are used when we calculate $p(x|\theta)$.
 There are some cases where the values of the parameters are easy to infer, such as the probability $p$ getting a head using a fair coin, used on a Bernoulli or Binomial distribution.
 However, in many problems, these values are complex to define, and it is more viable to estimate the parameters using the data $x$. 
 For instance, in the example above with the coin toss, if the coin is somehow tampered to have a biased behavior, 
 rather than examining the dynamics of the structure of the coin to infer a parameter for $p$, 
 a person could simply throw the coin $n$ times and count the number of heads $h$ and set $p=\frac{h}{n}$. In doing this, the person is using the data $x$ to estimate $\theta$.
 
-With this in mind, we will know generalize this process. We define the probability $p(\theta|x)$, which is probability of the parameter $\theta$, given the data $x$. 
+With this in mind, we will now generalize this process. We define the probability $p(\theta|x)$, which is probability of the parameter $\theta$, given the data $x$. 
 This probability is called {\bf likelihood} $\likelihood(\theta|x)$ and measures how well the parameter $\theta$ models the data $x$. This can be defined in terms of the distribution $f$ as
 \begin{equation*}
 \likelihood(\theta|x_1,...,x_n)=\prod_{i=1}^n f(x_i|\theta)
@@ -287,7 +287,7 @@ If we get the sequence [1,0,1,1,0] instead, the likelihood values would be:
 \item $\likelihood(1,x) = f(1,1)^5 = 1^3\times 0^2 = 0$
 \end{itemize}
 
-We can that likelihood is highest when the distribution $f$ with parameter $p$ is the best fit for the observed samples.
+We can see that the likelihood is highest when the distribution $f$ with parameter $p$ is the best fit for the observed samples.
 Thus, the best estimate for $p$ according to $x$ would the value where $\likelihood(p,x)$ is highest. 
 
 The value of the parameter $\theta$ with the highest likelihood is called {\bf maximum likelihood estimate(MLE)} and is defined as
