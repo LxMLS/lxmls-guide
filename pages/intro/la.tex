@@ -65,7 +65,7 @@ print a.shape
 print a.dtype.name
 float64
 \end{python}
-This shows you that ``a'' is an 3*2 arrays of type float64. By default, arrays
+This shows you that ``a'' is an 3*2 array of type float64. By default, arrays
 contain 64~bit floating point numbers. You can specify the particular array
 type by using the keyword dtype.
 
@@ -79,7 +79,7 @@ denote 32~bits integers).
 
 \smallskip
 
-There are many other ways to create arrays, you can create arrays from lists of numbers:
+You can also create arrays from lists of numbers:
 \begin{python}
 a = np.array([[2,3],[3,4]])
 print a
@@ -111,7 +111,7 @@ c = np.zeros([a_dim1,b_dim2])
 for i in xrange(a_dim1):
    for j in xrange(b_dim2):
        for k in xrange(a_dim2):
-          c[i,j] += a[i,k]*b[j,k]
+          c[i,j] += a[i,k]*b[k,j]
 print c
 \end{python}
 
@@ -131,7 +131,7 @@ multiplication, the expression {a * b} denotes element-wise multiplication.
 \item Matrix multiplication is distributive: $A(B+C)= AB + AC$.
 \item Matrix multiplication is (generally) not commutative : $AB \neq BA$.
 \item Given two vectors $x,y \in \mathbb{R}^{n}$ the product $x^{T}y$, called {\bf inner product}
-or {\bf dot product}
+or {\bf dot product}, is given by
 \begin{equation*}
 x^{T}y \in \mathbb{R} = \left[\begin{array}{cccc}
 x_{1}&x_{2}&\ldots&x_{n}\end{array}\right] \left[\begin{array}{c}
