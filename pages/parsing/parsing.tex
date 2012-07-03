@@ -9,7 +9,7 @@ Let $\mathcal{T}$ be an \emph{alphabet} (\emph{i.e.}, a finite set of symbols), 
 infinite set of strings produced with those symbols: 
 $$\mathcal{T}^* = \varnothing \cup \mathcal{T} \cup \mathcal{T}^2 \cup \ldots$$ 
 A \emph{language} $L$ is a subset of $\mathcal{T}^*$. 
-The ``complexity'' of a language $L$ can be accessed in terms of how hard it is to construct a machine (an \emph{automaton}) capable 
+The ``complexity'' of a language $L$ can be loosely defined by how hard it is to construct a machine (an \emph{automaton}) capable 
 of distinguishing the words in $L$ from the elements of   $\mathcal{T}^*$ which are not in $L$.%
 \footnote{We recommend the classic book by \citet{Hopcroft1979} for a thorough introduction on the subject of 
 automata theory and formal languages.} %
@@ -223,7 +223,7 @@ The following is an example of an annotated sentence in one of the most widely u
 This exercise will show you that real-world sentences can have complicated syntactic structures. 
 There is a parse tree visualizer in \url{http://www.ark.cs.cmu.edu/treeviz/}. 
 Go to your local {\tt data/treebanks} folder and open the file {\tt PTB\_excerpt.txt}. 
-Copy a few sentences from there, and examine their parse trees in the visualizer.  
+Copy a few trees from the file, one at a time, and examine their parse trees in the visualizer.  
 \end{exercise}
 
 A treebank makes possible to learn a parser in a supervised fashion. The simplest way is via a 
@@ -312,7 +312,7 @@ phrasal constituents, which render non-terminal nodes unnecessary. This has comp
 the complexity of the parsing algorithms) as well as design advantages (no grammar is necessary, and treebank annotations are way simpler, since no 
 internal constituents need to be annotated). It also shifts the focus from internal syntactic structures and generative grammars \citep{Chomsky1965} 
 to lexical and transformational grammars \citep{Tesniere1959,Hudson1984,Melcuk1988,Covington1990}. 
-Arcs connecting words are called \emph{dependency links} or \emph{dependency arcs}. In a arc $\langle h,m \rangle$, 
+Arcs connecting words are called \emph{dependency links} or \emph{dependency arcs}. In an arc $\langle h,m \rangle$, 
 the source word $h$ is called the \emph{head} and the target word $m$ is called 
 the \emph{modifier}. 
 
