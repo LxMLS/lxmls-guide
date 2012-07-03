@@ -105,7 +105,7 @@ $P(A_{i})$ is called the {\bf prior probability} of A and $P(A_{i}|B)$ is the {\
 \end{remark}
 
 \begin{remark}
-In Bayesian Statistical Inference, Bayes' theorem is used to compute the estimates of parameters for distributions 
+In Bayesian Statistical Inference, Bayes' theorem is used to compute the estimates of distribution parameters 
 from data; Where, prior is the initial {\em belief} about the parameters, likelihood is the distribution function  
 of the parameter (usually trained from data) and posterior is the {\em updated belief} about the parameters.
 \end{remark}
@@ -173,7 +173,7 @@ A discussion of a few important distributions and related properties:
 %For each distribution talk about 
 \subsection{\label{bernoulli} Bernoulli}
 The {\bf Bernoulli distribution} is a discrete probability distribution that takes 1 with the success probability $p$ and 0 with the failure probability $q=1-p$.
-A single bernoulli trial is parametrized with the success probability $p$, and the input $k\in \{0,1\}$ (1=success, 0=failure), and can be expressed as
+A single Bernoulli trial is parametrized with the success probability $p$, and the input $k\in \{0,1\}$ (1=success, 0=failure), and can be expressed as
 \begin{equation*}
 \label{bernoulli-eq}
 f(k;p) = p^kq^{1-k} = p^k(1-p)^{1-k}
@@ -190,7 +190,7 @@ j \end{array}\right) p^{j}q^{n-j} = \left(\begin{array}{c}
 n \\
 j \end{array}\right) p^{j}(1-p)^{n-j}
 \end{equation*}
-where $n$ is the number of Bernoulli trails with probability $p$ of success on each trial.
+where $n$ is the number of Bernoulli trials with probability $p$ of success on each trial.
 
 \subsection{\label{categorical} Categorical}
 The Categorical distribution (often conflated with the Multinomial distribution, in fields such as Natural Language Processing), is another generalization of the Bernoulli distribution, allowing the definition of a set of possible outcomes, rather than simply the events "success" and "failure" defined in the Bernoulli distribution.
@@ -207,7 +207,7 @@ Considering a set of outcomes indexed from $1$ to $n$, the vector $x_1,...,x_n$,
 \begin{equation*}
 f(x_1,...,x_n;p_1,...,p_n) = \frac{n!}{x_{1}!...x_{n}!} p_{1}^{x_{1}}...p_{n}^{x_{n}}.
 \end{equation*}
-Where parameters $p_1,...,p_n$ is the occurrence probability of the respective outcome. 
+Where parameters $p_1,...,p_n$ represent the occurrence probability for the respective outcome. 
 
 
 %\begin{theorem}{\bf (Multinomial theorem)} Let $m$ and $n$ be positive integers. Let $A$ be the set of vectors $x=(x_{1},\ldots,x_{n})$ 
@@ -256,10 +256,14 @@ Until now, we assumed that, for every distribution, the parameters $\theta$ are 
 There are some cases where the values of the parameters are easy to infer, such as the probability $p$ getting a head using a fair coin, used on a Bernoulli or Binomial distribution.
 However, in many problems, these values are complex to define, and it is more viable to estimate the parameters using the data $x$. 
 For instance, in the example above with the coin toss, if the coin is somehow tampered to have a biased behavior, 
-rather than examining the dynamics of the structure of the coin to infer a parameter for $p$, 
+rather than examining the dynamics or the structure of the coin to infer a parameter for $p$, 
 a person could simply throw the coin $n$ times and count the number of heads $h$ and set $p=\frac{h}{n}$. In doing this, the person is using the data $x$ to estimate $\theta$.
 
+<<<<<<< HEAD
+With this in mind, we will know generalize this process. We define the probability $p(\theta|x)$, which is the probability of the parameter $\theta$, given the data $x$. 
+=======
 With this in mind, we will now generalize this process. We define the probability $p(\theta|x)$, which is probability of the parameter $\theta$, given the data $x$. 
+>>>>>>> upstream/master
 This probability is called {\bf likelihood} $\likelihood(\theta|x)$ and measures how well the parameter $\theta$ models the data $x$. This can be defined in terms of the distribution $f$ as
 \begin{equation*}
 \likelihood(\theta|x_1,...,x_n)=\prod_{i=1}^n f(x_i|\theta)
@@ -288,7 +292,7 @@ If we get the sequence [1,0,1,1,0] instead, the likelihood values would be:
 \end{itemize}
 
 We can see that the likelihood is highest when the distribution $f$ with parameter $p$ is the best fit for the observed samples.
-Thus, the best estimate for $p$ according to $x$ would the value where $\likelihood(p,x)$ is highest. 
+Thus, the best estimate for $p$ according to $x$ would be the value for which $\likelihood(p,x)$ is the highest. 
 
 The value of the parameter $\theta$ with the highest likelihood is called {\bf maximum likelihood estimate(MLE)} and is defined as
 \begin{equation*}
@@ -305,7 +309,7 @@ And the MLE estimate would be given by:
 \begin{equation*}
 \frac{\delta \likelihood(p,x)}{\delta p}=0
 \end{equation*}
-which resolves into
+which resolves to
 \begin{equation*}
 p_{mle}=0.6
 \end{equation*}
