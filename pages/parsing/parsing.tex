@@ -496,7 +496,10 @@ dp.read_data("portuguese")
 Observe the statistics which are plotted. How many features are there in total?
 
 \item We will now have a close look on the \emph{features} that can be used in the parser. 
-Examine the file {\tt code/parsing/dependency\_features.py}. 
+Examine the file:
+\begin{quote}
+{\tt lxmls/parsing/dependency\_features.py}. 
+\end{quote}
 The following method takes a sentence and computes a vector of features for each possible arc $\langle h, m \rangle$: 
 \begin{python}
 def create_arc_features(self, instance, h, m, add=False):
