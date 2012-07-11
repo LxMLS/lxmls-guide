@@ -101,7 +101,7 @@ P(A_{i}|B)=\frac{P(B|A_{i})P(A_{i})}{\sum_{j}P(B|A_{j})P(A_{j})}.
 \end{minipage}}
 
 \begin{remark}
-$P(A_{i})$ is called the {\bf prior probability} of A and $P(A_{i}|B)$ is the {\bf posterior probability} of A.
+$P(A_{i})$ is called the {\bf prior probability} of $A_i$ and $P(A_{i}|B)$ is the {\bf posterior probability} of $A_i$.
 \end{remark}
 
 \begin{remark}
@@ -239,17 +239,6 @@ f_{X}(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/2\sigma^2}, \text{   }-\infty 
 Fig. \ref{fig:normaldist}, compares a plot of normal density for the cases $\mu=0$ and $\sigma=1$, and 
 $\mu=0$ and  $\sigma=2$.
 
-\subsection{Conjugate Priors}
-%\fbox
-%{\begin{minipage}[h]{0.9\linewidth} 
-\begin{definition}
-let $\mathcal{F}= \{f_{X}(x|s), s \in \mathcal{X}\}$ be a class of likelihood functions; let $\mathcal{P}$ be a class
-of probability (density or mass) functions; if, for any $x$, any $p_{S}(s) \in \mathcal{P}$, and any $f_{X}(x|s) \in \mathcal{F}$,
-the resulting a posteriori probability function $p_{S}(s|x) = f_{X}(x|s)p_{S}(s)$ is still in $\mathcal{P}$, then $\mathcal{P}$ is 
-called a conjugate family, or a family of {\bf conjugate priors}, for $\mathcal{F}$.
-\end{definition}
-%\end{minipage}}
-%\gka{An example here for conjugate families}
 
 \subsection{Maximum Likelihood Estimation}
 Until now, we assumed that, for every distribution, the parameters $\theta$ are known and are used when we calculate $p(x|\theta)$.
@@ -338,3 +327,15 @@ function and add random jitter (i.e., move the point a little bit) to the
 points before displaying them. Does your impression of the data change?
 \end{itemize}
 \end{exercise}
+
+\subsection{Conjugate Priors}
+%\fbox
+%{\begin{minipage}[h]{0.9\linewidth} 
+\begin{definition}
+let $\mathcal{F}= \{f_{X}(x|s), s \in \mathcal{X}\}$ be a class of likelihood functions; let $\mathcal{P}$ be a class
+of probability (density or mass) functions; if, for any $x$, any $p_{S}(s) \in \mathcal{P}$, and any $f_{X}(x|s) \in \mathcal{F}$,
+the resulting a posteriori probability function $p_{S}(s|x) = f_{X}(x|s)p_{S}(s)$ is still in $\mathcal{P}$, then $\mathcal{P}$ is 
+called a conjugate family, or a family of {\bf conjugate priors}, for $\mathcal{F}$.
+\end{definition}
+%\end{minipage}}
+%\gka{An example here for conjugate families}
