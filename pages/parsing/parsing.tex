@@ -386,12 +386,14 @@ The three important inference tasks are:
 \item Obtain the tree with the largest score, 
 $${\hat t} = \argmax_t \mathrm{score}_{\boldsymbol{\theta}}(t).$$
 \item Compute the partition function (for a log-linear model),
-$$Z(s_{\boldsymbol{\theta}}) = \sum_t \exp(\mathrm{score}_{\boldsymbol{\theta}}(t)).$$
+$$Z(\mathbf{s_{\boldsymbol{\theta}}}) = \sum_t \exp(\mathrm{score}_{\boldsymbol{\theta}}(t)),$$
+where $\mathbf{s_{\boldsymbol{\theta}}}$ is short-hand notation for the set of all the $s_{\boldsymbol{\theta}}( h,m )$ coefficients.
 \item Compute the posterior marginals for all the possible arcs (which for a log-linear model is the gradient of the log-partition function), 
-$$P_{\boldsymbol{\theta}}(\langle h,m \rangle \in t) = \frac{\partial \log Z(s_{\boldsymbol{\theta}})}{\partial s_{\boldsymbol{\theta}}( h,m )}.$$
+$$P_{\boldsymbol{\theta}}(\langle h,m \rangle \in t) = \frac{\partial \log Z(\mathbf{s_{\boldsymbol{\theta}}})}{\partial s_{\boldsymbol{\theta}}( h,m )}.$$
 \end{enumerate}
 
 \begin{exercise}
+\textbf{(Warning: this exercise is somewhat complex. Feel free to think about it after the lab and ask your questions later!)}
 In \emph{projective} dependency parsing using arc-factored models, the three tasks above can be solved in time $O(N^3)$. 
 Sketch how the most likely dependency tree can be computed by ``adapting'' the CKY algorithm. 
 (Hint: note that the CKY algorithm builds larger spans by combining smaller spans, 
@@ -434,12 +436,13 @@ L_{hm} = \left\{
 -\exp(s_{\boldsymbol{\theta}}(h,m))), & \text{otherwise.}
 \end{array}\right.
 \end{equation}
-Denote by $\boldsymbol{r}=(r_m)_{m=1,\ldots,n}$ the first row of this matrix, transposed, with the first entry removed, i.e., 
-$r_i \triangleq -\exp(s_{\boldsymbol{\theta}}(0,m)))$.
-Furthermore, denote by $\hat{L}$ the $(0,0)$-minor of $L$, 
+%Denote by $\boldsymbol{r}=(r_m)_{m=1,\ldots,n}$ the first row of this matrix, transposed, with the first entry removed, i.e., 
+%$r_i \triangleq -\exp(s_{\boldsymbol{\theta}}(0,m)))$.
+%Furthermore,
+Denote by $\hat{L}$ the $(0,0)$-minor of $L$, 
 \emph{i.e.}, the matrix obtained from $L$ 
-by removing the first row and column. Consider the determinant $\det \hat{L}$ and the 
-inverse matrix $[\hat{L}^{-1}]$. %
+by removing the first row and column. Consider its determinant $\det \hat{L}$ and its 
+inverse $\hat{L}^{-1}$. %
 Then: %
 %% \footnote{The above described is the \emph{multiple root} case, where a valid dependency tree may have multiple words 
 %% attached to the dummy root; there is also a solution for 
@@ -447,7 +450,7 @@ Then: %
 \begin{itemize}
 \item the partition function is given by 
 \begin{equation}
-Z(s_{\boldsymbol{\theta}}) = \det \hat{L};
+Z(\mathbf{s_{\boldsymbol{\theta}}}) = \det \hat{L};
 \end{equation}
 \item the posterior marginals 
 are given by 
@@ -493,7 +496,7 @@ import dependency_parser as depp
 dp = depp.DependencyParser()
 dp.read_data("portuguese")
 \end{python}
-Observe the statistics which are plotted. How many features are there in total?
+Observe the statistics which are shown. How many features are there in total?
 
 \item We will now have a close look on the \emph{features} that can be used in the parser. 
 Examine the file:
@@ -521,7 +524,7 @@ train the parser by running $10$ epochs of the structured perceptron algorithm:
 dp.train_perceptron(10)
 dp.test()
 \end{python}
-What is the accuracy obtained in the test set? (Note: the plotted accuracy is the fraction of words whose parent was correctly predicted.) 
+What is the accuracy obtained in the test set? (Note: the shown accuracy is the fraction of words whose parent was correctly predicted.) 
 
 \item Repeat the previous exercise by 
 subsequently enabling the lexical, distance and contextual features:
