@@ -211,6 +211,70 @@ a += 1
 
 \end{exercise}
 
+\subsection{Debugging in Python}
+
+Python is really easy to program after you get used to a few personality traits e.g. the obligatory spacing. During the lab sessions we will also be using the iPython iterative command line which allows you to execute a script command by command. This should limit the need for debugging tools. There will be situations however in which we will be using and extending modules which involve multiple classes and functions. To get a quick glimpse of the variable structures and what the code does, Python offers the pdb debugging module. In the lab we will be using an improved version of this module called ipdb, which incorporates various advantages like colored text. This module has multiple working modes but we be centering ourselves in the simplest yet most effective mode, just write
+
+\begin{verbatim}
+import ipdb;ipdb.set_trace() 
+\end{verbatim}
+ 
+at the position of the code that you want to inspect and run your code. The code will run normally as expected until it reaches this statement. Then the execution will stop and the pdb command line will open, for example
+
+\begin{verbatim}
+> ./lxmls-toolkit/lxmls/classifiers/gaussian_naive_bayes.py(27)train()
+-> nr_x,nr_f = x.shape
+(Pdb) 
+\end{verbatim} 
+
+This would be the same as locating a breakpoint in any debugging environment. The difference is that we now navigate through the code from a command line rather than an editor. For this purpose there are a number of commands you can use. The complete list can be found here http://docs.python.org/library/pdb.html, but we provide here a short table with the most useful  
+
+\begin{table}[!h]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+(h)elp           & Starts the help menu\\
+(p)rint          & Print a variable\\
+(p)retty(p)rint	 & Print a variable, with line break (useful for lists)\\
+\hline
+(n)ext line      & Jump to next line\\ 
+(s)tep           & Jump inside of the function we stopped at\\
+c(ont(inue))     & Continue execution until finding breakpoint or finishing\\
+(r)eturn         & Continue execution until current function returns\\
+b(reak) n        & Set a breakpoint in in line n\\
+\hline
+l(ist) [n], [m]  & Print 11 lines around current line. Optionally starting in line n or between lines n, m\\
+w(here)          & Shows which function called the function we are in, and upwards (stack\footnotemark)\\
+u(p)             & Goes one level up the stack (frame of the function that called the function we are on)\\
+d(down)          & Goes one level down the stack\\
+\hline
+\textit{blank}          & Repeat last command\\ 
+\textit{expression}     & Executes python expression as if it were in current frame\\
+\hline
+\end{tabular}
+\end{center}
+\caption{\label{tb::pdbbasiccommands}Basic pdb/ipdb commands, parentheses indicates abbreviation}
+\end{table}
+
+\footnotetext{Note that since we are inside the IPython command line, the IPython functions will also appear at the top.}
+
+So getting back to our example, we can type n(ext) once to execute the line we stopped at
+
+\begin{verbatim}
+(Pdb) n
+> ./lxmls-toolkit/lxmls/classifiers/gaussian_naive_bayes.py(29)train()
+-> classes = np.unique(y)
+\end{verbatim}
+
+Now we can inspect the two variables we just created using the p(retty)p(rint) option
+
+\begin{verbatim}
+(Pdb) pp nr_x,nr_f
+(50, 2)
+\end{verbatim}
+
+From here we could keep advancing with the n(ext) option or set a b(reak) point and type c(ontinue) to jump to a new position. We could also execute any python expression which is valid in the current frame (the function we stopped at). This is particularly useful to find out why code crushes, as we can try different alternatives without the need to restart the code again.
+
 \subsection{Plotting in Python - Matplotlib}
 
 Matplotlib is a plotting library for Python. It supports \textsc{2d} and
