@@ -14,7 +14,7 @@ IPython, which stands for \emph{interactive Python}, is an improved Python
 shell. It saves your command history between sessions, has basic auto-complete,
 and has internal support for interacting with graphs through matplotlib.
 
-IPython is also designed to facilitate running parallel code of clusters of
+IPython is also designed to facilitate running parallel code on clusters of
 machines, but we will not make use of that functionality.
 
 To run IPython, simply run \texttt{ipython} on your command line. For
@@ -59,6 +59,23 @@ def myfunction(x):
 
 %prun myfunction(22)
 \end{python}
+
+\subsubsection{Extending basic Functionalities with Modules}
+
+In python you can load new functionalities into the language by using the \code{import}, \code{from} and \code{as} keywords. For example we can load the numpy module as
+
+\begin{python}
+import numpy as np
+\end{python}
+
+then we can run following on the ipython command line
+
+\begin{verbatim}
+np.var?
+np.random.normal?
+\end{verbatim}
+
+The import  will make the numpy tools available through the alias \code{np}. This shorter alias prevents the code from getting too long if we load lots of modules. The first command will display the help for the method \code{numpy.var} using the previously commented symbol \code{?}. Note that in order to display the help you need the full name of the function including the module name or alias. Modules have also submodules that can be accessed the same way, as shown in the second example.
 
 \subsubsection{Exiting}
 
@@ -121,7 +138,7 @@ for i in range(2,10,2):
     print i
 \end{python}
 
-The \code{range} function is built int to Python and it creates lists
+The \code{range} function is built into Python and it creates lists
 containing arithmetic progressions. 
 
 \begin{exercise}
@@ -325,6 +342,7 @@ plt.plot(Ints, Ints**2, 'bo')
 # Set the display limits to see better
 plt.xlim(-4.5,4.5)
 plt.ylim(-1,17)
+plt.show()
 \end{python}
 \end{exercise}
 

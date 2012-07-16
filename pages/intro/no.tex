@@ -210,8 +210,7 @@ Make a function that computes the function value given $x$.
 
 \begin{python}
 def get_y(x):
-    value =  pow((x+2),2) - 16*math.exp(-((x-2)**2))
-    return value
+    return (x+2)**2 - 16*math.exp(-((x-2)**2))
 \end{python}
 
 Draw a plot around $x \in [-8,8]$.
