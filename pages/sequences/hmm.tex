@@ -45,7 +45,7 @@ clean''  and ``clean walk tennis walk ''. This will be our test set.
 To train our model, we will be given access to three different sequences of
 days, containing both the activities and the weather on those days, namely: 
 ``walk/rainy walk/sunny shop/sunny
-clean/sunny'', ``walk/rainy walk/rainy shop/rainy clean/rainy '' and ``shop/rainy walk/rainy shop/rainy clean/rainy''. This
+clean/sunny'', ``walk/rainy walk/rainy shop/rainy clean/sunny '' and ``walk/sunny shop/sunny shop/sunny clean/sunny''. This
 will be our training set.
  \end{example}
 
@@ -165,7 +165,7 @@ which for the example from Figure \ref{fig:hmm} is:
 Here is a detailed explanation of the terms:
 \begin{equation}
   \joint = \hspace{-1.5cm}\underbrace{\pi_{r}}_{\text{prob. of starting at state ``r''}} \hspace{-2cm}\overbrace{b_r("w")}^{\text{prob. of observing ``w'' if state is ``r''}} \hspace{-2cm}\underbrace{a_{r,s}}_{\text{prob. of going from state ``r'' to state ``s''}} \hspace{-2cm}\overbrace{b_s("w")}^{\text{prob. of observing ``w'' if state is ``s''}} \hspace{-1cm}\underbrace{a_{s,s}b_s("s") a_{s,s}b_s("c")}_{\text{etc...}} \hspace{-1.5cm}\overbrace{a_{s,STOP}}^{\text{prob. of going from state ``s'' to state ``STOP''}}
-  \label{eqn:hmm_ex}
+%  \label{eqn:hmm_ex}
 \end{equation}
 
 \begin{exercise}
