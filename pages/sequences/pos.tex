@@ -49,12 +49,11 @@ Ignore the warnings -- they are a consequence of our choice of using only a redu
 %estimate the probability of words that were never seen during
 %training, so the counts are zero and, when normalizing to get probabilities, we are trying to do 0/0. 
 
-Look at the transition probabilities of the trained model, using the commands
-\begin{python}
-In []: import matplotlib.pyplot as plt
-In []: hmm.transition_probs
-\end{python}
-
+Look at the transition probabilities of the trained model
+%\begin{python}
+%In []: import matplotlib.pyplot as plt
+%In []: hmm.transition_probs
+%\end{python}
  (see
 Figure \ref{fig:transProbs}), and see if they match your intuition
 about the English language (e.g. adjectives tend to come before nouns).
@@ -125,7 +124,7 @@ Out[]: 0.8377896613190731
 
 Perform some error analysis to understand were the errors are coming
 from. You can start by visualizing the confusion matrix (true tags vs
-predicted tags).
+predicted tags). You should get something like \ref{fig:cm_uns}.
 
 \begin{python}
 In []: run sequences/confusion_matrix.py
