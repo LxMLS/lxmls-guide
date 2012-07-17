@@ -129,6 +129,8 @@ predicted tags).
 \begin{python}
 In []: run sequences/confusion_matrix.py
 In []: cm = build_confusion_matrix(test_seq.seq_list,pred,len(corpus.int_to_tag),hmm.nr_states)
+In []: plot_confusion_bar_graph(cm,corpus.int_to_tag,xrange(hmm.nr_states),tag_colors)
+In[]: plt.show()
 \end{python}
 
 \begin{figure}
