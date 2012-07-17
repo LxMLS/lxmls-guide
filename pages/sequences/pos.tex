@@ -39,7 +39,8 @@ unknown tag pd
 In []: corpus.add_sequence_list(train_seq) 
 In []: run sequences/hmm.py
 In []: hmm = HMM(corpus)
-In []: hmm.train_supervised(train_seq.seqlist)
+In []: hmm.train_supervised(train_seq)
+In []: hmm.print_transition_matrix()
 \end{python}
 
 Ignore the warnings -- they are a consequence of our choice of using only a reduced set of 12 tags instead of the full set of POS tags.
