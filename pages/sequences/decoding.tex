@@ -1,13 +1,14 @@
 Given the learned parameters and an
-observation $\sent$ we want to find the best hidden state sequence
-$\hseq^*$. There are several ways to define what we mean by the best
-$\hseq^*$, for instance, the best assignment to each hidden
-variable $\hs_i$ and the best assignment
-to the sequence $\hseq$ as a whole. 
-The first way, normally called \textbf{Posterior decoding} consists
+observation $\sent$, we want to find the best hidden state sequence
+$\hseq^*$; this is called \emph{decoding}. There are several ways to define what we mean by the best
+$\hseq^*$; for instance, it could be the best assignment to each hidden
+variable $\hs_i$, or the best assignment
+to the sequence $\hseq$ as a whole.
+
+The first way, normally called \textbf{Posterior decoding}, consists
 in picking the highest state posterior for each position in the sequence:
 \begin{equation}
-\hseq^* = \argmax_{\hs_1 \ldots \hs_N} \gamma_i(\hs_i),
+\hseq^* = \argmax_{\hs_1 \ldots \hs_N} b_i(\hs_i)
 \end{equation}
 where $\gamma_i(\hs_i)$ is the posterior probability $P(\hs_i|\sent)$. 
 This method does not guarantee that the sequence $\hseq^*$ is a
@@ -15,14 +16,14 @@ valid sequence of the model. For instance there might be a transition
 probability between two of the best node posteriors with probability
 zero. 
 
-The second approach called \textbf{Viterbi decoding} consists in
+The second approach, called \textbf{Viterbi decoding}, consists in
 picking the best global hidden state sequence $\hseq$. 
 \begin{equation}
 \hseq^* = \argmax_{\hseq} \joint.
 \end{equation}
 
-Both approaches rely on dynamic programming making use of the
-independence assumptions of the HMM model over an alternative
+Both approaches rely on dynamic programming, making use of the
+independence assumptions of the HMM model. They use an alternative
 representation of the HMM called a Trellis (Figure~\ref{fig:trellis}). 
 \begin{figure}
 \centering
@@ -33,72 +34,92 @@ representation of the HMM called a Trellis (Figure~\ref{fig:trellis}).
 \end{figure}
 
 This representation unfolds all possible states for each position and
-makes explicit the independence assumption, each position only
-depends on the previous position. Figure \ref{fig:trellis}  shows the
+makes explicit the independence assumption: each position only
+depends on the previous position. Figure \ref{fig:trellis} shows the
 trellis for the particular example in Figure \ref{hmm}. 
 
 
-Each column represents a position, in the sentence as is associated
-with its observation, and each row represents a possible state. 
-For the algorithms described in the following section it would be
-useful to define a new re-parametrization of the model, in terms of
-node potentials $\phi_n(l)$ (the value of the boxes in Figure \ref{fig:trellis})
-and edge potentials $\phi_n(l,m)$ (the value of the links in  Figure
-\ref{fig:trellis}). There is a direct mapping from the HMM
-parameters to this new representation: 
-\begin{itemize}
-\item\emph{Edge Potentials} - correspond to the transition parameters, with the exception of the
-edges into the last position that correspond to the final transition parameters.
-\item\emph{Node Potentials} - correspond to the observation
-parameters for a given state and the observation at that position.  The
-first position is the exception and corresponds to the
-product between the observation parameters for that state and
-the observation in that position with the initial parameters for that state. 
-\end{itemize}
-
-Although this re-parametrization simplifies the exposition, and will be
-used in these lectures, it is not necessarily very practical since we
-will be reproducing several values (for instance the transition
-parameters for each position).
-Given the node potentials and edge potentials the probability of the
-sequence from the example is:
+Each column represents a position in the sentence, and each row represents a possible state. 
+For the decoding algorithms described in the following sections, it is
+useful to define a re-parametrization of the model in equation \eqref{eqn:hmm}, in terms of
+node potentials $\phi_n(l)$ (associating a number to each box in Figure \ref{fig:trellis})
+and edge potentials $\phi_{n-1,n}(l,m)$ (associating a number to each edge in  Figure
+\ref{fig:trellis}). For our example, this re-parametrization is given by
+%
 \begin{equation}
   \joint =\phi_1(r)\phi_1(r,s)\phi_2(s)\phi_2(s,s)\phi_3(s)\phi_3(s,s)\phi_4(s).
   \label{eqn:hmm_ex_treelis}
 \end{equation}
 
+%\begin{equation}
+%  \joint =\phi_1(``w'',r)\phi_1(r,s)\phi_2(``w'',s)\phi_2(s,s)\phi_3(``s'',s)\phi_3(s,s)\phi_4(``c'',s).
+%  \label{eqn:hmm_ex_treelis}
+%\end{equation}
+
+In other words, to do this re-parameterization we need to find expressions for the potential variables, (the $\phi$'s) such that \eqref{eqn:hmm} and \eqref{eqn:hmm_ex_treelis} are equal. The solution is given by
+\begin{equation}
+\phi_{i-1,i}(l,m) = a_{l,m}
+\label{eq:nodes1}
+\end{equation}
+and
+\begin{equation}
+\phi_i(l) = 
+\begin{cases}
+ b_{\obs_i}(l)\pi_l \quad\text{i = 1}\\
+ b_{\obs_i}(l) \quad\text{i = 2,\ldots,N-1}\\
+ b_{\obs_i}(l)a_{l,STOP} \quad\text{i = N}
+ \label{eq:nodes2}
+\end{cases}
+\end{equation}
+
+
+%\begin{itemize}
+%\item\emph{Edge Potentials} - correspond to the transition parameters, with the exception of the
+%edges into the last position that correspond to the final transition parameters.
+%\item\emph{Node Potentials} - correspond to the observation
+%parameters for a given state and the observation at that position.  The
+%first position is the exception and corresponds to the
+%product between the observation parameters for that state and
+%the observation in that position with the initial parameters for that state. 
+%\end{itemize}
+
+%Although this re-parametrization simplifies the exposition, and will be
+%used in these lectures, it is not necessarily very practical since we
+%will be reproducing several values (for instance the transition
+%parameters for each position).
+
 \begin{exercise}
-Convince yourself that the Equation \ref{eqn:hmm_ex_treelis} is equivalent to equation \ref{eqn:hmm_ex}
+Convince yourself that equation \ref{eqn:hmm_ex_treelis} is equivalent to equation \ref{eqn:hmm_ex}, as long as you use the correspondences in equations \eqref{eq:nodes1} and \eqref{eq:nodes2}.
 
-Implement a function that builds the node and edge potentials for a
-given sequence. The function head is in the \emph{hmm.py} file:
+Use the given function \emph{build\_potentials} on the first training sequence and confirm that the values are correct. You should get the same values as presented below.
+
+%Implement a function that builds the node and edge potentials for a
+%given sequence. The function head is in the \emph{hmm.py} file:
+
+%\begin{python}
+% def build_potentials(self,sequence):
+%\end{python}
+%
+%Run this function for the first training sequence from the simple
+%dataset and compare the results given (If the results are the same
+%then you are ready to go).
 
 \begin{python}
- def build_potentials(self,sequence):
-\end{python}
-
-Run this function for the first training sequence from the simple
-dataset and compare the results given (If the results are the same
-then you are ready to go).
-
-\begin{python}
-In[]:  run sequences/hmm.py
+In[]: run sequences/hmm.py
 In[]: hmm = HMM(simple)
 In[]: hmm.train_supervised(simple.train)
 In[]: node_potentials,edge_potentials = hmm.build_potentials(simple.train.seq_list[0])
 In []: node_potentials
 Out[]: 
 array([[ 0.5       ,  0.75      ,  0.25      ,  0.        ],
-       [ 0.08333333,  0.25      ,  0.375     ,  0.375     ]])
-
+       [ 0.08333333,  0.25      ,  0.375     ,  0.140625  ]])
 In []: edge_potentials
 Out[]: 
-array([[[ 0.66666667,  0.66666667,  0.        ],
-        [ 0.33333333,  0.33333333,  1.        ]],
+array([[[ 0.5  ,  0.5  ,  0.5  ],
+        [ 0.5  ,  0.5  ,  0.5  ]],
 
-       [[ 0.        ,  0.        ,  0.        ],
-        [ 1.        ,  1.        ,  1.        ]]])
-
+       [[ 0.   ,  0.   ,  0.   ],
+        [ 0.625,  0.625,  0.625]]])
 \end{python}
 \end{exercise}
 
@@ -106,7 +127,7 @@ array([[[ 0.66666667,  0.66666667,  0.        ],
 
 \subsection{Posterior Decoding}
 Posterior decoding consists
-in picking the highest state posterior for each position in the sequence:
+in picking the highest state posterior for each position in the sequence independently:
 \begin{equation}
 \hseq^* = \argmax_{\hs_1 \ldots \hs_N} \gamma_i(\hs_i).
 \end{equation}
@@ -116,7 +137,7 @@ hidden state sequence given that we have observed a particular
 sentence. Moreover, we will be interested in two other posteriors distributions:
 the \textbf{state posterior distribution}, corresponding to the
 probability of being in a given state in a certain position given the
-observed sentence; the \textbf{transition posterior distribution},
+observed sentence; and the \textbf{transition posterior distribution},
 which is the probability of making a particular transition, from position $i$ to
 $i+1$ given the observed sentence. 
 
@@ -138,13 +159,13 @@ The number of possible hidden state sequences is exponential in the
 length of the sentence ($|\hvocab|^N$),
  which makes summing over all of them hard. In this particular small
  example there are $2^4 = 16$ such paths and we can actually enumerate
- them explicitly and calculate their probability using Equation \ref{eqn:hmm_ex_treelis}. But this is as far as it goes, for part-of-speech
+ them explicitly and calculate their probability using Equation \ref{eqn:hmm_ex_treelis}. But this is as far as it goes: for part-of-speech
  induction with a small tagset of 12 tags and a medium size
  sentence of length 10, there are $12^{10} = 61 917 364 224$ such
  paths. 
 Yet, we must be able to compute this sum (sum over $\hseq$) to compute the above likelihood
-formula, this is called the inference problem. For sequence models , there is a well know dynamic programming algorithm,
-the \textbf{Forward Backward} algorithm (FB), that allows the computation
+formula; this is called the inference problem. For sequence models, there is a well known dynamic programming algorithm,
+the \textbf{Forward Backward} (FB) algorithm, that allows the computation
 to be performed in linear time, by making use of the independence assumptions.
 
 The FB algorithm relies on the independence of previous states
@@ -158,11 +179,10 @@ The FB algorithm defines two auxiliary probabilities, the forward probability an
 The forward probability represents the probability that in position
 $i$ we are in state $\hs_i = \hv_l$ and that we have observed $\sent$
 up to that position. The forward probability is defined by the
-following recurrence (we will use the marginals parametrization of the
-model): 
+following recurrence (we will use the potentials we defined earlier, in \eqref{eq:nodes1} and \eqref{eq:nodes2}): 
 \begin{eqnarray}
 \alpha_1(\hv_l) &=& \phi_1(l) \\
-\alpha_i(\hv_l) &=& \left[ \displaystyle \sum_{\hv_m \in \hvocab} \phi_{(i-1)}(m,l) \alpha_{i-1}(\hv_m) \right] \phi_i(l) \label{forwardRecursion}
+\alpha_i(\hv_l) &=& \left[ \displaystyle \sum_{\hv_m \in \hvocab} \phi_{i-1,i}(m,l) \alpha_{i-1}(\hv_m) \right] \phi_i(l) \label{forwardRecursion}
 \end{eqnarray}
 
 \begin{figure}
@@ -179,15 +199,14 @@ model):
 \end{center}
 \end{figure}
 
-At position 1, the probability of being in state ``r'' corresponding
-to being in state ``r'' and observing word ``w'' is just the node
-marginal for that position $\phi_1(r) = \alpha_1(r)$ (see Figure
+At position 1, the probability of being in state ``r'' and observing word ``w'' is just the node
+marginal for that position: $\alpha_1(r) = \phi_1(r)$ (see Figure
  \ref{fig:fb} left). At position 2 the probability
 of being in state ``s'' and observing the sequence of words ``w w''
 corresponds to the sum of all possible ways of reaching position 2 in
-state ``s'' namely: ``rs'' or ``ss'' (see Figure \ref{fig:fb} right). The probability of the first is
+state ``s'', namely, ``rs'' and ``ss'' (see Figure \ref{fig:fb} right). The probability of the former is
 $\phi_1(r)\phi_1(r,s)\phi_2(s)$
-and the second is $\phi_1(s)\phi_1(s,s)\phi_2(s)$, so:
+and that of the latter is $\phi_1(s)\phi_1(s,s)\phi_2(s)$, so we get:
 \begin{eqnarray*}
    \alpha_2(s) &=& \phi_1(r)\phi_1(r,s)\phi_2(s) +
    \phi_1(s)\phi_1(s,s)\phi_2(s) \\
@@ -218,27 +237,26 @@ represents the probability of observing $\sent$ from position $i+1$ up to $N$, g
 The backward recurrence is given by:
 \begin{eqnarray}
 \beta_N(\hv_l) &=& 1 \\
-\beta_i(\hv_l) &=& \displaystyle \sum_{\hv_m \in \hvocab} \phi_i(l,m)\phi_{i+1}(m) \beta_{i+1}(\hv_m).
+\beta_i(\hv_l) &=& \displaystyle \sum_{\hv_m \in \hvocab} \phi_{i,i+1}(l,m)\phi_{i+1}(m) \beta_{i+1}(\hv_m).
 %a_{l,m} b_m(\obs_{i+1}) \beta_{i+1}(\hv_m).
 \end{eqnarray}
 The backward probability is similar to the forward probability, but operates in the inverse direction.
 At position $N$ there are no more observations, and the backward
-probability is set to 1. At position $i$ the probability 
+probability is set to 1. At position $i$, the probability 
 of having observed the future and being in state $\hv_l$, is given by the sum for all possible states of the probability of having transitioned 
-from position $i$ in state $\hv_l$ to position $i+1$ with state $\hv_m$ and observed $\obs_{i+1}$ at time $i+1$ and the future given by  $\beta_{i+1}(\hs_{i+1} = \hv_m)$. 
+from position $i$ with state $\hv_l$ to position $i+1$ with state $\hv_m$, and observing $\obs_{i+1}$ at time $i+1$ and the future from there onward, which is $\beta_{i+1}(\hs_{i+1} = \hv_m)$. 
 
-With the FB probability one can compute the likelihood of a given sentence using any position in the sentence.
+With the FB probabilities one can compute the likelihood of a given sentence using any position in the sentence.
 \begin{equation}
 \label{eq::fbsanity}
-  \marginal = \displaystyle \sum_{\hseq} \joint =  \forall{i}
+  \marginal = \displaystyle \sum_{\hseq} \joint = 
   \displaystyle \sum_{\hv \in \hvocab} \alpha_i(\hv) \beta_i(\hv).
 \end{equation}
 
-Note that for time N, $\beta_N(\hv) = 1$ and we get back to equation
+This equation will work for any choice of $i$. Note that for time $N$, $\beta_N(\hv) = 1$ and we get back to equation
 \ref{eq:forwardSum}. Although redundant, this fact is useful when implementing an
 HMM as a sanity check that the computations are being performed
-correctly, since one can compare the likelihood at each position that
-should be the same. The FB algorithm may fail for long
+correctly, since one can compute this expression for several $i$; they should all yield the same value. The FB algorithm may fail for long
 sequences since the nested multiplication of numbers smaller than 1
 may easily become smaller than the machine precision. To avoid that
 problem, \cite{rabiner} presents a scaled version of the FB algorithm that avoids this problem.
@@ -257,7 +275,7 @@ Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm.
         \FOR{$i=2$ {\bfseries to} $N$}
          \FOR{$\hv_l \in \hvocab$ }
                  \STATE $\alpha_i(\hv_l) = \left[ \displaystyle
-                   \sum_{m  \in \hvocab} \phi_{(i-1)}(m,l)
+                   \sum_{m  \in \hvocab} \phi_{i-1,i}(m,l)
                    \alpha_{i-1}(\hv_m) \right] \phi_i(l)$
          \ENDFOR 
         \ENDFOR 
@@ -267,7 +285,7 @@ Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm.
         \STATE $\beta_N(\hv_l) = 1$
         \ENDFOR 
        \FOR{$i=N-1$ {\bfseries to} 1}
-        \STATE $\beta_i(\hv_l) = \displaystyle \sum_{\hv_m \in \hvocab} \phi_i(l,m)\phi_{i+1}(m) \beta_{i+1}(\hv_m).$
+        \STATE $\beta_i(\hv_l) = \displaystyle \sum_{\hv_m \in \hvocab} \phi_{i,i+1}(l,m)\phi_{i+1}(m) \beta_{i+1}(\hv_m).$
         \ENDFOR 
        \STATE \textbf{output:} The forward and backward probabilities
        $\alpha$ and $\beta$
@@ -277,31 +295,31 @@ Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm.
 
 
 \begin{exercise}
-Given the implementation of the forward pass of the forward backward
-algorithm in the file \emph{forward\_backward.py} implement the backward pass.
-\begin{python}
+%Given the implementation of the forward pass of the forward backward
+%algorithm in the file \emph{forward\_backward.py}, implement the backward pass.
+%\begin{python}
+%
+%def forward_backward(node_potentials,edge_potentials):
+%    H,N = node_potentials.shape
+%    forward = np.zeros([H,N],dtype=float)
+%    backward = np.zeros([H,N],dtype=float)
+%    forward[:,0] = node_potentials[:,0]
+%    ## Forward loop
+%    for pos in xrange(1,N):
+%        for current_state in xrange(H):
+%            for prev_state in xrange(H):
+%                forward_v = forward[prev_state,pos-1]
+%                trans_v = edge_potentials[prev_state,current_state,pos-1]
+%                prob = forward_v*trans_v
+%                forward[current_state,pos] += prob
+%            forward[current_state,pos] *= node_potentials[current_state,pos]
+%    ## Backward loop
+%          ## Your code
+%   return forward,backward
+%
+%\end{python}
 
-def forward_backward(node_potentials,edge_potentials):
-    H,N = node_potentials.shape
-    forward = np.zeros([H,N],dtype=float)
-    backward = np.zeros([H,N],dtype=float)
-    forward[:,0] = node_potentials[:,0]
-    ## Forward loop
-    for pos in xrange(1,N):
-        for current_state in xrange(H):
-            for prev_state in xrange(H):
-                forward_v = forward[prev_state,pos-1]
-                trans_v = edge_potentials[prev_state,current_state,pos-1]
-                prob = forward_v*trans_v
-                forward[current_state,pos] += prob
-            forward[current_state,pos] *= node_potentials[current_state,pos]
-    ## Backward loop
-          ## Your code
-   return forward,backward
-
-\end{python}
-
-Use the provided function that makes use of Equation \ref{eq::fbsanity} to make
+Run the provided forward-backward algorithm on the first train sequence. Use the provided function that makes use of Equation \ref{eq::fbsanity} to make
 sure your implementation is correct:
  
 \begin{python}
@@ -310,11 +328,11 @@ In[]: hmm = HMM(simple)
 In[]: hmm.train_supervised(simple.train)
 In[]: forward,backward =  hmm.forward_backward(simple.train.seq_list[0])
 In []: sanity_check_forward_backward(forward,backward)
-Out[]: 
-array([[ 0.03613281],
-       [ 0.03613281],
-       [ 0.03613281],
-       [ 0.03613281]])
+[[ 0.00629354]
+ [ 0.00629354]
+ [ 0.00629354]
+ [ 0.00629354]]
+Out[8]: True
 \end{python}
 \end{exercise}
 
@@ -324,12 +342,12 @@ and transition posteriors.
 \begin{align}
  \mathbf{State \ Posterior\!:}\;\;\;\;   \gamma_i(\hv_l) &= p_\theta(\hs_i = \hv_l \mid \sent) = \frac{\alpha_i(\hv_l) \beta_i(\hv_l)}{\marginal}; \label{eq::nodePosterior2} \\
  \mathbf{Transition \ Posterior\!:}\;\;\;\;  \xi_i(\hv_l,\hv_m) &= p_\theta(\hs_i = \hv_l, \hs_{i+1}= \hv_m  \mid \sent) \nonumber\\
- &=  \frac{\alpha_i(\hv_l) \phi_i(l,m)\phi_{i+1}(m)\beta_{i+1}(\hv_m)}{\marginal}.\label{eq::edgePosterior2}
+ &=  \frac{\alpha_i(\hv_l) \phi_{i,i+1}(l,m)\phi_{i+1}(m)\beta_{i+1}(\hv_m)}{\marginal}.\label{eq::edgePosterior2}
 \end{align}
 A graphical representation of these posteriors is illustrated in figure~\ref{fig:posteriors}. 
-On the left it is shown that $\alpha_i(\hv_l) \beta_i(\hv_l)$ returns the sum of all paths that contain the state $y_i$, weighted by $\joint$, and on the right we can see that $\alpha_i(\hv_l) \phi_i(l,m)\phi_{i+1}(m)\beta_{i+1}(\hv_m)$ returns the same for all paths containing the edge from $y_l$ to $y_m$.
+On the left it is shown that $\alpha_i(\hv_l) \beta_i(\hv_l)$ returns the sum of all paths that contain the state $y_i$, weighted by $\joint$; on the right we can see that $\alpha_i(\hv_l) \phi_{i,i+1}(l,m)\phi_{i+1}(m)\beta_{i+1}(\hv_m)$ returns the same for all paths containing the edge from $y_l$ to $y_m$.
 Thus, these posteriors can be seen as the ratio of the number of paths that contain the given state or transition (weighted by $\joint$) and the number of possible paths in the graph $\marginal$.
-As an practical example, given that the person perform the sequence of actions ``w w s c", we want to know the probability of having been raining in the second day. The state posterior probability for this event can be seen as the probability that the sequence of actions ``walk walk shop clean" was generated by a sequence of weathers and where it was raining in the second day. In this case, the possible sequences would be "r r r r", "s r r r", "r r s r", "r r r s", "s r s r", "s r r s", "r r s s", and "s r s s".
+As an practical example, given that the person perform the sequence of actions ``w w s c", we want to know the probability of having been raining in the second day. The state posterior probability for this event can be seen as the probability that the sequence of actions ``walk walk shop clean" was generated by a sequence of weathers and where it was raining in the second day. In this case, the possible sequences would be "r r r r", "s r r r", "r r s r", "r r r s", "s r s r", "s r r s", "r r s s", and "s r s s" (\emph{i.e.}, all the sequences which have "r" in the second position).
 
 \begin{figure}
 \begin{center}
@@ -343,8 +361,8 @@ As an practical example, given that the person perform the sequence of actions `
 \end{center}
 \end{figure}
 
-Using the node posteriors we are ready to perform posterior
-decoding. Algorithm \ref{alg:pd} shown the posterior decoding algorithm.
+Using the node posteriors, we are ready to perform posterior
+decoding. Algorithm \ref{alg:pd} shows the posterior decoding algorithm.
 
 \begin{algorithm}[t]
    \caption{Posterior Decoding algorithm \label{alg:pd}}
@@ -377,13 +395,12 @@ decoding. Algorithm \ref{alg:pd} shown the posterior decoding algorithm.
 
 \begin{exercise}
 Given the node and edge posterior formulas \ref{eq::nodePosterior},\ref{eq::edgePosterior} and the
-  forward and backward formulas \ref{eq::forward},\ref{eq::backward} convince yourself that formulas
+  forward and backward formulas \ref{eq::forward},\ref{eq::backward}, convince yourself that formulas
   \ref{eq::nodePosterior2},\ref{eq::edgePosterior2} are correct. 
 
-Compute the node posteriors for the first training sentence, and look at
-the output. Can you come up with a sanity check for calculating the
-posteriors (Hint: Note that the node posteriors are a proper
-probability distribution).
+Compute the node posteriors for the first training sentence (use the provided \emph{get\_node\_posteriors} function), and look at
+the output. Note that the node posteriors are a proper
+probability distribution (the columns of the result sum to 1).
 
 \begin{python}
 In[]:  run sequences/hmm.py
@@ -393,73 +410,73 @@ In [15]: node_posteriors = hmm.get_node_posteriors(simple.train.seq_list[0])
 
 In [16]: node_posteriors
 Out[16]: 
-array([[ 0.91891892,  0.75675676,  0.43243243,  0.        ],
-       [ 0.08108108,  0.24324324,  0.56756757,  1.        ]])
+array([[ 0.95738152,  0.75281282,  0.26184794,  0.        ],
+       [ 0.04261848,  0.24718718,  0.73815206,  1.        ]])
 \end{python}
+\end{exercise}
 
-Implement the posterior decode method using the method you tried previously. 
-\begin{python}
-def posterior_decode(self,seq):
-\end{python}
+\begin{exercise}
+%Implement the posterior decode method using the \emph{get\_node\_posteriors} method you tried in the previous exercise. 
+%\begin{python}
+%def posterior_decode(self,seq):
+%\end{python}
 
 Run the posterior decode on the first test sequence, and evaluate it.
  
 \begin{python}
-In[]:  run sequences/hmm.py
+In[]: run sequences/hmm.py
 In[]: hmm = HMM(simple)
 In[]: hmm.train_supervised(simple.train)
-In [19]: y_pred = hmm.posterior_decode(simple.test.seq_list[0])
-In [20]: w/r w/r s/s c/s
-Out[20]: array([0, 0, 1, 1])
-In [21]: simple.test.seq_list[0]
-Out[21]: w/r w/s s/s c/s
+In[]: y_pred = hmm.posterior_decode(simple.test.seq_list[0])
+In[]: y_pred
+Out[]: w/r w/r s/s c/s
+In[]: simple.test.seq_list[0]
+Out[]: w/r w/s s/s c/s
 \end{python}
 
 Do the same for the second test sentence:
 \begin{python}
-In [22]: y_pred = hmm.posterior_decode(simple.test.seq_list[1])
-In [23]: y_pred
-Out[23]: c/r w/r t/r w/r
-In [24]: simple.test.seq_list[1]
-Out[24]: c/s w/s t/s w/s 
+In[]: y_pred = hmm.posterior_decode(simple.test.seq_list[1])
+In[]: y_pred
+Out[]: c/r w/r t/r w/r
+In[]: simple.test.seq_list[1]
+Out[]: c/s w/s t/s w/s 
 \end{python}
 
-What is wrong? Observe the observations for that sentence. In fact the
-observation t was never seen at training time, so the probability for
-it will be zero (no matter what state) and make all possible state
-sequences have zero probability (the value 0 is just the default.
+What is wrong? Note the observations for the second test sentence: the
+observation "t" was never seen at training time, so the probability for
+it will be zero (no matter what state). This will make all possible state
+sequences have zero probability.
 As seen in the previous lecture, this is a problem with generative
-models, that can be corrected using smoothing (there are other
+models, which can be corrected using smoothing (among other
 options).
 
-Change your train method to add smoothing:
+Change the \emph{train\_supervised} method to add smoothing:
 \begin{python}
 def train_supervised(self,sequence_list, smoothing):
 \end{python}
 
-Repeat the last exercise with the new parameters. What do you observe?
+Try, for example, adding 1 to all the counts, and repeating this exercise with that smoothing. What do you observe?
 \end{exercise}
 
+Note that if you use smoothing when training, the sanity checks mentioned at the start of this chapter are no longer true. For example, the sum of all the transition counts is no longer equal to the number of tokens -- it is larger.
 
-Note that if you use smoothing when training you need to account for
-that in the counts sanity checks you did in the previous exercise.
-
-\begin{exercise}
-Change the function you just created \emph{ def
-  sanity\_check\_counts(self,seq\_list):} to account for smoothing. Make
-sure it works properly.
-
-\begin{python}
-In []: run sequences/hmm.py
-In []: hmm = HMM(simple)
-In []: hmm.collect_counts_from_corpus(simple.train,smoothing=0.1)
-In []: hmm.sanity_check_counts(simple.train,smoothing=0.1)
-Init Counts match
-Final Counts match
-Transition Counts match
-Observations Counts match
-\end{python}
-\end{exercise}
+%\begin{exercise}
+%Change the function you just created \emph{ def
+%  sanity\_check\_counts(self,seq\_list):} to account for smoothing. Make
+%sure it works properly.
+%
+%\begin{python}
+%In []: run sequences/hmm.py
+%In []: hmm = HMM(simple)
+%In []: hmm.collect_counts_from_corpus(simple.train,smoothing=0.1)
+%In []: hmm.sanity_check_counts(simple.train,smoothing=0.1)
+%Init Counts match
+%Final Counts match
+%Transition Counts match
+%Observations Counts match
+%\end{python}
+%\end{exercise}
 
 
 \subsection{Viterbi Decoding}
@@ -473,9 +490,8 @@ picking the best global hidden state sequence $\hseq$.
 
 The viterbi algorithm 
 is very similar to the forward procedure of the FB algorithm,
-making use of the same trellis structure to efficiently represent and 
-use all the exponential number of sequences. In fact the only
-difference from the forward algorithm is in the recursion
+making use of the same trellis structure to efficiently represent the exponential number of sequences without prohibitive computation costs. In fact, the only
+difference from the forward-backward algorithm is in the recursion
 \ref{forwardRecursion} where instead of summing over all possible 
 hidden states, we take their maximum.
 
@@ -487,13 +503,13 @@ The viterbi trellis represents the path with maximum probability in
 position
 $i$ when we are in state $\hs_i = \hv_l$ and that we have observed $\sent$
 up to that position. The viterbi algorithm is defined by the
-following recurrence (we will use the marginals parametrization of the
-model): 
+following recurrence (we again use the potentials defined in equations \eqref{eq:nodes1} and \eqref{eq:nodes2}): 
 \begin{eqnarray}
 \delta_1(\hv_l) &=& \phi_1(l) \\
-\delta_i(\hv_l) &=& \left[ \max_{y_1 ... y_i} \phi_{(i-1)}(m,l)
+\delta_i(\hv_l) &=& \left[ \max_{y_1 ... y_i} \phi_{i-1,i}(m,l)
   \delta_{i-1}(\hv_m) \right] \phi_i(l) \label{viterbiRecursion} \\
-\psi_{i}(\hv_l) &=& \left[ \argmax_{y_1 ... y_i} \right]
+\psi_{i}(\hv_l) &=& \left[ \argmax_{y_1 ... y_i} \phi_{i-1,i}(m,l)
+  \delta_{i-1}(\hv_m) \right]
 %\phi_{(i-1)}(m,l)  \delta_{i-1}(\hv_m) \right] \phi_i(l) \label{viterbiBackpointers}
 \end{eqnarray}
 
@@ -511,7 +527,7 @@ Algorithm \ref{alg:viterbi} shows the pseudo code for the Viterbi algorithm.
         \FOR{$i=2$ {\bfseries to} $N$}
          \FOR{$\hv_l \in \hvocab$ }
                  \STATE $\delta_i(\hv_l) = \left[ \displaystyle
-                   \max_{m  \in \hvocab} \phi_{(i-1)}(m,l)
+                   \max_{m  \in \hvocab} \phi_{i-1,i}(m,l)
                    \delta_{i-1}(\hv_m) \right] \phi_i(l)$
                  \STATE $\psi_{i}(\hv_l) = m$
          \ENDFOR 
@@ -529,7 +545,7 @@ Algorithm \ref{alg:viterbi} shows the pseudo code for the Viterbi algorithm.
 
 
 \begin{exercise}
-Implement a method for performing viterbi decoding.
+Implement a method for performing viterbi decoding. You can use our implementation of posterior decoding (the function \emph{posterior\_decode}) for reference.
 \begin{python}
         def viterbi_decode(self,seq):
 \end{python}
@@ -542,8 +558,11 @@ In []: y_pred
 Out[]: w/r w/r s/r c/s 
 In []: y_pred = hmm.viterbi_decode(simple.test.seq_list[1])
 In []: y_pred
-Out[]: c/r w/r t/r w/r 
+Out[]: c/s w/s t/s w/s 
 \end{python}
+
+Note: since we didn't run the \emph{train\_supervised} method again, we are still using the result of the training using smoothing. Therefore, you should compare these results to the ones of posterior decoding with smoothing.
+
 \end{exercise}
 
 

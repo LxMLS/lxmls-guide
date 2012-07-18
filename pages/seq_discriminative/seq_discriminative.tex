@@ -1,6 +1,6 @@
 In this class, we will continue to focus on sequence classification,
 but instead of following a \emph{generative} approach (like in the previous
-chapter) we move towards \emph{discriminative} approaches.
+chapter) we move towards \emph{discriminative} approaches. Recall that the difference between these approaches is that generative approaches attempt to model the probability distribution of the data, $p_{\theta} (\sent, \hseq )$ whereas discriminative ones only model the conditional probability of the sequence, given the observed data, $p_{\theta} (\hseq | \sent )$.
 
 \begin{table}
 \centering
@@ -41,32 +41,31 @@ extended to structured problems, given the perceptron example.
 Before we explain the particular methods, the next section will talk a
 bit about feature representation for sequences. 
 
+Throughout this chapter, we will be searching for the solution of 
 
 \begin{equation}
-\argmax_{\hseq} = p_{\theta} (\hseq | \sent ) = \theta \cdot  f(\sent,\hseq) \label{eq::struc_pred} 
+\argmax_{\hseq} p_{\theta} (\hseq | \sent ) = \argmax_{\hseq} \theta \cdot  f(\sent,\hseq) \label{eq::struc_pred} 
 \end{equation}
 
 As in the previous section, $\hseq$ is a sequence so the maximization
-is over an exponential number of objects, making it intractable. Again
-we will assume a first order markov independence assumption, and so the
-features will decompose as the model. So Equation
+is over an exponential number of objects, making it intractable by brute force methods. Again
+we will make a first order Markov independence assumption, and so the
+features will decompose as the model. Therefore, expression
 ~\ref{eq::struc_pred} can be written as:
 
 \begin{equation}
-\argmax_{\hseq} = \sum_N \sum_{\hseq} \theta \cdot
+\argmax_{\hseq} \sum_N \sum_{\hseq} \theta \cdot
 f(n,\hs_n,\sent_n)  + \sum_N \sum_{\hs_n \in \hvocab} \theta \cdot f(n,\hs_n,\hs_{n-1},\sent_n)\label{eq::struc_pred_decompose} 
 \end{equation}
-
-
 
 \section{\label{seq::features} Feature Extraction}
 
 In this section we will define two simple feature sets. The first one
 will only use identity features, and will mimic the features used by
-the HMM model from the previous section. This will allow to directly
+the HMM model from the previous section. This will allow us to directly
 compare the performance of a generative vs a discriminative
 approach. Note that although not required, all the features we will use
-in this section are binary features (0-1), indicating the presence or
+in this section are binary features, indicating the presence or
 absence of a given condition. 
 
 \begin{table}
@@ -78,8 +77,8 @@ Condition & Name\\
 $\hs_i = l \text{  } \& \text{  } t =0 $& Initial State \\
 \hline
 $\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m$& Transition Features \\
-\hline
-$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
+%\hline
+%$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
 \hline
 $\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
 \hline
@@ -89,35 +88,35 @@ $\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
 \end{center}
 \end{table}
 
-\begin{example}
-Simple ID Feature set containing the same features as an HMM model.
-\begin{python}
-0 Ms./NOUN NF: id:Ms.::NOUN init_tag:NOUN 
-1 Haag/NOUN NF: id:Haag::NOUN EF: prev_tag:NOUN::NOUN 
-2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
-3 Elianti/NOUN NF: id:Elianti::NOUN EF: prev_tag:VERB::NOUN 
-4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
-\end{python}
-\end{example}
+%\begin{example}
+%Simple ID Feature set containing the same features as an HMM model.
+%\begin{python}
+%0 Ms./NOUN NF: id:Ms.::NOUN init_tag:NOUN 
+%1 Haag/NOUN NF: id:Haag::NOUN EF: prev_tag:NOUN::NOUN 
+%2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
+%3 Elianti/NOUN NF: id:Elianti::NOUN EF: prev_tag:VERB::NOUN 
+%4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
+%\end{python}
+%\end{example}
 
 Table~\ref{id-features} depicts the features that are implicit in the HMM, which was the subject of 
-the previous chapter. These features are indicators of initial, final, observation and transition events. 
+the previous chapter. These features are indicators of initial, observation and transition events. 
 The fact that we were using a generative model has forced us (in some sense) to 
 make strong independence assumptions. 
 However, since we now move to a discriminative approach, where we model $P(\hseq|\sent)$ rather than $P(\sent,\hseq)$, we are not tied anymore to 
 some of these assumptions. In particular: 
 \begin{itemize}
 \item We may use ``overlapping'' features, \emph{e.g.}, features that fire simultaneously for many instances. 
-For example, we can use a feature for a word and another for prefixes and suffixes of that word. 
+For example, we can use a feature for a word, such as a feature which fires for the word "brilliantly", and another for prefixes and suffixes of that word, such as one which fires if the last two letters of the word are "ly".
 This would lead to an awkward model if we wanted to insist on a generative approach. 
-\item We may use features that depend arbitrarily on the entire \emph{input} sequence $\sent$. On the other hand, 
+\item We may use features that depend arbitrarily on the \emph{entire input sequence} $\sent$. On the other hand, 
 we still need to resort to ``local'' features with respect to the \emph{outputs} (\emph{e.g.} looking only at consecutive state pairs), 
 otherwise decoding algorithms will become more expensive.  
 \end{itemize}
 Table~\ref{ex-features} shows examples of features that are traditionally used in POS tagging with discriminative models.  
 Of course, we could have much more complex features, looking arbitrarily to 
 the input sequence. We are not going to have them in this
-exercise only for performance reasons (to have less features and smaller caches).
+exercise only for performance reasons (to have less features and smaller caches). State-of-the-art sequence classifiers can easily reach over one million features!
 
 \begin{table}
 \begin{center}
@@ -128,8 +127,8 @@ Condition & Name\\
 $\hs_i = l \text{  } \& \text{  } t =0 $& Initial State \\
 \hline
 $\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m$& Transition Features \\
-\hline
-$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
+%\hline
+%$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
 \hline
 $\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
 \hline
@@ -153,16 +152,16 @@ $\sent_i = a \text{  } \& \text{  } a_{[N-i..N]} \forall i \in [1,2,3] \text{  }
 \end{table}
 
 
-\begin{example}
-
-\begin{python}
-0 Ms./NOUN NF: id:Ms.::NOUN uppercased::NOUN suffix:.::NOUN suffix:s.::NOUN prefix:M::NOUN prefix:Ms::NOUN init_tag:NOUN 
-1 Haag/NOUN NF: id:Haag::NOUN uppercased::NOUN suffix:g::NOUN suffix:ag::NOUN suffix:aag::NOUN prefix:H::NOUN prefix:Ha::NOUN prefix:Haa::NOUN rare::NOUN EF: prev_tag:NOUN::NOUN 
-2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
-3 Elianti/NOUN NF: id:Elianti::NOUN uppercased::NOUN suffix:i::NOUN suffix:ti::NOUN suffix:nti::NOUN prefix:E::NOUN prefix:El::NOUN prefix:Eli::NOUN rare::NOUN EF: prev_tag:VERB::NOUN 
-4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
-\end{python}
-\end{example}
+%\begin{example}
+%
+%\begin{python}
+%0 Ms./NOUN NF: id:Ms.::NOUN uppercased::NOUN suffix:.::NOUN suffix:s.::NOUN prefix:M::NOUN prefix:Ms::NOUN init_tag:NOUN 
+%1 Haag/NOUN NF: id:Haag::NOUN uppercased::NOUN suffix:g::NOUN suffix:ag::NOUN suffix:aag::NOUN prefix:H::NOUN prefix:Ha::NOUN prefix:Haa::NOUN rare::NOUN EF: prev_tag:NOUN::NOUN 
+%2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
+%3 Elianti/NOUN NF: id:Elianti::NOUN uppercased::NOUN suffix:i::NOUN suffix:ti::NOUN suffix:nti::NOUN prefix:E::NOUN prefix:El::NOUN prefix:Eli::NOUN rare::NOUN EF: prev_tag:VERB::NOUN 
+%4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
+%\end{python}
+%\end{example}
 
 We consider two kinds of features: \emph{node features}, which form a vector $\boldsymbol{f}_N(\sent,\hv_i)$, 
 and \emph{edge features}, which form a vector $\boldsymbol{f}_E(\sent,\hv_i,\hv_{i-1})$.% 
@@ -215,7 +214,7 @@ already implemented for HMMs: the Viterbi algorithm (for 1) and the forward-back
 
 \section{\label{s:spercetron}Structured Perceptron}
 
-The structured perceptron \citep{collins2002discriminative}, namely its averaged version is a very simple
+The structured perceptron \citep{collins2002discriminative}, namely its averaged version, is a very simple
 algorithm that relies on Viterbi decoding and very simple additive
 updates. In practice this algorithm is very easy to implement and
 behaves remarkably well in a variety of problems. These two
@@ -251,82 +250,98 @@ There are only two differences:
   along with the assumption that the features
   decompose as the model, as explained in the previous section.
 \item Instead of updating the features for the entire $y'$ (in this
-  case $\hseq$) we update the features only at the positions were the
-  labels are different. 
+  case $\hseq$) we update the features only at the positions where the
+  labels are different (note that step 6 of algorithm \ref{alg:structured-perceptron} just keeps the current value of the weights if the predicted and true labels are the same).
 \end{itemize}
 
 
 \begin{exercise}\label{exer:strucperc1}
 In this exercise you will test the structured perceptron algorithm
-using different feature sets for \pos\ Tagging.
-
-Start by loading the corpus and creating an IDFeature class. Next
-initialize the perceptron and train the algorithm. 
-
+using different feature sets for \pos\ Tagging. Start with the code below, which uses the ID feature set from table \ref{id-features}.
 \begin{python}
-import sys
-sys.path.append("readers/" )
-sys.path.append("sequences/" )
-
-import pos_corpus as pcc
-import id_feature as idfc
-
-import structured_perceptron as spc
+import sequences.structured_perceptron as spc
+import sequences.crf_batch as crfc
+import readers.pos_corpus as pcc
+import sequences.id_feature as idfc
+import sequences.extended_feature as exfc
 
 
-posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
-id_f = idfc.IDFeatures(posc)
+print "Perceptron Exercise"
+corpus = pcc.PostagCorpus()
+train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
+test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=15,max_nr_sent=1000)
+dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=15,max_nr_sent=1000)
+corpus.add_sequence_list(train_seq) 
+id_f = idfc.IDFeatures(corpus)
 id_f.build_features()
-sp = spc.StructuredPercetron(posc,id_f)
+sp = spc.StructuredPercetron(corpus,id_f)
 sp.nr_rounds = 20
-sp.train_supervised(posc.train.seq_list)
+sp.train_supervised(train_seq.seq_list)
 
-Epoch: 0 Accuracy: 0.617797
-Epoch: 1 Accuracy: 0.797775
-Epoch: 2 Accuracy: 0.864115
-Epoch: 3 Accuracy: 0.901794
-Epoch: 4 Accuracy: 0.925644
-Epoch: 5 Accuracy: 0.932659
-Epoch: 6 Accuracy: 0.938872
-Epoch: 7 Accuracy: 0.946087
-Epoch: 8 Accuracy: 0.949193
-Epoch: 9 Accuracy: 0.950696
-Epoch: 10 Accuracy: 0.952701
-Epoch: 11 Accuracy: 0.952600
-Epoch: 12 Accuracy: 0.956910
-Epoch: 13 Accuracy: 0.956108
-Epoch: 14 Accuracy: 0.956408
-Epoch: 15 Accuracy: 0.958413
-Epoch: 16 Accuracy: 0.957110
-Epoch: 17 Accuracy: 0.959014
-Epoch: 18 Accuracy: 0.959315
-Epoch: 19 Accuracy: 0.960216
 \end{python}
+You will get some messages about "unknown tags", which are a consequence of using a reduced set of 12 POS tags instead of the full set. You will also receive feedback when each epoch is finished.
+%\begin{python}
+%import sys
+%sys.path.append("readers/" )
+%sys.path.append("sequences/" )
+%
+%import pos_corpus as pcc
+%import id_feature as idfc
+%
+%import structured_perceptron as spc
+%
+%
+%posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
+%id_f = idfc.IDFeatures(posc)
+%id_f.build_features()
+%sp = spc.StructuredPercetron(posc,id_f)
+%sp.nr_rounds = 20
+%sp.train_supervised(posc.train.seq_list)
+%
+%Epoch: 0 Accuracy: 0.617797
+%Epoch: 1 Accuracy: 0.797775
+%Epoch: 2 Accuracy: 0.864115
+%Epoch: 3 Accuracy: 0.901794
+%Epoch: 4 Accuracy: 0.925644
+%Epoch: 5 Accuracy: 0.932659
+%Epoch: 6 Accuracy: 0.938872
+%Epoch: 7 Accuracy: 0.946087
+%Epoch: 8 Accuracy: 0.949193
+%Epoch: 9 Accuracy: 0.950696
+%Epoch: 10 Accuracy: 0.952701
+%Epoch: 11 Accuracy: 0.952600
+%Epoch: 12 Accuracy: 0.956910
+%Epoch: 13 Accuracy: 0.956108
+%Epoch: 14 Accuracy: 0.956408
+%Epoch: 15 Accuracy: 0.958413
+%Epoch: 16 Accuracy: 0.957110
+%Epoch: 17 Accuracy: 0.959014
+%Epoch: 18 Accuracy: 0.959315
+%Epoch: 19 Accuracy: 0.960216
+%\end{python}
 
-Now evaluate the learned model on both the development and test set.
+After training is done, evaluate the learned model on the training, development and test sets.
 \begin{python}
-pred_train = sp.viterbi_decode_corpus(posc.train.seq_list)
-pred_dev = sp.viterbi_decode_corpus(posc.dev.seq_list)
-pred_test = sp.viterbi_decode_corpus(posc.test.seq_list)
-eval_train = sp.evaluate_corpus(posc.train.seq_list,pred_train)
-eval_dev = sp.evaluate_corpus(posc.dev.seq_list,pred_dev)
-eval_test = sp.evaluate_corpus(posc.test.seq_list,pred_test)
+pred_train = sp.viterbi_decode_corpus(train_seq.seq_list)
+pred_dev = sp.viterbi_decode_corpus(dev_seq.seq_list)
+pred_test = sp.viterbi_decode_corpus(test_seq.seq_list)
+
+eval_train = sp.evaluate_corpus(train_seq.seq_list,pred_train)
+eval_dev = sp.evaluate_corpus(dev_seq.seq_list,pred_dev)
+eval_test = sp.evaluate_corpus(test_seq.seq_list,pred_test)
+
 print "Structured Percetron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
-
-Out[]: Structured Percetron - ID Features Accuracy Train: 0.867 Dev: 0.831 Test: 0.790
-
-
 \end{python}
 
-Compare with the results achieved with the HMM model.
-
+You should get values similar to these:
 \begin{python}
-Best Smoothing 1.000000 --  Test Set Accuracy: Posterior Decode 0.809, Viterbi Decode: 0.777
+Out[]: Structured Percetron - ID Features Accuracy Train: 0.968 Dev: 0.864 Test: 0.852
+
 \end{python}
 \end{exercise}
 
-Even using a similar feature set the perceptron yields better
-results. Perform some error analysis and figure out what are the main
+Compare with the results achieved with the HMM model (0.838 on the test set, from the previous lecture). Even using a similar feature set the structured perceptron yields better
+results than the HMM from the previous lecture. Perform some error analysis and figure out what are the main
 errors the perceptron is making. Compare them with the errors made
 by the HMM model. (Hint: use the methods developed in the previous
 lecture to help you with the error analysis).
@@ -336,57 +351,40 @@ lecture to help you with the error analysis).
 Repeat the previous exercise using the extended feature set. Compare the results.
 
 \begin{python}
-import extended_feature as exfc
-
-ex_f = exfc.ExtendedFeatures(posc)
+ex_f = exfc.ExtendedFeatures(corpus)
 ex_f.build_features()
-sp = spc.StructuredPercetron(posc,ex_f)
+sp = spc.StructuredPercetron(corpus,ex_f)
 sp.nr_rounds = 20
-sp.train_supervised(posc.train.seq_list)
+sp.train_supervised(train_seq.seq_list)
 
-Epoch: 0 Accuracy: 0.638741
-Epoch: 1 Accuracy: 0.807596
-Epoch: 2 Accuracy: 0.876541
-Epoch: 3 Accuracy: 0.907406
-Epoch: 4 Accuracy: 0.921836
-Epoch: 5 Accuracy: 0.939974
-Epoch: 6 Accuracy: 0.940575
-Epoch: 7 Accuracy: 0.948893
-Epoch: 8 Accuracy: 0.948893
-Epoch: 9 Accuracy: 0.950095
-Epoch: 10 Accuracy: 0.954404
-Epoch: 11 Accuracy: 0.957110
-Epoch: 12 Accuracy: 0.954605
-Epoch: 13 Accuracy: 0.956910
-Epoch: 14 Accuracy: 0.956509
-Epoch: 15 Accuracy: 0.956609
-Epoch: 16 Accuracy: 0.958012
-Epoch: 17 Accuracy: 0.959014
-Epoch: 18 Accuracy: 0.957411
-Epoch: 19 Accuracy: 0.958413
+pred_train = sp.viterbi_decode_corpus(train_seq.seq_list)
+pred_dev = sp.viterbi_decode_corpus(dev_seq.seq_list)
+pred_test = sp.viterbi_decode_corpus(test_seq.seq_list)
 
-pred_train = sp.viterbi_decode_corpus(posc.train.seq_list)
-pred_dev = sp.viterbi_decode_corpus(posc.dev.seq_list)
-pred_test = sp.viterbi_decode_corpus(posc.test.seq_list)
+eval_train = sp.evaluate_corpus(train_seq.seq_list,pred_train)
+eval_dev = sp.evaluate_corpus(dev_seq.seq_list,pred_dev)
+eval_test = sp.evaluate_corpus(test_seq.seq_list,pred_test)
 
-eval_train = sp.evaluate_corpus(posc.train.seq_list,pred_train)
-eval_dev = sp.evaluate_corpus(posc.dev.seq_list,pred_dev)
-eval_test = sp.evaluate_corpus(posc.test.seq_list,pred_test)
-
-print "Structured Percetron - Extended Features Accuracy Train: %.3f  Dev: %.3f Test:   %.3f"%(eval_train,eval_dev,eval_test)
-
-Structured Percetron - Extended Features Accuracy Train: 0.946  Dev: 0.868 Test:   0.840
+print "Structured Percetron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
 
 \end{python}
 
+You should get values close to the following:
+\begin{python}
+Structured Percetron - Extended Features Accuracy Train: 0.970 Dev: 0.913 Test: 0.903
+\end{python}
 
 Compare the errors obtained with the two different feature
-sets. Perform some feature analysis, what errors were correct by using
+sets. Do some error analysis: what errors were correct by using
 more features? Can you think of other features to use to solve the
 errors found?
 \end{exercise}
 
-
+The main lesson to learn from this exercise is that, usually, if you are not satisfied by the accuracy of your algorithm, you can perform some error analysis and find out which errors your algorithm is making. You can then add more features which attempt to improve those specific errors (this is known as \emph{feature engineering}). This can lead to two problems:
+\begin{itemize}
+\item More features will make training and decoding more expensive. For example, if you add features that depend on the current word and the previous word, the number of new features is the square of the number of different words, which is quite large. For example, the Penn Treebank has around 40000 different words, so you are adding a lot of new features, even though not all pairs of words will ever occur. Features that depend on three words (previous, current, and next) are even more numerous.
+\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfit problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
+\end{itemize}
 
 
 \section{\label{s:crf}Conditional Random Fields}
@@ -408,7 +406,7 @@ perceptron to structured perceptron:
 \item Instead of finding the posterior marginal $P(y'|x)$ for a given
   variable, it finds the posterior marginals for all factors (nodes and edges), 
   $P(\hseq_i | \sent)$ and  $P(\hseq_i, \hseq_{i-1}| \sent)$. 
-  We can compute this quantities by using the forward-backward algorithm with the node and edge potentials 
+  We can compute these quantities by using the forward-backward algorithm with the node and edge potentials 
   defined in Eqs.~\ref{dis_node_potentials}--\ref{dis_edge_potentials}, 
   along with the assumption that the features
   decompose as the model, as explained in the previous section.
@@ -453,53 +451,70 @@ $$P_{\boldsymbol{\theta}^t}(\hseq|\sent) = \frac{1}{Z(\boldsymbol{\theta}^t,\sen
 Repeat Exercises~\ref{exer:strucperc1}--\ref{exer:strucperc2} using a CRF model instead of the perceptron algorithm. 
 Report the results. 
 
-Here is the code for the simple feature set:
+Here is the code for the simple feature set (note: this code doesn't give feedback while it's running, and it can take several minutes to run, even on a fast computer; just be patient):
+
+%\begin{python}
+%import crf_batch as crfc
+%posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
+%id_f = idfc.IDFeatures(posc)
+%id_f.build_features()
+%
+%
+%crf = crfc.CRF_batch(posc,id_f)
+%crf.train_supervised(posc.train.seq_list)
+%
+%pred_train = crf.viterbi_decode_corpus(posc.train.seq_list)
+%pred_dev = crf.viterbi_decode_corpus(posc.dev.seq_list)
+%pred_test = crf.viterbi_decode_corpus(posc.test.seq_list)
+%
+%eval_train = crf.evaluate_corpus(posc.train.seq_list,pred_train)
+%eval_dev = crf.evaluate_corpus(posc.dev.seq_list,pred_dev)
+%eval_test = crf.evaluate_corpus(posc.test.seq_list,pred_test)
+%
+%print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+%Out[]: CRF - ID Features Accuracy Train: 0.920 Dev: 0.863 Test: 0.830
+%\end{python}
 
 \begin{python}
-import crf_batch as crfc
-posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
-id_f = idfc.IDFeatures(posc)
-id_f.build_features()
+crf = crfc.CRF_batch(corpus,id_f)
+crf.train_supervised(train_seq.seq_list)
 
+pred_train = crf.viterbi_decode_corpus(train_seq.seq_list)
+pred_dev = crf.viterbi_decode_corpus(dev_seq.seq_list)
+pred_test = crf.viterbi_decode_corpus(test_seq.seq_list)
 
-crf = crfc.CRF_batch(posc,id_f)
-crf.train_supervised(posc.train.seq_list)
-
-pred_train = crf.viterbi_decode_corpus(posc.train.seq_list)
-pred_dev = crf.viterbi_decode_corpus(posc.dev.seq_list)
-pred_test = crf.viterbi_decode_corpus(posc.test.seq_list)
-
-eval_train = crf.evaluate_corpus(posc.train.seq_list,pred_train)
-eval_dev = crf.evaluate_corpus(posc.dev.seq_list,pred_dev)
-eval_test = crf.evaluate_corpus(posc.test.seq_list,pred_test)
+eval_train = crf.evaluate_corpus(train_seq.seq_list,pred_train)
+eval_dev = crf.evaluate_corpus(dev_seq.seq_list,pred_dev)
+eval_test = crf.evaluate_corpus(test_seq.seq_list,pred_test)
 
 print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
-Out[]: CRF - ID Features Accuracy Train: 0.920 Dev: 0.863 Test: 0.830
+\end{python}
+
+You should get close to these results (apart from some warnings which you can safely ignore):
+\begin{python}
+CRF - ID Features Accuracy Train: 0.936 Dev: 0.858 Test: 0.853
 \end{python}
 
 Here is the code for the extended feature set:
 
 \begin{python}
+crf = crfc.CRF_batch(corpus,ex_f)
+crf.train_supervised(train_seq.seq_list)
 
-posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
-ex_f = exfc.ExtendedFeatures(posc)
-ex_f.build_features()
+pred_train = crf.viterbi_decode_corpus(train_seq.seq_list)
+pred_dev = crf.viterbi_decode_corpus(dev_seq.seq_list)
+pred_test = crf.viterbi_decode_corpus(test_seq.seq_list)
 
-
-crf = crfc.CRF_batch(posc,ex_f)
-crf.train_supervised(posc.train.seq_list)
-
-pred_train = crf.viterbi_decode_corpus(posc.train.seq_list)
-pred_dev = crf.viterbi_decode_corpus(posc.dev.seq_list)
-pred_test = crf.viterbi_decode_corpus(posc.test.seq_list)
-
-eval_train = crf.evaluate_corpus(posc.train.seq_list,pred_train)
-eval_dev = crf.evaluate_corpus(posc.dev.seq_list,pred_dev)
-eval_test = crf.evaluate_corpus(posc.test.seq_list,pred_test)
+eval_train = crf.evaluate_corpus(train_seq.seq_list,pred_train)
+eval_dev = crf.evaluate_corpus(dev_seq.seq_list,pred_dev)
+eval_test = crf.evaluate_corpus(test_seq.seq_list,pred_test)
 
 print "CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+\end{python}
 
-Out[]: CRF - Extended Features Accuracy Train: 0.924 Dev: 0.872 Test: 0.831
+And here are the expected results:
+\begin{python}
+CRF - Extended Features Accuracy Train: 0.595 Dev: 0.587 Test: 0.591
 \end{python}
 
 \end{exercise}
