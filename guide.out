@@ -1,0 +1,64 @@
+\BOOKMARK [0][-]{chapter.0}{Basic Tutorials}{}% 1
+\BOOKMARK [1][-]{section.0.1}{Python}{chapter.0}% 2
+\BOOKMARK [2][-]{subsection.0.1.1}{Running Python}{section.0.1}% 3
+\BOOKMARK [2][-]{subsection.0.1.2}{Python by Example}{section.0.1}% 4
+\BOOKMARK [2][-]{subsection.0.1.3}{Debugging in Python}{section.0.1}% 5
+\BOOKMARK [2][-]{subsection.0.1.4}{Plotting in Python - Matplotlib}{section.0.1}% 6
+\BOOKMARK [2][-]{subsection.0.1.5}{Numpy}{section.0.1}% 7
+\BOOKMARK [1][-]{section.0.2}{Essential Linear Algebra}{chapter.0}% 8
+\BOOKMARK [2][-]{subsection.0.2.1}{Notation}{section.0.2}% 9
+\BOOKMARK [2][-]{subsection.0.2.2}{Some Matrix Operations and Properties}{section.0.2}% 10
+\BOOKMARK [2][-]{subsection.0.2.3}{Norms}{section.0.2}% 11
+\BOOKMARK [2][-]{subsection.0.2.4}{Linear Independence and Rank}{section.0.2}% 12
+\BOOKMARK [1][-]{section.0.3}{Probability Theory}{chapter.0}% 13
+\BOOKMARK [2][-]{subsection.0.3.1}{Probability distribution functions}{section.0.3}% 14
+\BOOKMARK [2][-]{subsection.0.3.2}{ Bernoulli}{section.0.3}% 15
+\BOOKMARK [2][-]{subsection.0.3.3}{ Binomial}{section.0.3}% 16
+\BOOKMARK [2][-]{subsection.0.3.4}{ Categorical}{section.0.3}% 17
+\BOOKMARK [2][-]{subsection.0.3.5}{ Multinomial}{section.0.3}% 18
+\BOOKMARK [2][-]{subsection.0.3.6}{ Gaussian Distribution}{section.0.3}% 19
+\BOOKMARK [2][-]{subsection.0.3.7}{Maximum Likelihood Estimation}{section.0.3}% 20
+\BOOKMARK [2][-]{subsection.0.3.8}{Conjugate Priors}{section.0.3}% 21
+\BOOKMARK [1][-]{section.0.4}{Numerical optimization}{chapter.0}% 22
+\BOOKMARK [2][-]{subsection.0.4.1}{Convex Functions}{section.0.4}% 23
+\BOOKMARK [2][-]{subsection.0.4.2}{Derivative and Gradient}{section.0.4}% 24
+\BOOKMARK [2][-]{subsection.0.4.3}{Gradient Based Methods}{section.0.4}% 25
+\BOOKMARK [0][-]{chapter.1}{Classification}{}% 26
+\BOOKMARK [1][-]{section.1.1}{Notation}{chapter.1}% 27
+\BOOKMARK [1][-]{section.1.2}{Generative Classifiers: Na\357ve Bayes}{chapter.1}% 28
+\BOOKMARK [2][-]{subsection.1.2.1}{Example: 2-D Gaussians}{section.1.2}% 29
+\BOOKMARK [2][-]{subsection.1.2.2}{Example: Multinomial Model for Document Classification}{section.1.2}% 30
+\BOOKMARK [1][-]{section.1.3}{Features and Linear Classifiers}{chapter.1}% 31
+\BOOKMARK [1][-]{section.1.4}{ Online Algorithms: Perceptron and MIRA}{chapter.1}% 32
+\BOOKMARK [2][-]{subsection.1.4.1}{ Perceptron}{section.1.4}% 33
+\BOOKMARK [2][-]{subsection.1.4.2}{Margin Infused Relaxed Algorithm \(MIRA\)}{section.1.4}% 34
+\BOOKMARK [1][-]{section.1.5}{Discriminative Classifiers: Maximum Entropy and Support Vector Machines}{chapter.1}% 35
+\BOOKMARK [2][-]{subsection.1.5.1}{Maximum Entropy Classifiers}{section.1.5}% 36
+\BOOKMARK [2][-]{subsection.1.5.2}{Support Vector Machines}{section.1.5}% 37
+\BOOKMARK [1][-]{section.1.6}{Comparison}{chapter.1}% 38
+\BOOKMARK [1][-]{section.1.7}{Final remarks}{chapter.1}% 39
+\BOOKMARK [0][-]{chapter.2}{Sequence Models}{}% 40
+\BOOKMARK [1][-]{section.2.1}{ Hidden Markov Models}{chapter.2}% 41
+\BOOKMARK [1][-]{section.2.2}{ Finding the Maximum Likelihood Parameters}{chapter.2}% 42
+\BOOKMARK [1][-]{section.2.3}{ Finding the most likely sequence - Decoding}{chapter.2}% 43
+\BOOKMARK [2][-]{subsection.2.3.1}{Posterior Decoding}{section.2.3}% 44
+\BOOKMARK [2][-]{subsection.2.3.2}{Viterbi Decoding}{section.2.3}% 45
+\BOOKMARK [1][-]{section.2.4}{ Part-of-Speech Tagging \(POS\)}{chapter.2}% 46
+\BOOKMARK [0][-]{chapter.3}{Learning Structured Predictors}{}% 47
+\BOOKMARK [1][-]{section.3.1}{ Feature Extraction}{chapter.3}% 48
+\BOOKMARK [1][-]{section.3.2}{Structured Perceptron}{chapter.3}% 49
+\BOOKMARK [1][-]{section.3.3}{Conditional Random Fields}{chapter.3}% 50
+\BOOKMARK [0][-]{chapter.4}{Syntax and Parsing}{}% 51
+\BOOKMARK [1][-]{section.4.1}{Phrase-based Parsing}{chapter.4}% 52
+\BOOKMARK [2][-]{subsection.4.1.1}{Context Free Grammars}{section.4.1}% 53
+\BOOKMARK [2][-]{subsection.4.1.2}{Ambiguity}{section.4.1}% 54
+\BOOKMARK [2][-]{subsection.4.1.3}{Probabilistic Context-Free Grammars}{section.4.1}% 55
+\BOOKMARK [2][-]{subsection.4.1.4}{The CKY Parsing Algorithm}{section.4.1}% 56
+\BOOKMARK [2][-]{subsection.4.1.5}{Learning the Grammar}{section.4.1}% 57
+\BOOKMARK [2][-]{subsection.4.1.6}{Model Refinements}{section.4.1}% 58
+\BOOKMARK [1][-]{section.4.2}{Dependency Parsing}{chapter.4}% 59
+\BOOKMARK [2][-]{subsection.4.2.1}{Motivation}{section.4.2}% 60
+\BOOKMARK [2][-]{subsection.4.2.2}{Projective and Non-projective Parsing}{section.4.2}% 61
+\BOOKMARK [2][-]{subsection.4.2.3}{Algorithms for Projective Dependency Parsing}{section.4.2}% 62
+\BOOKMARK [2][-]{subsection.4.2.4}{Algorithms for Non-Projective Dependency Parsing}{section.4.2}% 63
+\BOOKMARK [2][-]{subsection.4.2.5}{Model Refinements}{section.4.2}% 64
