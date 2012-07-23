@@ -268,9 +268,9 @@ import sequences.extended_feature as exfc
 
 print "Perceptron Exercise"
 corpus = pcc.PostagCorpus()
-train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
-test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=15,max_nr_sent=1000)
-dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=15,max_nr_sent=1000)
+train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=10,max_nr_sent=1000)
+test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=10,max_nr_sent=1000)
+dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=10,max_nr_sent=1000)
 corpus.add_sequence_list(train_seq) 
 id_f = idfc.IDFeatures(corpus)
 id_f.build_features()
@@ -280,45 +280,6 @@ sp.train_supervised(train_seq.seq_list)
 
 \end{python}
 You will get some messages about "unknown tags", which are a consequence of using a reduced set of 12 POS tags instead of the full set. You will also receive feedback when each epoch is finished.
-%\begin{python}
-%import sys
-%sys.path.append("readers/" )
-%sys.path.append("sequences/" )
-%
-%import pos_corpus as pcc
-%import id_feature as idfc
-%
-%import structured_perceptron as spc
-%
-%
-%posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
-%id_f = idfc.IDFeatures(posc)
-%id_f.build_features()
-%sp = spc.StructuredPercetron(posc,id_f)
-%sp.nr_rounds = 20
-%sp.train_supervised(posc.train.seq_list)
-%
-%Epoch: 0 Accuracy: 0.617797
-%Epoch: 1 Accuracy: 0.797775
-%Epoch: 2 Accuracy: 0.864115
-%Epoch: 3 Accuracy: 0.901794
-%Epoch: 4 Accuracy: 0.925644
-%Epoch: 5 Accuracy: 0.932659
-%Epoch: 6 Accuracy: 0.938872
-%Epoch: 7 Accuracy: 0.946087
-%Epoch: 8 Accuracy: 0.949193
-%Epoch: 9 Accuracy: 0.950696
-%Epoch: 10 Accuracy: 0.952701
-%Epoch: 11 Accuracy: 0.952600
-%Epoch: 12 Accuracy: 0.956910
-%Epoch: 13 Accuracy: 0.956108
-%Epoch: 14 Accuracy: 0.956408
-%Epoch: 15 Accuracy: 0.958413
-%Epoch: 16 Accuracy: 0.957110
-%Epoch: 17 Accuracy: 0.959014
-%Epoch: 18 Accuracy: 0.959315
-%Epoch: 19 Accuracy: 0.960216
-%\end{python}
 
 After training is done, evaluate the learned model on the training, development and test sets.
 \begin{python}
@@ -335,13 +296,15 @@ print "Structured Percetron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %
 
 You should get values similar to these:
 \begin{python}
-Out[]: Structured Percetron - ID Features Accuracy Train: 0.968 Dev: 0.864 Test: 0.852
+Out[]: Structured Percetron - ID Features Accuracy Train: 0.972 Dev: 0.799 Test: 0.811
+
 
 \end{python}
 \end{exercise}
 
-Compare with the results achieved with the HMM model (0.838 on the test set, from the previous lecture). Even using a similar feature set the structured perceptron yields better
-results than the HMM from the previous lecture. Perform some error analysis and figure out what are the main
+%Compare with the results achieved with the HMM model (0.838 on the test set, from the previous lecture). Even using a similar feature set the structured perceptron yields better
+%results than the HMM from the previous lecture. 
+Perform some error analysis and figure out what are the main
 errors the perceptron is making. Compare them with the errors made
 by the HMM model. (Hint: use the methods developed in the previous
 lecture to help you with the error analysis).
@@ -371,7 +334,7 @@ print "Structured Percetron - Extended Features Accuracy Train: %.3f Dev: %.3f T
 
 You should get values close to the following:
 \begin{python}
-Structured Percetron - Extended Features Accuracy Train: 0.970 Dev: 0.913 Test: 0.903
+Structured Percetron - Extended Features Accuracy Train: 0.973 Dev: 0.887 Test: 0.881
 \end{python}
 
 Compare the errors obtained with the two different feature
@@ -453,27 +416,6 @@ Report the results.
 
 Here is the code for the simple feature set (note: this code doesn't give feedback while it's running, and it can take several minutes to run, even on a fast computer; just be patient):
 
-%\begin{python}
-%import crf_batch as crfc
-%posc = pcc.PostagCorpus("en",max_sent_len=15,train_sents=1000,dev_sents=200,test_sents=200)
-%id_f = idfc.IDFeatures(posc)
-%id_f.build_features()
-%
-%
-%crf = crfc.CRF_batch(posc,id_f)
-%crf.train_supervised(posc.train.seq_list)
-%
-%pred_train = crf.viterbi_decode_corpus(posc.train.seq_list)
-%pred_dev = crf.viterbi_decode_corpus(posc.dev.seq_list)
-%pred_test = crf.viterbi_decode_corpus(posc.test.seq_list)
-%
-%eval_train = crf.evaluate_corpus(posc.train.seq_list,pred_train)
-%eval_dev = crf.evaluate_corpus(posc.dev.seq_list,pred_dev)
-%eval_test = crf.evaluate_corpus(posc.test.seq_list,pred_test)
-%
-%print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
-%Out[]: CRF - ID Features Accuracy Train: 0.920 Dev: 0.863 Test: 0.830
-%\end{python}
 
 \begin{python}
 crf = crfc.CRF_batch(corpus,id_f)
@@ -492,7 +434,7 @@ print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,
 
 You should get close to these results (apart from some warnings which you can safely ignore):
 \begin{python}
-CRF - ID Features Accuracy Train: 0.936 Dev: 0.858 Test: 0.853
+CRF - ID Features Accuracy Train:  ID Features Accuracy Train: 0.970 Dev: 0.856 Test: 0.868
 \end{python}
 
 Here is the code for the extended feature set:
@@ -514,7 +456,7 @@ print "CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_
 
 And here are the expected results:
 \begin{python}
-CRF - Extended Features Accuracy Train: 0.595 Dev: 0.587 Test: 0.591
+CRF - Extended Features Accuracy Train: 0.990 Dev: 0.903 Test: 0.901
 \end{python}
 
 \end{exercise}
