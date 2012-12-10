@@ -264,7 +264,7 @@ denote by $\mathcal{I}_k$ the indices of those instances belonging to the $k$th 
 The maximum likelihood estimates of the quantities above are: 
 \begin{eqnarray}\label{eq:mlemultinomial}
 {\hat P}(c_k) = \frac{|\mathcal{I}_k|}{M}, \qquad
-{\hat P}(w_j|c_k) = \frac{\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{\sum_ {m} n_j(x^m)}.
+{\hat P}(w_j|c_k) = \frac{\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{\sum_{i=1}^J \sum_ {m\in \mathcal{I}_k} n_i(x^m)}.
 \end{eqnarray}
 In words: the class priors' estimates are their relative frequencies (as before), and 
 the class-conditional word probabilities are the relative frequencies of those words across documents with that class.
@@ -309,7 +309,7 @@ print "Multinomial Naive Bayes Amazon Sentiment Accuracy train: %f test: %f"%(ac
 To solve this problem, apply a simple \emph{add-one} smoothing technique: replace the expression in Eq.~\ref{eq:mlemultinomial} 
 for the estimation of the conditional probabilities 
 by
-$${\hat P}(w_j|c_k) = \frac{1+\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{J + \sum_ {m} n_j(x^m)}.$$
+$${\hat P}(w_j|c_k) = \frac{1+\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{J + \sum_{i=1}^J \sum_ {m\in \mathcal{I}_k} n_i(x^m)}.$$
 %$${\hat P}(w_j|c_k) = \frac{1+\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{J + |\mathcal{I}_k|}.$$
 
 
