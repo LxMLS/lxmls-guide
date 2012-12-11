@@ -1,35 +1,41 @@
-\subsection{Running Python}
+\subsection{Two ways of using Python: File versus Interactive Command Line}
 
-You can access and run Python interactively, simply by running the
-\texttt{python} command. Alternatively, you can save your program to a file
-and run python on it:
+There are two main ways in which you can use Python. The first is to write python code in a file with your favourite text editor and run it. The first program in every new language is usually a program printing the "Hello World" message. Lets do this in python, just create a file named \texttt{yourfile.py} and write in it
+
+\begin{python}
+print 'Hello World!'
+\end{python}
+\noindent you can then run it by calling 
 
 \begin{verbatim}
 python yourfile.py
 \end{verbatim}
 
-In these lab sessions, we are going to be using Python in interactive mode
-several times. The standard Python interface is not very friendly, though.
-IPython, which stands for \emph{interactive Python}, is an improved Python
-shell. It saves your command history between sessions, has basic auto-complete,
-and has internal support for interacting with graphs through matplotlib.
+This should run the program and display the message "Hello World!" returning the control to the command line.
 
-IPython is also designed to facilitate running parallel code on clusters of
-machines, but we will not make use of that functionality.
+The second way is to simply start an interactive command line by running the command \texttt{python}. In the python command line you can run python code simply by writing it and pressing enter. In these lab sessions, we are going to be using Python in interactive mode several times. The standard Python interface is not very friendly, though. IPython, which stands for \emph{interactive Python}, is an improved Python shell. It saves your command history between sessions, has basic auto-complete, and has internal support for interacting with graphs through matplotlib. IPython is also designed to facilitate running parallel code on clusters of machines, but we will not make use of that functionality.
 
-To run IPython, simply run \texttt{ipython} on your command line. For
-interactive numeric use, the \texttt{--pylab} flag imports numpy and matplotlib
-for you and sets up interactive graphs:
+To run IPython, simply type \texttt{ipython} on your command line\footnotemark\footnotetext{Note that in some systems, e.g. Linux, you may need to run the command lower-cased.}. For interactive numeric use, the \texttt{--pylab} flag imports numpy and matplotlib for you and sets up interactive graphs:
 
 \begin{verbatim}
-ipython --pylab
+IPython --pylab
 \end{verbatim}
 
-In some systems you may need to run the command lower-cased:
+You can then run python commands in the IPython command line
 
-\begin{verbatim}
-ipython -pylab
-\end{verbatim}
+\begin{python}
+ In[]: print "Hello, World!"
+Out[]: Hello, World!
+\end{python}
+
+but you can also run python code written into a file.
+
+\begin{python}
+ In[]: run ./yourfile.py
+Out[]: Hello, World!
+\end{python}
+
+Keep in mind that you can easily switch between these two modes. You can quickly test commands in the command line directly and e.g. inspect variables. Larger sections of code can be stored and run from files.
 
 \subsubsection{Help and Documentation}
 
@@ -39,59 +45,16 @@ There are several ways to get help on IPython:
 \item Adding a question mark to the end of a function or variable and pressing Enter brings up associated documentation. Unfortunately, not all packages are well documented. Numpy and matplotlib (the two libraries we will extensively use in the lab sessions) are pleasant exceptions;
 \item \code{help('print')} gets the online documentation for the \code{print} keyword;
 \item \code{help()}, enters the help system.
+\item When at the help system, type \code{q} to exit.
 \end{itemize}
 
-When at the help system, type \code{q} to exit.
-
-For more information on IPython~\citep{PER-GRA:2007}, check the website: \url{http://ipython.scipy.org/moin/}
-
-
-\subsubsection{Profiling}
-
-
-If you are interested in checking the performance of your program, you can use the
-command \%prun in IPython (this is an IPython-only feature). For example:
-
-
-\begin{python}
-def myfunction(x):
-    ...
-
-%prun myfunction(22)
-\end{python}
-
-\subsubsection{Extending basic Functionalities with Modules}
-
-In python you can load new functionalities into the language by using the \code{import}, \code{from} and \code{as} keywords. For example we can load the numpy module as
-
-\begin{python}
-import numpy as np
-\end{python}
-
-then we can run following on the ipython command line
-
-\begin{verbatim}
-np.var?
-np.random.normal?
-\end{verbatim}
-
-The import  will make the numpy tools available through the alias \code{np}. This shorter alias prevents the code from getting too long if we load lots of modules. The first command will display the help for the method \code{numpy.var} using the previously commented symbol \code{?}. Note that in order to display the help you need the full name of the function including the module name or alias. Modules have also submodules that can be accessed the same way, as shown in the second example.
+\noindent For more information on IPython~\citep{PER-GRA:2007}, check the website: \url{http://ipython.scipy.org/moin/}
 
 \subsubsection{Exiting}
 
 Exit IPython by typing \code{exit()} or \code{quit()} (or typing CTRL-D).
 
 \subsection{Python by Example}
-
-%%%% Hello World
-
-The first program of every programmer in every new language prints "Hello,
-World!". In Python, this simply reads:
-
-\begin{python}
- In[]: print "Hello, World!"
-Out[]: Hello, World!
-\end{python}
 
 
 \subsubsection{Data Structures}
@@ -115,16 +78,10 @@ the following:
  Use L[i:j] to return the countries in the Iberian Peninsula.
 \end{exercise}
 
-\subsubsection{Loops}
+\subsubsection{Loops and Indentation}
 
-A loop allows a certain section of code to be repeated a certain number of
-times. The loops continue until a stop condition is reached. For instance, when
-a variable has reached a certain value or when the list you are iterating has
-reached its end. In Python you have \code{while} and \code{for} loops.
-
-The following two programs output exactly the same: the even numbers from 2 to
+A loop allows a section of code to be repeated a certain number of times. The loops continue until a stop condition is reached. For instance, when a variable has reached a certain value or when the list you are iterating has reached its end. In Python you have \code{while} and \code{for} loop statements. The following two example programs output exactly the same using both statements: the even numbers from 2 to
 8.
-
 
 \begin{python}
 i = 2
@@ -138,25 +95,54 @@ for i in range(2,10,2):
     print i
 \end{python}
 
-The \code{range} function is built into Python and it creates lists
-containing arithmetic progressions. 
+You can copy and run this from the IPython command line. Alternatively you can write this into your \texttt{yourfile.py} file an run it as well. Notice something?. It is possible that the code did not act as expected or maybe an error message popped up. This brings us to an important aspect of python: \textbf{indentation}. Indentation is the number of blank spaces at the left-most of each command. This is how Python differentiates between blocks of commands inside or outside a statement, e.g. \code{while}, \code{for} or other. All commands withing one loop or other statement must have the same number of blank spaces at the left. For instance, consider the following code: 
+
+\begin{python}
+a=1
+while a <= 3:
+    print a
+    a += 1
+\end{python}
+
+\noindent and its output:
+
+\begin{python}
+1
+2
+3
+\end{python}
+
 
 \begin{exercise}
-David, John, Allysson and Anne are four of your colleagues in the Summer Course. Create a python program to greet all of them. The output should be\\
-\begin{python} 
-Hello, David!
-Hello, John!
-Hello, Allysson!
-Hello, Anne!
+Can you then predict the output of the following code?:
+
+\begin{python}
+a=1
+while a <= 3:
+    print a
+a += 1
 \end{python}
-Note that you have around 100 colleagues. You should use the data structures you have just learned to minimize the lines of code you are using in this exercise.
+
 \end{exercise}
 
+\noindent Bear in mind that indentation is often the main source of errors when starting to work with python. Try to get use to it as quick as possible. It is also recommendable that you use a text editor that can display all characters e.g. blank space, tabs, since these characters can be visually similar but are considered different by python.
+
+%The \code{range} function is built into Python and it creates lists containing arithmetic progressions. 
+
+%\begin{exercise}
+%David, John, Allysson and Anne are four of your colleagues in the Summer Course. Create a python program to greet all of them. The output should be\\
+%\begin{python} 
+%Hello, David!
+%Hello, John!
+%Hello, Allysson!
+%Hello, Anne!
+%\end{python}
+%Note that you have around 100 colleagues. You should use the data structures you have just learned to minimize the lines of code you are using in this exercise.
+%\end{exercise}
 
 \subsubsection{Control Flow}
 
-The \code{if} statement allows to control the flow of your program. The next
-program makes a greeting that depends on the time of the day.
+The \code{if} statement allows to control the flow of your program. The next program outputs a greeting that depends on the time of the day.
 
 \begin{python}
 if hour < 12:
@@ -182,10 +168,10 @@ def greet(hour):
         print 'Good evening!'
 \end{python}
 
-If you call the function \code{greet} with different hours of the day, the program will greet you accordingly.
+You can write this commands into IPython interactive command line directly or write them into a file and run the file in IPython. Once you do this the function will be available for you to use. Call the function \code{greet} with different hours of the day and see that the program will greet you accordingly.
 
 \begin{exercise}
- Note that the previous code allows the hour to be less than 0 or more than 24. Change the code in order to indicate that the hour given as input is invalid. Your output should be something like:
+Note that the previous code allows the hour to be less than 0 or more than 24. Change the code in order to indicate that the hour given as input is invalid. Your output should be something like:
 
 \begin{python}
 greet(50)
@@ -196,55 +182,35 @@ Invalid hour: it should be between 0 and 24.
 
 \end{exercise}
 
-\subsubsection{Indentation}
+\subsubsection{Profiling}
 
-In Python, indentation is important. This is how Python differentiates between
-nested and non-nested blocks of commands. For instance, consider the following
-code and its output:
+If you are interested in checking the performance of your program, you can use the command \%prun in IPython (this is an IPython-only feature). For example:
 
 \begin{python}
-a=1
-while a <= 3:
-    print a
-    a += 1
+def myfunction(x):
+    ...
+
+%prun myfunction(22)
 \end{python}
+
+\subsubsection{Debugging in Python}
+
+During the lab sessions we will be using the previously described iPython iterative command line which allows you to execute a script command by command. This should limit the need for debugging tools. There will be situations however in which we will be using and extending modules which involve more elaborated code and statements like classes and nested functions. Although desirable, it should not be necessary for you to fully understand the whole code to carry out the exercises. It will suffice to understand the algorithm as explained in the theoretical part of the class and the local context of the part of the code where we will be working. 
+
+The simpler way to do this is to run the code and stop the execution at a given point to get a quick glimpse of the variable structures and what the code does. You can do this with the ipdb module. We can use this module by modifying a previous example as 
 
 \begin{python}
-1
-2
-3
+def greet(hour):
+    if hour < 12:
+        print 'Good morning!'
+    elif hour >= 12 and hour < 20:
+        print 'Good afternoon!'
+    else:
+        import ipdb;ipdb.set_trace()
+        print 'Good evening!'
 \end{python}
 
-
-\begin{exercise}
-Can you predict the output of the following code:
-
-\begin{python}
-a=1
-while a <= 3:
-    print a
-a += 1
-\end{python}
-
-\end{exercise}
-
-\subsection{Debugging in Python}
-
-Python is really easy to program after you get used to a few personality traits e.g. the obligatory spacing. During the lab sessions we will also be using the iPython iterative command line which allows you to execute a script command by command. This should limit the need for debugging tools. There will be situations however in which we will be using and extending modules which involve multiple classes and functions. To get a quick glimpse of the variable structures and what the code does, Python offers the pdb debugging module. In the lab we will be using an improved version of this module called ipdb, which incorporates various advantages like colored text. This module has multiple working modes but we be centering ourselves in the simplest yet most effective mode, just write
-
-\begin{verbatim}
-import ipdb;ipdb.set_trace() 
-\end{verbatim}
- 
-at the position of the code that you want to inspect and run your code. The code will run normally as expected until it reaches this statement. Then the execution will stop and the pdb command line will open, for example
-
-\begin{verbatim}
-> ./lxmls-toolkit/lxmls/classifiers/gaussian_naive_bayes.py(27)train()
--> nr_x,nr_f = x.shape
-(Pdb) 
-\end{verbatim} 
-
-This would be the same as locating a breakpoint in any debugging environment. The difference is that we now navigate through the code from a command line rather than an editor. For this purpose there are a number of commands you can use. The complete list can be found here http://docs.python.org/library/pdb.html, but we provide here a short table with the most useful  
+write this code into a file and run it to have this new definition loaded into IPython. Now if you try \texttt{greet(22)} the code should stop at the place where you located the break-point. You can now run new commands or inspect variables. For this purpose there are a number of commands you can use. The complete list can be found here \url{http://docs.python.org/library/pdb.html}, but we provide here a short table with the most useful  
 
 \begin{table}[!h]
 \begin{center}
@@ -277,26 +243,43 @@ d(down)          & Goes one level down the stack\\
 
 So getting back to our example, we can type n(ext) once to execute the line we stopped at
 
+\begin{python}
+ipdb> n
+> ./lxmls-toolkit/yourfile.py(8)greet()
+      7                 import ipdb;ipdb.set_trace()
+----> 8                 print 'Good evening!' 
+\end{python}
+
+Now we can inspect the variable \texttt{hour} using the p(retty)p(rint) option
+
+\begin{python}
+ipdb> pp hour
+22
+\end{python}
+
+From here we could keep advancing with the n(ext) option or set a b(reak) point and type c(ontinue) to jump to a new position. We could also execute any python expression which is valid in the current frame (the function we stopped at). This is particularly useful to find out why code crashes, as we can try different alternatives without the need to restart the code again.
+
+\subsubsection{Extending basic Functionalities with Modules}
+
+In python you can load new functionalities into the language by using the \code{import}, \code{from} and \code{as} keywords. For example we can load the numpy module as
+
+\begin{python}
+import numpy as np
+\end{python}
+
+then we can run following on the ipython command line
+
 \begin{verbatim}
-(Pdb) n
-> ./lxmls-toolkit/lxmls/classifiers/gaussian_naive_bayes.py(29)train()
--> classes = np.unique(y)
+np.var?
+np.random.normal?
 \end{verbatim}
 
-Now we can inspect the two variables we just created using the p(retty)p(rint) option
+The import  will make the numpy tools available through the alias \code{np}. This shorter alias prevents the code from getting too long if we load lots of modules. The first command will display the help for the method \code{numpy.var} using the previously commented symbol \code{?}. Note that in order to display the help you need the full name of the function including the module name or alias. Modules have also submodules that can be accessed the same way, as shown in the second example.
 
-\begin{verbatim}
-(Pdb) pp nr_x,nr_f
-(50, 2)
-\end{verbatim}
-
-From here we could keep advancing with the n(ext) option or set a b(reak) point and type c(ontinue) to jump to a new position. We could also execute any python expression which is valid in the current frame (the function we stopped at). This is particularly useful to find out why code crushes, as we can try different alternatives without the need to restart the code again.
 
 \subsection{Plotting in Python - Matplotlib}
 
-Matplotlib is a plotting library for Python. It supports \textsc{2d} and
-\textsc{3d} plots of various forms. It can show them interactively or save them
-to a file (several output formats are supported).
+Matplotlib is a plotting library for Python. It supports \textsc{2d} and \textsc{3d} plots of various forms. It can show them interactively or save them to a file (several output formats are supported).
 
 \begin{python}
 import numpy as np
@@ -351,18 +334,11 @@ plt.show()
 
 \subsection{Numpy}
 
-Numpy is a library needed for scientific computing with Python. 
+Numpy is a library for scientific computing with Python.
 
 \subsubsection{Multidimensional Arrays}
 
-The main object of numpy is the multidimensional array. A multidimensional
-array is a table with all elements of the same type and can have several
-dimensions.
-
-Numpy provides various functions to access and manipulate multidimensional
-arrays. In one dimensional arrays, you can index, slice, and iterate as you can
-with lists. In a two dimensional array M, you can use perform these operations
-along several dimensions.
+The main object of numpy is the multidimensional array. A multidimensional array is a table with all elements of the same type and can have several dimensions. Numpy provides various functions to access and manipulate multidimensional arrays. In one dimensional arrays, you can index, slice, and iterate as you can with lists. In a two dimensional array M, you can use perform these operations along several dimensions.
 
 \begin{itemize}
  \item M[i,j], to access the item in the ith row and j-th column; 
@@ -390,9 +366,7 @@ A[1:,0] # This is [ [2], [4] ]. Why?
 
 \subsubsection{Mathematical Operations}
 
-There are many helpful functions in numpy. For basic mathematical operations, we have \code{np.log}, \code{np.exp},
-\code{np.cos},\ldots with the expected meaning. These operate both on single
-arguments and on arrays (where they will behave element wise).
+There are many helpful functions in numpy. For basic mathematical operations, we have \code{np.log}, \code{np.exp}, \code{np.cos},\ldots with the expected meaning. These operate both on single arguments and on arrays (where they will behave element wise).
 
 \begin{python}
 import matplotlib.pyplot as plt
@@ -406,9 +380,7 @@ plt.plot(X, C)
 plt.plot(X, S)
 \end{python}
 
-Other functions take a whole array and compute a single value from it. For
-example, \code{np.sum}, \code{np.mean},\ldots These are available as both free
-functions and as methods on arrays.
+Other functions take a whole array and compute a single value from it. For example, \code{np.sum}, \code{np.mean},\ldots These are available as both free functions and as methods on arrays.
 
 \begin{python}
 import numpy as np
@@ -433,8 +405,7 @@ Consider the following approximation to compute an integral
 \int_0^{1} f(x)dx \approx \sum_{i = 0}^{999} \frac{f(i/1000)}{1000}.
 \]
 
-Use numpy to implement this for $f(x) = x^2$. You should not need to use any
-loops. The exact value is $1/3$. How close is the approximation?
+Use numpy to implement this for $f(x) = x^2$. You should not need to use any loops. The exact value is $1/3$. How close is the approximation?
 \end{exercise}
 
 
