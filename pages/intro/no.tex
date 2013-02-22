@@ -1,18 +1,13 @@
-
-
 Most problems in machine learning require minimization/maximization of functions (likelihoods, risk, energy, entropy, etc.,). Let $x^*$ be the value of $x$ which minimizes the value of some function $f(x)$. Mathematically, this is written as
 
 \begin{equation*}
 x^* = \argmin_x f(x)
 \end{equation*}
 
-In a few special cases, we can solve this minimization problem analytically in closed form (solving for optimal $x^{*}$ in  $\nabla_{x}f(x^{*})=0$), 
-but in most cases it is too cumbersome (or impossible) to solve these equations analytically, and they must be tackled numerically. In this section we will cover some basic notions of numerical optimization. The goal is to provide the intuitions behind the methods that will be used in the rest of the school. There are plenty of good textbooks in the subject that you can consult for more information \citep{Nocedal1999,bertsekas1995np,boyd2004convex}.
+In a few special cases, we can solve this minimization problem analytically in closed form (solving for optimal $x^{*}$ in  $\nabla_{x}f(x^{*})=0$), but in most cases it is too cumbersome (or impossible) to solve these equations analytically, and they must be tackled numerically. In this section we will cover some basic notions of numerical optimization. The goal is to provide the intuitions behind the methods that will be used in the rest of the school. There are plenty of good textbooks in the subject that you can consult for more information \citep{Nocedal1999,bertsekas1995np,boyd2004convex}.
 
-The most common way to solve the problems when no closed form solution is available is to resort to an iterative algorithm. In this Section, we will see some 
-of these iterative optimization techniques. These iterative algorithms compute a sequence of points $x^{(0)},x^{(1)},\ldots \in \text{domain}(f)$ such that hopefully $x^t = x^*$.
+The most common way to solve the problems when no closed form solution is available is to resort to an iterative algorithm. In this Section, we will see some of these iterative optimization techniques. These iterative algorithms construct a sequence of points $x^{(0)},x^{(1)},\ldots \in \text{domain}(f)$ such that hopefully $x^t = x^*$ after a number of iterations.
 Such a sequence is called the {\bf minimizing sequence} for the problem.
-
 
 \subsection{Convex Functions}
 
@@ -29,40 +24,33 @@ One important property of a function $f(x)$ is whether it is a \textbf{convex fu
  \end{figure}
 
 
-Intuitively, imagine dropping a ball on either side of 
-Figure
-\ref{fig:convexfn}, the ball will role to the bottom of the bowl
-independently from where it is dropped. This is the main benefit of a
-convex function. On the other hand, if you drop a ball from the left
-side of Figure \ref{fig:nonconvexfn} it will reach a
-different position than if you drop a ball from its right side. Moreover, dropping it from the left side will lead you to a much better (\emph{i.e.}, lower) place than if you drop the ball from the right side. This is the main problem with non-convex functions: there are no guarantees about the quality of the local minimum you find.
+Intuitively, imagine dropping a ball on either side of Figure \ref{fig:convexfn}, the ball will role to the bottom of the bowl independently from where it is dropped. This is the main benefit of a convex function. On the other hand, if you drop a ball from the left side of Figure \ref{fig:nonconvexfn} it will reach a different position than if you drop a ball from its right side. Moreover, dropping it from the left side will lead you to a much better (\emph{i.e.}, lower) place than if you drop the ball from the right side. This is the main problem with non-convex functions: there are no guarantees about the quality of the local minimum you find.
 
 More formally, some concepts to understand about convex functions are:
 
-A {\bf line segment} between points $x_{1}$ and $x_{2}$: contains all points such that 
+\noindent A {\bf line segment} between points $x_{1}$ and $x_{2}$: contains all points such that 
 \begin{equation*}
 x=\theta x_{1} + (1-\theta)x_{2}
 \end{equation*}
 where $0\leq \theta \leq 1$.
 
 \vspace{0.1in}
-A {\bf convex set} contains the line segment between any two points in the set 
+\noindent A {\bf convex set} contains the line segment between any two points in the set 
 \begin{equation*}
 x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightarrow \hspace{0.12in} \theta x_{1} + (1-\theta)x_{2} \in C
 \end{equation*}
 
 \vspace{0.1in}
-A function $f: \mathbb{R}^{n}\rightarrow R$ is a {\bf convex function} if the domain of $f$ is a convex set and 
+\noindent A function $f: \mathbb{R}^{n}\rightarrow R$ is a {\bf convex function} if the domain of $f$ is a convex set and 
 \begin{equation*}
 f(\theta x + (1-\theta) y) \leq \theta f(x) + (1-\theta) f(y)
 \end{equation*}
 
-for all $x,y \in \text{domain of } f$, $0 \leq \theta \leq 1$
+\noindent for all $x,y \in \text{domain of } f$, $0 \leq \theta \leq 1$
 
 \subsection{Derivative and Gradient}
 
-The \textbf{derivative} of a function is a measure of how the function varies with its input variables. 
-Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval. 
+The \textbf{derivative} of a function is a measure of how the function varies with its input variables. Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval. 
 \begin{equation}
 \frac{f(b) - f(a)}{b-a} 
 \end{equation}
@@ -71,9 +59,9 @@ The derivative can be seen as the limit as the interval goes to zero, and it giv
 \frac {\partial f}{\partial x} = \lim_{h = 0} \frac{f(x+h) - f(x)}{h} 
 \end{equation}
 
-Table \ref{tb::derivatives} shows derivatives of some functions that we will be using during the school. 
+\noindent Table \ref{tb::derivatives} shows derivatives of some functions that we will be using during the school.
 
-\begin{table}
+\begin{table}[!h]
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
@@ -102,22 +90,13 @@ An important rule of derivation is the chain rule. Consider $h=f\circ g$, and $u
 
 \begin{example}
 
-
-Consider the function $h(x)=exp(x^{2})$. \\
-$h(x)=f(g(x))=f(u)=exp(u)$, where $u=g(x)=x^{2}$.\\
-$\frac{\partial h}{\partial x}=\frac{\partial f}{\partial u}\cdot \frac{\partial u}{\partial x}=exp(u) \cdot 2x=exp(x^{2}) \cdot 2x$\\
+Consider the function $h(x)=\exp(x^{2})$, this can be decomposed as $h(x)=f(g(x))=f(u)=\exp(u)$, where $u=g(x)=x^{2}$ and has derivative $\frac{\partial h}{\partial x}=\frac{\partial f}{\partial u}\cdot \frac{\partial u}{\partial x}=\exp(u) \cdot 2x=\exp(x^{2}) \cdot 2x$
 
 \end{example}
 
-\begin{example}
-Consider the function $f(x) = x^2$ and its derivative $\frac{\partial f} {\partial x}$. Look at the derivative of that function at points [-2,0,2], draw the tangent to the graph in that point.
+\begin{exercise}
+Consider the function $f(x) = x^2$ and its derivative $\frac{\partial f} {\partial x}$. Look at the derivative of that function at points [-2,0,2], draw the tangent to the graph in that point $\frac{\partial f}{\partial x}\left(-2\right)=-4$, $\frac{\partial f}{\partial x}\left(0\right)=0$, and $\frac{\partial f}{\partial x}\left(2\right)=4$. For example, the tangent equation for $x=-2$ is $y=-4x - b$, where $b=f(-2)$. The following code plots the function and the derivatives on those points using matplotlib (See Figure \ref{fig:tangents}).
 
-$\frac{\partial f}{\partial x}\left(-2\right)=-4$, $\frac{\partial f}{\partial x}\left(0\right)=0$, and $\frac{\partial f}{\partial x}\left(2\right)=4$
-
-For example, the tangent equation for $x=-2$ is $y=-4x - b$, where $b=f(-2)$
-
-The following code plots the function and the derivatives on those
-points using matplotlib (See Figure \ref{fig:tangents}).
 \begin{python}
 a = np.arange(-5,5,0.01)
 f_x = np.power(a,2)
@@ -143,33 +122,22 @@ for i in k:
 \end{center}
 \end{figure}
 
+\end{exercise}
 
-\end{example}
-
-The \textbf{gradient} of a function is a generalization of the 
-derivative concept we just saw before, for several dimensions. Lets
-assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as
-a pair $x = {x_1,x_2}$. Then, the gradient measures the slope of the
-function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
-
+The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Lets assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as a pair $x = {x_1,x_2}$. Then, the gradient measures the slope of the function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
 
 \subsection{Gradient Based Methods}
 
-Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods used in this class 
-will make use of the function value $f(x)$ as well as the gradient of the function $\nabla_{x} f(x)$. 
-The simplest method is the {\bf Gradient descent} method, an unconstrained first-order optimization algorithm. 
+Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods used in this class will make use of the function value $f(x)$ as well as the gradient of the function $\nabla_{x} f(x)$. The simplest method is the {\bf Gradient descent} method, an unconstrained first-order optimization algorithm.
 
-The intuition of this method is as follows: You start at a given point
-$x_0$ and compute the gradient at that point $\nabla_{x_0} f(x)$. You
-then take a step of length $\eta$ on the direction of the negative
-gradient to find a new point: $x_1$ = $x_0 - \eta \nabla_{x_{0}}
-f(x)$. Then, you compute the gradient at this new point, $\nabla_{x_1} f(x)$, and take a step of length $\eta$ on the direction of the negative
-gradient to find a new point: $x_2$ = $x_1 - \eta \nabla_{x_{1}} f(x)$. You proceed until you have reached a minimum (local or global). Recall from the previous subsection that you can identify the minimum by testing if the norm of the gradient is zero: $||\nabla f(x)|| = 0$.
+The intuition of this method is as follows: You start at a given point $x_0$ and compute the gradient at that point $\nabla_{x_0} f(x)$. You then take a step of length $\eta$ on the direction of the negative gradient to find a new point: $x_1$ = $x_0 - \eta \nabla_{x_{0}}
+f(x)$. Then, you compute the gradient at this new point, $\nabla_{x_1} f(x)$, and take a step of length $\eta$ on the direction of the negative gradient to find a new point: $x_2$ = $x_1 - \eta \nabla_{x_{1}} f(x)$. You proceed until you have reached a minimum (local or global). Recall from the previous subsection that you can identify the minimum by testing if the norm of the gradient is zero: $||\nabla f(x)|| = 0$.
 
-There are several practical concerns even with this basic algorithm to ensure both that the algorithm converges (reaches the minimum) and that it does so in a fast way (by fast we mean the number of function and gradient evaluations). 
+There are several practical concerns even with this basic algorithm to ensure both that the algorithm converges (reaches the minimum) and that it does so in a fast way (by fast we mean the number of function and gradient evaluations).
+
 \begin{itemize}
 \item \textbf{Step Size $\eta$} A first question is how to find the step length $\eta$. One condition is that $eta$ should guarantee sufficient decrease in the function value. We will not cover these methods here but the most common ones are \textbf{Backtracking line search} or the \textbf{Wolf Line Search} \citep{Nocedal1999}.
-\item \textbf{Descent Direction}  A second problem is that using the negative gradient as direction can lead to a very slow convergence. Different methods that change the descent direction by multiplying the gradient by a matrix $\beta$ have been proposed that guarantee a faster convergence. Two notable methods are the Conjugate Gradient (CG) and the Limited Memory Quasi Newton methods (LBFGS) \citep{Nocedal1999}. 
+\item \textbf{Descent Direction}  A second problem is that using the negative gradient as direction can lead to a very slow convergence. Different methods that change the descent direction by multiplying the gradient by a matrix $\beta$ have been proposed that guarantee a faster convergence. Two notable methods are the Conjugate Gradient (CG) and the Limited Memory Quasi Newton methods (LBFGS) \citep{Nocedal1999}.
 \item \textbf{Stopping Criteria} Finally, it will normally not be possible to reach full convergence either because it will be too slow, or because of numerical issues (computers cannot perform exact arithmetic). So normally we need to define a stopping criteria for the algorithm. Three common criteria (that are normally used together) are: a maximum number of iterations; the gradient norm be smaller than a given threshold   $||\nabla f(x)|| \leq \eta_1$, or the normalized difference in the function value be smaller than a given threshold $\frac{|f(x_t) - f(x_{t-1})|}{\max(|f(x_t)|,|f(x_{t-1})|)} \leq \eta_2$
 \end{itemize}
 
@@ -195,7 +163,6 @@ Algorithm \ref{alg:graddescent} shows the general gradient based algorithm. Note
 \end{center}
 \end{figure}
 
-
 % Gradient descent can work in any number of dimensions.  The process can also include {\bf line search} 
 % to determine the locally optimal $\eta$ in each iteration. For non-differentiable functions, gradient 
 % methods are ill-defined. Also, the procedure can take many iterations to converge to a local minimum 
@@ -210,8 +177,7 @@ Make a function that computes the function value given $x$.
 
 \begin{python}
 def get_y(x):
-    value =  pow((x+2),2) - 16*math.exp(-((x-2)**2))
-    return value
+    return (x+2)**2 - 16*np.exp(-((x-2)**2))
 \end{python}
 
 Draw a plot around $x \in [-8,8]$.
@@ -230,7 +196,7 @@ def get_grad(x):
     return (2*x+4)-16*(-2*x + 4)*np.exp(-((x-2)**2))
 \end{python}
 
-Use the method \emph{gradient\_descent} to find the minimum of this function. Convince yourself that the code is doing the proper thing. Look at the constants we defined. Note, that we are using a simple approach to pick the step size (always have the value step\_size) which is not necessarily correct. 
+Use the method \emph{gradient\_descent} to find the minimum of this function. Convince yourself that the code is doing the proper thing. Look at the constants we defined. Note, that we are using a simple approach to pick the step size (always have the value step\_size) which is not necessarily correct.
 
 \begin{python}
 def gradient_descent(start_x,func,grad):
@@ -301,12 +267,7 @@ plot(res[:,0],res[:,1],'+')
 \end{figure}
 
 
-Figure \ref{fig:gradex2} shows the resulting minimizing sequence. Note
-that now the algorithm converged to the global minimum. However, note
-that to get to the global minimum the sequence of points jumped from one side of the minimum to the other. This is a consequence of using a wrong step size (in this case too large).
-
-
-Repeat the previous exercise changing both the values of the step-size and the precision. What do you observe?
+Figure \ref{fig:gradex2} shows the resulting minimizing sequence. Note that now the algorithm converged to the global minimum. However, note that to get to the global minimum the sequence of points jumped from one side of the minimum to the other. This is a consequence of using a wrong step size (in this case too large). Repeat the previous exercise changing both the values of the step-size and the precision. What do you observe?
 \end{exercise}
 
 During this school we will rely on the numerical optimization methods provided by Scipy (scientific computing library in python), which are very efficient implementations.

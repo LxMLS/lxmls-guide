@@ -1,14 +1,11 @@
-
-Linear Algebra provides a compact way of representing and operating on sets
-of linear equations.
+Linear Algebra provides a compact way of representing and operating on sets of linear equations.
 
 \begin{eqnarray*}
 4x_{1} &- 5x_{2} &= -13 \\
 -2x_{1} &+ 3x_{2} &= 9
 \end{eqnarray*}
 
-This is a system of linear equations in 2 variables. In matrix notation we can write
-the system more compactly as 
+This is a system of linear equations in 2 variables. In matrix notation we can write the system more compactly as 
 \begin{equation*}
 Ax=b
 \end{equation*}
@@ -28,12 +25,14 @@ A= \left[ \begin{array}{cc}
 We use the following notation:
 
 \begin{itemize}
+
 \item By $A \in \mathbb{R}^{m \times n}$, we denote a {\bf matrix} with $m$ rows and $n$ columns, where the 
 entries of A are real numbers.
-\item By $x \in \mathbb{R}^{n}$, we denote a {\bf vector} with $n$ entries. A vector can also be 
-thought of as a matrix with $n$ rows and $1$ column, known as a {\bf column vector}. A {\bf row vector}
---- a matrix with 1 row and $n$ columns is denoted as $x^{T}$, the transpose of x.
+
+\item By $x \in \mathbb{R}^{n}$, we denote a {\bf vector} with $n$ entries. A vector can also be thought of as a matrix with $n$ rows and $1$ column, known as a {\bf column vector}. A {\bf row vector} --- a matrix with 1 row and $n$ columns is denoted as $x^{T}$, the transpose of x.
+
 \item The $i$th element of a vector x is denoted $x_{i}$
+
 \begin{equation*}
 x = \left[\begin{array}{c}
 x_{1} \\
@@ -45,8 +44,7 @@ x_{n}
 \end{itemize}
 
 \begin{exercise}
-In the rest of the school we will represent both matrices and vectors as numpy arrays.
-You can create arrays in different ways, one possible way is to create an array of zeros. 
+In the rest of the school we will represent both matrices and vectors as numpy arrays. You can create arrays in different ways, one possible way is to create an array of zeros.
 \begin{python}
 import numpy as np
 m = 3
@@ -65,17 +63,13 @@ print a.shape
 print a.dtype.name
 float64
 \end{python}
-This shows you that ``a'' is an 3*2 array of type float64. By default, arrays
-contain 64~bit floating point numbers. You can specify the particular array
-type by using the keyword dtype.
+This shows you that ``a'' is an 3*2 array of type float64. By default, arrays contain 64~bit\footnotemark\footnotetext{On your computer, particularly if you have an older computer, \code{int} might denote 32~bits integers} floating point numbers. You can specify the particular array type by using the keyword dtype.
 
 \begin{python}
 a = np.zeros([m,n],dtype=int)
 print a.dtype
 int64
 \end{python}
-(On your computer, particularly if you have an older computer, \code{int} might
-denote 32~bits integers).
 
 \smallskip
 
@@ -101,7 +95,7 @@ C_{ij}=\sum\limits_{k=1}^{n}A_{ik}B_{kj}.
 \end{equation*}
 
 \begin{exercise}
-You can multiply two matrix by looping over both indexes and multiplying the individual entries.
+You can multiply two matrices by looping over both indexes and multiplying the individual entries.
 \begin{python}
 a = np.array([[2,3],[3,4]])
 b = np.array([[1,1],[1,1]])
@@ -115,16 +109,14 @@ for i in xrange(a_dim1):
 print c
 \end{python}
 
-This is, however, cumbersome and inefficient. Numpy supports matrix
-multiplication with the dot function:
+This is, however, cumbersome and inefficient. Numpy supports matrix multiplication with the dot function:
 
 \begin{python}
 d = np.dot(a,b)
 print d
 \end{python}
 
-\textbf{Important note:} with numpy, you must use \code{dot} to get matrix
-multiplication, the expression {a * b} denotes element-wise multiplication.
+\textbf{Important note:} with numpy, you must use \code{dot} to get matrix multiplication, the expression {a * b} denotes element-wise multiplication.
 \end{exercise}
 
 \item Matrix multiplication is associative: $(AB)C= A(BC)$.
@@ -219,8 +211,7 @@ elements, tr$(A)= \sum\limits_{i=1}^{n} A_{ii}$
 
 \end{itemize}
 \subsection{Norms}
-The {\bf norm} of a vector is informally the measure of the ``length'' of the vector. The commonly
-used Euclidean or $\ell_{2}$ norm is given by
+The {\bf norm} of a vector is informally the measure of the ``length'' of the vector. The commonly used Euclidean or $\ell_{2}$ norm is given by
 \begin{equation*}
 \|x\|_{2}=\sqrt{\sum\limits_{i=1}^{n} x_{i}^{2}}.
 \end{equation*}
@@ -234,26 +225,20 @@ used Euclidean or $\ell_{2}$ norm is given by
 Note: $\begin{array}{ccc} \ell_{1} \text{ norm}: \|x\|_{1} = \sum\limits_{i=1}^{n} |x_{i}| && \ell_{\infty} \text{ norm}: \|x\|_{\infty} = \text{max}_{i} |x_{i}| \end{array}$.
 
 \subsection{Linear Independence and Rank}
-A set of vectors $\{x_{1},x_{2},\ldots,x_{n}\} \subset \mathbb{R}^{m}$ is said to be {\bf (linearly) independent} if 
-no vector can be represented as a linear combination of the remaining vectors. Conversely, if one vector 
-belonging to the set can be represented as a linear combination of the remaining vectors, then the 
-vectors are said to be {\bf linearly dependent}. That is, if 
+A set of vectors $\{x_{1},x_{2},\ldots,x_{n}\} \subset \mathbb{R}^{m}$ is said to be {\bf (linearly) independent} if no vector can be represented as a linear combination of the remaining vectors. Conversely, if one vector belonging to the set can be represented as a linear combination of the remaining vectors, then the vectors are said to be {\bf linearly dependent}. That is, if 
 \begin{equation*}
 x_{j}=\sum\limits_{i\neq j}\alpha_{i}x_{i}
 \end{equation*}
 for some $j \in \{1,\ldots,n\}$ and some scalar values $\alpha_{1}, \ldots, \alpha_{i-1}, \alpha_{i+1}, \ldots, \alpha_{n} \in \mathbb{R}$. 
 
 \begin{itemize}
-\item The {\bf rank} of a matrix is the number of linearly independent columns, which is always equal to the number of linearly independent rows. 
+\item The {\bf rank} of a matrix is the number of linearly independent columns, which is always equal to the number of linearly independent rows.
 \item For $A \in R^{m\times n}$, rank$(A) \leq$ min$(m,n)$. If rank$(A)=$min$(m,n)$, then $A$ is said
 to be  {\bf full rank}.
-\item  For $A \in R^{m\times n}$, rank$(A)$=rank$(A^{T})$.
-\item  For $A \in R^{m\times n}$,  $B \in R^{n\times p}$, rank$(AB) \leq$ min$($rank$(A)$,rank$(B)$).
-\item  For $A,B \in R^{m\times n}$, rank$(A+B) \leq$ rank$(A)$ + rank$(B)$.
-
-
-\item Two vectors $x,y \in \mathbb{R}^{n}$ are {\bf orthogonal} if $x^{T}y=0$. A square matrix $U \in \mathbb{R}^{n\times n}$
-is orthogonal if all its columns are orthogonal to each other and are normalized ($\|x\|_{2} = 1$), It follows that
+\item For $A \in R^{m\times n}$, rank$(A)$=rank$(A^{T})$.
+\item For $A \in R^{m\times n}$,  $B \in R^{n\times p}$, rank$(AB) \leq$ min$($rank$(A)$,rank$(B)$).
+\item For $A,B \in R^{m\times n}$, rank$(A+B) \leq$ rank$(A)$ + rank$(B)$.
+\item Two vectors $x,y \in \mathbb{R}^{n}$ are {\bf orthogonal} if $x^{T}y=0$. A square matrix $U \in \mathbb{R}^{n\times n}$ is orthogonal if all its columns are orthogonal to each other and are normalized ($\|x\|_{2} = 1$), It follows that
 \begin{equation*}
 U^{T}U=I=UU^{T}.
 \end{equation*}
