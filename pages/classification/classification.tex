@@ -29,7 +29,7 @@ Throughout, we use modified notation and let $P(y)$ denote the \emph{probability
 \emph{Joint} and \emph{conditional} probabilities are 
 denoted respectively as $P(x,y) \triangleq P_{X,Y}(X=x \wedge Y=y)$ and $P(x|y) \triangleq P_{X|Y}(X=x \,\,|\,\,Y=y)$. From the laws of probabilities: 
 \begin{equation}
-P(x,y)=P(y|x) P(x), 
+P(x,y)=P(y|x) P(x) = P(x|y) P(y), 
 \end{equation}
 for all $x \in \mathcal{X}$ and $y \in \mathcal{Y}$.
 
@@ -37,13 +37,13 @@ Quantities that are predicted or estimated from the data will be appended a hat-
 as ${\hat P}(y)$, ${\hat P}(x,y)$ and ${\hat P}(y|x)$; and a prediction of an output will be denoted ${\hat y}$. 
 
 We assume that a \emph{training dataset} $\mathcal{D}$ is provided
-which consists of input-output pairs (called \emph{examples} or
+which consists of $M$ input-output pairs (called \emph{examples} or
 \emph{instances}): 
 \begin{equation}
 \mathcal{D} = \{(x^{1},y^{1}),\ldots,(x^{M},y^{M})\} \subseteq \mathcal{X} \times \mathcal{Y}.  
 \end{equation}
 
-The goal of (supervised) machine learning is to use $\mathcal{D}$ to learn a function $h$ (called a \emph{classifier}) 
+The goal of (supervised) machine learning is to use the training dataset $\mathcal{D}$ to learn a function $h$ (called a \emph{classifier}) 
 that maps from $\mathcal{X}$ to $\mathcal{Y}$: this way, given a new instance 
 $x \in \mathcal{X}$ (test example), the machine makes a prediction ${\hat y}$ by evaluating $h$ on $x$, i.e., ${\hat y} = h(x)$. 
 
@@ -60,22 +60,22 @@ $x \in \mathcal{X}$ (test example), the machine makes a prediction ${\hat y}$ by
 \end{figure}
 %}
 
-
 \section{\label{s::naiveBayes}Generative Classifiers: Na\"{i}ve Bayes}
 
 If we knew the \emph{true} distribution $P(X,Y)$, the best possible classifier (Bayes optimal) 
 would be one which predicts according to
+
 \begin{eqnarray}
 {\hat y} &=& \arg\max_{y \in \mathcal{Y}} P(y|x) = \arg\max_{y \in \mathcal{Y}} \frac{P(x,y)}{P(x)} \nonumber\\
 &=^{\dagger}& \arg\max_{y \in \mathcal{Y}} P(x,y) \nonumber \\
 &=& \arg\max_{y \in \mathcal{Y}} P(y) P(x|y),
 \end{eqnarray}
-where in ${\dagger}$ we used the fact that $P(x)$ is constant with respect to $y$. 
-The probability distributions $P(Y)$ and $P(X|Y)$ are respectively
-called the \emph{class prior} and the \emph{class
-  conditionals}. Figure \ref{simpleDataSet_bo} shows an example of
-the Bayes optimal decision boundary for a toy example.  
-\begin{figure}
+where in ${\dagger}$ we used the fact that $P(x)$ is constant with respect to $y$. Generative classifiers try to estimate the probability distributions $P(Y)$ and $P(X|Y)$ (which are respectively called the \emph{class prior} and the \emph{class conditionals}).
+  
+Figure \ref{simpleDataSet_bo} shows an example of
+the Bayes optimal decision boundary for a toy example with $K=2$ classes, $M=100$ points, class priors $P(y_1) = P(y_2) = 0.5$, and class conditionals $P(x|y_i)$ given by 2-D Gaussian distributions with the same variance but different means.
+
+\begin{figure}[h]
 \begin{center}
     \includegraphics[width=1\columnwidth]{figs/classification/gaussian_separabale_bo.png}
   \caption{\label{simpleDataSet_bo} Example of a dataset together with
@@ -86,25 +86,33 @@ the Bayes optimal decision boundary for a toy example.
     points are represented as circles.}
   \end{center}
 \end{figure}
-Generative models assume data are generated according to the following generative story (independently for each $m=1,\ldots,M$): 
+
+
+
+Generative models assume that the data are generated according to the following generative story (independently for each $m=1,\ldots,M$): 
 \begin{enumerate}
 \item A class $y_m \sim P(Y)$ is drawn from the class prior distribution;
 \item An input $x_m \sim P(X|Y=y_m)$ is drawn from the corresponding class conditional.
 \end{enumerate}
 Training a generative model 
 amounts to \emph{estimating} these probabilities using the dataset $\mathcal{D}$, yielding estimates 
-$\hat{P}(y)$ and $\hat{P}(x|y)$. This is usually called training time.
+$\hat{P}(y)$ and $\hat{P}(x|y)$. This estimation is usually called \emph{training}, or \emph{learning}.
 
-At test time, we are given a new input $x \in \mathcal{X}$, and we want to make a prediction according to  
+After we are done training, we are given a new input $x \in \mathcal{X}$, and we want to make a prediction according to  
 \begin{eqnarray}
 {\hat y} &=& \arg\max_{y \in \mathcal{Y}} \hat{P}(y) \hat{P}(x|y),
+\label{eq:argmax}
 \end{eqnarray}
-using the probabilities estimated at training time. We are left with two important problems:
+using the probabilities estimated in the training stage. This is usually called \emph{inference} or \emph{decoding}.
+
+
+We are left with two important problems:
 \begin{enumerate}
-\item How should the distributions ${\hat P}(Y)$ and ${\hat P}(X|Y)$ be ``defined'' 
+\item How should the distributions ${\hat P}(Y)$ and ${\hat P}(X|Y)$ be ``defined''?
 (i.e., what kind of independence assumptions should they state, or how should they factor?)
 \item How should parameters be estimated from the training data $\mathcal{D}$?
 \end{enumerate}
+
 The first problem strongly depends on the application at hand. Quite often, there is a natural decomposition of the input variable $X$ into $J$ components, 
 \begin{equation}
 X = (X_1,\ldots,X_J). 
@@ -116,134 +124,133 @@ P(X|Y) &=& \prod_{j=1}^J P(X_j|Y).
 Note that this independence assumption greatly reduces the number of parameters to be estimated (degrees of freedom) 
 from $O(\exp(J))$ to $O(J)$, 
 hence estimation of ${\hat P}(X|Y)$ becomes much simpler, as we shall see. 
-It also makes the overall computation much more efficient 
-(in particular for large $J$) and it decreases the risk of overfitting the data. 
+It also makes the overall computation much more efficient for large $J$ and it decreases the risk of overfitting the data. 
 On the other hand, if the assumption is over-simplistic it may increase the risk 
 of under-fitting. 
 %This choice greatly simplifies the problem of parametrizing ${\hat P}(Y)$ and ${\hat P}(X|Y)$. 
 
-The \emph{maximum likelihood criterion} 
-aims to maximize the probability of the training sample, assuming it was generated iid. This probability (call it $P(\mathcal{D})$) factorizes as 
+For the second problem, one of the simplest ways to solve it is using \emph{maximum likelihood estimation}, which aims to maximize the probability of the training sample, assuming that each point was generated independently. This probability (call it $P(\mathcal{D})$) factorizes as 
 \begin{eqnarray}
 P(\mathcal{D}) &=& \prod_{m=1}^M P(x^m,y^m) \nonumber\\
 &=& \prod_{m=1}^M P(y^m)\prod_{j=1}^J P(x^m_j|y^m). 
 \end{eqnarray}
 
-%\begin{example}[2-D Gaussians] 
-\subsection{Example: 2-D Gaussians}
-
-We first illustrate the na\"ive Bayes assumption with a toy example. 
-Suppose that $\mathcal{X}=\mathbb{R}^2$ and $\mathcal{Y}=\{1,2\}$. 
-Assume that each class-conditional is a two-dimensional Gaussian distribution with fixed covariance, 
-i.e., $P(X_1,X_2|Y=y)=\mathcal{N}(\boldsymbol{\mu}_y, \boldsymbol{\Sigma}_y)$. 
-
-According to the na\"ive Bayes assumption, ${\hat P}(X_1,X_2|Y) = {\hat P}(X_1|Y) {\hat P}(X_2|Y)$ (remark: this 
-is equivalent to assuming that 
-the $\boldsymbol{\Sigma}_y$ are diagonal!). For simplicity, we also assume that the two classes have unit variance. Then, we have 
-${\hat P}(X_1|Y=y) = \mathcal{N}(\mu_{y1}, 1.0)$ 
-and ${\hat P}(X_2|Y=y) = \mathcal{N}(\mu_{y2}, 1.0)$. Figure
-\ref{simpleDataSet} shows an example a dataset of two gaussians with unit
-variance, where $\mu_{y1} = [-1,-1]$ and $\mu_{y1} = [1,1]$. Figure
-\ref{simpleDataSet_bo} shows the same example but where both
-gaussians have $\Sigma = 0.5$, together with the Bayes optimal decision boundary. 
-The parameters that need to be estimated are the class-conditional means $\mu_{11},\mu_{12},\mu_{21},\mu_{22}$ and 
-the class priors ${\hat P}(Y=1)$ and ${\hat P}(Y=2)$. Given a training sample $\mathcal{D} = \{(x^{1},y^{1}),\ldots,(x^{M},y^{M})\}$, 
-denote by $\mathcal{I}_1\subseteq \{1,\ldots,M\}$ the indices of those instances belonging to class $1$, and 
-by $\mathcal{I}_2\subseteq \{1,\ldots,M\}$ the indices of the ones that belong to class $2$. 
-The maximum likelihood estimates of the quantities above are: 
-\begin{eqnarray}
-{\hat P}(Y = 1) = \frac{|\mathcal{I}_1|}{M}, \quad 
-{\hat P}(Y = 2) = \frac{|\mathcal{I}_2|}{M}\nonumber\\
-\mu_{11} = \frac{1}{|\mathcal{I}_1|} \sum_{m \in \mathcal{I}_1} x_1^{m}, \quad
-\mu_{12} = \frac{1}{|\mathcal{I}_1|} \sum_{m \in \mathcal{I}_1} x_2^{m}\nonumber\\
-\mu_{21} = \frac{1}{|\mathcal{I}_2|} \sum_{m \in \mathcal{I}_2} x_1^{m}, \quad
-\mu_{22} = \frac{1}{|\mathcal{I}_2|} \sum_{m \in \mathcal{I}_2} x_2^{m}.
-\end{eqnarray}
-In words: the class priors' estimates are their relative frequencies, and 
-the class-conditional means' estimates are the sample means. 
-%\end{example}
-
-\begin{exercise}\label{exer:simplenb}
-
-\begin{enumerate}
-Start by importing all the libraries necessary for this lab through the following preamble: 
-\begin{python}
-import sys
-import matplotlib.pyplot as plt
-sys.path.append("readers/")
-sys.path.append("classifiers/")
-sys.path.append("distributions/")
-sys.path.append("util/")
-
-import simple_data_set as sds
-import linear_classifier as lcc
-import gaussian_naive_bayes as gnbc
-import naive_bayes as nb
-\end{python}
-
-Now, generate a training and a test dataset like in the previous example, each with $M=100$ points, $50$ of each class. 
-Assume the following class-conditionals: 
-$P(X|Y=1) \sim N((-1,-1), \sigma^2 \boldsymbol{I})$ and $P(X|Y=2) \sim
-N((1,1), \boldsymbol{I})$, for $\sigma = 1.0$. 
-To do this, run the following command from the {\tt code} directory:
-
-\begin{python}
-sd = sds.SimpleDataSet(nr_examples=100, g1 = [[-1,-1],1], g2 = [[1,1],1], balance=0.5, split=[0.5, 0, 0.5])
-\end{python}
-
-You can visualize your data and see the Bayes optimal surface boundary by typing: 
-\begin{python}
-fig,axis = sd.plot_data()
-\end{python}
-
-Note: you might need to type {\tt plt.show()} in order to show the figure.
-
-Now, run na\"ive Bayes on this dataset. To do that, use the class {\tt GaussianNaiveBayes}, 
-which is defined in the file {\tt GaussianNaiveBayes.py} under the
-classification directory. 
-Report your estimates, as well as training set and testing set
-accuracies:
-
-\begin{python}
-gnb = gnbc.GaussianNaiveBayes()
-params_nb_sd = gnb.train(sd.train_X, sd.train_y)
-
-print "Estimated Means"
-print gnb.means
-print "Estimated Priors"
-print gnb.prior
-y_pred_train = gnb.test(sd.train_X,params_nb_sd)
-acc_train = gnb.evaluate(sd.train_y, y_pred_train)
-y_pred_test = gnb.test(sd.test_X,params_nb_sd)
-acc_test = gnb.evaluate(sd.test_y, y_pred_test)
-print "Gaussian Naive Bayes Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
-\end{python}
-
-To visualize the surface boundary estimated by na\"ive Bayes, type: 
-\begin{python}
-fig,axis = sd.add_line(fig,axis,params_nb_sd,"Naive Bayes","red")
-\end{python}
-Do not worry for now about why the surface boundaries look the way they look. This is going to be the subject of \S\ref{sec:linearclass}. 
 
 
-Repeat the exercise above for different values of $\sigma^2$, different balances, and different sample sizes. What do you observe? 
+%%\begin{example}[2-D Gaussians] 
+%\subsection{Example: 2-D Gaussians}
+%
+%We first illustrate the na\"ive Bayes assumption with a toy example. 
+%Suppose that $\mathcal{X}=\mathbb{R}^2$ and $\mathcal{Y}=\{1,2\}$. 
+%Assume that each class-conditional is a two-dimensional Gaussian distribution with fixed covariance, 
+%i.e., $P(X_1,X_2|Y=y)=\mathcal{N}(\boldsymbol{\mu}_y, \boldsymbol{\Sigma}_y)$. 
+%
+%According to the na\"ive Bayes assumption, ${\hat P}(X_1,X_2|Y) = {\hat P}(X_1|Y) {\hat P}(X_2|Y)$ (remark: this 
+%is equivalent to assuming that 
+%the $\boldsymbol{\Sigma}_y$ are diagonal!). For simplicity, we also assume that the two classes have unit variance. Then, we have 
+%${\hat P}(X_1|Y=y) = \mathcal{N}(\mu_{y1}, 1.0)$ 
+%and ${\hat P}(X_2|Y=y) = \mathcal{N}(\mu_{y2}, 1.0)$. Figure
+%\ref{simpleDataSet} shows an example a dataset of two gaussians with unit
+%variance, where $\mu_{y1} = [-1,-1]$ and $\mu_{y1} = [1,1]$. Figure
+%\ref{simpleDataSet_bo} shows the same example but where both
+%gaussians have $\Sigma = 0.5$, together with the Bayes optimal decision boundary. 
+%The parameters that need to be estimated are the class-conditional means $\mu_{11},\mu_{12},\mu_{21},\mu_{22}$ and 
+%the class priors ${\hat P}(Y=1)$ and ${\hat P}(Y=2)$. Given a training sample $\mathcal{D} = \{(x^{1},y^{1}),\ldots,(x^{M},y^{M})\}$, 
+%denote by $\mathcal{I}_1\subseteq \{1,\ldots,M\}$ the indices of those instances belonging to class $1$, and 
+%by $\mathcal{I}_2\subseteq \{1,\ldots,M\}$ the indices of the ones that belong to class $2$. 
+%The maximum likelihood estimates of the quantities above are: 
+%\begin{eqnarray}
+%{\hat P}(Y = 1) = \frac{|\mathcal{I}_1|}{M}, \quad 
+%{\hat P}(Y = 2) = \frac{|\mathcal{I}_2|}{M}\nonumber\\
+%\mu_{11} = \frac{1}{|\mathcal{I}_1|} \sum_{m \in \mathcal{I}_1} x_1^{m}, \quad
+%\mu_{12} = \frac{1}{|\mathcal{I}_1|} \sum_{m \in \mathcal{I}_1} x_2^{m}\nonumber\\
+%\mu_{21} = \frac{1}{|\mathcal{I}_2|} \sum_{m \in \mathcal{I}_2} x_1^{m}, \quad
+%\mu_{22} = \frac{1}{|\mathcal{I}_2|} \sum_{m \in \mathcal{I}_2} x_2^{m}.
+%\end{eqnarray}
+%In words: the class priors' estimates are their relative frequencies, and 
+%the class-conditional means' estimates are the sample means. 
+%%\end{example}
+%
+%\begin{exercise}\label{exer:simplenb}
+%
+%\begin{enumerate}
+%Start by importing all the libraries necessary for this lab through the following preamble: 
+%\begin{python}
+%import sys
+%import matplotlib.pyplot as plt
+%sys.path.append("readers/")
+%sys.path.append("classifiers/")
+%sys.path.append("distributions/")
+%sys.path.append("util/")
+%
+%import simple_data_set as sds
+%import linear_classifier as lcc
+%import gaussian_naive_bayes as gnbc
+%import naive_bayes as nb
+%\end{python}
+%
+%Now, generate a training and a test dataset like in the previous example, each with $M=100$ points, $50$ of each class. 
+%Assume the following class-conditionals: 
+%$P(X|Y=1) \sim N((-1,-1), \sigma^2 \boldsymbol{I})$ and $P(X|Y=2) \sim
+%N((1,1), \boldsymbol{I})$, for $\sigma = 1.0$. 
+%To do this, run the following command from the {\tt code} directory:
+%
+%\begin{python}
+%sd = sds.SimpleDataSet(nr_examples=100, g1 = [[-1,-1],1], g2 = [[1,1],1], balance=0.5, split=[0.5, 0, 0.5])
+%\end{python}
+%
+%You can visualize your data and see the Bayes optimal surface boundary by typing: 
+%\begin{python}
+%fig,axis = sd.plot_data()
+%\end{python}
+%
+%Note: you might need to type {\tt plt.show()} in order to show the figure.
+%
+%Now, run na\"ive Bayes on this dataset. To do that, use the class {\tt GaussianNaiveBayes}, 
+%which is defined in the file {\tt GaussianNaiveBayes.py} under the
+%classification directory. 
+%Report your estimates, as well as training set and testing set
+%accuracies:
+%
+%\begin{python}
+%gnb = gnbc.GaussianNaiveBayes()
+%params_nb_sd = gnb.train(sd.train_X, sd.train_y)
+%
+%print "Estimated Means"
+%print gnb.means
+%print "Estimated Priors"
+%print gnb.prior
+%y_pred_train = gnb.test(sd.train_X,params_nb_sd)
+%acc_train = gnb.evaluate(sd.train_y, y_pred_train)
+%y_pred_test = gnb.test(sd.test_X,params_nb_sd)
+%acc_test = gnb.evaluate(sd.test_y, y_pred_test)
+%print "Gaussian Naive Bayes Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
+%\end{python}
+%
+%To visualize the surface boundary estimated by na\"ive Bayes, type: 
+%\begin{python}
+%fig,axis = sd.add_line(fig,axis,params_nb_sd,"Naive Bayes","red")
+%\end{python}
+%Do not worry for now about why the surface boundaries look the way they look. This is going to be the subject of \S\ref{sec:linearclass}. 
+%
+%
+%Repeat the exercise above for different values of $\sigma^2$, different balances, and different sample sizes. What do you observe? 
+%
+%\end{enumerate}
+%\end{exercise}
 
-\end{enumerate}
-\end{exercise}
 
-
-\subsection{Example: Multinomial Model for Document Classification}
+\section{Example: Multinomial Na\"{i}ve Bayes for Document Classification}
 
 We now consider a more realistic scenario where the na\"ive Bayes classifier may be applied. 
 Suppose that the task is \emph{document classification}: 
-$\mathcal{X}$ is the set of all possible documents, and $\mathcal{Y}=\{c_1,\ldots,c_K\}$ is a set of \emph{topics} for those documents. 
+$\mathcal{X}$ is the set of all possible documents, and $\mathcal{Y}=\{y_1,\ldots,y_K\}$ is a set of classes for those documents. 
 Let $\mathcal{V} = \{w_1,\ldots,w_J\}$ be the vocabulary, i.e., the set of words that occur in some document. 
 
-A very popular document representation is through a ``bag-of-words'': each document is seen as a multiset of words along with 
-their frequencies; word ordering is ignored. We are going to see that this is equivalent to a na\"ive Bayes assumption 
-with the \emph{multinomial model}.%
-\footnote{Another popular model for documents is the Bernoulli model, which only looks at the presence/absence of a word in a 
-document, rather than word frequency. See \cite{Manning2008,McCallum1998} for further information.} % 
+A very popular document representation is through a ``bag-of-words'': each document is seen as a collection of words along with 
+their frequencies; word ordering is ignored. We are going to see that this is equivalent to a na\"ive Bayes assumption with the \emph{multinomial model}.%
+%\footnote{Another popular model for documents is the Bernoulli model, which only looks at the presence/absence of a word in a 
+%document, rather than word frequency. See \cite{Manning2008,McCallum1998} for further information.} % 
 We associate to each class a multinomial distribution, which ignores word ordering, but takes into consideration the 
 frequency with which each word appears in a document. For simplicity, we assume that all documents have the same length $L$.%
 \footnote{We can get rid of this assumption by defining a distribution on the document length. Everything stays the same 
@@ -251,20 +258,20 @@ if that distribution is uniform up to a maximum document length.} %
 Each document $x$ is assumed to have been generated as follows. First, a class $y$ is generated according to $P(y)$. Then, 
 $x$ is generated by sequentially picking words from $\mathcal{V}$ with replacement. Each word $w_j$ is picked with probability $P(w_j|y)$. 
 For example, the probability of generating a document $x = w_{j_1}\ldots w_{j_L}$ (\emph{i.e.}, a sequence of 
-$L$ words---\emph{tokens}---$w_{j_1},\ldots,w_{j_L}$) is 
+$L$ words $w_{j_1},\ldots,w_{j_L}$) is 
 \begin{eqnarray}
 P(x|y) = \prod_{l=1}^L P(w_{j_l}|y) = \prod_{j=1}^J P(w_j|y)^{n_j(x)},
 \end{eqnarray}
 where $n_j(x)$ is the number of occurrences of word $w_j$ in document $x$. 
 
 Hence, the assumption is that word occurrences (\emph{tokens}) are independent given the class. 
-The parameters that need to be estimated are ${\hat P}(c_1),\ldots,{\hat P}(c_K)$, and ${\hat P}(w_j|c_k)$ for $j=1,\ldots,J$ and $k=1,\ldots,K$. 
+The parameters that need to be estimated are ${\hat P}(y_1),\ldots,{\hat P}(y_K)$, and ${\hat P}(w_j|y_k)$ for $j=1,\ldots,J$ and $k=1,\ldots,K$. 
 Given a training sample $\mathcal{D} = \{(x^{1},y^{1}),\ldots,(x^{M},y^{M})\}$, 
 denote by $\mathcal{I}_k$ the indices of those instances belonging to the $k$th class. 
 The maximum likelihood estimates of the quantities above are: 
 \begin{eqnarray}\label{eq:mlemultinomial}
-{\hat P}(c_k) = \frac{|\mathcal{I}_k|}{M}, \qquad
-{\hat P}(w_j|c_k) = \frac{\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{\sum_{i=1}^J \sum_ {m\in \mathcal{I}_k} n_i(x^m)}.
+{\hat P}(y_k) = \frac{|\mathcal{I}_k|}{M}, \qquad
+{\hat P}(w_j|y_k) = \frac{\sum_ {m \in \mathcal{I}_k} n_j(x^m)}{\sum_{i=1}^J \sum_ {m\in \mathcal{I}_k} n_i(x^m)}.
 \end{eqnarray}
 In words: the class priors' estimates are their relative frequencies (as before), and 
 the class-conditional word probabilities are the relative frequencies of those words across documents with that class.
@@ -324,21 +331,12 @@ Report the new accuracies.
 \end{exercise}
 
 
-\section{Features and Linear Classifiers}\label{sec:linearclass}
+\section{Features and Discriminative Classifiers}\label{sec:linearclass}
 
-In the previous section, we assumed a particular representation for 
-the input objects  $x \in \mathcal{X}$: points in a 2D Euclidean space 
-(in the Gaussian example) and bag-of-words representations of text 
-documents (in the sentiment data example). 
+In the previous sections we discussed generative classifiers. Those classifiers require us to model the class prior and class conditional distributions. Recall, however, that a classifier is \emph{any} function which maps objects $x \in \mathcal{X}$ onto classes $y \in \mathcal{Y}$. While it's often useful to model how the data was generated, it's not required. Classifiers which do not model these distributions are called \emph{discriminative} classifiers. 
 
-The methods discussed in this lecture are also applicable to a 
-wide range of problems, regardless of the intricacies of our input objects. 
-It is useful to think about each  $x \in \mathcal{X}$ as an abstract object, 
-which is subject to a set of descriptions or measurements, which are called \emph{features}.  
-A feature is simply a real number that describes the value of some
-property of $x$. 
-For instance in the toy examples described above you can think of $\mathcal{X}$
-as a set of points and the features to be its 2D coordinates.
+For the purpose of understanding discriminative classifiers, it is useful to think about each  $x \in \mathcal{X}$ as an abstract object which is subject to a set of descriptions or measurements, which are called \emph{features}. A feature is simply a real number that describes the value of some property of $x$. For example, in the previous section, the features of a document were the number of times each word $w_j$ appeared in it.
+
 Let $g_1(x),\ldots,g_J(x)$ be $J$ features of $x$. We call the vector
 \begin{equation}
 \boldsymbol{g}(x) = (g_1(x),\ldots,g_J(x))
@@ -346,8 +344,7 @@ Let $g_1(x),\ldots,g_J(x)$ be $J$ features of $x$. We call the vector
 a \emph{feature vector representation} of $x$. 
 The map $\boldsymbol{g}:\mathcal{X}\rightarrow \mathbb{R}^J$ is called a \emph{feature mapping}. 
 
-In NLP applications, features are often binary-valued and 
-result from evaluating propositions such as: 
+In NLP applications, features are often binary-valued and result from evaluating propositions such as: 
 \begin{eqnarray}
 g_1(x) &\triangleq& 
 \left\{
@@ -371,11 +368,7 @@ g_3(x) &\triangleq&
 \end{array}
 \right.
 \end{eqnarray}  
-In this example, the feature vector representation of the sentence $x$
-\begin{quote}
-Ronaldo kicked the ball and scored an amazing goal! 
-\end{quote}
-would be $\boldsymbol{g}(x) = (1,0,1)$. 
+In this example, the feature vector representation of the sentence "Ronaldo shoots and scores an amazing goal!" would be $\boldsymbol{g}(x) = (1,0,1)$. 
 
 In multi-class learning problems, rather than associating features only with the input objects, 
 it is useful to consider \emph{joint feature mappings} $\boldsymbol{f}:\mathcal{X}\times \mathcal{Y}\rightarrow \mathbb{R}^D$. 
@@ -449,8 +442,7 @@ very large.
 
 
 \begin{remark}
-The multinomial na\"ive Bayes classifier described in the previous section is an instance of a linear classifier
-(in fact, so is the 2-D Gaussian Bayes classifier---try to show this). 
+The multinomial na\"ive Bayes classifier described in the previous section is an instance of a linear classifier.
 Recall that the na\"ive Bayes classifier predicts according to ${\hat y} = \arg\max_{y \in \mathcal{Y}} \hat{P}(y) \hat{P}(x|y)$. 
 Taking logs, in the multinomial model for document classification this is equivalent to: 
 \begin{eqnarray}
@@ -470,18 +462,20 @@ Hence, the multinomial model yields a prediction rule of the form
 \end{eqnarray}
 \end{remark}
 
-\begin{exercise}
-Show that the Gaussian na\"ive Bayes classifier with shared and given
-  variance is also a linear classifier, and derive the formulas for
-  $\boldsymbol{w}_y$, $b_y$. 
-You should obtain the formulas that are implemented in the {\tt train} method  
-of {\tt GaussianNaiveBayes}. 
+%\begin{exercise}
+%Show that the Gaussian na\"ive Bayes classifier with shared and given
+%  variance is also a linear classifier, and derive the formulas for
+%  $\boldsymbol{w}_y$, $b_y$. 
+%You should obtain the formulas that are implemented in the {\tt train} method  
+%of {\tt GaussianNaiveBayes}. 
+%
+%Look again at the decision boundary that you have found in Exercise~\ref{exer:simplenb} 
+%and compare it with the Bayes optimal classifier. 
+%\end{exercise}
 
-Look again at the decision boundary that you have found in Exercise~\ref{exer:simplenb} 
-and compare it with the Bayes optimal classifier. 
-\end{exercise}
+\section{Online Discriminative Algorithms: Perceptron and MIRA}
 
-\section{ Online Algorithms: Perceptron and MIRA}
+We now discuss two discriminative classification algorithms. These two algorithms are called \emph{online} (or \emph{stochastic}) algorithms because they only process one data point (in our example, one document) at a time. Algorithms which look at the whole dataset at once are called \emph{offline}, or \emph{batch} algorithms, and will be discussed later.
 
 \subsection{\label{s:perceptron} Perceptron}
 
@@ -537,7 +531,7 @@ which averages the weight vector as a post-processing step.}
 
 \end{algorithm}
 
-The perceptron algorithm works as follows: at each round, it takes an input datum, and uses the current model 
+The perceptron algorithm works as follows: at each round, it takes an element $x$ from the data set, and uses the current model 
 to make a prediction. If the prediction is correct, nothing happens. 
 Otherwise, the model is corrected by adding the feature vector w.r.t. the correct output and 
 subtracting the  feature vector w.r.t. the predicted (wrong) output. Then, we proceed to the next round. 
@@ -556,7 +550,7 @@ if such a weight vector exists (in general, $\boldsymbol{w}$ is not unique).
 A very important property of the perceptron algorithm is the following: 
 if $\mathcal{D}$ is separable, then the 
 number of mistakes made by the perceptron algorithm until it finds a separating hyperplane is \emph{finite}.  
-This means that under this assumption, the perceptron will eventually reach a separating hyperplane $\boldsymbol{w}$. 
+This means that if the data are separable, the perceptron will eventually find a separating hyperplane $\boldsymbol{w}$. 
 
 
 There are other variants of the perceptron (e.g., with regularization) which we omit for brevity. 
@@ -594,10 +588,9 @@ and plot them every five iterations. What do you observe?
 
 %\afm{maybe we should keep things simple here and talk only about the unregularized variant of MIRA. It's easier to grasp the intuition. 
 %What do you guys think? We should probably ask Koby's opinion.}
-The MIRA algorithm \citep{Crammer2002,Crammer2006}  has achieved very good performance in NLP problems. 
-%MIRA resembles the stochastic subgradient algorithm for SVMs, 
-%but has a mechanism for choosing the stepsize. 
-At each round $t$, MIRA updates the weight vector by solving the following optimization problem: 
+The MIRA algorithm \citep{Crammer2002,Crammer2006}  has achieved very good performance in NLP problems. Recall that the Perceptron takes an input pattern and, if its prediction is wrong, adds the quantity $[\boldsymbol{f}(x^m,y^m) - \boldsymbol{f}(x^m,\hat{y})]$ to the weight vector. MIRA changes this by adding $\eta^t[\boldsymbol{f}(x^m,y^m) - \boldsymbol{f}(x^m,\hat{y})]$ to the weight vector. The difference is the step size $\eta^t$, which depends on the iteration $t$.
+
+There is a theoretical basis for this algorithm, which we now briefly explain. At each round $t$, MIRA updates the weight vector by solving the following optimization problem: 
 
 \begin{eqnarray}\label{eq:miraupdates} 
 \boldsymbol{w}^{t+1} \leftarrow \argmin_{\boldsymbol{w}, \xi} & \xi  + \frac{\lambda}{2} \|\boldsymbol{w} - \boldsymbol{w}^t\|^2 \\
@@ -718,47 +711,41 @@ results achieved and separating hiperplanes found.
 
 \section{Discriminative Classifiers: Maximum Entropy and Support Vector Machines}
 
-Unlike the na\"ive Bayes classifier, the algorithms described in the last section (perceptron and MIRA) directly focus on 
-finding a separating hyperplane to discriminate among the classes, rather than attempting 
-to model the probability $P(X,Y)$ that generates the data. 
-This kind of methods are called \emph{discriminative} (by opposition to the \emph{generative} ones).  
-This section presents two important discriminative classifiers, with widespread use 
-in NLP applications: maximum entropy and support vector machines. 
-  
+The algorithms described in the last section (perceptron and MIRA) are called \emph{online} or \emph{stochastic} algorithms, because they look at one data point at a time. We now describe two discriminative classifiers which look at all points at once; these are called \emph{offline} or \emph{batch} algorithms.
 
 \subsection{\label{s:me}Maximum Entropy Classifiers}
 
 The notion of \emph{entropy} in the context of Information Theory \citep{Shannon1948} is one of the most significant advances 
 in mathematics in the twentieth century. The principle of \emph{maximum entropy} (which appears under different names, 
 such as ``maximum mutual information'' or  ``minimum Kullback-Leibler divergence'') plays a fundamental role 
-in many methods in statistics and machine learning \citep{Jaynes1982}. 
-For an excellent textbook on Information Theory, we recommend \citet{Cover1991}. 
+in many methods in statistics and machine learning \citep{Jaynes1982}. \footnote{
+For an excellent textbook on Information Theory, we recommend \citet{Cover1991}. }
 The basic rationale is that choosing the model with the highest entropy (subject to 
 constraints that depend on the observed data) corresponds to making the fewest 
-possible assumptions regarding what was unobserved, trying to making uncertainty 
-about the model as large as possible. For example, if we have a dice and want to estimate 
+possible assumptions regarding what was unobserved, making uncertainty 
+about the model as large as possible.
+
+For example, if we throw a die and want to estimate 
 the probability of its outcomes, the distribution with the highest entropy would be the 
 uniform distribution (each outcome having of probability a $1/6$). 
-Now suppose that we partition the set of possible outcomes in two groups and are only told about how many 
-times outcomes on each of the groups have occurred. 
-If we know that outcomes $\{1,2,3\}$ occurred $10$ times in total, and 
+Now suppose that we are only told that outcomes $\{1,2,3\}$ occurred $10$ times in total, and 
 $\{4,5,6\}$ occurred $30$ times in total, then the principle of maximum entropy would lead us to 
 estimate $P(1)=P(2)=P(3)=1/12$ and $P(1)=P(2)=P(3)=1/4$ (i.e., outcomes would be uniform 
-within each of the two groups). 
+within each of the two groups). For an introduction of maximum entropy models, along with pointers to the literature, see 
+\url{http://www.cs.cmu.edu/~aberger/maxent.html}.
 
-For an introduction of maximum entropy models, along with pointers to the literature, see 
-\url{http://www.cs.cmu.edu/~aberger/maxent.html}. A fundamental result is that 
-the maximum entropy distribution $P_{\boldsymbol{w}}(Y|X)$ under \emph{first moment matching constraints} (which mean that 
+This example could be presented in a more formal way. Suppose that we want to use binary features to represent the outcome of the die throw. We use two features: $f_{123}(x,y) = 1$ if and only if $y \in \{1,2,3\}$, and $f_{456}(x,y) = 1$ if and only if $y \in \{4,5,6\}$. Our observations state that in 40 throws, we observed $f_{123}$ 10 times (25\%) and $f_{456}$ 30 times (75\%). The maximum entropy principle states that we want to find the parameters $\boldsymbol{w}$ of our model, and consequently the probability distribution $P_{\boldsymbol{w}}(Y|X)$, which makes $f_{123}$ have an expected value of 0.25 and $f_{456}$ have an expected value of 0.75. These constraints, $E[f_{123}] = 0.25$ and $E[f_{456}] = 0.75$, are known as \emph{first moment matching constraints}.\footnote{In general, these constraints mean that
 feature expectations under that distribution $\frac{1}{M}\sum_m E_{Y \sim P_{\boldsymbol{w}}}[\boldsymbol{f}(x_m,Y)]$ 
 must match the observed relative frequencies 
- $\frac{1}{M}\sum_m \boldsymbol{f}(x_m,y_m)$) 
-is a \emph{log-linear model}. The dual of that optimization problem is that of 
-maximizing likelihood in a log-linear model (in the binary case, called \emph{logistic regression} model). 
+ $\frac{1}{M}\sum_m \boldsymbol{f}(x_m,y_m)$.}
 
-The maximum entropy distribution%
-\footnote{Also called a log-linear model, a Boltzmann distribution, or an exponential family of 
+An important fundamental result, which we will not prove here, is that the maximum entropy distribution $P_{\boldsymbol{w}}(Y|X)$ under first moment matching constraints  
+is a \emph{log-linear model}.
+%The dual of that optimization problem is that of maximizing likelihood in a log-linear model (in the binary case, called \emph{logistic regression} model). 
+%The maximum entropy distribution
+\footnote{Also called a a Boltzmann distribution, or an exponential family of 
 distributions.} %
-has the following parametric form: 
+It has the following parametric form: 
 \begin{equation}\label{eq:loglinear}
 P_{\boldsymbol{w}}(y|x) = \frac{\exp(\boldsymbol{w} \cdot \boldsymbol{f}(x,y))}{Z(\boldsymbol{w},x)}
 \end{equation}
@@ -773,11 +760,8 @@ the feature expectations:
 &=& \sum_{y' \in \mathcal{Y}} P_{\boldsymbol{w}}(y'|x) \boldsymbol{f}(x,y').
 \end{eqnarray}
 
-Maximum entropy models are trained \emph{discriminatively}: this means that, instead of maximizing the \emph{joint} likelihood 
-$P_{\boldsymbol{w}}(x^1,\ldots,x^M,y^1,\ldots,y^M)$ (like generative approaches, such as na\"ive Bayes, do), one maximizes directly 
-the \emph{conditional} likelihood $P_{\boldsymbol{w}}(y^1,\ldots,y^M | x^1,\ldots,x^M)$. 
-The rationale is that one does not need to worry about modeling the input variables if all we want is an 
-accurate estimate of $P(Y|X)$, which is what matters for prediction. 
+%Maximum entropy models are trained \emph{discriminatively}: this means that, instead of maximizing the \emph{joint} likelihood  $P_{\boldsymbol{w}}(x^1,\ldots,x^M,y^1,\ldots,y^M)$ (like generative approaches, such as na\"ive Bayes, do), one maximizes directly the \emph{conditional} likelihood $P_{\boldsymbol{w}}(y^1,\ldots,y^M | x^1,\ldots,x^M)$. 
+%The rationale is that one does not need to worry about modeling the input variables if all we want is an accurate estimate of $P(Y|X)$, which is what matters for prediction. 
 The average conditional log-likelihood is: 
 \begin{eqnarray}
 \mathcal{L}(\boldsymbol{w}; \mathcal{D}) &=& 
@@ -967,19 +951,19 @@ on the \emph{dual} formulation. We will not discuss non-linear kernels or this d
 the resulting algorithms run in linear time (or less), while known kernel-based methods are quadratic with 
 respect to $M$. In large-scale problems (large $M$) the former are thus more appealing.}
 
-Consider $\rho(y',y)$ as a non-negative cost function. For simplicity, we focus here on the $0/1$-cost defined by Equation \ref{eq:costfunc} (but keep in mind that other cost functions are possible).  
+Consider $\rho(y',y)$ as a non-negative cost function, representing the cost of assigning a label $y'$ when the correct label was $y$. For simplicity, we focus here on the $0/1$-cost defined by Equation \ref{eq:costfunc} (but keep in mind that other cost functions are possible).  
 The \emph{hinge loss}%
 \footnote{The hinge loss for the $0/1$ cost is sometimes defined as 
 $\ell(\boldsymbol{w}; x,y) = \max\{0, \max_{y' \ne y} \boldsymbol{w} \cdot \boldsymbol{f}(x,y') - \boldsymbol{w} \cdot\boldsymbol{f}(x,y) + 1\}$.
 Given our definition of $\rho(\hat{y},y)$, note that the  two definitons are equivalent.} %
  is the function
 \begin{equation}\label{eq:hingeloss}
-\ell(\boldsymbol{w}; x,y) = \max_{y' \in \mathcal{Y}} \boldsymbol{w} \cdot \boldsymbol{f}(x,y') - \boldsymbol{w} \cdot\boldsymbol{f}(x,y) + \rho(y',y).
+\ell(\boldsymbol{w}; x,y) = \max_{y' \in \mathcal{Y}} \left[\boldsymbol{w} \cdot \boldsymbol{f}(x,y') - \boldsymbol{w} \cdot\boldsymbol{f}(x,y) + \rho(y',y)\right].
 \end{equation}
 Note that the objective of Eq.~\ref{eq:hingeloss} becomes zero when $y'=y$. Hence, we always have $\ell(\boldsymbol{w}; x,y)\ge 0$. 
 Moreover, if $\rho$ is the $0/1$ cost, we have $\ell(\boldsymbol{w}; x,y)= 0$ if and only if the weight vector is such that the model makes a correct prediction 
 with a \emph{margin} greater than $1$: \emph{i.e.}, $\boldsymbol{w} \cdot \boldsymbol{f}(x,y) \ge \boldsymbol{w} \cdot\boldsymbol{f}(x,y') + 1$ for all $y' \ne y$. 
-Otherwise, a positive loss is incurred. 
+Otherwise, a positive loss is incurred. The idea behind this formulation is that not only do we want to make a correct prediction, but we want to make a \emph{confident} prediction; this is why we have a loss unless the prediction is correct with some margin.
 
 Support vector machines (SVM) tackle the following optimization problem: 
 \begin{eqnarray}\label{eq:svm} 
