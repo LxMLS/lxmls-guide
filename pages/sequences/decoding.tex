@@ -1,26 +1,29 @@
 Given the learned parameters and an
-observation $\sent$, we want to find the best hidden state sequence
-$\hseq^*$; this is called \emph{decoding}. There are several ways to define what we mean by the best
-$\hseq^*$; for instance, it could be the best assignment to each hidden
-variable $\hs_i$, or the best assignment
-to the sequence $\hseq$ as a whole.
+observation $x = x_1\ldots x_N$, we want to find ``the best'' sequence of hidden states 
+$y^* = y_1^* \ldots y_N^*$;
+ this is called \emph{decoding}. There are several ways to define what we mean by the best
+$y^*$---for instance, we may will to minimize the probability of error
+on each hidden
+variable $Y_i$; or, we may want the best assignment
+to the sequence $Y_1\ldots Y_N$ as a whole.
 
-The first way, normally called \textbf{Posterior decoding}, consists
-in picking the highest state posterior for each position in the sequence:
+The first way, normally called \textbf{posterior decoding} or \textbf{minimum risk decoding}, consists
+in picking the highest state posterior for each position $i$ in the sequence:
 \begin{equation}
-\hseq^* = \argmax_{\hs_1 \ldots \hs_N} b_i(\hs_i)
+y_i^* = \argmax_{y_i \in \Lambda} P(Y_i=y_i | X_1=x_1,\ldots,X_N =x_N).
 \end{equation}
-where $\gamma_i(\hs_i)$ is the posterior probability $P(\hs_i|\sent)$. 
-This method does not guarantee that the sequence $\hseq^*$ is a
+%where $\gamma_i(\hs_i)$ is the posterior probability $P(\hs_i|\sent)$. 
+This method does not guarantee that the sequence $y^*$ is a
 valid sequence of the model. For instance there might be a transition
-probability between two of the best node posteriors with probability
+probability between two of the best state posteriors with probability
 zero. 
 
 The second approach, called \textbf{Viterbi decoding}, consists in
-picking the best global hidden state sequence $\hseq$. 
-\begin{equation}
-\hseq^* = \argmax_{\hseq} \joint.
-\end{equation}
+picking the best global hidden state sequence: 
+\begin{eqnarray}
+y^* &=& \argmax_{y = y_1\ldots y_N} P(Y_1=y_1,\ldots, Y_N=y_N | X_1=x_1,\ldots,X_N =x_N)\nonumber\\
+&=& \argmax_{y = y_1\ldots y_N} P(Y_1=y_1,\ldots, Y_N=y_N, X_1=x_1,\ldots,X_N =x_N).
+\end{eqnarray}
 
 Both approaches rely on dynamic programming, making use of the
 independence assumptions of the HMM model. They use an alternative
@@ -29,14 +32,13 @@ representation of the HMM called a Trellis (Figure~\ref{fig:trellis}).
 \centering
 \includegraphics[scale=1]{figs/sequences/trellis}
 \caption[HMM Trellis representation.]{\label{fig:trellis} Trellis
-  representation of the HMM in Figure ~\ref{hmm}, for the observation
+  representation of the HMM in Figure ~\ref{fig:hmm}, for the observation
   sequence ``w w s c'', where each hidden variable can take the values $r,s$.}
 \end{figure}
-
 This representation unfolds all possible states for each position and
 makes explicit the independence assumption: each position only
 depends on the previous position. Figure \ref{fig:trellis} shows the
-trellis for the particular example in Figure \ref{hmm}. 
+trellis for the particular example in Figure \ref{fig:hmm}. 
 
 
 Each column represents a position in the sentence, and each row represents a possible state. 
