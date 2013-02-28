@@ -1,66 +1,12 @@
 
 
 In this class, we relax the assumption that
-datapoints are independently and identically distributed (i.i.d.) 
+the data points are independently and identically distributed (i.i.d.) 
 by moving to a scenario of \emph{structured prediction}, where the inputs are assumed to have
 temporal or spacial dependencies. We start by 
 considering sequential models, which correspond to a \emph{chain structure}: for instance,
 the words in a sentence. In this lecture, we will use part-of-speech
 tagging as our example task.  
-
-The problem setting is the following:
-let $\X = \{\sent^1, \ldots, \sent^D\}$ be a training set of independent
-and identically-distributed random variables. In this work $\sent^d$
-(for notation simplicity we will drop the superscript $d$ when
-considering an isolated example) corresponds to a sentence in natural
-language and decomposes as a sequence of observations of length $N$: $\sent = \obs_1 \ldots
-\obs_N$. Each $\obs_n$ is a discrete
-random variable (a \emph{word}),  taking a value $\vv$ from a
-finite vocabulary $\vocab$. Each $\sent$ has an unknown hidden
-structure $\hseq$  that we want to predict. The
-structures are sequences $\hseq = \hs_1 \ldots \hs_N$ of the same
-length $N$ as the observations. Each hidden state $\hs_n$ is a discrete
-random variable and can take a value $\hv$ from a discrete vocabulary $\hvocab$. 
-
-\afm{need to improve notation}
-
-\begin{table}[h]
-\begin{center}
-\begin{tabular}{|l|l|}
-\hline
-\multicolumn{2}{|c|}{Notation}\\
-\hline
-\hline
-$\X$ & training set \\
-\hline
-$D$  & number of training examples \\
-\hline
-$\sent = \bx_1 \ldots \bx_N$  & observation sequence \\
-\hline
-$N  $& size of the observation sequence \\
-\hline
-$\obs_i$ &  observation at position $i$ in the sequence\\
-\hline
-$\vocab$ & observation values set\\
-\hline 
-$|\vocab|$ & number of distinct observation types\\
-\hline 
-$\vv_i$ & particular observation, $i \in |\vocab|$\\
-\hline 
-$\hseq = \hs_1 \ldots \hs_N$  & hidden state sequence \\
-\hline
-$\hs_i$ &  hidden state at position $i$ in the sequence\\
-\hline
-$\hvocab$ & hidden states value set \\
-\hline
-$|\hvocab|$ & number of distinct hidden value types \\
-\hline
-$\hv_i$ & particular hidden value, $i \in |\hvocab|$\\
-\hline 
-\end{tabular}
-\end{center}
-\caption{General notation used in this class}
-\end{table}
 
 We focus on the well known Hidden Markov Model (HMM) on section
 \ref{hmm}, where we describe how to estimate its parameters from labeled data
@@ -70,8 +16,111 @@ We focus on the well known Hidden Markov Model (HMM) on section
 algorithms (Viterbi and Forward-Backward) for sequence models. These
 inference algorithms will be fundamental for the rest of this lecture,
 as well as for the next lecture on \emph{discriminative} training of sequence
-models. Finally, section \ref{pos-tagging} will describe the task of 
-part-of-speech tagging, and how HMM are suitable for this task.
+models. Section \ref{pos-tagging} will describe the task of 
+part-of-speech tagging, and how HMM are suitable for this task. 
+Finally, Section \ref{sec:em} will 
+address unsupervised learning of HMMs through the EM
+algorithm.
+
+
+\section{Notation}
+
+The problem setting is the following. 
+We assume a finite set of \emph{observation labels}, 
+$\vocab := \{w_1,\ldots,w_J\}$,
+and a finite set of \emph{state labels}, 
+$\statevocab := \{c_1,\ldots, c_K\}$.
+In part-of-speech tagging, $\vocab$ is a 
+vocabulary of word types, and 
+$\statevocab$ is the set of part-of-speech tags 
+(noun, verb, adjective, \emph{etc.})
+Let $\varepsilon$ denote the empty string. 
+We denote by 
+$\vocab^* := \{\varepsilon\} \cup \vocab \cup \vocab^2 \cup \ldots$ and 
+$\statevocab^* := \{\varepsilon\} \cup \statevocab \cup \statevocab^2  \cup \ldots$ the Kleene closure 
+of each of the two sets above. 
+Elements of $\vocab^*$ and $\statevocab^*$ 
+are \emph{strings of observations} and \emph{strings of states}, 
+respectively. 
+Throughout this class, we 
+assume our input set is $\X = \vocab^*$, 
+and our output set is $\Y = \statevocab^*$. 
+In other words, 
+our inputs are observation sequences, 
+$x = x_1 x_2 \ldots x_N$, 
+for some $N \in \mathbb{N}$, where each $x_i \in \vocab$;
+given such a $x$, we seek 
+the corresponding state sequence, 
+$y = y_1 y_2 \ldots y_N$, 
+where each $y_i \in \statevocab$.
+We will assume two scenarios in this lab:
+\begin{enumerate}
+\item \emph{Supervised learning.} We will 
+train models from a sample set of paired observation and state sequences, $\mathcal{D}_L := \{(x^1,y^1), \ldots, (x^M,y^M)\} \subseteq \X \times \Y$.
+\item \emph{Unsupervised learning.} We will also
+train models from the set of observations only, $\mathcal{D}_U := \{x^1, \ldots, x^M\} \subseteq \X$.
+\end{enumerate}
+Our notation is summarized in Table~\ref{tab:hmm_notation}.
+
+%Let $\X = \{\sent^1, \ldots, \sent^D\}$ be a training set of independent
+%and identically-distributed random variables. In this work $\sent^d$
+%(for notation simplicity we will drop the superscript $d$ when
+%considering an isolated example) corresponds to a sentence in natural
+%language and decomposes as a sequence of observations of length $N$: $\sent = \obs_1 \ldots
+%\obs_N$. Each $\obs_n$ is a discrete
+%random variable (a \emph{word}),  taking a value $\vv$ from a
+%finite vocabulary $\vocab$. Each $\sent$ has an unknown hidden
+%structure $\hseq$  that we want to predict. The
+%structures are sequences $\hseq = \hs_1 \ldots \hs_N$ of the same
+%length $N$ as the observations. Each hidden state $\hs_n$ is a discrete
+%random variable and can take a value $\hv$ from a discrete vocabulary $\hvocab$. 
+%
+%\afm{need to improve notation}
+
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{Notation}\\
+\hline
+\hline
+$\mathcal{D}_L$ & training set (including labeled data)\\
+\hline
+$\mathcal{D}_U$ & training set (unlabeled data only)\\
+\hline
+$M$  & number of training examples \\
+\hline
+$x = x_1 \ldots x_N$  & observation sequence \\
+\hline
+$y = y_1 \ldots y_N$  & state sequence \\
+\hline
+$N$  & length of the sequence \\
+\hline
+$x_i$ &  observation at position $i$ in the sequence\\
+\hline
+$y_i$ &  state at position $i$ in the sequence\\
+\hline
+${\tt start}, {\tt stop}$ & start and stop symbols\\
+\hline
+$\vocab$ & observation set\\
+\hline 
+$J$ & number of distinct observation types\\
+\hline 
+$w_j$ & particular observation, $j \in \{1,\ldots,J\}$\\
+\hline 
+$\statevocab$ & state set\\
+\hline 
+$K$ & number of distinct states\\
+\hline 
+$c_k$ & particular state, $k \in \{1,\ldots,K\}$\\
+\hline  
+\end{tabular}
+\end{center}
+\label{tab:hmm_notation}
+\caption{General notation used in this class}
+\end{table}
+
+
 
 
 

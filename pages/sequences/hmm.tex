@@ -1,21 +1,42 @@
 
-The Hidden Markov Model (HMM) is one of the most common sequence
-probabilistic models, and has been applied to a wide variety of
-tasks. More generally, an HMM is a particular instance of  a chain
-directed probabilistic graphical model, or a Bayesian network.  In a
+Hidden Markov Models (HMMs) are one of the most common sequence
+probabilistic models, and have been applied to a wide variety of
+tasks. HMMs are particular instances of directed probabilistic graphical models (or Bayesian networks) which have a chain topology. 
+In a
 Bayesian network, every random variable is represented as a node in a
 graph, and the edges in the graph are directed and represent
 probabilistic dependencies between the random variables. For an HMM, the random variables are divided into two sets, the 
-\emph{observed} variables, in our case 
-$\obs$, and the \emph{hidden} variables, in our case $\hs$. In the HMM
+\emph{observed variables}, $X = X_1\ldots X_N$, 
+and the \emph{hidden variables} $Y = Y_1\ldots Y_N$.
+In the HMM
 terminology, the observed variables are called \emph{observations}, and the
 hidden variables are called \emph{states}. 
+The states are generated according to a Markov process, in which the $i$th state $Y_i$ depends only 
+at the previous state $Y_{i-1}$. 
+We call the probability distributions 
+$P(Y_{i}|Y_{i-1})$ the \emph{transition probabilities}.
+Two special states are the ${\tt start}$ symbol,
+which starts the sequence, and 
+the ${\tt stop}$ symbol, which ends it. 
+We call the distributions 
+$P(Y_{1}|Y_{0} = {\tt start})$ the \emph{initial probabilities}, and 
+$P(Y_{N+1}={\tt stop} |Y_{N})$ the \emph{final probabilities}.%
+\footnote{Note that the initial and final probabilities 
+are asymmetric.} %
+%Some textbooks describing HMMs omit the stop symbol. 
+%While in some applications, one needs not to 
+%consider It is useful to artificially introduce a special ``STOP'' state at the end of the sequence, which marks its end. This is useful for two reasons: it simplifies the notation, and it also allows our model to cope with sequences of any finite size (otherwise, how would our model cope with natural sentences, which can range from one or two words to dozens?).
+%}
+In addition, states emit observation symbols according to
+\emph{emission probabilities}
+$P(X_i|Y_i)$. In an HMM, it is assumed that all
+observations are independent given the states
+that generated them.
+
 
 As you may find out in today's lab session, 
-implementing the inference routines of the HMM can be challenging, 
-and debugging can become hard in large
-datasets. We thus start with a small and very
-simple (very unrealistic!) example. The idea is that you may compute the desired
+implementing the inference routines of the HMM can be challenging. We start with a small and very
+simple (also very unrealistic!) example. The idea is that you may compute the desired
 quantities by hand and check if your implementation yields the correct result. 
 
 \begin{example}
@@ -23,37 +44,51 @@ quantities by hand and check if your implementation yields the correct result.
 Consider a person, which is only interested in four activities: 
 \begin{itemize}
 \item walking in
-the park (w);
-\item shopping (s);
-\item cleaning his apartment (c);
-\item playing tennis (t).
+the park ({\tt walk});
+\item shopping ({\tt shop});
+\item cleaning his apartment ({\tt clean});
+\item playing tennis ({\tt tennis}).
 \end{itemize}
 The choice of what to do on a given day is determined exclusively by the weather at that day. The
-weather can be either \emph{rainy} (r) or \emph{sunny} (s). 
+weather can be either {\tt rainy} or {\tt sunny}. 
 Now, suppose that we observe what the person did on a sequence of days; 
 can we use that information to predict the weather each of those days? 
 To tackle this problem, we assume 
-that the weather behaves as a discrete Markov Chain: the weather on a
-given day is independent of everything else \emph{given 
-the weather on the previous day}. The entire system is that of a hidden Markov model (HMM).
+that the weather behaves as a discrete Markov chain: the weather on a
+given day depends only on 
+the previous day's  weather. 
+The entire system can be described as an hidden Markov model (HMM).
 
 Assume we are asked to predict what was the weather on two different
-sequences of days given the following observations: ``walk walk shop
-clean''  and ``clean walk tennis walk ''. This will be our test set.
-
+sequences of days given the following observations: ``{\tt walk} {\tt walk} {\tt shop}
+{\tt clean}''  and 
+``{\tt clean} {\tt walk} {\tt tennis}
+{\tt walk}.''
+This will be our test set.
 
 To train our model, we will be given access to three different sequences of
 days, containing both the activities and the weather on those days, namely: 
-``walk/rainy walk/sunny shop/sunny
-clean/sunny'', ``walk/rainy walk/rainy shop/rainy clean/sunny '' and ``walk/sunny shop/sunny shop/sunny clean/sunny''. This
+``{\tt walk/rainy walk/sunny shop/sunny
+clean/sunny}'', ``{\tt walk/rainy walk/rainy shop/rainy clean/sunny}'' and ``{\tt walk/sunny shop/sunny shop/sunny clean/sunny.}'' This
 will be our training set.
- \end{example}
 
-It is useful to artificially introduce a special ``STOP'' state at the end of the sequence, which marks its end. This is useful for two reasons: it simplifies the notation, and it also allows our model to cope with sequences of any finite size (otherwise, how would our model cope with natural sentences, which can range from one or two words to dozens?).
+%It is useful to artificially introduce a special ``STOP'' state at the end of the sequence, which marks its end. This is useful for two reasons: it simplifies the notation, and it also allows our model to cope with sequences of any finite size (otherwise, how would our model cope with natural sentences, which can range from one or two words to dozens?).
 
 Figure \ref{hmm} shows the HMM model for the first sequence of our simple
-example, already including the ``STOP'' symbol. The notation is summarized in Table \ref{tab:hmm-simple-notation}. Note that $i,j$ can go up to $N+1$ due to the ``STOP'' symbol.
+example, already including the {\tt start} and 
+{\tt stop} symbols. The notation is summarized in Table \ref{tab:hmm-simple-notation}.
+\end{example}
+ 
 
+
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{figs/sequences/hmm_new}
+\label{fig:hmm}
+\caption[HMM running example]{HMM structure, for the simple
+running example.}
+\end{figure}
 
 \begin{table}[h]
 \begin{center}
@@ -62,88 +97,96 @@ example, already including the ``STOP'' symbol. The notation is summarized in Ta
 \multicolumn{2}{|c|}{HMM Example}\\
 \hline
 \hline
-$\sent$ & observed sentence ``w w s c'' \\
+$x$ & observed sequence ``{\tt walk walk shop clean}'' \\
 \hline
 $N = 4$ & observation length \\
 \hline
-$i,j$ & positions in the sentence: $i,j \in \{1 \ldots N\}$ \\
+$i$ & position in the sentence: $i \in \{1 \ldots N\}$ \\
 \hline
-$\vocab = \{w,s,c,t\}$ & observation vocabulary \\
+$\vocab = \{\text{{\tt walk}},\text{{\tt shop}},\text{{\tt clean}},\text{{\tt tennis}}\}$ & observation set \\
 \hline 
-$p,q$ & indexes into the vocabulary $p,q \in |\vocab|$\\
+$j$ & index into the observation set $j \in \{1,\ldots, J\}$\\
 \hline
-$\obs_i = \vv_q,\obs_j = \vv_p$ & observation at position $\obs_i$ ($\obs_j$) has value $\vv_q$ ($\vv_p$)\\
+$X_i = w_j$ & observation at position $i$ 
+has value $w_j$\\
 \hline 
-$\hvocab = \{r,s\}$ & hidden values vocabulary\\
+$\statevocab = \{\text{{\tt rainy}},\text{{\tt sunny}}\}$ & state set\\
 \hline 
-$l,m$ & indexes into the hidden values vocabulary\\
+$k$ & index into state set $k \in \{1,\ldots,K\}$\\
 \hline
-$\hs_i = \hv_l,\hs_j = \hv_m$ & state at position $\hs_i$ ($\hs_j$) has hidden value $\hv_l$ ($\hv_m$)\\
+$Y_i = c_k, Y_{i-1}=c_l$ & state at position $i$ ($i-1$) has value $c_k$ ($c_l$)\\
 \hline
 \end{tabular}
 \end{center}
 \caption[HMM notation]{\label{tab:hmm-simple-notation} HMM notation for the running example.}
 \end{table}
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.6\textwidth]{figs/sequences/hmm}
-\caption[HMM running example]{\label{fig:hmm} HMM structure, for the simple
-running example.}
-\end{figure}
 
 
-A first order HMM model has the following independence assumptions over the joint distribution $\joint$:
+\begin{exercise}
+Load the simple sequence dataset. 
+From the ipython command line (note: start ipython from the {\tt lxmls}
+directory), create a simple sequence object and look at the training
+and test set.
+\begin{python}
+>>> import readers.simple_sequence as ssr
+>>> simple = ssr.SimpleSequence()
+>>> print simple.train
+[walk/rainy walk/sunny shop/sunny clean/sunny , walk/rainy walk/rainy shop/rainy clean/sunny , walk/sunny shop/sunny shop/sunny clean/sunny ]
+>>> print simple.test
+[walk/rainy walk/sunny shop/sunny clean/sunny , clean/sunny walk/sunny tennis/sunny walk/sunny ]
+\end{python}
+\end{exercise}
+
+
+
+A first order HMM model has the following independence assumptions over the joint distribution $P(X=x,Y=y)$:
 \begin{itemize}
   \item \textbf{Independence of previous states.} The probability of
-    being in a given state $\hv_l$ at position $\hs_i$ only depends on
-    the state $\hv_m$ of the previous position $\hs_{i-1}$. Formally, 
-    $p_{\theta} (\hs_i = \hv_l \mid \hs_{i-1} = \hv_m, \hs_{i-2} \ldots \hs_{1}) = p_{\theta} (\hs_i = \hv_l \mid \hs_{i-1} = \hv_m)$, 
+    being in a given state at position $i$ only depends on
+    the state of the previous position $i-1$. Formally, 
+    $P (Y_i = y_i | Y_{i-1} = y_{i-1}, Y_{i-2} = y_{i-2}, \ldots, Y_1 = y_1) = P (Y_i = y_i | Y_{i-1} = y_{i-1})$, 
     defining a first order Markov chain.%
     \footnote{The order of the Markov chain depends on the number of previous positions taken into account. 
     The remainder of the exposition can be easily extended to higher order HMMs, giving the model more generality, 
-    but making inference harder.}
+    but making inference more expensive.}
   \item \textbf{Homogeneous transition.} The probability of
-    making a transition from state $\hv_l$ to state $\hv_m$ is independent of
-    the particular position in the sentence: for all $i,j \in \{1,\ldots,N\}$,
-    $p_{\theta} (\hs_i = \hv_l \mid \hs_{i-1} = \hv_m) =  p_{\theta}
-    (\hs_j = \hv_l \mid \hs_{j-1} = \hv_m)$, so
-    $p_{\theta} (\hs_i = \hv_l \mid \hs_{i-1} = \hv_m) = p_{\theta} (\hv_l \mid \hv_m)$.
+    making a transition from state $c_l$ to state $c_k$ is independent of
+    the particular position in the sentence: for all $i,t \in \{1,\ldots,N\}$,
+    $P (Y_i = c_k | Y_{i-1} = c_l) =  P (Y_{i+t} = c_k | Y_{i+t-1} = c_l)$, so we can simply write 
+    $P (Y_i = c_k | Y_{i-1} = c_l) = P_{\mathrm{trans}}(c_k|c_l)$.
   \item \textbf{Observation independence.}  The probability of
-    observing $\vv_q$ at position $i$ is fully determined by the state
-    at that position. Formally, $p_{\theta} (\obs_i = \vv_q \mid \hs_i = \hv_l, \hs_{i-1}, \hs_{i-2} \ldots \hs_{1}) = p_{\theta}(\obs_i = \vv_q\mid
-    \hs_i=\hv_l)$, and this probability is independent of the
-    particular position, that is  $p_{\theta}(\obs_i = \vv_q\mid
-    \hs_i=\hv_l)  = p_{\theta}(\vv_q\mid \hv_l)$.
+    observing $X_i = x_i$ at position $i$ is fully determined by the state $Y_i$
+    at that position. Formally, $P (X_i = x_i | Y_1=y_1, \ldots, Y_i=y_i, \ldots, Y_N=y_N) = P(X_i = x_i | Y_i = y_i)$, and this probability is independent of the
+    particular position, so we can write  $P(X_i = w_j | Y_i = c_k) = P(X_{i+t} = w_j | Y_{i+t} = c_k) = P_{\mathrm{emiss}}(w_j|c_k)$ for every $i$ and $t$.
 \end{itemize}
 These conditional independence assumptions are crucial to allow
 efficient inference, as will be described.
 
-We also need to define a \emph{start probability}, the probability of starting 
-at state $\hv_l$.
+We also need to define \emph{initial probabilities}, the probability of starting 
+at each state, and 
+\emph{final probabilities}, the probability of ending the sequence given that we are at a particular state.
 %Furthermore, when dealing with text, it is usual to break the homogeneous transition for the last position, and model the final transitions as independent parameters.
- The three probability
+ The
 distributions that define the HMM model are summarized in Table
 \ref{tab:hmm-dist}. 
 For each one
 of them we will use a short notation to simplify the exposition.
 \begin{table}[h]
 \begin{center}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|l|l|}
 \hline
-\multicolumn{3}{|c|}{HMM distributions}\\
+\multicolumn{4}{|c|}{HMM distributions}\\
 \hline
-Name & probability distribution & short notation \\
+Name & probability distribution & short notation & array size\\
 \hline
-\textbf{initial probability} & $p_{\theta} (\hs_1 = \hv_l)$ & $\pi_{l}$\\
+\textbf{initial probability} & $P(Y_1 = c_k | Y_0 = \text{\tt start})$ & $P_{\mathrm{init}}(c_k|\text{\tt start})$ & $K$ \\
 \hline
-%\textbf{final probability} & $p_{\theta} (\hs_T = \hv_l \mid
-%\hs_{T-1} = \hv_m)$ & $f_{m,l}$\\
-%\hline
-\textbf{transition probability} & $p_{\theta} (\hs_i = \hv_l \mid
-\hs_{i-1} = \hv_m)$ & $a_{m,l}$\\
+\textbf{transition probability} & $P(Y_{i}=c_k|Y_{i-1} = c_l)$ & $P_{\mathrm{trans}}(c_k|c_l)$ & $K\times K$\\
 \hline
-\textbf{observation probability} & $p_{\theta}(\obs_i = \vv_q\mid \hs_i = \hv_l)$ & $b_l(\obs_i) $ \\
+\textbf{final probability} & $P(Y_{N+1} = \text{\tt stop} | Y_N = c_k)$ & $P_{\mathrm{final}}(\text{\tt stop}|c_k)$ & $K$\\
+\hline
+\textbf{emission probability} & $P(X_i=w_j| Y_i = c_k)$ & $P_{\mathrm{emiss}}(w_j|c_k)$ & $J \times K$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -151,37 +194,62 @@ Name & probability distribution & short notation \\
 \end{table}
 
 The joint distribution can be expressed as:
-\begin{equation}
-  \joint =\pi_{\hs_1}b_{\hs_1}(\obs_1) [\prod_{i=2}^{N}
-  a_{\hs_{i-1},\hs_{i}} b_{\hs_{i}}(\obs_i)] a_{\hs_{i},STOP},
-  \label{eqn:hmm}
-\end{equation}
+\begin{eqnarray}\label{eqn:hmm}
+\lefteqn{P(X_1=x_1,\ldots,X_N=x_N,Y_1=y_1,\ldots,Y_N=y_N)=}\nonumber\\
+&&
+P_{\mathrm{init}}(y_1|\text{\tt start}) 
+\times
+\left(
+\prod_{i=1}^{N-1} P_{\mathrm{trans}}(y_{i+1}|y_i)
+\right)
+\times
+P_{\mathrm{final}}(\text{\tt stop}|y_N)
+\times 
+\prod_{i=1}^{N} P_{\mathrm{emiss}}(x_i|y_i),
+\end{eqnarray}
 which for the example from Figure \ref{fig:hmm} is:
-\begin{equation}
-  \joint =\pi_{r} b_r("w") a_{r,s}b_s("w") a_{s,s}b_s("s") a_{s,s}b_s("c")a_{s,STOP}.
-  \label{eqn:hmm_ex}
-\end{equation}
+\begin{eqnarray}  \label{eqn:hmm_ex}
+\lefteqn{P(X_1=x_1,\ldots,X_4=x_4,Y_1=y_1,\ldots,Y_4=y_4)=}\nonumber\\
+&&
+P_{\mathrm{init}}(\text{\tt rainy}|\text{\tt start}) 
+\times
+P_{\mathrm{trans}}(\text{\tt sunny}|\text{\tt rainy}) 
+\times
+P_{\mathrm{trans}}(\text{\tt sunny}|\text{\tt sunny}) 
+\times
+P_{\mathrm{trans}}(\text{\tt sunny}|\text{\tt sunny}) 
+\times\nonumber\\&&
+P_{\mathrm{final}}(\text{\tt stop}|\text{\tt sunny}) 
+\times
+P_{\mathrm{emiss}}(\text{\tt walk}|\text{\tt rainy}) 
+\times
+P_{\mathrm{emiss}}(\text{\tt walk}|\text{\tt sunny}) 
+\times
+P_{\mathrm{emiss}}(\text{\tt shop}|\text{\tt sunny}) \nonumber\\&&
+\times
+P_{\mathrm{emiss}}(\text{\tt clean}|\text{\tt sunny}).
+\end{eqnarray}
 %
-Here is a detailed explanation of the terms:
-\begin{equation}
-  \joint = \hspace{-1.5cm}\underbrace{\pi_{r}}_{\text{prob. of starting at state ``r''}} \hspace{-2cm}\overbrace{b_r("w")}^{\text{prob. of observing ``w'' if state is ``r''}} \hspace{-2cm}\underbrace{a_{r,s}}_{\text{prob. of going from state ``r'' to state ``s''}} \hspace{-2cm}\overbrace{b_s("w")}^{\text{prob. of observing ``w'' if state is ``s''}} \hspace{-1cm}\underbrace{a_{s,s}b_s("s") a_{s,s}b_s("c")}_{\text{etc...}} \hspace{-1.5cm}\overbrace{a_{s,STOP}}^{\text{prob. of going from state ``s'' to state ``STOP''}}
-%  \label{eqn:hmm_ex}
-\end{equation}
+%Here is a detailed explanation of the terms:
+%\begin{equation}
+%  \joint = \hspace{-1.5cm}\underbrace{\pi_{r}}_{\text{prob. of starting at state ``r''}} \hspace{-2cm}\overbrace{b_r("w")}^{\text{prob. of observing ``w'' if state is ``r''}} \hspace{-2cm}\underbrace{a_{r,s}}_{\text{prob. of going from state ``r'' to state ``s''}} \hspace{-2cm}\overbrace{b_s("w")}^{\text{prob. of observing ``w'' if state is ``s''}} \hspace{-1cm}\underbrace{a_{s,s}b_s("s") a_{s,s}b_s("c")}_{\text{etc...}} \hspace{-1.5cm}\overbrace{a_{s,STOP}}^{\text{prob. of going from state ``s'' to state ``STOP''}}
+%%  \label{eqn:hmm_ex}
+%\end{equation}
 
-\begin{exercise}
-Load the simple sequence dataset:
-From the ipython command line (Note: start ipython from the \emph{lxmls}
-directory), create a simple sequence object and look at the training
-and test set.
-\begin{python}
- In[]: run readers/simple_sequence.py
- In[]: simple = SimpleSequence()
- In[]: simple.train
-Out[]: [w/r w/s s/s c/s , w/r w/r s/r c/s , w/s s/s s/s c/s ]
- In[]: simple.test
-Out[]: [w/r w/s s/s c/s , c/s w/s t/s w/s ] 
-\end{python}
-\end{exercise}
+%\begin{exercise}
+%Load the simple sequence dataset:
+%From the ipython command line (Note: start ipython from the \emph{lxmls}
+%directory), create a simple sequence object and look at the training
+%and test set.
+%\begin{python}
+% In[]: run readers/simple_sequence.py
+% In[]: simple = SimpleSequence()
+% In[]: simple.train
+%Out[]: [w/r w/s s/s c/s , w/r w/r s/r c/s , w/s s/s s/s c/s ]
+% In[]: simple.test
+%Out[]: [w/r w/s s/s c/s , c/s w/s t/s w/s ] 
+%\end{python}
+%\end{exercise}
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "../../guide"
@@ -192,4 +260,4 @@ Out[]: [w/r w/s s/s c/s , c/s w/s t/s w/s ]
 
 
 In the next section we turn our attention to estimating the different
-probability distributions of the model: $\pi_l$, $a_{m,l}$ and $b_l(\obs_i)$.
+probability distributions of the model.
