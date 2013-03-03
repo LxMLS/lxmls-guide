@@ -1,6 +1,6 @@
 In this class, we will continue to focus on sequence classification,
 but instead of following a \emph{generative} approach (like in the previous
-chapter) we move towards \emph{discriminative} approaches. Recall that the difference between these approaches is that generative approaches attempt to model the probability distribution of the data, $p_{\theta} (\sent, \hseq )$ whereas discriminative ones only model the conditional probability of the sequence, given the observed data, $p_{\theta} (\hseq | \sent )$.
+chapter) we move towards \emph{discriminative} approaches. Recall that the difference between these approaches is that generative approaches attempt to model the probability distribution of the data, $P(X,Y)$ whereas discriminative ones only model the conditional probability of the sequence, given the observed data, $P(Y|X)$.
 
 \begin{table}
 \centering
@@ -42,21 +42,34 @@ Before we explain the particular methods, the next section will talk a
 bit about feature representation for sequences. 
 
 Throughout this chapter, we will be searching for the solution of 
-
 \begin{equation}
-\argmax_{\hseq} p_{\theta} (\hseq | \sent ) = \argmax_{\hseq} \theta \cdot  f(\sent,\hseq) \label{eq::struc_pred} 
+\argmax_{y \in \statevocab^N} P(Y=y | X=x) = \argmax_{y \in \statevocab^N} \W \cdot  \F(x,y). \label{eq::struc_pred} 
 \end{equation}
+where $\W$ is a weight vector, and $\F(x,y)$ is a feature vector. We will see that these sort of linear models are more flexible than HMMs, in the sense that they may incorporate 
+more general features while being able to reuse the same decoders (based on the Viterbi and forward-backward algorithms). In fact, \emph{the exercises in this lab will not touch the decoders that 
+have been developed in the previous lab}. Only the training algorithms and the function that 
+compute the scores will change.
 
-As in the previous section, $\hseq$ is a sequence so the maximization
+As in the previous section, $y = y_1\ldots y_N$ is a sequence so the maximization
 is over an exponential number of objects, making it intractable by brute force methods. Again
-we will make a first order Markov independence assumption, and so the
-features will decompose as the model. Therefore, expression
-~\ref{eq::struc_pred} can be written as:
-
+we will make an assumption analogous to the ``first order Markov independence property,'' so that the
+features may decompose as a sum over nodes and edges in a trellis. 
+This is done by assuming expression~\ref{eq::struc_pred} can be written as:
 \begin{equation}
-\argmax_{\hseq} \sum_N \sum_{\hseq} \theta \cdot
-f(n,\hs_n,\sent_n)  + \sum_N \sum_{\hs_n \in \hvocab} \theta \cdot f(n,\hs_n,\hs_{n-1},\sent_n)\label{eq::struc_pred_decompose} 
+\argmax_{y \in \statevocab^N} 
+\sum_{i=1}^N \underbrace{\W \cdot \F_{\mathrm{emiss}}(i,x,y_i)}_{\mathrm{score}_{\mathrm{emiss}}}  + 
+\underbrace{\W \cdot \F_{\mathrm{init}}(x,y_1)}_{\mathrm{score}_{\mathrm{init}}}  + 
+\sum_{i=1}^{N-1} \underbrace{\W \cdot \F_{\mathrm{trans}}(i,x,y_i,y_{i+1})}_{\mathrm{score}_{\mathrm{trans}}}+ 
+\underbrace{\W \cdot \F_{\mathrm{final}}(x,y_N)}_{\mathrm{score}_{\mathrm{final}}}
+\label{eq::struc_pred_decompose}
 \end{equation}
+In other words, the scores ${\mathrm{score}_{\mathrm{emiss}}}$, 
+${\mathrm{score}_{\mathrm{init}}}$, ${\mathrm{score}_{\mathrm{trans}}}$
+and ${\mathrm{score}_{\mathrm{final}}}$ are now computed as inner products 
+between weight vectors and feature vectors rather than log-probabilities.
+The feature vectors depend locally on the output variable 
+(\emph{i.e.}, they only look at a single $y_i$ or a pair $y_i,y_{i+1}$);
+however they may depend globally on the observed input $x=x_{1},\ldots,x_{N}$.
 
 \section{\label{seq::features} Feature Extraction}
 
@@ -65,8 +78,8 @@ will only use identity features, and will mimic the features used by
 the HMM model from the previous section. This will allow us to directly
 compare the performance of a generative vs a discriminative
 approach. Note that although not required, all the features we will use
-in this section are binary features, indicating the presence or
-absence of a given condition. 
+in this section are binary features, indicating whether a given condition 
+is satisfied or not. 
 
 \begin{table}
 \begin{center}
@@ -74,16 +87,16 @@ absence of a given condition.
 \hline
 Condition & Name\\
 \hline
-$\hs_i = l \text{  } \& \text{  } t =0 $& Initial State \\
+$y_i = c_k \text{  } \& \text{  } i =0 $& Initial Features \\
 \hline
-$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m$& Transition Features \\
-%\hline
-%$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
+$y_i = c_k \text{  } \& \text{  } y_{i-1} = c_l$& Transition Features \\
 \hline
-$\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
+$y_i = c_k \text{  } \& \text{  } i = N$& Final Features \\
+\hline
+$x_i = w_j \text{  } \& \text{  } y_i = c_k$ & Emission Features \\
 \hline
 \end{tabular}
-\caption{\label{id-features} IDFeatures feature set. This set
+\caption{\label{id-features} {\tt IDFeatures} feature set. This set
   replicates the features used by the HMM model.}
 \end{center}
 \end{table}
@@ -100,16 +113,16 @@ $\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
 %\end{example}
 
 Table~\ref{id-features} depicts the features that are implicit in the HMM, which was the subject of 
-the previous chapter. These features are indicators of initial, observation and transition events. 
+the previous chapter. These features are indicators of initial, transition, final, and emission events. 
 The fact that we were using a generative model has forced us (in some sense) to 
 make strong independence assumptions. 
-However, since we now move to a discriminative approach, where we model $P(\hseq|\sent)$ rather than $P(\sent,\hseq)$, we are not tied anymore to 
+However, since we now move to a discriminative approach, where we model $P(Y|X)$ rather than $P(X,Y)$, we are not tied anymore to 
 some of these assumptions. In particular: 
 \begin{itemize}
 \item We may use ``overlapping'' features, \emph{e.g.}, features that fire simultaneously for many instances. 
 For example, we can use a feature for a word, such as a feature which fires for the word "brilliantly", and another for prefixes and suffixes of that word, such as one which fires if the last two letters of the word are "ly".
 This would lead to an awkward model if we wanted to insist on a generative approach. 
-\item We may use features that depend arbitrarily on the \emph{entire input sequence} $\sent$. On the other hand, 
+\item We may use features that depend arbitrarily on the \emph{entire input sequence} $x$. On the other hand, 
 we still need to resort to ``local'' features with respect to the \emph{outputs} (\emph{e.g.} looking only at consecutive state pairs), 
 otherwise decoding algorithms will become more expensive.  
 \end{itemize}
@@ -124,30 +137,26 @@ exercise only for performance reasons (to have less features and smaller caches)
 \hline
 Condition & Name\\
 \hline
-$\hs_i = l \text{  } \& \text{  } t =0 $& Initial State \\
+$y_i = c_k \text{  } \& \text{  } i =0 $& Initial Features \\
 \hline
-$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m$& Transition Features \\
-%\hline
-%$\hs_i = l \text{  } \& \text{  } \hs_{i-1} = m \text{  }\& \text{  } t = N$& Final Transition Features \\
+$y_i = c_k \text{  } \& \text{  } y_{i-1} = c_l$& Transition Features \\
 \hline
-$\sent_i = a \text{  } \& \text{  } \hs_i = l$& Observation Features \\
+$y_i = c_k \text{  } \& \text{  } i = N$& Final Features \\
 \hline
-$\sent_i = a \text{  } \& \text{ $a$ is uppercased} \text{  } \& \text{  } \hs_i = l$& Uppercase Features
+$x_i = w_j \text{  } \& \text{  } y_i = c_k$& Basic Emission Features \\
+$x_i = w_j \text{  } \& \text{ $w_j$ is uppercased} \text{  } \& \text{  } y_i = c_k$& Uppercase Features
 \\
-\hline
-$\sent_i = a \text{  } \& \text{ $a$ contains digit} \text{  } \& \text{  } \hs_i = l$& Digit Features
+$x_i = w_j \text{  } \& \text{ $w_j$ contains digit} \text{  } \& \text{  } y_i = c_k$& Digit Features
 \\
-\hline
-$\sent_i = a \text{  } \& \text{ $a$ contains hyphen} \text{  } \& \text{  } \hs_i = l$& Hyphen Features
+$x_i = w_j \text{  } \& \text{ $w_j$ contains hyphen} \text{  } \& \text{  } y_i = c_k$& Hyphen Features
 \\
-\hline
-$\sent_i = a \text{  } \& \text{  } a_{[0..i]} \forall i \in [1,2,3]
-\text{  } \and \text{  } \hs_i = l$& Prefix Features \\
-\hline
-$\sent_i = a \text{  } \& \text{  } a_{[N-i..N]} \forall i \in [1,2,3] \text{  } \& \text{  } \hs_i = l$& Suffix Features \\
+$x_i = w_j \text{  } \& \text{  } w_j[0..i] \forall i \in [1,2,3]
+\text{  } \& \text{  } y_i = c_k$& Prefix Features \\
+$x_i = w_j \text{  } \& \text{  } w_j[|w_j|-i..|w_j|] \forall i \in [1,2,3] \text{  } \& \text{  } y_i = c_k$& Suffix Features \\
 \hline
 \end{tabular}
-\caption{\label{ex-features} Extended feature set. Some features in this set could not be included in the HMM model.}
+\caption{\label{ex-features} Extended feature set. Some features in this set could not be included in the HMM model. The features included in the bottom row are all considered emission features 
+for the purpose of our implementation, since they all depend on $i$, $x$ and $y_i$.}
 \end{center}
 \end{table}
 
@@ -163,48 +172,125 @@ $\sent_i = a \text{  } \& \text{  } a_{[N-i..N]} \forall i \in [1,2,3] \text{  }
 %\end{python}
 %\end{example}
 
-We consider two kinds of features: \emph{node features}, which form a vector $\boldsymbol{f}_N(\sent,\hv_i)$, 
-and \emph{edge features}, which form a vector $\boldsymbol{f}_E(\sent,\hv_i,\hv_{i-1})$.% 
-\footnote{To make things simpler, we will assume later on that edge features do not depend on the input $\sent$---but they could, without 
-changing at all the decoding algorithm.} %
-These feature vectors will receive parameter vectors $\boldsymbol{\theta}_N$ and  $\boldsymbol{\theta}_E$. 
-Similarly as in the previous chapter, we consider:
+Our features subdivide into two groups: 
+$\F_{\mathrm{emiss}}$, $\F_{\mathrm{init}}$, 
+and $\F_{\mathrm{final}}$ are all instances of 
+\emph{node features}, 
+depending only on a single position in the
+state sequence (a node in the trellis); 
+$\F_{\mathrm{trans}}$ 
+are \emph{edge features},
+depending on two consecutive positions in the state 
+sequence (an edge in the trellis).
+Similarly as in the previous chapter, we have the following scores (also called 
+\emph{log-potentials} in the literature on CRFs and graphical models):
 \begin{itemize}
-\item\emph{Node Potentials.} These are scores for a state at a particular position. 
- They are given by 
- \begin{equation}\label{dis_node_potentials}
- \psi_V(\sent,\hs_i) = \exp(\boldsymbol{\theta}_V \cdot \boldsymbol{f}_V(\sent,\hs_i)).
- \end{equation}
-\item\emph{Edge Potentials.} These are scores for the transitions. They are given by 
- \begin{equation}\label{dis_edge_potentials}
-\psi_E(\sent,\hs_i,\hs_{i-1}) = \exp(\boldsymbol{\theta}_E \cdot \boldsymbol{f}_E(\sent,\hs_i,\hs_{i-1})). 
- \end{equation}
+\item \emph{Initial scores.}
+These are scores for the initial state. 
+They are given by 
+\begin{equation}
+{\mathrm{score}}_{\mathrm{init}}(x,y_1) = \W \cdot \F_{\mathrm{init}}(x,y_1).
+\end{equation} 
+\item \emph{Transition scores.}
+These are scores for two consecutive states at a particular position. 
+They are given by 
+\begin{equation}
+{\mathrm{score}}_{\mathrm{trans}}(i,x,y_i,y_{i+1}) = \W \cdot \F_{\mathrm{trans}}(i,x,y_{i},y_{i+1}).
+\end{equation} 
+\item \emph{Final scores.}
+These are scores for the final state. 
+They are given by 
+\begin{equation}
+{\mathrm{score}}_{\mathrm{final}}(x,y_N) = \W \cdot \F_{\mathrm{final}}(x,y_N).
+\end{equation} 
+\item \emph{Emission scores.}
+These are scores for a state at a particular position. 
+They are given by 
+\begin{equation}\label{dis_node_potentials}
+{\mathrm{score}}_{\mathrm{emiss}}(i,x,y_i) = \W \cdot \F_{\mathrm{emiss}}(i,x,y_i).
+\end{equation} 
 \end{itemize}
-
-Let $\boldsymbol{\theta} = (\boldsymbol{\theta}_N, \boldsymbol{\theta}_E)$. 
-The conditional probability $P(\hseq|\sent)$ is then defined as follows: 
+%which form a vector $\boldsymbol{f}_N(\sent,\hv_i)$, 
+%and \emph{edge features}, which form a vector $\boldsymbol{f}_E(\sent,\hv_i,\hv_{i-1})$.% 
+%\footnote{To make things simpler, we will assume later on that edge features do not depend on the input $\sent$---but they could, without 
+%changing at all the decoding algorithm.} %
+%These feature vectors will receive parameter vectors $\boldsymbol{\theta}_N$ and  $\boldsymbol{\theta}_E$. 
+%Similarly as in the previous chapter, we consider:
+%\begin{itemize}
+%\item\emph{Node Potentials.} These are scores for a state at a particular position. 
+% They are given by 
+% \begin{equation}\label{dis_node_potentials}
+% \psi_V(\sent,\hs_i) = \exp(\boldsymbol{\theta}_V \cdot \boldsymbol{f}_V(\sent,\hs_i)).
+% \end{equation}
+%\item\emph{Edge Potentials.} These are scores for the transitions. They are given by 
+% \begin{equation}\label{dis_edge_potentials}
+%\psi_E(\sent,\hs_i,\hs_{i-1}) = \exp(\boldsymbol{\theta}_E \cdot \boldsymbol{f}_E(\sent,\hs_i,\hs_{i-1})). 
+% \end{equation}
+%\end{itemize}
+%
+%Let $\boldsymbol{\theta} = (\boldsymbol{\theta}_N, \boldsymbol{\theta}_E)$. 
+Given a weight vector $\W$, the conditional probability $P_{\W}(Y=y|X=x)$ is then defined as follows: 
 \begin{eqnarray}
-P(\hseq|\sent) &=& \frac{1}{Z(\boldsymbol{\theta},\sent)}\exp\left(\sum_i \boldsymbol{\theta}_V \cdot \boldsymbol{f}_V(\sent_i,\hs_i) + 
-\sum_i\boldsymbol{\theta}_E \cdot
-\boldsymbol{f}_E(\sent_i,\hs_i,\hs_{i-1})\right) \label{eq:disc_formula}\\
-&=& \frac{1}{Z(\boldsymbol{\theta},x)} \prod_i\psi_V(\sent_i,\hs_i) \psi_E(\sent_i,\hs_i,\hs_{i-1}),
+\lefteqn{P_{\W}(Y=y|X=x) =}\nonumber\\
+&&
+\!\!\!\!\!\!\!\!\frac{1}{Z({\W},x)}\exp\left(\W \cdot \F_{\mathrm{init}}(x,y_1) + 
+\sum_{i=1}^{N-1} \W \cdot \F_{\mathrm{trans}}(i,x,y_i,y_{i+1})
++
+\W \cdot \F_{\mathrm{final}}(x,y_N)
++
+\sum_{i=1}^{N} \W \cdot \F_{\mathrm{emiss}}(i,x,y_i)
+\right) \label{eq:disc_formula}
+%&=& \frac{1}{Z(\boldsymbol{\theta},x)} \prod_i\psi_V(\sent_i,\hs_i) \psi_E(\sent_i,\hs_i,\hs_{i-1}),
 \end{eqnarray}
-where
+where the normalizing factor $Z(\W,x)$ is called the \emph{partition function}:
 \begin{eqnarray}
-Z(\boldsymbol{\theta},x) = \sum_{\hs \in \hvocab} \prod_i \psi_V(\sent_i,\hs_i) \psi_E(\sent_i,\hs_i,\hs_{i-1})
+\lefteqn{Z(\W,x) =}\nonumber\\ 
+&& 
+\sum_{y\in \statevocab^N} \exp\left(\W \cdot \F_{\mathrm{init}}(x,y_1) + 
+\sum_{i=1}^{N-1} \W \cdot \F_{\mathrm{trans}}(i,x,y_i,y_{i+1})
++
+\W \cdot \F_{\mathrm{final}}(x,y_N)
++
+\sum_{i=1}^{N} \W \cdot \F_{\mathrm{emiss}}(i,x,y_i)
+\right).
 \end{eqnarray}
-is the partition function. 
 
-There are three important problems that need to be solved: 
+For decoding,  
+there are three important problems that need to be solved: 
 \begin{enumerate}
-\item Given $\sent$, computing the most likely output sequence $\hseq$ (the one which maximizes $P(\hseq|\sent)$. 
-\item Compute the posterior marginals $P(\hs_i|\sent)$ at each position $i$.
-\item Compute the partition function. 
+\item Given $X=x$, computing the most likely output sequence $\widehat{y}$ (the one which maximizes $P_{\W}(Y=y|X=x)$. 
+\item Compute the posterior marginals $P_{\W}(Y_i=y_i|X=x)$ at each position $i$.
+\item Evaluate the partition function $Z(\W,x)$. 
 \end{enumerate}
-Interestingly, all these problems can be solved by using the same
-algorithms (just changing the potentials) that were 
-already implemented for HMMs: the Viterbi algorithm (for 1) and the forward-backward algorithm (for 2--3).
+Interestingly, all these problems can be solved by using the very same
+algorithms that were 
+already implemented for HMMs: the Viterbi algorithm (for 1) and the forward-backward algorithm (for 2--3). All that changes is the way the scores are computed. 
 
+For training, 
+the important problem is that of obtaining the weight vector $\W$ that lead to an accurate 
+classifier. 
+We will discuss two strategies:
+\begin{itemize}
+\item Maximizing conditional log-likelihood from a set of labeled data $\{(x^m,y^m)\}_{m=1}^M$. This corresponds to the following optimization problem:
+\begin{equation}
+\widehat{\W} = \argmax_{\W} \log P_{\W}(Y=y^m | X=x^m).
+\end{equation}
+To avoid overfitting, it is common to regularize with the Euclidean norm function, 
+which is equivalent to considering a zero-mean Gaussian prior on the weight vector.
+The problem becomes:
+\begin{equation}
+\widehat{\W} = \argmax_{\W} \log P_{\W}(Y=y^m | X=x^m) - \frac{\lambda}{2} \|\W\|^2.
+\end{equation}
+This is precisely the structured variant of the logistic regression 
+method discussed in Chapter 1.
+Unlike HMMs, this problem does not have a closed form solution 
+and has to be solved with numerical optimization. 
+\item Running the structured perceptron algorithm 
+to obtain a weight vector $\W$ that accurately
+classifies the training data. 
+We will see that this simple strategy achieves results which are competitive 
+with conditional log-likelihood maximization.
+\end{itemize}
 
 
 
