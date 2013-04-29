@@ -576,7 +576,11 @@ the output. Note that the state posteriors are a proper
 probability distribution (the columns of the result sum to 1).
 
 \begin{python}
->>> state_posteriors, _, _ = hmm.compute_posteriors(simple.train.seq_list[0])
+>>> initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
+>>> state_posteriors, _, _ = hmm.compute_posteriors(initial_scores,
+                                                    transition_scores,
+                                                    final_scores,
+                                                    emission_scores)
 >>> print state_posteriors
 [[ 0.95738152  0.04261848]
  [ 0.75281282  0.24718718]
