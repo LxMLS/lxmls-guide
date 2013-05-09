@@ -9,7 +9,13 @@ The concepts that we introduce in this chapter will be revisited in later chapte
 will be adapted to structured inputs and outputs. For now, we concern only with multi-class classification 
 (with just a few classes). 
 
-\section{Notation}
+\section*{Today's assignment}
+
+The assignment of today's class is to implement a classifier called Naive Bayes, and use it to perform sentiment analysis on a corpus of book reviews from Amazon.
+
+\section{Pre-assignment}
+
+\subsection{Notation}
 
 In what follows, we denote by $\mathcal{X}$ our \emph{input set} (also called \emph{observation set}), and by $\mathcal{Y}$ our \emph{output set}. 
 We will make no assumptions about the set $\mathcal{X}$, which can be continuous or discrete. In this lecture, we 
@@ -60,7 +66,7 @@ $x \in \mathcal{X}$ (test example), the machine makes a prediction ${\hat y}$ by
 \end{figure}
 %}
 
-\section{\label{s::naiveBayes}Generative Classifiers: Na\"{i}ve Bayes}
+\subsection{\label{s::naiveBayes}Generative Classifiers: Na\"{i}ve Bayes}
 
 If we knew the \emph{true} distribution $P(X,Y)$, the best possible classifier (Bayes optimal) 
 would be one which predicts according to
@@ -240,7 +246,7 @@ P(\mathcal{D}) &=& \prod_{m=1}^M P(x^m,y^m) \nonumber\\
 %\end{exercise}
 
 
-\section{Example: Multinomial Na\"{i}ve Bayes for Document Classification}
+\subsection{Example: Multinomial Na\"{i}ve Bayes for Document Classification}
 
 We now consider a more realistic scenario where the na\"ive Bayes classifier may be applied. 
 Suppose that the task is \emph{document classification}: 
@@ -277,7 +283,7 @@ In words: the class priors' estimates are their relative frequencies (as before)
 the class-conditional word probabilities are the relative frequencies of those words across documents with that class.
 
 
-
+\section{Assignment}
 
 \begin{exercise}
 In this exercise we will use the the Amazon sentiment analysis data \citep{blitzer2007biographies}, 
@@ -293,8 +299,8 @@ scr = srs.SentimentCorpus("books")
 This will load the data in a bag-of-words representation where rare words (occurring less than $5$ times in the training data) are removed. 
 
 \begin{enumerate}
-\item Create a file {\tt MultinomialNaiveBayes.py} and implement the na\"ive Bayes with the multinomial model in a new class
-  {\tt MultinomialNaiveBayes}. (Hint: look at the implementation of {\tt GaussianNaiveBayes} for inspiration).
+\item Open the file {\tt MultinomialNaiveBayes.py}. Inside the {\tt MultinomialNaiveBayes} class you will find the {\tt train} method. We have already placed some code in that file to help you get started.
+
 \item Run na\"ive Bayes with the multinomial model on the Amazon
   dataset (sentiment classification) and report results both for
   training and testing: 
@@ -330,8 +336,9 @@ Report the new accuracies.
 \end{enumerate}
 \end{exercise}
 
+\section{Post-assignment}
 
-\section{Features and Discriminative Classifiers}\label{sec:linearclass}
+\subsection{Features and Discriminative Classifiers}\label{sec:linearclass}
 
 In the previous sections we discussed generative classifiers. Those classifiers require us to model the class prior and class conditional distributions. Recall, however, that a classifier is \emph{any} function which maps objects $x \in \mathcal{X}$ onto classes $y \in \mathcal{Y}$. While it's often useful to model how the data was generated, it's not required. Classifiers which do not model these distributions are called \emph{discriminative} classifiers. 
 
@@ -473,11 +480,11 @@ Hence, the multinomial model yields a prediction rule of the form
 %and compare it with the Bayes optimal classifier. 
 %\end{exercise}
 
-\section{Online Discriminative Algorithms: Perceptron and MIRA}
+\subsection{Online Discriminative Algorithms: Perceptron and MIRA}
 
 We now discuss two discriminative classification algorithms. These two algorithms are called \emph{online} (or \emph{stochastic}) algorithms because they only process one data point (in our example, one document) at a time. Algorithms which look at the whole dataset at once are called \emph{offline}, or \emph{batch} algorithms, and will be discussed later.
 
-\subsection{\label{s:perceptron} Perceptron}
+\subsubsection{\label{s:perceptron} Perceptron}
 
 Perhaps the oldest algorithm to train a linear classifier is the \emph{perceptron} \citep{Rosenblatt1958}, 
 which we depict as Alg.~\ref{alg:perceptron}.%
@@ -584,7 +591,7 @@ and plot them every five iterations. What do you observe?
 \end{enumerate}
 \end{exercise}
 
-\subsection{Margin Infused Relaxed Algorithm (MIRA)}
+\subsubsection{Margin Infused Relaxed Algorithm (MIRA)}
 
 %\afm{maybe we should keep things simple here and talk only about the unregularized variant of MIRA. It's easier to grasp the intuition. 
 %What do you guys think? We should probably ask Koby's opinion.}
@@ -709,11 +716,11 @@ results achieved and separating hiperplanes found.
 
 
 
-\section{Discriminative Classifiers: Maximum Entropy and Support Vector Machines}
+\subsection{Discriminative Classifiers: Maximum Entropy and Support Vector Machines}
 
 The algorithms described in the last section (perceptron and MIRA) are called \emph{online} or \emph{stochastic} algorithms, because they look at one data point at a time. We now describe two discriminative classifiers which look at all points at once; these are called \emph{offline} or \emph{batch} algorithms.
 
-\subsection{\label{s:me}Maximum Entropy Classifiers}
+\subsubsection{\label{s:me}Maximum Entropy Classifiers}
 
 The notion of \emph{entropy} in the context of Information Theory \citep{Shannon1948} is one of the most significant advances 
 in mathematics in the twentieth century. The principle of \emph{maximum entropy} (which appears under different names, 
@@ -933,7 +940,7 @@ print "Max-Ent Online Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,a
 \end{exercise}
 
 
-\subsection{Support Vector Machines}\label{sec:svms}
+\subsubsection{Support Vector Machines}\label{sec:svms}
 
 Support vector machines are also a discriminative approach, but they are not a probabilistic model at all. 
 The basic idea is that, if the goal is to accurately predict outputs (according to some cost function), we should focus on that 
@@ -1073,7 +1080,7 @@ results achieved and separating hiperplanes found.
 
 
 
-\section{Comparison}
+\subsection{Comparison}
 
 Table~\ref{tab:comparison_lab1} provides a high-level comparison among the different models discussed in this chapter. 
 \begin{table}
@@ -1112,7 +1119,7 @@ Hyperparameters to tune				& 1 (smoothing) & 0 & 1 & 1 & 1\\
 \end{exercise}
 
 
-\section{Final remarks}
+\subsection{Final remarks}
 
 %\afm{Please add more if something else should be here!}
 
