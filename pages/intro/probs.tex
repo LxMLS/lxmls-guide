@@ -55,7 +55,7 @@ for every finite subset J of I.
 \end{minipage}}
 
 \vspace{0.1in}
-For events $A$ and $B$, where $P(B) > 0$, {\bf conditional probability} of $A$ given $B$ has occurred is defined as 
+For events $A$ and $B$, where $P(B) > 0$, the {\bf conditional probability} of $A$ given that $B$ has occurred is defined as: 
 
 \begin{equation} 
 P(A|B)=\frac{P(AB)}{P(B)}.
@@ -72,7 +72,7 @@ P(B)=\sum_{i=1}^{k}P(B|A_{i})P(A_{i}).
 \end{equation}
 
 
-Using Equations \ref{eq:condprob}  and \ref{eq:totprob}, one can derive the famous Bayes' theorem.
+Using Equations \ref{eq:condprob}  and \ref{eq:totprob}, one can derive the Bayes' theorem.
 
 \vspace{0.1in}
 \fbox
@@ -91,7 +91,7 @@ $P(A_{i})$ is called the {\bf prior probability} of $A_i$ and $P(A_{i}|B)$ is th
 \end{remark}
 
 \begin{remark}
-In Bayesian Statistical Inference, Bayes' theorem is used to compute the estimates of distribution parameters from data; Where, prior is the initial {\em belief} about the parameters, likelihood is the distribution function of the parameter (usually trained from data) and posterior is the {\em updated belief} about the parameters.
+In Bayesian Statistical Inference, the Bayes' theorem is used to compute the estimates of distribution parameters from data. Here, prior is the initial {\em belief} about the parameters, likelihood is the distribution function of the parameter (usually trained from data) and posterior is the {\em updated belief} about the parameters.
 \end{remark}
 
 %The theorem also holds when the sample space is continuous.
@@ -169,20 +169,20 @@ j \end{array}\right) p^{j}(1-p)^{n-j}
 where $n$ is the number of Bernoulli trials with probability $p$ of success on each trial.
 
 \subsection{\label{categorical} Categorical}
-The Categorical distribution (often conflated with the Multinomial distribution, in fields such as Natural Language Processing), is another generalization of the Bernoulli distribution, allowing the definition of a set of possible outcomes, rather than simply the events "success" and "failure" defined in the Bernoulli distribution. Considering a set of outcomes indexed from $1$ to $n$, the distribution takes the form of
+The \textbf{Categorical distribution} (often conflated with the Multinomial distribution, in fields like Natural Language Processing) is another generalization of the Bernoulli distribution, allowing the definition of a set of possible outcomes, rather than simply the events ``success'' and ``failure'' defined in the Bernoulli distribution. Considering a set of outcomes indexed from $1$ to $n$, the distribution takes the form of
 \begin{equation*}
 f(x_i;p_1,...,p_n) = p_i.
 \end{equation*}
-Where parameters $p_1,...,p_n$ is the set with the occurrence probability of each outcome. Note that we must ensure that $\sum_{i=1}^np_i=1$, so we can set $p_n = \sum_{i=1}^{n-1}p_i$.
+where parameters $p_1,...,p_n$ is the set with the occurrence probability of each outcome. Note that we must ensure that $\sum_{i=1}^np_i=1$, so we can set $p_n = \sum_{i=1}^{n-1}p_i$.
 
 \subsection{\label{multinomial} Multinomial}
 
-The Multinomial distribution is a generalization of the Binomial distribution and the Categorical distribution, since it considers multiple outcomes, as the Categorial distribution, and multiple trials, as in the Binomial distribution.
+The \textbf{Multinomial distribution} is a generalization of the Binomial distribution and the Categorical distribution, since it considers multiple outcomes, as the Categorial distribution, and multiple trials, as in the Binomial distribution.
 Considering a set of outcomes indexed from $1$ to $n$, the vector $x_1,...,x_n$, where $x_i$ indicates the number of times the event with index $i$ occurs, follows the Multinomial distribution
 \begin{equation*}
 f(x_1,...,x_n;p_1,...,p_n) = \frac{n!}{x_{1}!...x_{n}!} p_{1}^{x_{1}}...p_{n}^{x_{n}}.
 \end{equation*}
-Where parameters $p_1,...,p_n$ represent the occurrence probability for the respective outcome.
+Where parameters $p_1,...,p_n$ represent the occurrence probability of the respective outcome.
 
 
 %\begin{theorem}{\bf (Multinomial theorem)} Let $m$ and $n$ be positive integers. Let $A$ be the set of vectors $x=(x_{1},\ldots,x_{n})$ 
@@ -194,7 +194,7 @@ Where parameters $p_1,...,p_n$ represent the occurrence probability for the resp
 %\end{theorem}
 
 \subsection{\label{gaussian} Gaussian Distribution}
-A very important theorem in probability theory called the {\bf Central Limit Theorem} states that, under very general conditions, if we sum a very large number of mutually independent random variables, then the distribution of the sum can be closely approximated by a certain specific continuous density called the normal (or Gaussian) density. The normal density function with parameters $\mu$ and $\sigma$ is defined as follows:
+A very important theorem in probability theory is the {\bf Central Limit Theorem}. The Central Limit Theorem states that, under very general conditions, if we sum a very large number of mutually independent random variables, then the distribution of the sum can be closely approximated by a certain specific continuous density called the normal (or Gaussian) density. The normal density function with parameters $\mu$ and $\sigma$ is defined as follows:
 
 \begin{equation*}
 f_{X}(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/2\sigma^2}, \text{   }-\infty < x < \infty.
@@ -208,20 +208,20 @@ f_{X}(x)=\frac{1}{\sqrt{2\pi}\sigma}e^{-(x-\mu)^2/2\sigma^2}, \text{   }-\infty 
 \end{center}
 \end{figure}
 
-Fig. \ref{fig:normaldist}, compares a plot of normal density for the cases $\mu=0$ and $\sigma=1$, and 
+Figure \ref{fig:normaldist} compares a plot of normal density for the cases $\mu=0$ and $\sigma=1$, and 
 $\mu=0$ and  $\sigma=2$.
 
 
 \subsection{Maximum Likelihood Estimation}
-Until now, we assumed that, for every distribution, the parameters $\theta$ are known and are used when we calculate $p(x|\theta)$.There are some cases where the values of the parameters are easy to infer, such as the probability $p$ getting a head using a fair coin, used on a Bernoulli or Binomial distribution. However, in many problems, these values are complex to define, and it is more viable to estimate the parameters using the data $x$. For instance, in the example above with the coin toss, if the coin is somehow tampered to have a biased behavior, rather than examining the dynamics or the structure of the coin to infer a parameter for $p$, a person could simply throw the coin $n$ times and count the number of heads $h$ and set $p=\frac{h}{n}$. In doing this, the person is using the data $x$ to estimate $\theta$.
+Until now we assumed that, for every distribution, the parameters $\theta$ are known and are used when we calculate $p(x|\theta)$. There are some cases where the values of the parameters are easy to infer, such as the probability $p$ of getting a head using a fair coin, used on a Bernoulli or Binomial distribution. However, in many problems, these values are complex to define and it is more viable to estimate the parameters using the data $x$. For instance, in the example above with the coin toss, if the coin is somehow tampered to have a biased behavior, rather than examining the dynamics or the structure of the coin to infer a parameter for $p$, a person could simply throw the coin $n$ times, count the number of heads $h$ and set $p=\frac{h}{n}$. By doing so, the person is using the data $x$ to estimate $\theta$.
 
-With this in mind, we will know generalize this process. We define the probability $p(\theta|x)$, which is the probability of the parameter $\theta$, given the data $x$. This probability is called {\bf likelihood} $\likelihood(\theta|x)$ and measures how well the parameter $\theta$ models the data $x$. This can be defined in terms of the distribution $f$ as
+With this in mind, we will now generalize this process by defining the probability $p(\theta|x)$ as the probability of the parameter $\theta$, given the data $x$. This probability is called {\bf likelihood} $\likelihood(\theta|x)$ and measures how well the parameter $\theta$ models the data $x$. The likelihood can be defined in terms of the distribution $f$ as
 \begin{equation*}
 \likelihood(\theta|x_1,...,x_n)=\prod_{i=1}^n f(x_i|\theta)
 \end{equation*}
-where $x_1,...,x_n$ are iid samples.
+where $x_1,...,x_n$ are independently and identically distributed (i.i.d.) samples.
 
-To understand this concept better, we go back to the tampered coin example again. Suppose that we throw the coin 5 times and get the sequence [1,1,1,1,1] (1=head, 0=tail). Using the Bernoulli distribution~\ref{bernoulli-eq} $f$ to model this problem, we get the following likelihood values:
+To understand this concept better, we go back to the tampered coin example again. Suppose that we throw the coin 5 times and get the sequence [1,1,1,1,1] (1=head, 0=tail). Using the Bernoulli distribution (see Section~\ref{bernoulli-eq}) $f$ to model this problem, we get the following likelihood values:
 \begin{itemize}
 \item $\likelihood(0,x) = f(1,0)^5 = 0^5 = 0$
 \item $\likelihood(0.2,x) = f(1,0.2)^5 = 0.2^5 = 0.00032$
@@ -243,7 +243,7 @@ If we get the sequence [1,0,1,1,0] instead, the likelihood values would be:
 
 We can see that the likelihood is the highest when the distribution $f$ with parameter $p$ is the best fit for the observed samples. Thus, the best estimate for $p$ according to $x$ would be the value for which $\likelihood(p,x)$ is the highest. 
 
-The value of the parameter $\theta$ with the highest likelihood is called {\bf maximum likelihood estimate(MLE)} and is defined as
+The value of the parameter $\theta$ with the highest likelihood is called {\bf maximum likelihood estimate (MLE)} and is defined as
 \begin{equation*}
 \hat{\theta}_{mle}=argmax_{\theta}\likelihood(\theta|x)
 \end{equation*}
@@ -273,7 +273,7 @@ GaltonData = galton.load()
 \item What are the mean height and standard deviation of all the people in the sample? What is the mean height of the fathers and of the sons?
 \item Plot a histogram of all the heights (you might want to use the \texttt{plt.hist} function and the \texttt{ravel} method on arrays).
 \item Plot the height of the father versus the height of the son.
-\item You should notice that there are several points that are exactly the same (e.g., there are 21 pairs with the values 68.5 and 70.2). Use the \texttt{?} command in ipython to read the documentation for the \texttt{numpy.random.randn}function and add random jitter (i.e., move the point a little bit) to the points before displaying them. Does your impression of the data change?
+\item You should notice that there are several points that are exactly the same (e.g., there are 21 pairs with the values 68.5 and 70.2). Use the \texttt{?} command in ipython to read the documentation for the \texttt{numpy.random.randn} function and add random jitter (i.e., move the point a little bit) to the points before displaying them. Does your impression of the data change?
 \end{itemize}
 \end{exercise}
 
