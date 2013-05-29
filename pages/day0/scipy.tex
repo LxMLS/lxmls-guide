@@ -1,83 +1,50 @@
 
-\subsubsection{IPython}
-
-You can access and run Python interactively, simply by running the
-\texttt{python} command. Alternatively, you can save your programme to a file
-and run python on it:
-
-\begin{verbatim}
-python yourfile.py
-\end{verbatim}
-
-In these lab sessions, we are going to be using Python in interactive mode
-several times. The standard Python interface is not very friendly, though.
-IPython, which stands for \emph{interactive Python}, is an improved Python
-shell. It saves your command history between sessions, has basic auto-complete,
-and has internal support for interacting with graphs through matplotlib.
-
-IPython is also designed to facilitate running parallel code of clusters of
-machines, but we will not make use of that functionality.
-
-To run ipython, simply run \texttt{ipython} on your command line. For
-interactive numeric use, the \texttt{-pylab} flag imports numpy and matplotlib
-for you and sets up interactive graphs:
-
-\begin{verbatim}
-ipython -pylab
-\end{verbatim}
-
-The IPython website has more information on it~\citep{PER-GRA:2007}.
-\footnote{\url{http://ipython.scipy.org/moin/}}
-
-\subsection{Matplotlib}
 
 
-\subsection{Numpy}
 
-As discussed in the lecture, there are many helpful functions in numpy. For
-basic mathematical operations, we have \code{np.log}, \code{np.exp},
-\code{np.cos},\ldots with the expected meaning. These operate both on single
-arguments and on arrays (where they will behave element wise).
+\subsection{Numpy and Matplotlib}
 
-\begin{python}
-import matplotlib.pyplot as plt
-import numpy as np
-X = np.linspace(0, 4 * np.pi, 1000)
-C = np.cos(X)
-S = np.sin(X)
+%As discussed in the lecture, there are many helpful functions in numpy. For basic mathematical operations, we have \code{np.log}, \code{np.exp}, \code{np.cos},\ldots with the expected meaning. These operate both on single arguments and on arrays (where they will behave element wise).
 
-plt.plot(X, C)
-plt.plot(X, S)
-\end{python}
+%\begin{python}
+%import matplotlib.pyplot as plt
+%import numpy as np
+%X = np.linspace(0, 4 * np.pi, 1000)
+%C = np.cos(X)
+%S = np.sin(X)
 
-Other functions take a whole array and compute a single value from it. For
-example, \code{np.sum}, \code{np.mean},\ldots These are available as both free
-functions and as methods on arrays.
+%plt.plot(X, C)
+%plt.plot(X, S)
+%\end{python}
 
-\begin{python}
-import numpy as np
-A = np.arange(100)
-print np.mean(A)
-print A.mean()
+%Other functions take a whole array and compute a single value from it. For
+%example, \code{np.sum}, \code{np.mean},\ldots These are available as both free
+%functions and as methods on arrays.
 
-C = np.cos(A)
-print C.ptp()
-\end{python}
+%\begin{python}
+%import numpy as np
+%A = np.arange(100)
+%print np.mean(A)
+%print A.mean()
 
-\begin{exercise}
-Run the above example and lookup the \code{ptp} function/method.
-\end{exercise}
+%C = np.cos(A)
+%print C.ptp()
+%\end{python}
 
-\begin{exercise}
-Consider the following approximation to compute an integral
+%\begin{exercise}
+%Run the above example and lookup the \code{ptp} function/method.
+%\end{exercise}
 
-\[
-\int_0^{1} f(x)dx \approx \sum_{i = 0}^{999} \frac{f(i/1000)}{1000}.
-\]
+%\begin{exercise}
+%Consider the following approximation to compute an integral
 
-Use numpy to implement this for $f(x) = x^2$. You should not need to use any
-loops.
-\end{exercise}
+%\[
+%\int_0^{1} f(x)dx \approx \sum_{i = 0}^{999} \frac{f(i/1000)}{1000}.
+%\]
+
+%Use numpy to implement this for $f(x) = x^2$. You should not need to use any
+%loops.
+%\end{exercise}
 
 \begin{exercise}
 \begin{enumerate}
@@ -181,19 +148,6 @@ exercise.
 \end{exercise}
 
 \subsection{Debugging}
-
-There are a few options for debugging Python programmes. Given that we are
-using ipython, we will explore its internal methods.
-
-When you run a programme in ipython and there is an unhandled error (uncaught
-expection), you can type \code{debug} to enter the debugger (alternatively, you
-could have ran the code inside the debugger).
-
-Once inside the debugger, you can run debugging commands such as \code{step},
-\code{continue}, \code{up}/\code{down} (to move up and down the stack); or
-Python commands by prefixing them with \code{!}. The most common Python command
-you'll want to use is, of course, \code{print} to inspect the value of some
-variables and expressions.
 
 
 \begin{exercise}
