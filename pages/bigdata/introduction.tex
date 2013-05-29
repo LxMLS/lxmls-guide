@@ -1,0 +1,67 @@
+In this lab, we will work with Amazon.com's Web Services, a cloud based solution
+to run some simple analyses. Then, in the next lab, we will build on these
+tools to construct a larger learning system.
+
+\section{Introduction}
+
+AWS is a set of services of different types. We will focus on the \emph{Elastic
+Compute Cluster}, EC2.
+
+
+In this lab, we will be logging in to Linux-based machines using a command line
+interface. If you are not familiar with the command line, you may not grasp all
+the nuances
+
+\section{Running Your First Hadoop Job}
+
+You should have received a piece of paper with the following two pieces of
+information:
+
+\begin{enumerate}
+\item A host name
+\item A password
+\end{enumerate}
+
+This is the login to your private online server! Your hostname will look
+something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
+should be able to log in with username \texttt{ubuntu} and the password you
+were given. If you are using the command line, you can just type:
+
+ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
+
+(accept the RSA key and log in with the password we provided you).
+
+The machine has all of the necessary Python packages for you to work. It also
+has a standard collection of editors and other tools. It is an Ubuntu based
+installation and you can access super user powers with \texttt{sudo} (Don't
+worry if you did not understand this last sentence).
+
+\subsection{Running Word Count using Hadoop}
+
+\section{MapReduce \& Hadoop}
+
+The initial idea of MapReduce was an implementation by google, but very soon
+Hadoop appeared as an open-source implementation of the same paradigm.
+
+\subsection{Word Count}
+
+\begin{python}
+def count(doc):
+    from collections import defaultdict
+    c = defaultdict(int)
+    for w in doc.split():
+        c[w] += 1
+    for w,c in c.items():
+        yield w,c
+
+def combine(key, cs):
+    yield key, sum(cs)
+
+\end{python}
+
+
+\subsection{Naïve Bayes}
+
+The implementation of binary Naïve Bayes is very similar to counting words: we just
+need to keep track of the class of each document and maintain.
+
