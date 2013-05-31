@@ -277,6 +277,38 @@ ipdb> pp hour
 
 From here we could keep advancing with the n(ext) option or set a b(reak) point and type c(ontinue) to jump to a new position. We could also execute any python expression which is valid in the current frame (the function we stopped at). This is particularly useful to find out why code crashes, as we can try different alternatives without the need to restart the code again.
 
+\subsection{Exceptions}
+
+Occasionaly, a syntactically correct code statement may produce an error when an attempt is made to execute it. These kind of errors are called \textit{exceptions} in Python. For example, try executing the following:
+
+\begin{python}
+10/0
+\end{python}
+
+A \textit{ZeroDivisionError} exception was raised, and no output was returned. Exceptions can also be forced to occur by the programmer, with customized error messages (for a complete list of built-in exceptions, see \url{http://docs.python.org/2/library/exceptions.html}).
+
+\begin{python}
+raise ValueError("Invalid input value.")
+\end{python}
+
+\begin{exercise}
+Rewrite the code in Exercise 0.3 in order to raise a ValueError exception when the hour is less than 0 or more than 24.
+\end{exercise}
+
+Handling of exceptions is made with the \textit{try} statement:
+
+\begin{python}
+while True:
+    try:
+        x = int(raw_input("Please enter a number: ")
+        break
+    except ValueError:
+        print "Oops! That was no valid number. Try again..."
+\end{python}
+
+It works by first executing the \textit{try} clause. If no exception occurs, the \textit{except} clause is skipped; if an exception does occur, and if its type matches the the exception named in the \textit{except} keyword, the except clause is executed; otherwise, the exception is raised and execution is oborted (if it is not caught by outer \textit{try} statements).
+
+
 \subsubsection{Extending basic Functionalities with Modules}
 
 In Python you can load new functionalities into the language by using the \code{import}, \code{from} and \code{as} keywords. For example we can load the numpy module as
@@ -423,7 +455,7 @@ Consider the following approximation to compute an integral
 \int_0^{1} f(x)dx \approx \sum_{i = 0}^{999} \frac{f(i/1000)}{1000}.
 \]
 
-Use numpy to implement this for $f(x) = x^2$. You should not need to use any loops. The exact value is $1/3$. How close is the approximation?
+Use numpy to implement this for $f(x) = x^2$. You should not need to use any loops. Note that integer division in Python 2.x returns the floor division (use floats -- e.g. $5.0/2.0$ -- to obtain rationals). The exact value is $1/3$. How close is the approximation?
 \end{exercise}
 
 
