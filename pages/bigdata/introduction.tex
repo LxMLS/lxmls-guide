@@ -7,25 +7,28 @@ tools to construct a larger learning system.
 AWS is a set of services of different types. We will focus on the \emph{Elastic
 Compute Cluster}, EC2.
 
-
 In this lab, we will be logging in to Linux-based machines using a command line
 interface. If you are not familiar with the command line, you may not grasp all
 the nuances
 
 \section{Running Your First Hadoop Job}
 
-You should have received a piece of paper with the following two pieces of
+You should have received a piece of paper with the following four pieces of
 information:
 
 \begin{enumerate}
 \item A host name
 \item A password
+\item A ``AWS Key''
+\item A ``AWS Secret
 \end{enumerate}
 
-This is the login to your private online server! Your hostname will look
+We will ignore the first two items for the moment.  Your hostname will look
 something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
 should be able to log in with username \texttt{ubuntu} and the password you
-were given. If you are using the command line, you can just type:
+were given! This is your personal server.
+
+If you are using the command line, you can just type:
 
 ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
 
@@ -36,7 +39,6 @@ has a standard collection of editors and other tools. It is an Ubuntu based
 installation and you can access super user powers with \texttt{sudo} (Don't
 worry if you did not understand this last sentence).
 
-\subsection{Running Word Count using Hadoop}
 
 \section{MapReduce \& Hadoop}
 
@@ -45,20 +47,67 @@ Hadoop appeared as an open-source implementation of the same paradigm.
 
 \subsection{Word Count}
 
+Here is the problem:
+
+\begin{enumerate}
+\item You have a collection of documents, there are many of them.
+\item You want to count how many times each word appears in the whole collection.
+\end{enumerate}
+
+Counting words in a collection of documents can be parallelized in the following way:
+
+\begin{enumerate}
+\item You process each document by itself, counting how many times each word
+appears. This is the \emph{map} step. Notice that each document can be
+processed in parallel by different machines. The result for each file is a
+dictionary of a count for each word.
+\item You sum up the counts for each word to get the final count. This is the
+\emph{reduce} step. Notice that you can now parallelize over words.
+\end{enumerate}
+
+In this tutorial, we will be using the package \texttt{MrJob} (which was
+developed by Yelp, the company behind the epinomious website; but is available
+as open source, under the Apache license). On your Amazon machine, the package
+is already installed with all its dependencies, so you can just go ahead and
+use it.
+
+We are going to implement the word count algorithm now:
+
 \begin{python}
-def count(doc):
-    from collections import defaultdict
-    c = defaultdict(int)
-    for w in doc.split():
-        c[w] += 1
-    for w,c in c.items():
-        yield w,c
+# Import the necessary libraries:
+from mrjob.job import MRJob
 
-def combine(key, cs):
-    yield key, sum(cs)
+class WordCount(MRJob):
+    def mapper(self, _, doc):
+        c = {}
+        # Process the document
+        for w in doc.split():
+            if w in c:
+                c[w] += 1
+            else:
+                c[w] = 1
 
+        # Now, output the results
+        for w,c in c.items():
+            yield w,c
+
+    def reducer(self, key, cs):
+        yield key, sum(cs)
+
+wc = WordCount()
+wc.run()
 \end{python}
 
+You can save this as \texttt{wordcount.py} and run this on your machine
+directly. We will also make use of the \texttt{/datasets} directory that is
+preinstalled on your machine:
+
+python wordcount.py /datasets/small-text-file.txt
+
+\subsection{Running Word Count using Hadoop}
+
+We are now going to use the AWS Key and AWS Secret. These are like a username
+and password for Amazon Webservices.
 
 \subsection{Naïve Bayes}
 
