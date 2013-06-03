@@ -111,7 +111,7 @@ for i in range(2,10,2):
     print i
 \end{python}
 
-You can copy and run this from the IPython command line. Alternatively you can write this into your \texttt{yourfile.py} file an run it as well. Notice something?. It is possible that the code did not act as expected or maybe an error message popped up. This brings us to an important aspect of Python: \textbf{indentation}. Indentation is the number of blank spaces at the leftmost of each command. This is how Python differentiates between blocks of commands inside and outside a statement, e.g. \code{while}, \code{for} or other. All commands within a statement have the same number of blank spaces at their leftmost. For instance, consider the following code: 
+You can copy and run this from the IPython command line. Alternatively you can write this into your \texttt{yourfile.py} file an run it as well. Notice something? It is possible that the code did not act as expected or maybe an error message popped up. This brings us to an important aspect of Python: \textbf{indentation}. Indentation is the number of blank spaces at the leftmost of each command. This is how Python differentiates between blocks of commands inside and outside a statement, e.g. \code{while}, \code{for} or other. All commands within a statement have the same number of blank spaces at their leftmost. For instance, consider the following code: 
 
 \begin{python}
 a=1
@@ -141,7 +141,7 @@ a += 1
 
 \end{exercise}
 
-\noindent Bear in mind that indentation is often the main source of errors when starting to work with Python. Try to get use to it as quickly as possible. It is also recommendable that you use a text editor that can display all characters e.g. blank space, tabs, since these characters can be visually similar but are considered different by Python.
+\noindent Bear in mind that indentation is often the main source of errors when starting to work with Python. Try to get used to it as quickly as possible. It is also recommendable that you use a text editor that can display all characters e.g. blank space, tabs, since these characters can be visually similar but are considered different by Python. One of the most common mistakes by newcomers to Python is to have their files indented with spaces on some lines and with tabs on other lines. Visually it might appear that all lines have proper indentation, but you will get an \texttt{IndentationError} message if you try it.
 
 %The \code{range} function is built into Python and it creates lists containing arithmetic progressions. 
 
@@ -161,6 +161,7 @@ a += 1
 The \code{if} statement allows to control the flow of your program. The next program outputs a greeting that depends on the time of the day.
 
 \begin{python}
+hour = 16
 if hour < 12:
     print 'Good morning!'
 elif hour >= 12 and hour < 20:
@@ -184,7 +185,7 @@ def greet(hour):
         print 'Good evening!'
 \end{python}
 
-You can write this command into IPython interactive command line directly or write them into a file and run the file in IPython. Once you do this the function will be available for you to use. Call the function \code{greet} with different hours of the day and see that the program will greet you accordingly.
+You can write this command into IPython interactive command line directly or write them into a file and run the file in IPython. Once you do this the function will be available for you to use. Call the function \code{greet} with different hours of the day (for example, type \texttt{greet(16)}) and see that the program will greet you accordingly.
 
 \begin{exercise}
 Note that the previous code allows the hour to be less than 0 or more than 24. Change the code in order to indicate that the hour given as input is invalid. Your output should be something like:
@@ -200,7 +201,7 @@ Invalid hour: it should be between 0 and 24.
 
 \subsubsection{Profiling}
 
-If you are interested in checking the performance of your program, you can use the command \%prun in IPython (this is an IPython-only feature). For example:
+If you are interested in checking the performance of your program, you can use the command \texttt{\%prun} in IPython (this is an IPython-only feature). For example:
 
 \begin{python}
 def myfunction(x):
@@ -208,6 +209,17 @@ def myfunction(x):
 
 %prun myfunction(22)
 \end{python}
+
+The output of the \texttt{\%prun} command will show the following information for each function that was called during the execution of your code:
+
+\begin{itemize}
+\item \texttt{ncalls}: The number of times this function was called. If this function was used recursively, the output will be two numbers; the first one counts the total function calls with recursions included, the second one excludes recursive calls.
+\item \texttt{tottime}: Total time spent in this function, excluding the time spent in other functions called from within this function.
+\item \texttt{percall}: Same as \texttt{tottime}, but divided by the number of calls.
+\item \texttt{cumtime}: Same as \texttt{tottime}, but including the time spent in other functions called from within this function.
+\item \texttt{percall}: Same as \texttt{cumtime}, but divided by the number of calls.
+\item \texttt{filename:lineno(function)}: Tells you where this function was defined.
+\end{itemize}
 
 \subsubsection{Debugging in Python}
 
@@ -317,12 +329,12 @@ In Python you can load new functionalities into the language by using the \code{
 import numpy as np
 \end{python}
 
-then we can run following on the IPython command line
+then we can run the following on the IPython command line
 
-\begin{verbatim}
+\begin{python}
 np.var?
 np.random.normal?
-\end{verbatim}
+\end{python}
 
 The import  will make the numpy tools available through the alias \code{np}. This shorter alias prevents the code from getting too long if we load lots of modules. The first command will display the help for the method \code{numpy.var} using the previously commented symbol \code{?}. Note that in order to display the help you need the full name of the function including the module name or alias. Modules have also submodules that can be accessed the same way, as shown in the second example.
 
@@ -363,7 +375,7 @@ Y = X**2
 # Plot using a red line ('r')
 plt.plot(X, Y, 'r')
 
-# arange returns points ranging from -4 to +4
+# arange returns integers ranging from -4 to +4
 # (the upper argument is excluded!)
 Ints = np.arange(-4,5)
 
@@ -436,6 +448,8 @@ Other functions take a whole array and compute a single value from it. For examp
 import numpy as np
 
 A = np.arange(100)
+
+# These two lines do exactly the same thing
 print np.mean(A)
 print A.mean()
 
