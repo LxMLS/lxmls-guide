@@ -716,7 +716,7 @@ results achieved and separating hiperplanes found.
 
 
 
-\subsection{Discriminative Classifiers: Maximum Entropy and Support Vector Machines}
+\subsection{Batch Discriminative Classifiers: Maximum Entropy and Support Vector Machines}
 
 The algorithms described in the last section (perceptron and MIRA) are called \emph{online} or \emph{stochastic} algorithms, because they look at one data point at a time. We now describe two discriminative classifiers which look at all points at once; these are called \emph{offline} or \emph{batch} algorithms.
 
@@ -792,7 +792,7 @@ Here we use the squared $L_2$-norm as the regularizer,%
 $p(w_d) \sim \mathcal{N}(0; 1/\lambda^2)$ for each dimension of the weight vector.} %
 but other norms are possible. The scalar $\lambda \ge 0$ controls the amount of regularization. 
 Unlike the na\"ive Bayes examples, this optimization problem does not have a closed form solution in general; hence we need to resort to 
-numerical optimization (see section \ref{}). 
+numerical optimization (see section \ref{numerical_optimization}). 
 Let $F_{\lambda}(\boldsymbol{w}; \mathcal{D}) = -\mathcal{L}(\boldsymbol{w}; \mathcal{D}) + \frac{\lambda}{2} \|\boldsymbol{w}\|^2$ 
 be the objective function in Eq.~\ref{eq:maxent}.  This function is convex, which implies that a local optimum of Eq.~\ref{eq:maxent} is also a global optimum. 
 $F_{\lambda}(\boldsymbol{w}; \mathcal{D})$ is also differentiable: its gradient is 
