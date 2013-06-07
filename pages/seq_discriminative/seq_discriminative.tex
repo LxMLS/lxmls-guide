@@ -379,8 +379,31 @@ feature_mapper.build_features()
 crf_online = crfo.CRFOnline(corpus.word_dict, corpus.tag_dict, feature_mapper)
 crf_online.num_epochs = 20
 crf_online.train_supervised(train_seq)
+
+Epoch: 0 Objective value: -5.779018
+Epoch: 1 Objective value: -3.192724
+Epoch: 2 Objective value: -2.717537
+Epoch: 3 Objective value: -2.436614
+Epoch: 4 Objective value: -2.240491
+Epoch: 5 Objective value: -2.091833
+Epoch: 6 Objective value: -1.973353
+Epoch: 7 Objective value: -1.875643
+Epoch: 8 Objective value: -1.793034
+Epoch: 9 Objective value: -1.721857
+Epoch: 10 Objective value: -1.659605
+Epoch: 11 Objective value: -1.604499
+Epoch: 12 Objective value: -1.555229
+Epoch: 13 Objective value: -1.510806
+Epoch: 14 Objective value: -1.470468
+Epoch: 15 Objective value: -1.433612
+Epoch: 16 Objective value: -1.399759
+Epoch: 17 Objective value: -1.368518
+Epoch: 18 Objective value: -1.339566
+Epoch: 19 Objective value: -1.312636
 \end{python}
-You will get some messages about "unknown tags", which are a consequence of using a reduced set of 12 POS tags instead of the full set. You will also receive feedback when each epoch is finished.
+
+You will receive feedback when each epoch is finished, note that
+running the 20 epochs might take a while.
 
 After training is done, evaluate the learned model on the training, development and test sets.
 \begin{python}
@@ -398,11 +421,11 @@ print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,
 You should get values similar to these:
 \begin{python}
 Out[]: CRF - 
-ID Features Accuracy Train: 0.946 Dev: 0.849 Test: 0.856
+ID Features Accuracy Train: 0.949 Dev: 0.846 Test: 0.858
 \end{python}
 \end{exercise}
 
-Compare with the results achieved with the HMM model (0.838 on the test set, from the previous lecture). Even using a similar feature set a CRF yields better
+Compare with the results achieved with the HMM model (0.837 on the test set, from the previous lecture). Even using a similar feature set a CRF yields better
 results than the HMM from the previous lecture. 
 Perform some error analysis and figure out what are the main
 errors the tagger is making. Compare them with the errors made
@@ -421,6 +444,27 @@ crf_online = crfo.CRFOnline(corpus.word_dict, corpus.tag_dict, feature_mapper)
 crf_online.num_epochs = 20
 crf_online.train_supervised(train_seq)
 
+Epoch: 0 Objective value: -7.141596
+Epoch: 1 Objective value: -1.807511
+Epoch: 2 Objective value: -1.218877
+Epoch: 3 Objective value: -0.955739
+Epoch: 4 Objective value: -0.807821
+Epoch: 5 Objective value: -0.712858
+Epoch: 6 Objective value: -0.647382
+Epoch: 7 Objective value: -0.599442
+Epoch: 8 Objective value: -0.562584
+Epoch: 9 Objective value: -0.533411
+Epoch: 10 Objective value: -0.509885
+Epoch: 11 Objective value: -0.490548
+Epoch: 12 Objective value: -0.474318
+Epoch: 13 Objective value: -0.460438
+Epoch: 14 Objective value: -0.448389
+Epoch: 15 Objective value: -0.437800
+Epoch: 16 Objective value: -0.428402
+Epoch: 17 Objective value: -0.419990
+Epoch: 18 Objective value: -0.412406
+Epoch: 19 Objective value: -0.405524
+
 pred_train = crf_online.viterbi_decode_corpus(train_seq)
 pred_dev = crf_online.viterbi_decode_corpus(dev_seq)
 pred_test = crf_online.viterbi_decode_corpus(test_seq)
@@ -434,7 +478,7 @@ print "CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_
 
 You should get values close to the following:
 \begin{python}
-CRF - Extended Features Accuracy Train: 0.980 Dev: 0.903 Test: 0.895
+CRF - Extended Features Accuracy Train: 0.984 Dev: 0.899 Test: 0.894
 \end{python}
 
 Compare the errors obtained with the two different feature
@@ -467,22 +511,6 @@ first choice to try and test a new problem or a new feature set.
 Recall what you learned from \S\ref{s:perceptron} on the
 perceptron algorithm and compare it against the structured perceptron
 (Algorithm \ref{alg:structured-perceptron}). 
-
-%\begin{algorithm}[t]
-%   \caption{Averaged Structured perceptron \label{alg:structured-perceptron}}
-%\begin{algorithmic}[1]
-%   \STATE {\bfseries input:} dataset $\mathcal{D}$, number of rounds $T$
-%   \STATE initialize $\boldsymbol{w}^1 = \mathbf{0}$
-%	\FOR{$t=1$ {\bfseries to} $T$}
-%	\STATE choose $m = m(t)$ randomly
-%	\STATE take training pair $(\sent^m, \hseq^m)$ and predict using the current model: 
-%	$$\hat{\hseq}  \leftarrow \argmax_{\hseq'} \boldsymbol{w}^t \cdot \boldsymbol{f}(\sent^m,\hseq')$$
-%	\STATE update the model: 
-%	$\boldsymbol{w}^{t+1} \leftarrow \boldsymbol{w}^{t} + \boldsymbol{f}(\sent^m,\hseq^m) - \boldsymbol{f}(\sent^m,\hat{\hseq})$
-%	\ENDFOR
-%   \STATE \textbf{output:} the averaged model $\hat{\boldsymbol{w}} \leftarrow \frac{1}{T}\sum_{t=1}^T \boldsymbol{w}^t$
-%\end{algorithmic}
-%\end{algorithm}
 
 \begin{algorithm}[t]
    \caption{Averaged Structured perceptron \label{alg:structured-perceptron}}
@@ -561,9 +589,32 @@ sp = spc.StructuredPerceptron(corpus.word_dict, corpus.tag_dict, feature_mapper)
 sp.num_epochs = 20
 sp.train_supervised(train_seq)
 
+Epoch: 0 Accuracy: 0.656806
+Epoch: 1 Accuracy: 0.820898
+Epoch: 2 Accuracy: 0.879176
+Epoch: 3 Accuracy: 0.907432
+Epoch: 4 Accuracy: 0.925239
+Epoch: 5 Accuracy: 0.939956
+Epoch: 6 Accuracy: 0.946284
+Epoch: 7 Accuracy: 0.953790
+Epoch: 8 Accuracy: 0.958499
+Epoch: 9 Accuracy: 0.955114
+Epoch: 10 Accuracy: 0.959235
+Epoch: 11 Accuracy: 0.968065
+Epoch: 12 Accuracy: 0.968212
+Epoch: 13 Accuracy: 0.966740
+Epoch: 14 Accuracy: 0.971302
+Epoch: 15 Accuracy: 0.968653
+Epoch: 16 Accuracy: 0.970419
+Epoch: 17 Accuracy: 0.971891
+Epoch: 18 Accuracy: 0.971744
+Epoch: 19 Accuracy: 0.973510
+
 pred_train = sp.viterbi_decode_corpus(train_seq)
 pred_dev = sp.viterbi_decode_corpus(dev_seq)
 pred_test = sp.viterbi_decode_corpus(test_seq)
+
+
 
 eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
@@ -572,30 +623,9 @@ eval_test = sp.evaluate_corpus(test_seq, pred_test)
 print "Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
 \end{python}
 
-You should get close to these results (apart from some warnings which you can safely ignore):
-\begin{python}
-Epoch: 0 Accuracy: 0.661516
-Epoch: 1 Accuracy: 0.825460
-Epoch: 2 Accuracy: 0.871376
-Epoch: 3 Accuracy: 0.902281
-Epoch: 4 Accuracy: 0.920824
-Epoch: 5 Accuracy: 0.932156
-Epoch: 6 Accuracy: 0.942311
-Epoch: 7 Accuracy: 0.939662
-Epoch: 8 Accuracy: 0.947020
-Epoch: 9 Accuracy: 0.950846
-Epoch: 10 Accuracy: 0.951582
-Epoch: 11 Accuracy: 0.956144
-Epoch: 12 Accuracy: 0.957322
-Epoch: 13 Accuracy: 0.957910
-Epoch: 14 Accuracy: 0.966446
-Epoch: 15 Accuracy: 0.967182
-Epoch: 16 Accuracy: 0.965563
-Epoch: 17 Accuracy: 0.962767
-Epoch: 18 Accuracy: 0.965710
-Epoch: 19 Accuracy: 0.966004
 
-Structured Perceptron - ID Features Accuracy Train: 0.968 Dev: 0.805 Test: 0.814
+\begin{python}
+Structured Perceptron - ID Features Accuracy Train: 0.984 Dev: 0.835 Test: 0.840
 \end{python}
 
 Here is the code for the extended feature set:
@@ -606,6 +636,27 @@ feature_mapper.build_features()
 sp = spc.StructuredPerceptron(corpus.word_dict, corpus.tag_dict, feature_mapper)
 sp.num_epochs = 20
 sp.train_supervised(train_seq)
+
+Epoch: 0 Accuracy: 0.764386
+Epoch: 1 Accuracy: 0.872701
+Epoch: 2 Accuracy: 0.903458
+Epoch: 3 Accuracy: 0.927594
+Epoch: 4 Accuracy: 0.938484
+Epoch: 5 Accuracy: 0.951141
+Epoch: 6 Accuracy: 0.949816
+Epoch: 7 Accuracy: 0.959529
+Epoch: 8 Accuracy: 0.957616
+Epoch: 9 Accuracy: 0.962325
+Epoch: 10 Accuracy: 0.961148
+Epoch: 11 Accuracy: 0.970567
+Epoch: 12 Accuracy: 0.968212
+Epoch: 13 Accuracy: 0.973216
+Epoch: 14 Accuracy: 0.974393
+Epoch: 15 Accuracy: 0.973951
+Epoch: 16 Accuracy: 0.976600
+Epoch: 17 Accuracy: 0.977483
+Epoch: 18 Accuracy: 0.974834
+Epoch: 19 Accuracy: 0.977042
 
 pred_train = sp.viterbi_decode_corpus(train_seq)
 pred_dev = sp.viterbi_decode_corpus(dev_seq)
@@ -620,27 +671,7 @@ print "Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f 
 
 And here are the expected results:
 \begin{python}
-Epoch: 0 Accuracy: 0.768065
-Epoch: 1 Accuracy: 0.870935
-Epoch: 2 Accuracy: 0.900221
-Epoch: 3 Accuracy: 0.918469
-Epoch: 4 Accuracy: 0.937307
-Epoch: 5 Accuracy: 0.942605
-Epoch: 6 Accuracy: 0.945401
-Epoch: 7 Accuracy: 0.950846
-Epoch: 8 Accuracy: 0.952759
-Epoch: 9 Accuracy: 0.955850
-Epoch: 10 Accuracy: 0.957616
-Epoch: 11 Accuracy: 0.964386
-Epoch: 12 Accuracy: 0.959971
-Epoch: 13 Accuracy: 0.967182
-Epoch: 14 Accuracy: 0.967476
-Epoch: 15 Accuracy: 0.968653
-Epoch: 16 Accuracy: 0.970419
-Epoch: 17 Accuracy: 0.970861
-Epoch: 18 Accuracy: 0.971450
-Epoch: 19 Accuracy: 0.970125
-Structured Perceptron - Extended Features Accuracy Train: 0.975 Dev: 0.884 Test: 0.875
+Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test: 0.890
 \end{python}
 
 \end{exercise}
