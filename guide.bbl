@@ -1,0 +1,405 @@
+\begin{thebibliography}{}
+
+\bibitem[Bertsekas et~al., 1995]{bertsekas1995np}
+Bertsekas, D., Homer, M., Logan, D., and Patek, S. (1995).
+\newblock {\em Nonlinear programming}.
+\newblock Athena Scientific.
+
+\bibitem[Bishop, 2006]{Bishop2006}
+Bishop, C. (2006).
+\newblock {\em Pattern recognition and machine learning}, volume~4.
+\newblock Springer New York.
+
+\bibitem[Blitzer et~al., 2007]{blitzer2007biographies}
+Blitzer, J., Dredze, M., and Pereira, F. (2007).
+\newblock Biographies, bollywood, boom-boxes and blenders: Domain adaptation
+  for sentiment classification.
+\newblock In {\em Annual Meeting-Association For Computational Linguistics},
+  volume~45, page 440.
+
+\bibitem[Bottou, 1991]{Bottou1991}
+Bottou, L. (1991).
+\newblock {\em Une Approche Theorique de l'Apprentissage Connexionniste:
+  Applications a la Reconnaissance de la Parole}.
+\newblock PhD thesis.
+
+\bibitem[Boyd and Vandenberghe, 2004]{boyd2004convex}
+Boyd, S. and Vandenberghe, L. (2004).
+\newblock {\em Convex optimization}.
+\newblock Cambridge Univ Pr.
+
+\bibitem[Buchholz and Marsi, 2006]{conll06st}
+Buchholz, S. and Marsi, E. (2006).
+\newblock {CoNLL-X} shared task on multilingual dependency parsing.
+\newblock In {\em Proc. of CoNLL}.
+
+\bibitem[Carreras, 2007]{Carreras2007}
+Carreras, X. (2007).
+\newblock {Experiments with a higher-order projective dependency parser}.
+\newblock In {\em Proc. of CoNLL}.
+
+\bibitem[Charniak, 1997]{Charniak1997}
+Charniak, E. (1997).
+\newblock Statistical parsing with a context-free grammar and word statistics.
+\newblock In {\em Proceedings of the National Conference on Artificial
+  Intelligence}, pages 598--603. Citeseer.
+
+\bibitem[Charniak et~al., 2006]{Charniak2006}
+Charniak, E., Johnson, M., Elsner, M., Austerweil, J., Ellis, D., Haxton, I.,
+  Hill, C., Shrivaths, R., Moore, J., Pozar, M., et~al. (2006).
+\newblock Multilevel coarse-to-fine pcfg parsing.
+\newblock In {\em Proceedings of the main conference on Human Language
+  Technology Conference of the North American Chapter of the Association of
+  Computational Linguistics}, pages 168--175. Association for Computational
+  Linguistics.
+
+\bibitem[Chomsky, 1965]{Chomsky1965}
+Chomsky, N. (1965).
+\newblock {\em Aspects of the Theory of Syntax}, volume 119.
+\newblock The MIT press.
+
+\bibitem[Chu and Liu, 1965]{Chu1965}
+Chu, Y.~J. and Liu, T.~H. (1965).
+\newblock On the shortest arborescence of a directed graph.
+\newblock {\em Science Sinica}, 14:1396--1400.
+
+\bibitem[Cohen et~al., 2008]{Cohen2008}
+Cohen, S., Gimpel, K., and Smith, N. (2008).
+\newblock Logistic normal priors for unsupervised probabilistic grammar
+  induction.
+\newblock In {\em In NIPS}. Citeseer.
+
+\bibitem[Collins, 1999]{Collins1999}
+Collins, M. (1999).
+\newblock {\em Head-driven statistical models for natural language parsing}.
+\newblock PhD thesis, University of Pennsylvania.
+
+\bibitem[Collins, 2002]{collins2002discriminative}
+Collins, M. (2002).
+\newblock Discriminative training methods for hidden markov models: Theory and
+  experiments with perceptron algorithms.
+\newblock In {\em Proceedings of the ACL-02 conference on Empirical methods in
+  natural language processing-Volume 10}, pages 1--8. Association for
+  Computational Linguistics.
+
+\bibitem[Cover et~al., 1991]{Cover1991}
+Cover, T., Thomas, J., Wiley, J., et~al. (1991).
+\newblock {\em Elements of information theory}, volume~6.
+\newblock Wiley Online Library.
+
+\bibitem[Covington, 1990]{Covington1990}
+Covington, M. (1990).
+\newblock Parsing discontinuous constituents in dependency grammar.
+\newblock {\em Computational Linguistics}, 16(4):234--236.
+
+\bibitem[Crammer et~al., 2006]{Crammer2006}
+Crammer, K., Dekel, O., Keshet, J., Shalev-Shwartz, S., and Singer, Y. (2006).
+\newblock {Online Passive-Aggressive Algorithms}.
+\newblock {\em JMLR}, 7:551--585.
+
+\bibitem[Crammer and Singer, 2002]{Crammer2002}
+Crammer, K. and Singer, Y. (2002).
+\newblock {On the algorithmic implementation of multiclass kernel-based vector
+  machines}.
+\newblock {\em The Journal of Machine Learning Research}, 2:265--292.
+
+\bibitem[Duda et~al., 2001]{Duda2001}
+Duda, R., Hart, P., and Stork, D. (2001).
+\newblock {\em Pattern classification}, volume~2.
+\newblock Wiley New York.
+
+\bibitem[Edmonds, 1967]{Edmonds1967}
+Edmonds, J. (1967).
+\newblock Optimum branchings.
+\newblock {\em Journal of Research of the National Bureau of Standards},
+  71B:233--240.
+
+\bibitem[Eisner, 1996]{Eisner1996}
+Eisner, J. (1996).
+\newblock Three new probabilistic models for dependency parsing: An
+  exploration.
+\newblock In {\em Proceedings of the 16th conference on Computational
+  linguistics-Volume 1}, pages 340--345. Association for Computational
+  Linguistics.
+
+\bibitem[Eisner and Satta, 1999]{Eisner1999}
+Eisner, J. and Satta, G. (1999).
+\newblock Efficient parsing for bilexical context-free grammars and head
+  automaton grammars.
+\newblock In {\em Proc. of ACL}.
+
+\bibitem[Finkel et~al., 2008]{Finkel2008}
+Finkel, J., Kleeman, A., and Manning, C. (2008).
+\newblock Efficient, feature-based, conditional random field parsing.
+\newblock {\em Proceedings of ACL-08: HLT}, pages 959--967.
+
+\bibitem[Henderson, 2003]{Henderson2003}
+Henderson, J. (2003).
+\newblock Inducing history representations for broad coverage statistical
+  parsing.
+\newblock In {\em Proceedings of the 2003 Conference of the North American
+  Chapter of the Association for Computational Linguistics on Human Language
+  Technology-Volume 1}, pages 24--31. Association for Computational
+  Linguistics.
+
+\bibitem[Hopcroft et~al., 1979]{Hopcroft1979}
+Hopcroft, J., Motwani, R., and Ullman, J. (1979).
+\newblock {\em Introduction to automata theory, languages, and computation},
+  volume~3.
+\newblock Addison-wesley Reading, MA.
+
+\bibitem[Huang and Sagae, 2010]{Huang2010}
+Huang, L. and Sagae, K. (2010).
+\newblock {Dynamic programming for linear-time incremental parsing}.
+\newblock In {\em Proc. of ACL}, pages 1077--1086.
+
+\bibitem[Hudson, 1984]{Hudson1984}
+Hudson, R. (1984).
+\newblock {\em Word grammar}.
+\newblock Blackwell Oxford.
+
+\bibitem[Jaynes, 1982]{Jaynes1982}
+Jaynes, E. (1982).
+\newblock On the rationale of maximum-entropy methods.
+\newblock {\em Proceedings of the IEEE}, 70(9):939--952.
+
+\bibitem[Joachims, 2002]{Joachims2002}
+Joachims, T. (2002).
+\newblock {\em Learning to Classify Text Using Support Vector Machines:
+  Methods, Theory and Algorithms}.
+\newblock Kluwer Academic Publishers.
+
+\bibitem[Johnson, 1998]{Johnson1998}
+Johnson, M. (1998).
+\newblock Pcfg models of linguistic tree representations.
+\newblock {\em Computational Linguistics}, 24(4):613--632.
+
+\bibitem[Klein and Manning, 2002]{Klein2002}
+Klein, D. and Manning, C. (2002).
+\newblock A generative constituent-context model for improved grammar
+  induction.
+\newblock In {\em Proceedings of the 40th Annual Meeting on Association for
+  Computational Linguistics}, pages 128--135. Association for Computational
+  Linguistics.
+
+\bibitem[Klein and Manning, 2003]{Klein2003}
+Klein, D. and Manning, C. (2003).
+\newblock Accurate unlexicalized parsing.
+\newblock In {\em Proceedings of the 41st Annual Meeting on Association for
+  Computational Linguistics-Volume 1}, pages 423--430. Association for
+  Computational Linguistics.
+
+\bibitem[Koo and Collins, 2010]{Koo2010}
+Koo, T. and Collins, M. (2010).
+\newblock {Efficient third-order dependency parsers}.
+\newblock In {\em Proc. of ACL}, pages 1--11.
+
+\bibitem[Koo et~al., 2007]{Koo2007}
+Koo, T., Globerson, A., Carreras, X., and Collins, M. (2007).
+\newblock {Structured prediction models via the matrix-tree theorem}.
+\newblock In {\em Proc. EMNLP}.
+
+\bibitem[Koo et~al., 2010]{Koo2010EMNLP}
+Koo, T., Rush, A.~M., Collins, M., Jaakkola, T., and Sontag, D. (2010).
+\newblock Dual decomposition for parsing with non-projective head automata.
+\newblock In {\em EMNLP}.
+
+\bibitem[Lafferty et~al., 2001]{lafferty2001conditional}
+Lafferty, J., McCallum, A., and Pereira, F. (2001).
+\newblock Conditional random fields: Probabilistic models for segmenting and
+  labeling sequence data.
+\newblock In {\em Procs. of ICML}, pages 282--289.
+
+\bibitem[Magerman, 1995]{Magerman1995}
+Magerman, D. (1995).
+\newblock Statistical decision-tree models for parsing.
+\newblock In {\em Proceedings of the 33rd annual meeting on Association for
+  Computational Linguistics}, pages 276--283. Association for Computational
+  Linguistics.
+
+\bibitem[Manning et~al., 2008]{Manning2008}
+Manning, C., Raghavan, P., and Sch{\"u}tze, H. (2008).
+\newblock {\em Introduction to information retrieval}, volume~1.
+\newblock Cambridge University Press Cambridge, UK.
+
+\bibitem[Manning and Sch{\"u}tze, 1999]{Manning1999}
+Manning, C. and Sch{\"u}tze, H. (1999).
+\newblock {\em Foundations of statistical natural language processing},
+  volume~59.
+\newblock MIT Press.
+
+\bibitem[Marcus et~al., 1993]{pennTreeBank}
+Marcus, M., Marcinkiewicz, M., and Santorini, B. (1993).
+\newblock {Building a large annotated corpus of English: The Penn Treebank}.
+\newblock {\em Computational linguistics}, 19(2):313--330.
+
+\bibitem[Martins et~al., 2009]{Martins2009ACL}
+Martins, A. F.~T., Smith, N.~A., and Xing, E.~P. (2009).
+\newblock Concise integer linear programming formulations for dependency
+  parsing.
+\newblock In {\em Proc. of ACL-IJCNLP}.
+
+\bibitem[McCallum et~al., 2000]{mccallum2000maximum}
+McCallum, A., Freitag, D., and Pereira, F. (2000).
+\newblock Maximum entropy markov models for information extraction and
+  segmentation.
+\newblock In {\em Proceedings of the Seventeenth International Conference on
+  Machine Learning}, pages 591--598. Citeseer.
+
+\bibitem[McDonald et~al., 2006]{McDonald2006CoNLL}
+McDonald, R., Lerman, K., and Pereira, F. (2006).
+\newblock Multilingual dependency analysis with a two-stage discriminative
+  parser.
+\newblock In {\em Proc. of CoNLL}.
+
+\bibitem[McDonald and Satta, 2007]{McDonald2007}
+McDonald, R. and Satta, G. (2007).
+\newblock On the complexity of non-projective data-driven dependency parsing.
+\newblock In {\em Proc. of IWPT}.
+
+\bibitem[McDonald et~al., 2005]{McDonald2005b}
+McDonald, R.~T., Pereira, F., Ribarov, K., and Hajic, J. (2005).
+\newblock Non-projective dependency parsing using spanning tree algorithms.
+\newblock In {\em Proc. of HLT-EMNLP}.
+
+\bibitem[Melʹ{\v{c}}uk, 1988]{Melcuk1988}
+Melʹ{\v{c}}uk, I. (1988).
+\newblock {\em Dependency syntax: theory and practice}.
+\newblock State University of New York Press.
+
+\bibitem[Mitchell, 1997]{Mitchell1997}
+Mitchell, T. (1997).
+\newblock {\em Machine learning}.
+
+\bibitem[Nivre, 2009]{Nivre2009}
+Nivre, J. (2009).
+\newblock Non-projective dependency parsing in expected linear time.
+\newblock In {\em Proceedings of the Joint Conference of the 47th Annual
+  Meeting of the ACL and the 4th International Joint Conference on Natural
+  Language Processing of the AFNLP: Volume 1-Volume 1}, pages 351--359.
+  Association for Computational Linguistics.
+
+\bibitem[Nivre et~al., 2006]{Nivre2006CoNLL}
+Nivre, J., Hall, J., Nilsson, J., Eryi{\v g}it, G., and Marinov, S. (2006).
+\newblock Labeled pseudo-projective dependency parsing with support vector
+  machines.
+\newblock In {\em Procs. of CoNLL}.
+
+\bibitem[Nocedal and Wright, 1999]{Nocedal1999}
+Nocedal, J. and Wright, S. (1999).
+\newblock {\em Numerical optimization}.
+\newblock Springer verlag.
+
+\bibitem[P\'erez and Granger, 2007]{PER-GRA:2007}
+P\'erez, F. and Granger, B.~E. (2007).
+\newblock {IP}ython: a {S}ystem for {I}nteractive {S}cientific {C}omputing.
+\newblock {\em {C}omput. {S}ci. {E}ng.}, 9(3):21--29.
+
+\bibitem[Petrov and Klein, 2007]{Petrov2007NAACL}
+Petrov, S. and Klein, D. (2007).
+\newblock Improved inference for unlexicalized parsing.
+\newblock In {\em Human Language Technologies 2007: The Conference of the North
+  American Chapter of the Association for Computational Linguistics;
+  Proceedings of the Main Conference}, pages 404--411, Rochester, New York.
+  Association for Computational Linguistics.
+
+\bibitem[Petrov and Klein, 2008a]{Petrov2008NIPS}
+Petrov, S. and Klein, D. (2008a).
+\newblock Discriminative log-linear grammars with latent variables.
+\newblock In Platt, J., Koller, D., Singer, Y., and Roweis, S., editors, {\em
+  Advances in Neural Information Processing Systems 20 (NIPS)}, pages
+  1153--1160, Cambridge, MA. MIT Press.
+
+\bibitem[Petrov and Klein, 2008b]{Petrov2008EMNLP}
+Petrov, S. and Klein, D. (2008b).
+\newblock Sparse multi-scale grammars for discriminative latent variable
+  parsing.
+\newblock In {\em Proceedings of the 2008 Conference on Empirical Methods in
+  Natural Language Processing}, pages 867--876, Honolulu, Hawaii. Association
+  for Computational Linguistics.
+
+\bibitem[Rabiner, 1989]{rabiner}
+Rabiner, L. (1989).
+\newblock A tutorial on hidden markov models and selected applications in
+  speech recognition.
+\newblock {\em In Proc. IEEE}, 77(2):257--286.
+
+\bibitem[Ratnaparkhi, 1999]{Ratnaparkhi1999}
+Ratnaparkhi, A. (1999).
+\newblock Learning to parse natural language with maximum entropy models.
+\newblock {\em Machine Learning}, 34(1):151--175.
+
+\bibitem[Rosenblatt, 1958]{Rosenblatt1958}
+Rosenblatt, F. (1958).
+\newblock The perceptron: A probabilistic model for information storage and
+  organization in the brain.
+\newblock {\em Psychological review}, 65(6):386.
+
+\bibitem[Sch{\"o}lkopf and Smola, 2002]{Schoelkopf2002}
+Sch{\"o}lkopf, B. and Smola, A.~J. (2002).
+\newblock {\em Learning with Kernels}.
+\newblock The MIT Press, Cambridge, MA.
+
+\bibitem[Shalev-Shwartz et~al., 2007]{ShalevShwartz2007ICML}
+Shalev-Shwartz, S., Singer, Y., and Srebro, N. (2007).
+\newblock {Pegasos: Primal estimated sub-gradient solver for svm}.
+\newblock In {\em ICML}.
+
+\bibitem[Shannon, 1948]{Shannon1948}
+Shannon, C. (1948).
+\newblock A mathematical theory of communication.
+\newblock {\em Bell Syst. Tech. Journ.}, 27(379):623.
+
+\bibitem[Shawe-Taylor and Cristianini, 2004]{ShaweTaylor2004}
+Shawe-Taylor, J. and Cristianini, N. (2004).
+\newblock {\em Kernel Methods for Pattern Analysis}.
+\newblock CUP.
+
+\bibitem[Smith and Eisner, 2008]{DSmith2008}
+Smith, D.~A. and Eisner, J. (2008).
+\newblock Dependency parsing by belief propagation.
+\newblock In {\em Proc. of EMNLP}.
+
+\bibitem[Smith and Smith, 2007]{DSmithSmith2007}
+Smith, D.~A. and Smith, N.~A. (2007).
+\newblock {Probabilistic models of nonprojective dependency trees}.
+\newblock In {\em Proc. EMNLP-CoNLL}.
+
+\bibitem[Smith and Eisner, 2005]{Smith2005}
+Smith, N. and Eisner, J. (2005).
+\newblock Guiding unsupervised grammar induction using contrastive estimation.
+\newblock In {\em Proc. of IJCAI Workshop on Grammatical Inference
+  Applications}. Citeseer.
+
+\bibitem[Surdeanu et~al., 2008]{Surdeanu2008}
+Surdeanu, M., Johansson, R., Meyers, A., M{\`a}rquez, L., and Nivre, J. (2008).
+\newblock The {CoNLL}-2008 shared task on joint parsing of syntactic and
+  semantic dependencies.
+\newblock {\em Proc. of CoNLL}.
+
+\bibitem[Tarjan, 1977]{Tarjan1977}
+Tarjan, R. (1977).
+\newblock {Finding optimum branchings}.
+\newblock {\em Networks}, 7(1):25--36.
+
+\bibitem[Taskar et~al., 2004]{Taskar2004}
+Taskar, B., Klein, D., Collins, M., Koller, D., and Manning, C. (2004).
+\newblock Max-margin parsing.
+\newblock In {\em Proc. EMNLP}, pages 1--8.
+
+\bibitem[Tesni{\`e}re, 1959]{Tesniere1959}
+Tesni{\`e}re, L. (1959).
+\newblock {\em El{\'e}ments de syntaxe structurale}.
+\newblock Libraire C. Klincksieck.
+
+\bibitem[Tutte, 1984]{Tutte1984}
+Tutte, W. (1984).
+\newblock {\em {Graph Theory}}.
+\newblock Addison-Wesley, Reading, MA.
+
+\bibitem[Vapnik, 1995]{Vapnik1995}
+Vapnik, N.~V. (1995).
+\newblock {\em The Nature of Statistical Learning Theory}.
+\newblock Springer-Verlag, New York.
+
+\end{thebibliography}

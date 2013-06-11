@@ -1,0 +1,68 @@
+\BOOKMARK [0][-]{chapter.0}{Basic Tutorials}{}% 1
+\BOOKMARK [1][-]{section.0.1}{Python}{chapter.0}% 2
+\BOOKMARK [2][-]{subsection.0.1.1}{Python Basics}{section.0.1}% 3
+\BOOKMARK [2][-]{subsection.0.1.2}{Python by Example}{section.0.1}% 4
+\BOOKMARK [2][-]{subsection.0.1.3}{Exceptions}{section.0.1}% 5
+\BOOKMARK [2][-]{subsection.0.1.4}{Matplotlib \205 Plotting in Python}{section.0.1}% 6
+\BOOKMARK [2][-]{subsection.0.1.5}{Numpy \205 Scientific Computing with Python}{section.0.1}% 7
+\BOOKMARK [1][-]{section.0.2}{Essential Linear Algebra}{chapter.0}% 8
+\BOOKMARK [2][-]{subsection.0.2.1}{Notation}{section.0.2}% 9
+\BOOKMARK [2][-]{subsection.0.2.2}{Some Matrix Operations and Properties}{section.0.2}% 10
+\BOOKMARK [2][-]{subsection.0.2.3}{Norms}{section.0.2}% 11
+\BOOKMARK [2][-]{subsection.0.2.4}{Linear Independence, Rank, and Orthogonal Matrices}{section.0.2}% 12
+\BOOKMARK [1][-]{section.0.3}{Probability Theory}{chapter.0}% 13
+\BOOKMARK [2][-]{subsection.0.3.1}{Probability distribution functions}{section.0.3}% 14
+\BOOKMARK [2][-]{subsection.0.3.2}{ Bernoulli}{section.0.3}% 15
+\BOOKMARK [2][-]{subsection.0.3.3}{ Binomial}{section.0.3}% 16
+\BOOKMARK [2][-]{subsection.0.3.4}{ Categorical}{section.0.3}% 17
+\BOOKMARK [2][-]{subsection.0.3.5}{ Multinomial}{section.0.3}% 18
+\BOOKMARK [2][-]{subsection.0.3.6}{ Gaussian Distribution}{section.0.3}% 19
+\BOOKMARK [2][-]{subsection.0.3.7}{Maximum Likelihood Estimation}{section.0.3}% 20
+\BOOKMARK [2][-]{subsection.0.3.8}{Conjugate Priors}{section.0.3}% 21
+\BOOKMARK [1][-]{section.0.4}{Numerical optimization}{chapter.0}% 22
+\BOOKMARK [2][-]{subsection.0.4.1}{Convex Functions}{section.0.4}% 23
+\BOOKMARK [2][-]{subsection.0.4.2}{Derivative and Gradient}{section.0.4}% 24
+\BOOKMARK [2][-]{subsection.0.4.3}{Gradient Based Methods}{section.0.4}% 25
+\BOOKMARK [1][-]{section.0.5}{Python Exercises}{chapter.0}% 26
+\BOOKMARK [2][-]{subsection.0.5.1}{Numpy and Matplotlib}{section.0.5}% 27
+\BOOKMARK [2][-]{subsection.0.5.2}{Debugging}{section.0.5}% 28
+\BOOKMARK [0][-]{chapter.1}{Classification}{}% 29
+\BOOKMARK [1][-]{section.1.1}{Pre-assignment}{chapter.1}% 30
+\BOOKMARK [2][-]{subsection.1.1.1}{Notation}{section.1.1}% 31
+\BOOKMARK [2][-]{subsection.1.1.2}{Generative Classifiers: Na\357ve Bayes}{section.1.1}% 32
+\BOOKMARK [2][-]{subsection.1.1.3}{Example: Multinomial Na\357ve Bayes for Document Classification}{section.1.1}% 33
+\BOOKMARK [1][-]{section.1.2}{Assignment}{chapter.1}% 34
+\BOOKMARK [1][-]{section.1.3}{Post-assignment}{chapter.1}% 35
+\BOOKMARK [2][-]{subsection.1.3.1}{Features and Discriminative Classifiers}{section.1.3}% 36
+\BOOKMARK [2][-]{subsection.1.3.2}{Online Discriminative Algorithms: Perceptron and MIRA}{section.1.3}% 37
+\BOOKMARK [2][-]{subsection.1.3.3}{Batch Discriminative Classifiers: Maximum Entropy and Support Vector Machines}{section.1.3}% 38
+\BOOKMARK [2][-]{subsection.1.3.4}{Comparison}{section.1.3}% 39
+\BOOKMARK [2][-]{subsection.1.3.5}{Final remarks}{section.1.3}% 40
+\BOOKMARK [0][-]{chapter.2}{Sequence Models}{}% 41
+\BOOKMARK [1][-]{section.2.1}{Notation}{chapter.2}% 42
+\BOOKMARK [1][-]{section.2.2}{ Hidden Markov Models}{chapter.2}% 43
+\BOOKMARK [1][-]{section.2.3}{ Finding the Maximum Likelihood Parameters}{chapter.2}% 44
+\BOOKMARK [1][-]{section.2.4}{ Decoding a Sequence}{chapter.2}% 45
+\BOOKMARK [2][-]{subsection.2.4.1}{Computing in log-domain}{section.2.4}% 46
+\BOOKMARK [2][-]{subsection.2.4.2}{Posterior Decoding}{section.2.4}% 47
+\BOOKMARK [2][-]{subsection.2.4.3}{Viterbi Decoding}{section.2.4}% 48
+\BOOKMARK [1][-]{section.2.5}{ Part-of-Speech Tagging \(POS\)}{chapter.2}% 49
+\BOOKMARK [1][-]{section.2.6}{Unsupervised Learning of HMMs}{chapter.2}% 50
+\BOOKMARK [0][-]{chapter.3}{Learning Structured Predictors}{}% 51
+\BOOKMARK [1][-]{section.3.1}{ Feature Extraction}{chapter.3}% 52
+\BOOKMARK [1][-]{section.3.2}{Conditional Random Fields}{chapter.3}% 53
+\BOOKMARK [1][-]{section.3.3}{Structured Perceptron}{chapter.3}% 54
+\BOOKMARK [0][-]{chapter.4}{Syntax and Parsing}{}% 55
+\BOOKMARK [1][-]{section.4.1}{Phrase-based Parsing}{chapter.4}% 56
+\BOOKMARK [2][-]{subsection.4.1.1}{Context Free Grammars}{section.4.1}% 57
+\BOOKMARK [2][-]{subsection.4.1.2}{Ambiguity}{section.4.1}% 58
+\BOOKMARK [2][-]{subsection.4.1.3}{Probabilistic Context-Free Grammars}{section.4.1}% 59
+\BOOKMARK [2][-]{subsection.4.1.4}{The CKY Parsing Algorithm}{section.4.1}% 60
+\BOOKMARK [2][-]{subsection.4.1.5}{Learning the Grammar}{section.4.1}% 61
+\BOOKMARK [2][-]{subsection.4.1.6}{Model Refinements}{section.4.1}% 62
+\BOOKMARK [1][-]{section.4.2}{Dependency Parsing}{chapter.4}% 63
+\BOOKMARK [2][-]{subsection.4.2.1}{Motivation}{section.4.2}% 64
+\BOOKMARK [2][-]{subsection.4.2.2}{Projective and Non-projective Parsing}{section.4.2}% 65
+\BOOKMARK [2][-]{subsection.4.2.3}{Algorithms for Projective Dependency Parsing}{section.4.2}% 66
+\BOOKMARK [2][-]{subsection.4.2.4}{Algorithms for Non-Projective Dependency Parsing}{section.4.2}% 67
+\BOOKMARK [2][-]{subsection.4.2.5}{Model Refinements}{section.4.2}% 68
