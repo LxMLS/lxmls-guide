@@ -299,7 +299,7 @@ scr = srs.SentimentCorpus("books")
 This will load the data in a bag-of-words representation where rare words (occurring less than $5$ times in the training data) are removed. 
 
 \begin{enumerate}
-\item Open the file {\tt multinomial_naive_bayes.py}. Inside the {\tt MultinomialNaiveBayes} class you will find the {\tt train} method. We have already placed some code in that file to help you get started.
+\item Open the file {\tt multinomial\_naive\_bayes.py}. Inside the {\tt MultinomialNaiveBayes} class you will find the {\tt train} method. We have already placed some code in that file to help you get started.
 
 \item Run na\"ive Bayes with the multinomial model on the Amazon
   dataset (sentiment classification) and report results both for
@@ -406,6 +406,9 @@ where $\boldsymbol{g}(x) \in \mathbb{R}^J$ is a input feature vector, $\otimes$ 
 ($[\boldsymbol{a} \otimes \boldsymbol{b}]_{ij} = a_i b_j$) and 
 $\boldsymbol{e}_y \in \mathbb{R}^{K}$, with $[\boldsymbol{e}_y]_c = 1$ iff $y=c$, and 
 $0$ otherwise. Hence $\boldsymbol{f}(x,y) \in \mathbb{R}^D$ with $D = JK$.
+NOTA-MA: De acordo com a defenicao dada de produto kronecker, o vector $f(x,y)$ dado em
+\eqref{eq:jointfeatsimple} devia ser 2D e $\boldsymbol{f}(x,y) \in \mathbb{R}^{J \times K}$.
+
 
 
 
@@ -490,6 +493,8 @@ Perhaps the oldest algorithm to train a linear classifier is the \emph{perceptro
 which we depict as Alg.~\ref{alg:perceptron}.%
 \footnote{Actually, we are showing a more robust variant of the perceptron, 
 which averages the weight vector as a post-processing step.} 
+NOTA-MA: O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
+e também tem uma versão bach.
 
 \begin{algorithm}[t]
 
@@ -568,6 +573,8 @@ We provide an implementation of the perceptron algorithm in the class {\tt Perce
 \begin{enumerate}
 \item Run the perceptron algorithm on the simple dataset
 previously generated and report its train and test set accuracy: 
+NOTA-MA: Falta definir o sd ("`simple dataset"') anterirormente. Apenas se definiu o dataset da Amazon.
+
 \begin{python}
 import perceptron as percc
 
@@ -893,6 +900,7 @@ in a development partition or with cross-validation.
 \begin{exercise}
 We provide an implementation of the L-BFGS algorithm for training maximum entropy models in the class {\tt MaxEnt\_batch}, 
 as well as an implementation of the SGD algorithm in the class {\tt MaxEnt\_online}. 
+NOTA-MA: A sigla SGD (stochastic gradient descent?) não foi definida; não e percebe o que é.
 \begin{enumerate}
 \item Train a  maximum entropy model using L-BFGS on the Simple data
   set (try different values of $\lambda$). Compare the results with the previous methods. Plot the decision boundary. 
