@@ -13,27 +13,26 @@ will be adapted to structured inputs and outputs. For now, we concern only with 
 
 The assignment of today's class is to implement a classifier called Naive Bayes, and use it to perform sentiment analysis on a corpus of book reviews from Amazon.
 
-\section{Pre-assignment}
 
-\subsection{Notation}
+\section{Notation}
 
-In what follows, we denote by $\mathcal{X}$ our \emph{input set} (also called \emph{observation set}), and by $\mathcal{Y}$ our \emph{output set}. 
+In what follows, we denote by $\mathcal{X}$ our \emph{input set} (also called \emph{observation set}) and by $\mathcal{Y}$ our \emph{output set}. 
 We will make no assumptions about the set $\mathcal{X}$, which can be continuous or discrete. In this lecture, we 
 consider \emph{classification} problems, where $\mathcal{Y} = \{c_1,\ldots,c_K\}$ is a finite set, consisting of $K$ \emph{classes} (also called \emph{labels}). 
 For example, $\mathcal{X}$ can be a set of documents in natural language, and $\mathcal{Y}$ a set of topics, the goal 
 being to assign a topic to each document. 
 
-We use upper-case letters for denoting random variables, and lower-case letters for value assignments to those variables:  
-for example, 
+We use upper-case letters for denoting random variables, and lower-case letters for value assignments to those variables: for example,
 \begin{itemize}
 \item $X$ is a random variable taking values on $\mathcal{X}$,
 \item $Y$ is a random variable taking values on $\mathcal{Y}$,
 \item $x \in \mathcal{X}$ and $y \in \mathcal{Y}$ are particular values for $X$ and $Y$. 
 \end{itemize}  
 We consider \emph{events} such as $X=x$, $Y=y$, etc. 
-Throughout, we use modified notation and let $P(y)$ denote the \emph{probability} associated with the event $Y=y$ (instead of writing $P_Y(Y=y)$). 
-\emph{Joint} and \emph{conditional} probabilities are 
-denoted respectively as $P(x,y) \triangleq P_{X,Y}(X=x \wedge Y=y)$ and $P(x|y) \triangleq P_{X|Y}(X=x \,\,|\,\,Y=y)$. From the laws of probabilities: 
+
+For simplicity reasons, throughout this lecture we will use modified notation and let $P(y)$ denote the \emph{probability} associated with the event $Y=y$ (instead of $P_Y(Y=y)$). 
+Also, \emph{joint} and \emph{conditional} probabilities are 
+denoted as $P(x,y) \triangleq P_{X,Y}(X=x \wedge Y=y)$ and $P(x|y) \triangleq P_{X|Y}(X=x \,\,|\,\,Y=y)$, respectively. From the laws of probabilities: 
 \begin{equation}
 P(x,y)=P(y|x) P(x) = P(x|y) P(y), 
 \end{equation}
@@ -49,41 +48,49 @@ which consists of $M$ input-output pairs (called \emph{examples} or
 \mathcal{D} = \{(x^{1},y^{1}),\ldots,(x^{M},y^{M})\} \subseteq \mathcal{X} \times \mathcal{Y}.  
 \end{equation}
 
-The goal of (supervised) machine learning is to use the training dataset $\mathcal{D}$ to learn a function $h$ (called a \emph{classifier}) 
+The \textbf{goal of (supervised) machine learning} is to use the training dataset $\mathcal{D}$ to learn a function $h$ (called a \emph{classifier}) 
 that maps from $\mathcal{X}$ to $\mathcal{Y}$: this way, given a new instance 
 $x \in \mathcal{X}$ (test example), the machine makes a prediction ${\hat y}$ by evaluating $h$ on $x$, i.e., ${\hat y} = h(x)$. 
 
+%Ana: a imagem seguinte n‹o estava a ser referida em lado nenhum
 %\out{
-\begin{figure}
-\begin{center}
-    \includegraphics[width=1\columnwidth]{figs/classification/simple_data_set}
-  \caption{\label{simpleDataSet} Example of a dataset.
-    The input set consists in points in the real plane, $\mathcal{X} =
-    \mathbb{R}^2$, and the output set consists of two classes (Red
-    and Blue). Training points are represented as squares, while test
-    points are represented as circles.}
-  \end{center}
-\end{figure}
+%\begin{figure}
+%\begin{center}
+%    \includegraphics[width=1\columnwidth]{figs/classification/simple_data_set}
+%  \caption{\label{simpleDataSet} Example of a dataset.
+%    The input set consists in points in the real plane, $\mathcal{X} =
+ %   \mathbb{R}^2$, and the output set consists of two classes (Red
+ %   and Blue). Training points are represented as squares, while test
+ %   points are represented as circles.}
+ % \end{center}
+%\end{figure}
 %}
 
-\subsection{\label{s::naiveBayes}Generative Classifiers: Na\"{i}ve Bayes}
+\section{\label{s::naiveBayes}Generative Classifiers: Na\"{i}ve Bayes}
 
-If we knew the \emph{true} distribution $P(X,Y)$, the best possible classifier (Bayes optimal) 
+If we knew the \emph{true} distribution $P(X,Y)$, the best possible classifier (called Bayes optimal) 
 would be one which predicts according to
 
 \begin{eqnarray}
-{\hat y} &=& \arg\max_{y \in \mathcal{Y}} P(y|x) = \arg\max_{y \in \mathcal{Y}} \frac{P(x,y)}{P(x)} \nonumber\\
+{\hat y} &=& \arg\max_{y \in \mathcal{Y}} P(y|x)  \nonumber\\
+&=& \arg\max_{y \in \mathcal{Y}} \frac{P(x,y)}{P(x)} \nonumber \\
 &=^{\dagger}& \arg\max_{y \in \mathcal{Y}} P(x,y) \nonumber \\
 &=& \arg\max_{y \in \mathcal{Y}} P(y) P(x|y),
 \end{eqnarray}
-where in ${\dagger}$ we used the fact that $P(x)$ is constant with respect to $y$. Generative classifiers try to estimate the probability distributions $P(Y)$ and $P(X|Y)$ (which are respectively called the \emph{class prior} and the \emph{class conditionals}).
+where in ${\dagger}$ we used the fact that $P(x)$ is constant with respect to $y$. 
+
+Generative classifiers try to estimate the probability distributions $P(Y)$ and $P(X|Y)$, which are respectively called the \emph{class prior} and the \emph{class conditionals}. 
+They assume that the data are generated according to the following generative story (independently for each $m=1,\ldots,M$): 
+\begin{enumerate}
+\item A class $y_m \sim P(Y)$ is drawn from the class prior distribution;
+\item An input $x_m \sim P(X|Y=y_m)$ is drawn from the corresponding class conditional.
+\end{enumerate}
   
-Figure \ref{simpleDataSet_bo} shows an example of
-the Bayes optimal decision boundary for a toy example with $K=2$ classes, $M=100$ points, class priors $P(y_1) = P(y_2) = 0.5$, and class conditionals $P(x|y_i)$ given by 2-D Gaussian distributions with the same variance but different means.
+Figure \ref{simpleDataSet_bo} shows an example of the Bayes optimal decision boundary for a toy example with $K=2$ classes, $M=100$ points, class priors $P(y_1) = P(y_2) = 0.5$, and class conditionals $P(x|y_i)$ given by 2-D Gaussian distributions with the same variance but different means.
 
 \begin{figure}[h]
 \begin{center}
-    \includegraphics[width=1\columnwidth]{figs/classification/gaussian_separabale_bo.png}
+    \includegraphics[width=.90\columnwidth]{figs/classification/gaussian_separabale_bo.png}
   \caption{\label{simpleDataSet_bo} Example of a dataset together with
     the corresponding Bayes optimal decision boundary.
     The input set consists in points in the real plane, $\mathcal{X} =
@@ -94,22 +101,17 @@ the Bayes optimal decision boundary for a toy example with $K=2$ classes, $M=100
 \end{figure}
 
 
+\subsection{Training and Inference}
 
-Generative models assume that the data are generated according to the following generative story (independently for each $m=1,\ldots,M$): 
-\begin{enumerate}
-\item A class $y_m \sim P(Y)$ is drawn from the class prior distribution;
-\item An input $x_m \sim P(X|Y=y_m)$ is drawn from the corresponding class conditional.
-\end{enumerate}
-Training a generative model 
-amounts to \emph{estimating} these probabilities using the dataset $\mathcal{D}$, yielding estimates 
-$\hat{P}(y)$ and $\hat{P}(x|y)$. This estimation is usually called \emph{training}, or \emph{learning}.
+Training a generative model amounts to \emph{estimating} the probabilities $P(Y)$ and $P(X|Y)$ using the dataset $\mathcal{D}$, yielding estimates 
+$\hat{P}(y)$ and $\hat{P}(x|y)$. This estimation is usually called \emph{training} or \emph{learning}.
 
 After we are done training, we are given a new input $x \in \mathcal{X}$, and we want to make a prediction according to  
 \begin{eqnarray}
 {\hat y} &=& \arg\max_{y \in \mathcal{Y}} \hat{P}(y) \hat{P}(x|y),
 \label{eq:argmax}
 \end{eqnarray}
-using the probabilities estimated in the training stage. This is usually called \emph{inference} or \emph{decoding}.
+using the estimated probabilities. This is usually called \emph{inference} or \emph{decoding}.
 
 
 We are left with two important problems:
@@ -254,7 +256,7 @@ $\mathcal{X}$ is the set of all possible documents, and $\mathcal{Y}=\{y_1,\ldot
 Let $\mathcal{V} = \{w_1,\ldots,w_J\}$ be the vocabulary, i.e., the set of words that occur in some document. 
 
 A very popular document representation is through a ``bag-of-words'': each document is seen as a collection of words along with 
-their frequencies; word ordering is ignored. We are going to see that this is equivalent to a na\"ive Bayes assumption with the \emph{multinomial model}.%
+their frequencies; word ordering is ignored. We are going to see that this is equivalent to a na\"ive Bayes assumption with the \emph{multinomial model}. 
 %\footnote{Another popular model for documents is the Bernoulli model, which only looks at the presence/absence of a word in a 
 %document, rather than word frequency. See \cite{Manning2008,McCallum1998} for further information.} % 
 We associate to each class a multinomial distribution, which ignores word ordering, but takes into consideration the 
@@ -285,8 +287,10 @@ the class-conditional word probabilities are the relative frequencies of those w
 
 \section{Assignment}
 
+With the previous theoretical background, you will be able to solve today's assignment.  
+
 \begin{exercise}
-In this exercise we will use the the Amazon sentiment analysis data \citep{blitzer2007biographies}, 
+In this exercise we will use the Amazon sentiment analysis data \citep{blitzer2007biographies}, 
 where the goal is to classify text documents as expressing a \emph{positive} or \emph{negative} sentiment 
 (i.e., a classification problem with two labels). We are going to focus on book reviews. 
 To load the data, type:
@@ -336,11 +340,12 @@ Report the new accuracies.
 \end{enumerate}
 \end{exercise}
 
-\section{Post-assignment}
 
-\subsection{Features and Discriminative Classifiers}\label{sec:linearclass}
+\section{Discriminative Classifiers}\label{sec:linearclass}
 
-In the previous sections we discussed generative classifiers. Those classifiers require us to model the class prior and class conditional distributions. Recall, however, that a classifier is \emph{any} function which maps objects $x \in \mathcal{X}$ onto classes $y \in \mathcal{Y}$. While it's often useful to model how the data was generated, it's not required. Classifiers which do not model these distributions are called \emph{discriminative} classifiers. 
+In the previous sections we discussed generative classifiers, which require us to model the class prior and class conditional distributions ($P(Y)$ and $P(X|Y)$, respectively). Recall, however, that a classifier is \emph{any} function which maps objects $x \in \mathcal{X}$ onto classes $y \in \mathcal{Y}$. While it's often useful to model how the data was generated, it's not required. Classifiers that do not model these distributions are called \emph{discriminative} classifiers. 
+
+\subsection{Features}
 
 For the purpose of understanding discriminative classifiers, it is useful to think about each  $x \in \mathcal{X}$ as an abstract object which is subject to a set of descriptions or measurements, which are called \emph{features}. A feature is simply a real number that describes the value of some property of $x$. For example, in the previous section, the features of a document were the number of times each word $w_j$ appeared in it.
 
@@ -406,10 +411,11 @@ where $\boldsymbol{g}(x) \in \mathbb{R}^J$ is a input feature vector, $\otimes$ 
 ($[\boldsymbol{a} \otimes \boldsymbol{b}]_{ij} = a_i b_j$) and 
 $\boldsymbol{e}_y \in \mathbb{R}^{K}$, with $[\boldsymbol{e}_y]_c = 1$ iff $y=c$, and 
 $0$ otherwise. Hence $\boldsymbol{f}(x,y) \in \mathbb{R}^D$ with $D = JK$.
-NOTA-MA: De acordo com a defenicao dada de produto kronecker, o vector $f(x,y)$ dado em
-\eqref{eq:jointfeatsimple} devia ser 2D e $\boldsymbol{f}(x,y) \in \mathbb{R}^{J \times K}$.
+\todo{De acordo com a defenicao dada de produto kronecker, o vector $f(x,y)$ dado em
+\eqref{eq:jointfeatsimple} devia ser 2D e $\boldsymbol{f}(x,y) \in \mathbb{R}^{J \times K}$.}
 
 
+\subsection{Inference}
 
 
 
@@ -483,18 +489,25 @@ Hence, the multinomial model yields a prediction rule of the form
 %and compare it with the Bayes optimal classifier. 
 %\end{exercise}
 
-\subsection{Online Discriminative Algorithms: Perceptron and MIRA}
+\subsection{Online Discriminative Algorithms}
 
 We now discuss two discriminative classification algorithms. These two algorithms are called \emph{online} (or \emph{stochastic}) algorithms because they only process one data point (in our example, one document) at a time. Algorithms which look at the whole dataset at once are called \emph{offline}, or \emph{batch} algorithms, and will be discussed later.
 
 \subsubsection{\label{s:perceptron} Perceptron}
 
-Perhaps the oldest algorithm to train a linear classifier is the \emph{perceptron} \citep{Rosenblatt1958}, 
-which we depict as Alg.~\ref{alg:perceptron}.%
+The \emph{perceptron} \citep{Rosenblatt1958} is perhaps the oldest algorithm used to train a linear classifier. 
+The perceptron works as follows: at each round, it takes an element $x$ from the dataset, and uses the current model 
+to make a prediction. If the prediction is correct, nothing happens. 
+Otherwise, the model is corrected by adding the feature vector w.r.t. the correct output and 
+subtracting the  feature vector w.r.t. the predicted (wrong) output. Then, it proceeds to the next round. 
+
+
+Alg.~\ref{alg:perceptron} shows the pseudo-code of the perceptron algorithm. As it can be seen, it is remarkably simple; yet it often reaches a very good performance, 
+often better than the Na\"ive Bayes, and usually not much worse than maximum entropy models or SVMs (which will be 
+described in the next following).
 \footnote{Actually, we are showing a more robust variant of the perceptron, 
-which averages the weight vector as a post-processing step.} 
-NOTA-MA: O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
-e também tem uma versão bach.
+which averages the weight vector as a post-processing step.}  \todo{\small O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
+e também tem uma versão bach.}
 
 \begin{algorithm}[t]
 
@@ -543,13 +556,7 @@ e também tem uma versão bach.
 
 \end{algorithm}
 
-The perceptron algorithm works as follows: at each round, it takes an element $x$ from the data set, and uses the current model 
-to make a prediction. If the prediction is correct, nothing happens. 
-Otherwise, the model is corrected by adding the feature vector w.r.t. the correct output and 
-subtracting the  feature vector w.r.t. the predicted (wrong) output. Then, we proceed to the next round. 
-Alg.~\ref{alg:perceptron} is remarkably simple; yet it often reaches a very good performance, 
-often better than the Na\"ive Bayes model, and usually not much worse than maximum entropy models or SVMs (which will be 
-described in the next section). 
+
 
 %\jg{This next paragraph should be explained in the Linear classifier
 %  section since we alread used this here for the NB}
@@ -573,7 +580,7 @@ We provide an implementation of the perceptron algorithm in the class {\tt Perce
 \begin{enumerate}
 \item Run the perceptron algorithm on the simple dataset
 previously generated and report its train and test set accuracy: 
-NOTA-MA: Falta definir o sd ("`simple dataset"') anterirormente. Apenas se definiu o dataset da Amazon.
+\todo{Falta definir o sd ("`simple dataset"') anterirormente. Apenas se definiu o dataset da Amazon.}
 
 \begin{python}
 import perceptron as percc
@@ -723,17 +730,16 @@ results achieved and separating hiperplanes found.
 
 
 
-\subsection{Batch Discriminative Classifiers: Maximum Entropy and Support Vector Machines}
+\subsection{Batch Discriminative Classifiers}
 
-The algorithms described in the last section (perceptron and MIRA) are called \emph{online} or \emph{stochastic} algorithms, because they look at one data point at a time. We now describe two discriminative classifiers which look at all points at once; these are called \emph{offline} or \emph{batch} algorithms.
+As we have mentioned, the perceptron and MIRA algorithms are called \emph{online} or \emph{stochastic} because they look at one data point at a time. We now describe two discriminative classifiers which look at all points at once; these are called \emph{offline} or \emph{batch} algorithms.
 
 \subsubsection{\label{s:me}Maximum Entropy Classifiers}
 
 The notion of \emph{entropy} in the context of Information Theory \citep{Shannon1948} is one of the most significant advances 
 in mathematics in the twentieth century. The principle of \emph{maximum entropy} (which appears under different names, 
 such as ``maximum mutual information'' or  ``minimum Kullback-Leibler divergence'') plays a fundamental role 
-in many methods in statistics and machine learning \citep{Jaynes1982}. \footnote{
-For an excellent textbook on Information Theory, we recommend \citet{Cover1991}. }
+in many methods in statistics and machine learning \citep{Jaynes1982}. \footnote{For an excellent textbook on Information Theory, we recommend \citet{Cover1991}. }
 The basic rationale is that choosing the model with the highest entropy (subject to 
 constraints that depend on the observed data) corresponds to making the fewest possible assumptions regarding what was unobserved, making uncertainty 
 about the model as large as possible.
@@ -743,8 +749,8 @@ uniform distribution (each outcome having of probability a $1/6$).
 Now suppose that we are only told that outcomes $\{1,2,3\}$ occurred $10$ times in total, and 
 $\{4,5,6\}$ occurred $30$ times in total, then the principle of maximum entropy would lead us to 
 estimate $P(1)=P(2)=P(3)=1/12$ and $P(1)=P(2)=P(3)=1/4$ (i.e., outcomes would be uniform 
-within each of the two groups). For an introduction of maximum entropy models, along with pointers to the literature, see 
-\url{http://www.cs.cmu.edu/~aberger/maxent.html}.
+within each of the two groups).\footnote{For an introduction of maximum entropy models, along with pointers to the literature, see 
+\url{http://www.cs.cmu.edu/~aberger/maxent.html}.}
 
 This example could be presented in a more formal way. Suppose that we want to use binary features to represent the outcome of the die throw. We use two features: $f_{123}(x,y) = 1$ if and only if $y \in \{1,2,3\}$, and $f_{456}(x,y) = 1$ if and only if $y \in \{4,5,6\}$. Our observations state that in 40 throws, we observed $f_{123}$ 10 times (25\%) and $f_{456}$ 30 times (75\%). The maximum entropy principle states that we want to find the parameters $\boldsymbol{w}$ of our model, and consequently the probability distribution $P_{\boldsymbol{w}}(Y|X)$, which makes $f_{123}$ have an expected value of 0.25 and $f_{456}$ have an expected value of 0.75. These constraints, $E[f_{123}] = 0.25$ and $E[f_{456}] = 0.75$, are known as \emph{first moment matching constraints}.\footnote{In general, these constraints mean that
 feature expectations under that distribution $\frac{1}{M}\sum_m E_{Y \sim P_{\boldsymbol{w}}}[\boldsymbol{f}(x_m,Y)]$ 
@@ -900,7 +906,7 @@ in a development partition or with cross-validation.
 \begin{exercise}
 We provide an implementation of the L-BFGS algorithm for training maximum entropy models in the class {\tt MaxEnt\_batch}, 
 as well as an implementation of the SGD algorithm in the class {\tt MaxEnt\_online}. 
-NOTA-MA: A sigla SGD (stochastic gradient descent?) não foi definida; não e percebe o que é.
+\todo{NOTE-MA: A sigla SGD (stochastic gradient descent?) não foi definida; não e percebe o que é.}
 \begin{enumerate}
 \item Train a  maximum entropy model using L-BFGS on the Simple data
   set (try different values of $\lambda$). Compare the results with the previous methods. Plot the decision boundary. 
@@ -950,7 +956,7 @@ print "Max-Ent Online Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,a
 
 \subsubsection{Support Vector Machines}\label{sec:svms}
 
-Support vector machines are also a discriminative approach, but they are not a probabilistic model at all. 
+\textit{Support vector machines} are also a discriminative approach, but they are not a probabilistic model at all. 
 The basic idea is that, if the goal is to accurately predict outputs (according to some cost function), we should focus on that 
 goal in the first place, rather than trying to estimate a probability distribution ($P(Y|X)$ or $P(X,Y)$), 
 which is a more difficult problem. As \citet{Vapnik1995} puts it, 
@@ -1046,7 +1052,7 @@ and the online algorithms seen above (perceptron and MIRA).
 %% \begin{itemize}
 %% \item Implement the SVM primal algorithm (Hint: look at the models
 %%   implemented earlier, you should only need to change a few lines of code).
-%% \item Run it on the simple data set, and see the decision
+%% \item Run it on the simple dataset, and see the decision
 %%   boundaries. Compare with the other methods.
 %% \item Plot the evolution of the decision boundaries. 
 %% \item Run it on the Amazon dataset and report the train, dev, test accuracies.
@@ -1088,10 +1094,10 @@ results achieved and separating hiperplanes found.
 
 
 
-\subsection{Comparison}
+\section{Comparison}
 
-Table~\ref{tab:comparison_lab1} provides a high-level comparison among the different models discussed in this chapter. 
-\begin{table}
+Table~\ref{tab:comparison_lab1} provides a high-level comparison among the different algorithms discussed in this chapter. 
+\begin{table}[h]
 \centering
 \small
 \begin{tabular}{l|ccccc}
@@ -1110,14 +1116,13 @@ Training									& Closed Form & Easy & Easy & Fair & Fair\\
 Hyperparameters to tune				& 1 (smoothing) & 0 & 1 & 1 & 1\\
 \hline\hline
 \end{tabular}
-\label{tab:comparison_lab1}
-\caption{Comparison among different models.}
+\caption{Comparison among different algorithms.\label{tab:comparison_lab1}}
 \end{table}
 
 \begin{exercise}
 \begin{itemize}
-\item Using the simple data set run the different models varying some
-  characteristics of the data, number of points, variance (hence
+\item Using the simple dataset run the different algorithms varying some
+  characteristics of the data: like the number of points, variance (hence
   separability), class balance. Use function
   \emph{run\_all\_classifiers} in file \emph{labs/run\_all\_classifiers.py} which receives a
   dataset and plots all decisions boundaries and accuracies. What can
@@ -1127,7 +1132,7 @@ Hyperparameters to tune				& 1 (smoothing) & 0 & 1 & 1 & 1\\
 \end{exercise}
 
 
-\subsection{Final remarks}
+\section{Final remarks}
 
 %\afm{Please add more if something else should be here!}
 
