@@ -258,7 +258,7 @@ inf
 
 \subsection{Posterior Decoding}
 Posterior decoding consists
-in picking the highest state posterior for each position in the sequence independently; for 
+in picking state with the highest posterior for each position in the sequence independently; for 
 each $i = 1,\ldots,N$:
 \begin{equation}
 y_i^* = \argmax_{y_i \in \statevocab} P(Y_i=y_i | X = x).
@@ -573,7 +573,7 @@ then pick the arg-max at each position:
 
 Compute the node posteriors for the first training sentence (use the provided \emph{compute\_posteriors} function), and look at
 the output. Note that the state posteriors are a proper
-probability distribution (the columns of the result sum to 1).
+probability distribution (the lines of the result sum to 1).
 
 \begin{python}
 >>> initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
@@ -621,7 +621,7 @@ Change the \emph{train\_supervised} method to add smoothing:
 def train_supervised(self,sequence_list, smoothing):
 \end{python}
 
-Try, for example, adding 1 to all the counts, and repeating this exercise with that smoothing. What do you observe?
+Try, for example, adding 0.1 to all the counts, and repeating this exercise with that smoothing. What do you observe?
 \begin{python}
 >>> hmm.train_supervised(simple.train, smoothing=0.1)
 >>> y_pred = hmm.posterior_decode(simple.test.seq_list[0])
@@ -794,6 +794,7 @@ in the module {\tt sequence\_classifier.py}.
 
 Test your method on both test sentences and compare the results with
 the ones given.
+NOTA-MA: O segundo dataset ainda não foi definido.
 \begin{python}
 >>> hmm.train_supervised(simple.train, smoothing=0.1)
 >>> y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])
