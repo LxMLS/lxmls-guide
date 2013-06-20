@@ -104,13 +104,21 @@ preinstalled on your machine:
 
 python wordcount.py /datasets/small-text-file.txt
 
-\subsection{Running Word Count using Hadoop}
+\subsubsection{Running Word Count using Hadoop}
 
 We are now going to use the AWS Key and AWS Secret. These are like a username
 and password for Amazon Webservices.
 
-\subsection{Naïve Bayes}
+We can run the exact same code as before using EMR:
+
+\subsubsection{Running Word Count on Wikipedia}
+
+This file is not very big, but running on a cluster of machine allows us to
+scale up run on Wikipedia
+
+\subsection{Using Naïve Bayes for Language Detection}
 
 The implementation of binary Naïve Bayes is very similar to counting words: we just
 need to keep track of the class of each document and maintain.
+
 
