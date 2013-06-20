@@ -1,0 +1,246 @@
+In this lab, we will work with Amazon.com's Web Services, a cloud based solution
+to run some simple analyses. Then, in the next lab, we will build on these
+tools to construct a larger learning system.
+
+\section{Introduction}
+
+AWS is a set of services of different types. We will focus on the \emph{Elastic
+Compute Cluster}, EC2.
+
+In this lab, we will be logging in to Linux-based machines using a command line
+interface. If you are not familiar with the command line, you may not grasp all
+the nuances
+
+\section{Running Your First Hadoop Job}
+
+You should have received a piece of paper with the following four pieces of
+information:
+
+\begin{enumerate}
+\item A host name
+\item A password
+\item A ``AWS Key''
+\item A ``AWS Secret
+\end{enumerate}
+
+We will ignore the first two items for the moment.  Your hostname will look
+something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
+should be able to log in with username \texttt{ubuntu} and the password you
+were given! This is your personal server.
+
+If you are using the command line, you can just type:
+
+ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
+
+(accept the RSA key and log in with the password we provided you).
+
+The machine has all of the necessary Python packages for you to work. It also
+has a standard collection of editors and other tools. It is an Ubuntu based
+installation and you can access super user powers with \texttt{sudo} (Don't
+worry if you did not understand this last sentence).
+
+
+\section{MapReduce \& Hadoop}
+
+The initial idea of MapReduce was an implementation by google, but very soon
+Hadoop appeared as an open-source implementation of the same paradigm.
+
+\subsection{Word Count}
+
+Here is the problem:
+
+\begin{enumerate}
+\item You have a collection of documents, there are many of them.
+\item You want to count how many times each word appears in the whole collection.
+\end{enumerate}
+
+Counting words in a collection of documents can be parallelized in the following way:
+
+\begin{enumerate}
+\item You process each document by itself, counting how many times each word
+appears. This is the \emph{map} step. Notice that each document can be
+processed in parallel by different machines. The result for each file is a
+dictionary of a count for each word.
+\item You sum up the counts for each word to get the final count. This is the
+\emph{reduce} step. Notice that you can now parallelize over words.
+\end{enumerate}
+
+In this tutorial, we will be using the package \texttt{MrJob} (which was
+developed by Yelp, the company behind the epinomious website; but is available
+as open source, under the Apache license). On your Amazon machine, the package
+is already installed with all its dependencies, so you can just go ahead and
+use it.
+
+We are going to implement the word count algorithm now:
+
+\begin{python}
+# Import the necessary libraries:
+from mrjob.job import MRJob
+import re
+
+# Check whether the word is a real word
+def _is_valid_word(w):
+    return re.search(r'\W', w) is None
+
+class WordCount(MRJob):
+    def mapper(self, _, doc):
+        c = {}
+        # Process the document
+        for w in doc.split():
+            if _is_valid_word(w):
+                if w in c:
+                    c[w] += 1
+                else:
+                    c[w] = 1
+
+        # Now, output the results
+        for w,c in c.items():
+            yield w,c
+
+    def reducer(self, key, cs):
+        yield key, sum(cs)
+
+wc = WordCount()
+wc.run()
+\end{python}
+
+You can save this as \texttt{wordcount.py} and run this on your machine
+directly. We will also make use of the \texttt{/datasets} directory that is
+preinstalled on your machine:
+
+\begin{verbatim}
+python wordcount.py /datasets/small-text-file.txt
+\end{verbatim}
+
+\subsubsection{Running Word Count using Hadoop}
+
+We are now going to use the AWS Key and AWS Secret. These are like a username
+and password for Amazon Webservices.
+
+We can run the exact same code as before using EMR:
+
+\begin{verbatim}
+export AWS_ACCESS_KEY_ID=<YOUR ACCESS KEY>
+export AWS_SECRET_KEY_ID=<YOUR SECRET KEY>
+
+python wordcount.py \
+        -r emr \
+        /datasets/small-text-file.txt /
+        --num-ec2-instances 2 \
+        --aws-region eu-west-1
+\end{verbatim}
+
+This runs the code on \emph{emr} (Elastic Map Reduce)with 2 instances.
+
+\subsubsection{Running Word Count on Wikipedia}
+
+This file is not very big, but running on a cluster of machine allows us to
+scale up run on Wikipedia
+
+\begin{verbatim}
+python wordcount.py \
+        -r emr \
+        s3://lxmls-labs/pt_perline10.txt
+        --num-ec2-instances 10 \
+        --aws-region eu-west-1
+\end{verbatim}
+
+This should take about 3 minutes.
+
+\subsection{Using Naïve Bayes for Language Detection}
+
+The implementation of binary Naïve Bayes is very similar to counting words: we just
+need to keep track of the class of each document and maintain.
+
+\begin{python}
+# Import the necessary libraries:
+from mrjob.job import MRJob
+import re
+
+# Check whether the word is a real word
+def _is_valid_word(w):
+    return re.search(r'\W', w) is None
+
+class TrimerCount(MRJob):
+    def mapper(self, _, doc):
+        c = {}
+        # Process the document
+        for i in xrange(len(doc)-3):
+            w = doc[i:i+3]
+            if _is_valid_word(w):
+                if w in c:
+                    c[w] += 1
+                else:
+                    c[w] = 1
+
+        # Now, output the results
+        for w,c in c.items():
+            yield w,c
+
+    def reducer(self, key, cs):
+        yield key, sum(cs)
+
+TrimerCount.run()
+\end{python}
+
+We will run two jobs, one on a selection of the Portuguese Wikipedia (10\%) and
+another on the English Wikipedia (only 1\% as this is much larger).
+
+\begin{verbatim}
+python trimercount.py \
+        -r emr \
+        s3://lxmls-labs/pt_perline10.txt
+        --num-ec2-instances 10 \
+        --aws-region eu-west-1 > pt.counts.txt
+
+python trimercount.py \
+        -r emr \
+        s3://lxmls-labs/en_perline01.txt
+        --num-ec2-instances 10 \
+        --aws-region eu-west-1 > en.counts.txt
+\end{verbatim}
+
+These should run in a few minutes as well. Running it on the whole Wikipedia
+could be done with the same system in just a few hours.
+
+\subsection{Building a Classifier}
+
+We need to load the outputs from the Hadoop runs:
+
+\begin{python}
+def load_counts(ifile):
+    counts = {}
+    with open(ifile) as input:
+        for line in input:
+            word, count = line.strip().split()
+            word = word[1:-1]
+            counts[word] = float(count)
+    return counts
+\end{python}
+
+We write a function for the classification:
+
+\begin{python}
+def score(counts_pt, counts_en, test):
+    val = 1.
+    for i in xrange(len(test)-3):
+        tri = test[i:i+3]
+        tri_pt = counts_pt.get(tri, 1.)
+        tri_en = counts_en.get(tri, 1.)
+        val *= tri_pt/tr_en
+    return val
+\end{python}
+
+We now load the two files and then classify any sentences the user types:
+
+\begin{python}
+counts_pt = load_counts('output.pt.txt')
+counts_en = load_counts('output.en.txt')
+
+while True:
+    test = raw_input("Type a test sentence? ")
+    if not test: break
+    print score(counts_pt, counts_en, test)
+\end{python}
+
+
