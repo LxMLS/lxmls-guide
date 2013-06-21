@@ -2,7 +2,7 @@ Given the learned parameters and a new
 observation sequence $x = x_1\ldots x_N$, we want to find ``the best'' sequence of hidden states 
 $y^* = y_1^* \ldots y_N^*$;
  this is called the \emph{decoding} problem. There are several ways to define what we mean by the best
-$y^*$---for instance, we may will to minimize the probability of error
+$y^*$---for instance, we may want to minimize the probability of error
 on each hidden
 variable $Y_i$; or, we may want the best assignment
 to the sequence $Y_1\ldots Y_N$ as a whole.
@@ -140,7 +140,7 @@ The trellis scores are given by the following expressions:
 \mathrm{score}_{\mathrm{trans}}(i, c_k, c_l) &=&
 \log P_{\mathrm{trans}}(Y_{i+1} = c_k | Y_i = c_l).
 \end{eqnarray}
-\item For each state $c_l$:
+\item For each state $c_l$ (\textbf{verify equation: remove $i$ from score?}):
 \begin{eqnarray}
 \mathrm{score}_{\mathrm{final}}(i, c_l) &=&
 \log P_{\mathrm{final}}(\text{\tt stop} | Y_N = c_l).
@@ -154,7 +154,7 @@ The trellis scores are given by the following expressions:
 
 Convince yourself that the score of a path in the trellis 
 (summing over the scores above) is equivalent 
-gives the log-probability $\log P(X=x,Y=y)$, 
+to the log-probability $\log P(X=x,Y=y)$, 
 as defined in 
 Eq.~\ref{eqn:hmm_ex}. 
 Use the given function \emph{compute\_scores} on the first training sequence and confirm that the values are correct. You should get the same values as presented below.
@@ -258,7 +258,7 @@ inf
 
 \subsection{Posterior Decoding}
 Posterior decoding consists
-in picking state with the highest posterior for each position in the sequence independently; for 
+in picking the state with the highest posterior for each position in the sequence independently; for 
 each $i = 1,\ldots,N$:
 \begin{equation}
 y_i^* = \argmax_{y_i \in \statevocab} P(Y_i=y_i | X = x).

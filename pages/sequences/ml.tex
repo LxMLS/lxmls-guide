@@ -74,9 +74,9 @@ C_{\mathrm{emiss}}(w_j,c_k) = \sum_{m=1}^M
 \end{align}
 
 Note that $\Ind$ is an indicator function that has the value 1 when the
-particular event happens, and zero otherwise. In words, the previous
+particular event happens, and zero otherwise. In other words, the previous
 equations go through the training corpus and count how
-often each even occurs. For example, Eq.~\ref{eq::transitionCounts} counts how often state $c_k$ follows state $c_j$. Therefore, $C_{\mathrm{trans}}(\text{\tt sunny},\text{\tt rainy})$ contains the number of times that a sunny day followed a rainy day.
+often each event occurs. For example, Eq.~\ref{eq::transitionCounts} counts how often state $c_k$ follows state $c_l$. Therefore, $C_{\mathrm{trans}}(\text{\tt sunny},\text{\tt rainy})$ contains the number of times that a sunny day followed a rainy day.
 
 %
 %: e.g. the word ``w'' appears with state
@@ -154,7 +154,7 @@ The provided function \emph{train\_supervised} from the \emph{hmm.py} file imple
 %\begin{python}
 %def train_supervised(self,sequence_list):
 %\end{python}
-Run this function given the simple dataset above and look at the estimated probabilities. Are they correct? You can also check the variables ending in \emph{\_counts} instead of \emph{\_probs} to see the raw counts (for example, typing \emph{hmm.initial\_probs} will show you the raw counts of initial states). How are the counts related to the probabilities?
+Run this function given the simple dataset above and look at the estimated probabilities. Are they correct? You can also check the variables ending in \emph{\_counts} instead of \emph{\_probs} to see the raw counts (for example, typing \emph{hmm.initial\_counts} will show you the raw counts of initial states). How are the counts related to the probabilities?
 
 \begin{python}
 >>> import sequences.hmm as hmmc

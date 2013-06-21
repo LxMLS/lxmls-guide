@@ -10,14 +10,14 @@ tagging as our example task.
 
 We focus on the well known Hidden Markov Model (HMM) on section
 \ref{hmm}, where we describe how to estimate its parameters from labeled data
-\ref{ml}. We will then move to how to find the most likely hidden sequence
+\ref{ml}. We will then see how to find the most likely hidden sequence
 (decoding) given an observation sequence and a parameter set
 \ref{decoding}. This section will explain the required inference
 algorithms (Viterbi and Forward-Backward) for sequence models. These
 inference algorithms will be fundamental for the rest of this lecture,
 as well as for the next lecture on \emph{discriminative} training of sequence
 models. Section \ref{pos-tagging} will describe the task of 
-part-of-speech tagging, and how HMM are suitable for this task. 
+part-of-speech tagging, and how HMMs are suitable for this task. 
 Finally, Section \ref{sec:em} will 
 address unsupervised learning of HMMs through the EM
 algorithm.
@@ -31,9 +31,9 @@ $\vocab := \{w_1,\ldots,w_J\}$,
 and a finite set of \emph{state labels}, 
 $\statevocab := \{c_1,\ldots, c_K\}$.
 In part-of-speech tagging, $\vocab$ is a 
-vocabulary of word types, and 
+vocabulary of word types \textbf{examples of word types?}, and 
 $\statevocab$ is the set of part-of-speech tags 
-(noun, verb, adjective, \emph{etc.})
+(noun, verb, adjective, \emph{etc.}).
 Let $\varepsilon$ denote the empty string. 
 We denote by 
 $\vocab^* := \{\varepsilon\} \cup \vocab \cup \vocab^2 \cup \ldots$ and 
@@ -49,7 +49,7 @@ In other words,
 our inputs are observation sequences, 
 $x = x_1 x_2 \ldots x_N$, 
 for some $N \in \mathbb{N}$, where each $x_i \in \vocab$;
-given such a $x$, we seek 
+given such an $x$, we seek 
 the corresponding state sequence, 
 $y = y_1 y_2 \ldots y_N$, 
 where each $y_i \in \statevocab$.
