@@ -125,6 +125,7 @@ The first problem strongly depends on the application at hand. Quite often, ther
 \begin{equation}
 X = (X_1,\ldots,X_J). 
 \end{equation}
+
 The na\"{i}ve Bayes method makes the following assumption: \emph{$X_1,\ldots,X_J$ are conditionally independent given the class}. Mathematically, this means that 
 \begin{eqnarray}
 P(X|Y) &=& \prod_{j=1}^J P(X_j|Y).
@@ -292,7 +293,7 @@ With the previous theoretical background, you will be able to solve today's assi
 \begin{exercise}
 In this exercise we will use the Amazon sentiment analysis data \citep{blitzer2007biographies}, 
 where the goal is to classify text documents as expressing a \emph{positive} or \emph{negative} sentiment 
-(i.e., a classification problem with two labels). We are going to focus on book reviews. 
+(i.e., a classification problem with two classes). We are going to focus on book reviews. 
 To load the data, type:
 \begin{python}
 import sentiment_reader as srs
@@ -322,7 +323,7 @@ print "Multinomial Naive Bayes Amazon Sentiment Accuracy train: %f test: %f"%(ac
 \end{python}
 
 
-\item Observe that words that were not observed at training time cause problems at test time. Why? 
+\item Observe that words that were not observed at training time cause problems at test time. Why?
 To solve this problem, apply a simple \emph{add-one} smoothing technique: replace the expression in Eq.~\ref{eq:mlemultinomial} 
 for the estimation of the conditional probabilities 
 by
@@ -339,7 +340,6 @@ See \emph{e.g.} \citet{Manning1999,Manning2008} for more information.
 Report the new accuracies. 
 \end{enumerate}
 \end{exercise}
-
 
 \section{Discriminative Classifiers}\label{sec:linearclass}
 
@@ -410,9 +410,8 @@ A very simple form of defining a joint feature mapping which is often employed i
 where $\boldsymbol{g}(x) \in \mathbb{R}^J$ is a input feature vector, $\otimes$ is the Kronecker product 
 ($[\boldsymbol{a} \otimes \boldsymbol{b}]_{ij} = a_i b_j$) and 
 $\boldsymbol{e}_y \in \mathbb{R}^{K}$, with $[\boldsymbol{e}_y]_c = 1$ iff $y=c$, and 
-$0$ otherwise. Hence $\boldsymbol{f}(x,y) \in \mathbb{R}^D$ with $D = JK$.
-\todo{De acordo com a defenicao dada de produto kronecker, o vector $f(x,y)$ dado em
-\eqref{eq:jointfeatsimple} devia ser 2D e $\boldsymbol{f}(x,y) \in \mathbb{R}^{J \times K}$.}
+$0$ otherwise. Hence $\boldsymbol{f}(x,y) \in \mathbb{R}^{J \times K}$.
+%\todo{De acordo com a defenicao dada de produto kronecker, o vector $f(x,y)$ dado em \eqref{eq:jointfeatsimple} devia ser 2D e $\boldsymbol{f}(x,y) \in \mathbb{R}^{J \times K}$.}
 
 
 \subsection{Inference}
@@ -504,7 +503,7 @@ subtracting the  feature vector w.r.t. the predicted (wrong) output. Then, it pr
 
 Alg.~\ref{alg:perceptron} shows the pseudo-code of the perceptron algorithm. As it can be seen, it is remarkably simple; yet it often reaches a very good performance, 
 often better than the Na\"ive Bayes, and usually not much worse than maximum entropy models or SVMs (which will be 
-described in the next following).
+described in the following section).
 \footnote{Actually, we are showing a more robust variant of the perceptron, 
 which averages the weight vector as a post-processing step.}  \todo{\small O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
 e também tem uma versão bach.}
