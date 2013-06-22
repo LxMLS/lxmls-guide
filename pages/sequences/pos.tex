@@ -2,8 +2,8 @@ Part of speech tagging is one the most important NLP tasks. The
 task is to assign each word a grammatical category, \emph{i.e.} Noun,
 Verb, Adjective, ... . In English, using the Penn Treebank (PTB) corpus \citep{pennTreeBank}, the current
 state of the art for part of speech tagging is around 97\% for a
-variety of methods \footnote{See ACL state of the art wiki}. 
-NOTA-MA: A footnote está correcta?
+variety of methods.%
+%\footnote{See ACL state of the art wiki.} 
 
 In the rest of this class we will use a subset of the PTB corpus, but
 instead of using the original 45 tags we will use a reduced tag set of
@@ -123,50 +123,50 @@ predicted tags). You should get something like \ref{fig:cm_uns}.
 %\end{exercise}
 
 
-\section{Unsupervised Learning of HMMs}
-
-\afm{explain here the EM algorithm}
-
-\begin{python}
-
-Initial accuracy: 0.303638
-Iter: 1 Log Likelihood: -101824.763927
-Iter: 1 Accuracy: 0.305441
-Iter: 2 Log Likelihood: -78057.108346
-Iter: 2 Accuracy: 0.321976
-Iter: 3 Log Likelihood: -77813.725501
-Iter: 3 Accuracy: 0.357451
-Iter: 4 Log Likelihood: -77192.947674
-Iter: 4 Accuracy: 0.385109
-Iter: 5 Log Likelihood: -76191.800849
-Iter: 5 Accuracy: 0.392123
-Iter: 6 Log Likelihood: -75242.572729
-Iter: 6 Accuracy: 0.391121
-Iter: 7 Log Likelihood: -74392.892496
-Iter: 7 Accuracy: 0.404249
-Iter: 8 Log Likelihood: -73357.542833
-Iter: 8 Accuracy: 0.399940
-Iter: 9 Log Likelihood: -72135.182778
-Iter: 9 Accuracy: 0.399238
-Iter: 10 Log Likelihood: -70924.246230
-Iter: 10 Accuracy: 0.395430
-Iter: 11 Log Likelihood: -69906.561800
-Iter: 11 Accuracy: 0.394328
-Iter: 12 Log Likelihood: -69140.228623
-Iter: 12 Accuracy: 0.390821
-Iter: 13 Log Likelihood: -68541.416423
-Iter: 13 Accuracy: 0.391522
-Iter: 14 Log Likelihood: -68053.456865
-Iter: 14 Accuracy: 0.389117
-Iter: 15 Log Likelihood: -67667.318961
-Iter: 15 Accuracy: 0.386411
-Iter: 16 Log Likelihood: -67337.685686
-Iter: 16 Accuracy: 0.385409
-Iter: 17 Log Likelihood: -67054.571821
-Iter: 17 Accuracy: 0.385409
-Iter: 18 Log Likelihood: -66769.973881
-Iter: 18 Accuracy: 0.385409
-Iter: 19 Log Likelihood: -66442.608458
-Iter: 19 Accuracy: 0.385409
-
-\end{python}
+%\section{Unsupervised Learning of HMMs}
+%
+%\afm{explain here the EM algorithm}
+%
+%\begin{python}
+%
+%Initial accuracy: 0.303638
+%Iter: 1 Log Likelihood: -101824.763927
+%Iter: 1 Accuracy: 0.305441
+%Iter: 2 Log Likelihood: -78057.108346
+%Iter: 2 Accuracy: 0.321976
+%Iter: 3 Log Likelihood: -77813.725501
+%Iter: 3 Accuracy: 0.357451
+%Iter: 4 Log Likelihood: -77192.947674
+%Iter: 4 Accuracy: 0.385109
+%Iter: 5 Log Likelihood: -76191.800849
+%Iter: 5 Accuracy: 0.392123
+%Iter: 6 Log Likelihood: -75242.572729
+%Iter: 6 Accuracy: 0.391121
+%Iter: 7 Log Likelihood: -74392.892496
+%Iter: 7 Accuracy: 0.404249
+%Iter: 8 Log Likelihood: -73357.542833
+%Iter: 8 Accuracy: 0.399940
+%Iter: 9 Log Likelihood: -72135.182778
+%Iter: 9 Accuracy: 0.399238
+%Iter: 10 Log Likelihood: -70924.246230
+%Iter: 10 Accuracy: 0.395430
+%Iter: 11 Log Likelihood: -69906.561800
+%Iter: 11 Accuracy: 0.394328
+%Iter: 12 Log Likelihood: -69140.228623
+%Iter: 12 Accuracy: 0.390821
+%Iter: 13 Log Likelihood: -68541.416423
+%Iter: 13 Accuracy: 0.391522
+%Iter: 14 Log Likelihood: -68053.456865
+%Iter: 14 Accuracy: 0.389117
+%Iter: 15 Log Likelihood: -67667.318961
+%Iter: 15 Accuracy: 0.386411
+%Iter: 16 Log Likelihood: -67337.685686
+%Iter: 16 Accuracy: 0.385409
+%Iter: 17 Log Likelihood: -67054.571821
+%Iter: 17 Accuracy: 0.385409
+%Iter: 18 Log Likelihood: -66769.973881
+%Iter: 18 Accuracy: 0.385409
+%Iter: 19 Log Likelihood: -66442.608458
+%Iter: 19 Accuracy: 0.385409
+%
+%\end{python}
