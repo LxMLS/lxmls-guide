@@ -1,0 +1,246 @@
+Given the training corpus $\mathcal{D}_{U} := \{x^1, \ldots, x^M\}$, training 
+seeks model parameters $\theta$ that minimize the negative log-likelihood of the corpus:
+\begin{equation}
+\label{loglikelihoood}
+\mathbf{Negative\;Log\;Likelihood\!:}\;\;\;\; \likelihood(\theta) = \widehat{\mathbb{E}} [-\log P_{\theta}(X)] = -\frac{1}{M}\sum_{m=1}^M \log \left( \sum_{y^m \in \Lambda} P_{\theta}(X=x^m,Y=y^m) \right),
+\end{equation}
+where $\widehat{\mathbb{E}}[f(X)] := \frac{1}{M}\sum_{m=1}^{M} f(x^m)$ denotes the empirical average of a function $f$ over the training corpus. Because of the hidden variables $y^1,\ldots,y^M$, the likelihood term contains a
+sum over all possible hidden structures inside of a logarithm, which
+makes this quantity hard to compute.
+
+The most common minimization
+algorithm to fit the model parameters in the presence of hidden
+variables is the Expectation-Maximization (EM) algorithm. 
+The EM procedure can be thought of intuitively in the following way. 
+If we observe the hidden variables' values for all sentences in the
+corpus, then we could easily compute the maximum likelihood value of
+the parameters as described in Section \ref{ml}. 
+On the other hand, if we had the model parameters we could label data
+using the model, and collect the
+sufficient statistics described in Section \ref{ml}.
+However, since we are working in an unsupervised setting, we never get to
+observe the hidden state sequence. Instead, given the 
+training set $\mathcal{D}_{U} = \{x^1 \ldots x^M\}$, we will need to
+collect \emph{expected} sufficient statistics (in this case, \emph{expected} counts) 
+that
+represent the number of times that each hidden variable is
+expected to be used with the current parameters setting. These expected sufficient
+statistics will then be used during learning as ``fake'' observations of
+the hidden variables. Using the node and edge posterior distributions
+described in Equations \ref{eq::nodePosterior} and \ref{eq::edgePosterior},
+the expected sufficient statistics can 
+be computed by the following formulas:
+
+\begin{align}
+\mathbf{Initial \ Counts\!:}\;\;\;\;  &  C_{\mathrm{init}}(c_k) = \sum_{m=1}^M
+P_{\theta} (Y^m_1 = c_k \,\,|\,\, X^m = x^m); \label{eq::initialCountsPost}\\
+%
+%\mathbf{Final \ Counts\!:}\;\;\;\;  &  fc(\hv_l,\hv _m) = \sum_{\trex} 
+%\Ind (\hs_N = \hv_l \mid \hs_{N-1} = \hv_m); \label{eq::finalCounts}\\
+%
+\mathbf{Transition \ Counts\!:}\;\;\;\;  &  C_{\mathrm{trans}}(c_k,c_l) =
+\sum_{m=1}^M  \sum_{i = 2}^{N}
+P_{\theta}(Y^m_i = c_k \wedge Y^m_{i-1} = c_l \,\,|\,\, X^m = x^m); \label{eq::transitionCountsPost}\\
+%
+\mathbf{Final \ Counts\!:}\;\;\;\;  &  C_{\mathrm{final}}(c_k) = \sum_{m=1}^M
+P_{\theta} (Y^m_N = c_k \,\,|\,\, X^m = x^m); \label{eq::finalCountsPost}\\
+%
+\mathbf{Emission \ Counts\!:}\;\;\;\;  &  
+C_{\mathrm{emiss}}(w_j,c_k) = \sum_{m=1}^M
+\sum_{i = 1}^{N}
+\Ind (x^m_i = w_j) P_{\theta}(Y^m_i = c_k \,\,|\,\, X^m = x^m); \label{eq::emissionCountsPost}
+\end{align}
+
+%\begin{align}
+%\mathbf{Initial \ Counts\!:}\;\;\;\;  &  ic(\hv_l) = \sum_{d=1}^D
+%\gamma_1 (\hv_l); \label{eq::initialCountsPost}\\
+%\mathbf{Final \ Counts\!:}\;\;\;\;  &  fc(\hv_N,\hv _{N-1}) = \sum_{d=1}^D  \xi_{N-1} (\hv_l,\hv_m); \label{eq::finalCountsPost}\\
+%\mathbf{Transition \ Counts\!:}\;\;\;\;  &  tc(\hv_l,\hv _m) = \sum_{d=1}^D \sum_{i = 1}^{N-1}  \xi_i (\hv_l,\hv_m); \label{eq::transitionCountsPost}\\
+%\mathbf{State \ Counts\!:}\;\;\;\;  &  sc(\vv_q,\hv_m) = \sum_{d=1}^D \sum_{i = 1 , \obs_i = \vv_q }^{N}  \gamma_i (\hv_m). \label{eq::stateCountsPost}
+%\end{align}
+
+Compare the previous equations with the ones described in Section
+\ref{ml} for the same quantities (Eqs.~\ref{eq::initialCounts}--\ref{eq::emissionCounts}). The main difference is that while in
+the presence of supervised data you sum the observed events, when you
+have no label data you sum the posterior probabilities of each
+event. If these probabilities were such that the probability mass was
+around single events then both equations will produce the same result.
+
+
+
+The EM procedure starts with an initial guess for the parameters
+$\theta^0$ at time $t = 0$. The algorithm keeps iterating 
+until it converges to a local minima of the negative log likelihood. Each
+iteration is divided into two steps:
+\begin{itemize} 
+ \item The {\bf{E-Step}} (Expectation) 
+computes the posteriors for the hidden variables $P_{\theta^t}(Y|X=x^m)$
+given the current parameter values $\theta^t$ and the observed variables $X=x^m$ for the $m$-th sentence. 
+For an HMM, this can be done through the Forward-Backward algorithm described in the previous sections.
+\item The {\bf{M-step}} (Maximization) uses those posteriors $P_{\theta^t}(Y|X=x^m)$ to
+``softly fill in'' the values of the hidden variables $Y^m$, and
+collects the sufficient statistics: initial counts (Eq: \ref{eq::initialCountsPost}), transition counts (Eq:
+\ref{eq::transitionCountsPost}), 
+final counts  (Eq: \ref{eq::finalCountsPost}),
+and emission counts (Eq: \ref{eq::emissionCountsPost}). These
+counts are then used to estimate maximum likelihood parameters $\theta^{t+1}$, as described in
+Section \ref{ml}.
+\end{itemize}
+
+The EM algorithm is guaranteed to
+converge to a local minimum of the log-likelihood $\likelihood(\theta)$, under mild
+conditions.  
+Note that we are not committing to the best assignment of the hidden variables, but
+summing the occurrences of each parameter weighed by the posterior
+probability of all possible assignments. 
+This modular split into two intuitive and straightforward steps
+accounts for the vast popularity of EM.%
+\footnote{More formally, EM minimizes an \emph{upper bound} of $\likelihood(\theta)$ via block-coordinate descent. See \citet{Neal1998} for details. Also, even though we are presenting EM in the context of HMMs, this algorithm can be more broadly applied to any probabilistic model with latent variables.} %
+
+% on an upper bound $F(q,\theta)$ using an auxiliary distribution over the latent variables
+%$\auxq$:
+%\begin{eqnarray}
+%\likelihood(\theta)  &=& \XpD \left[-\log \sum_{\hseq}\joint \right]\\
+%\label{eq:jensen}&=& \XpD \left[-\log \sum_{\hseq}
+%\auxq*\frac{\joint}{\auxq}\right] \le \XpD \left[- \sum_{\hseq} \auxq\log \frac{\joint}{\auxq}\right] \\
+%&=& \XpD \left[\sum_{\hseq} \auxq\log \frac{\auxq}{\joint}\right] =  F(q,\theta),
+%\end{eqnarray}
+%where we have multiplied and divided the $\joint$ by the same quantity
+%$\auxq$, and 
+%the lower bound comes from applying Jensen Inequality (Equation
+%\ref{eq:jensen}). $F(q,\theta)$ is normally referred to as the energy
+%function, which comes from the physics field and refers to the energy of a given system that we want to minimize.
+%\begin{equation}
+%\mathbf{EM\;Upper\;Bound\!:}\;\;\;\;\;\likelihood(\theta) \le F(q,\theta) =
+%\XpD \left[\sum_{\hseq} \auxq\log \frac{\auxq}{\joint}\right].
+%\end{equation}
+%The alternating E and M steps at iteration $t+1$ can be seen as minimizing the energy function first 
+%with respect to $\auxq$ and then with respect to $\theta$:
+%\begin{eqnarray}
+%\hspace{-5mm}{\mathbf E\!:}&& q^{t+1}(\hseq\mid\sent) =
+%\argmin_{\auxq} F(q,\theta^t)
+%  = \argmin_{\auxq} \KL(q(\hseq\mid\sent)\,||\,p_{\theta^t}(\hseq\mid\sent)) = p_{\theta^t}(\hseq\mid\sent);
+% \label{eq:e-step} \\
+%\hspace{-5mm}{\mathbf M\!:}&& \theta^{t+1} = \argmin_\theta
+%F(q^{t+1},\theta) = \argmax_\theta \XpD\!\left[\sum_{\hseq}
+%q^{t+1}(\hseq\mid\sent)\log p_\theta(\sent,\hseq)\right];
+%\label{eq:m-step}
+%\end{eqnarray}
+%where $\KL(q||p) = \Xp_q[\log \frac{q(\cdot)}{p(\cdot)}]$ is the
+%Kullback-Leibler divergence. The KL term in the E-Step results from 
+%dropping all terms from the energy function that are constant for a
+%set $\theta$, in this case the likelihood of the observation sequence
+%$\marginal$:
+%
+%\begin{align}
+%\sum_{\hseq} \auxq\log \frac{\auxq}{\joint} &= \sum_{\hseq} \auxq\log
+%\auxq - \sum_{\hseq} \auxq\log \joint  \\ 
+%&= \sum_{\hseq} \auxq\log \auxq - \sum_{\hseq} \auxq\log \marginal
+%\posterior \\
+%&= \sum_{\hseq} \auxq\log \frac{\auxq}{\posterior} - \log \marginal \\
+%&= \KL(\auxq||\posterior) - \log \marginal.
+%\end{align}
+
+Algorithm ~\ref{alg::em} presents the pseudo code for the EM
+algorithm. 
+%Note that this algorithm is agnostic of a particular model,
+%it only requires the model to implement a common interface.
+
+\begin{algorithm}
+\begin{algorithmic}[1]
+  \STATE {\bfseries input:} dataset $\mathcal{D}_{U}$, initial model $\theta$
+    \FOR{$t = 1$ {\bfseries to} $T$}
+    	  \STATE
+    	  \STATE \textbf{E-Step:}
+      \STATE Clear counts: $C_{\mathrm{init}}(.) = C_{\mathrm{trans}}(.,.) = C_{\mathrm{final}}(.) = C_{\mathrm{emiss}}(.,.) = 0$
+      \FOR{$x^m \in \mathcal{D}_{U}$}
+      	\STATE Compute posterior expectations $P_{\theta}(Y_i|X=x^m)$ and $P_{\theta}(Y_i,Y_{i+1}|X=x^m)$ using the current model $\theta$
+%        \STATE posteriors,likelihood =model.compute\_posteriors($seq$)
+%        \STATE model.update\_counts($seq$,posteriors)
+      \STATE Update counts as shown in Eqs.~\ref{eq::initialCountsPost}--\ref{eq::emissionCountsPost}.
+      \ENDFOR
+    	  \STATE
+      \STATE \textbf{M-Step:}
+         \STATE Update the model parameters $\theta$ based on the counts.
+    \ENDFOR
+\end{algorithmic}    
+\caption[EM algorithm]{\label{alg::em}  EM algorithm.} 
+\end{algorithm}
+
+
+One important thing to note in Algorithm \ref{alg::em} is that for the
+HMM model we already have all the model pieces we require. In fact
+the only method we don't have yet implemented from previous classes is
+the method to update the counts given the posteriors. 
+
+\begin{exercise}
+
+Implement the method to update the counts given the state and transition posteriors.
+\begin{python}
+ def update_counts(self, sequence, state_posteriors, transition_posteriors):
+\end{python}
+
+%Use the method you defined previously to check the count tables to
+%check if this method is correct. Use a corpus with only one sentence
+%to make the test simpler.
+
+%\begin{python}
+%In []: run readers/pos_corpus.py
+%In []: posc = PostagCorpus("en",max_sent_len=15,train_sents=1,dev_sents=0,test_sents=0)
+%In []: run sequences/hmm.py
+%In []: hmm = HMM(posc)
+%In []: hmm.train_supervised(posc.train,smoothing=0.1)
+%In []: hmm.clear_counts()
+%In []: posteriors,likelihood = hmm.get_posteriors(posc.train.seq_list[0])
+%In []: hmm.update_counts(posc.train.seq_list[0],posteriors)
+%In []: hmm.sanity_check_counts(posc.train)
+%\end{python}
+
+%If you pass this test, then you have all the pieces to implement the
+%EM algorithm. Look at the code for EM algorithm in file
+%\emph{sequences/em.py} and check it for yourself. 
+
+You now have all the pieces to implement the
+EM algorithm. Look at the code for EM algorithm in file
+\emph{sequences/hmm.py} and check it for yourself. 
+
+\begin{python}
+    def train_EM(self, dataset, smoothing=0, num_epochs=10, evaluate=True):
+        self.initialize_random()
+
+        if evaluate:
+            acc = self.evaluate_EM(dataset)
+            print "Initial accuracy: %f"%(acc)
+            
+        for t in xrange(1, num_epochs):
+            #E-Step
+            total_log_likelihood = 0.0
+            self.clear_counts(smoothing)
+            for sequence in dataset.seq_list:
+                # Compute scores given the observation sequence.
+                initial_scores, transition_scores, final_scores, emission_scores = \
+                    self.compute_scores(sequence)
+                
+                state_posteriors, transition_posteriors, log_likelihood = \
+                    self.compute_posteriors(initial_scores,
+                                            transition_scores,
+                                            final_scores,
+                                            emission_scores)
+
+                self.update_counts(sequence, state_posteriors, transition_posteriors)
+                total_log_likelihood += log_likelihood
+            print "Iter: %i Log Likelihood: %f"%(t, total_log_likelihood)
+            #M-Step
+            self.compute_parameters()
+            if evaluate:
+                 ### Evaluate accuracy at this iteration
+                acc = self.evaluate_EM(dataset)
+                print "Iter: %i Accuracy: %f"%(t,acc)
+\end{python}
+
+\end{exercise}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../guide"
+%%% End: 
