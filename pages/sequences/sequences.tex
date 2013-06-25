@@ -8,34 +8,30 @@ considering sequential models, which correspond to a \emph{chain structure}: for
 the words in a sentence. In this lecture, we will use part-of-speech
 tagging as our example task.  
 
-We focus on the well known Hidden Markov Model (HMM) on section
-\ref{hmm}, where we describe how to estimate its parameters from labeled data
-\ref{ml}. We will then see how to find the most likely hidden sequence
-(decoding) given an observation sequence and a parameter set
-\ref{decoding}. This section will explain the required inference
+We start by defining the notation for this lecture in Section~\ref{notation}.
+Afterwards, in section~\ref{hmm}, we focus on the well known Hidden Markov Models and in Section~\ref{ml} we describe how to estimate its parameters from labeled data. In Section \ref{decoding} we explain the inference
 algorithms (Viterbi and Forward-Backward) for sequence models. These
 inference algorithms will be fundamental for the rest of this lecture,
 as well as for the next lecture on \emph{discriminative} training of sequence
-models. Section \ref{pos-tagging} will describe the task of 
-part-of-speech tagging, and how HMMs are suitable for this task. 
-Finally, Section \ref{sec:em} will 
-address unsupervised learning of HMMs through the EM
-algorithm.
-NOTA-MA: Falta a ultima Seccao: "`sec:em"'.
+models. In Section \ref{pos-tagging} we describe the task of 
+Part-of-Speech tagging, and how the Hidden Markov Models are suitable for this task. 
+Finally, in Section \ref{sec:em} we 
+address unsupervised learning of Hidden Markov Models through the Expectation Maximization
+algorithm.\todo{NOTA-MA: Falta a ultima Seccao: "`sec:em"'.}
 
-\section{Notation}
+\section*{Today's assignment}
 
-The problem setting is the following. 
-We assume a finite set of \emph{observation labels}, 
+The assignment of today's class is to implement one inference algorithm for Hidden Markov Models, used to find the most likely hidden state sequence given an observation sequence.
+
+\section{Notation}\label{notation}
+
+In what follows, 
+we assume a finite set of \emph{observation labels}, 
 $\vocab := \{w_1,\ldots,w_J\}$,
 and a finite set of \emph{state labels}, 
 $\statevocab := \{c_1,\ldots, c_K\}$.
-In part-of-speech tagging, $\vocab$ is a 
-vocabulary of word types \textbf{examples of word types?}, and 
-$\statevocab$ is the set of part-of-speech tags 
-(noun, verb, adjective, \emph{etc.}).
-Let $\varepsilon$ denote the empty string. 
-We denote by 
+Let $\varepsilon$ be the empty string, 
+we denote by 
 $\vocab^* := \{\varepsilon\} \cup \vocab \cup \vocab^2 \cup \ldots$ and 
 $\statevocab^* := \{\varepsilon\} \cup \statevocab \cup \statevocab^2  \cup \ldots$ the Kleene closure 
 of each of the two sets above. 
@@ -52,12 +48,15 @@ for some $N \in \mathbb{N}$, where each $x_i \in \vocab$;
 given such an $x$, we seek 
 the corresponding state sequence, 
 $y = y_1 y_2 \ldots y_N$, 
-where each $y_i \in \statevocab$.
-We will assume two scenarios in this lab:
+where each $y_i \in \statevocab$. We also consider two special states: the ${\tt start}$ symbol,
+which starts the sequence, and 
+the ${\tt stop}$ symbol, which ends the sequence. 
+
+Moreover, in this lecture we will assume two scenarios:
 \begin{enumerate}
 \item \emph{Supervised learning.} We will 
 train models from a sample set of paired observation and state sequences, $\mathcal{D}_L := \{(x^1,y^1), \ldots, (x^M,y^M)\} \subseteq \X \times \Y$.
-\item \emph{Unsupervised learning.} We will also
+\item \emph{Unsupervised learning.} We will
 train models from the set of observations only, $\mathcal{D}_U := \{x^1, \ldots, x^M\} \subseteq \X$.
 \end{enumerate}
 Our notation is summarized in Table~\ref{tab:hmm_notation}.
@@ -94,23 +93,24 @@ $x = x_1 \ldots x_N$  & observation sequence \\
 \hline
 $y = y_1 \ldots y_N$  & state sequence \\
 \hline
+
 $N$  & length of the sequence \\
 \hline
-$x_i$ &  observation at position $i$ in the sequence\\
+$x_i$ &  observation at position $i$ in the sequence, $i \in \{1,\ldots,N\}$\\
 \hline
-$y_i$ &  state at position $i$ in the sequence\\
-\hline
-${\tt start}, {\tt stop}$ & start and stop symbols\\
+$y_i$ &  state at position $i$ in the sequence, $i \in \{1,\ldots,N\}$\\
+%\hline
+%${\tt start}, {\tt stop}$ & start and stop symbols\\ conceitos introduzidos na seccao seguinte
 \hline
 $\vocab$ & observation set\\
 \hline 
-$J$ & number of distinct observation types\\
+$J$ & number of distinct observation labels\\
 \hline 
 $w_j$ & particular observation, $j \in \{1,\ldots,J\}$\\
 \hline 
 $\statevocab$ & state set\\
 \hline 
-$K$ & number of distinct states\\
+$K$ & number of distinct state labels\\
 \hline 
 $c_k$ & particular state, $k \in \{1,\ldots,K\}$\\
 \hline  
