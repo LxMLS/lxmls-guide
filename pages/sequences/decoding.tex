@@ -287,7 +287,7 @@ possible hidden state sequences.
 \mathbf{Likelihood\!:}\;\;\;\; P(X=x) = \displaystyle \sum_{y \in \statevocab^N} P(X=x,Y=y).
 \end{equation}
 The number of possible hidden state sequences is exponential in the
-length of the sentence ($|\statevocab|^N$),
+length of the sequence ($|\statevocab|^N$),
  which makes the sum over all of them hard. 
  In our simple
  example, there are $2^4 = 16$ paths, which we can actually explicitly enumerate
@@ -393,7 +393,7 @@ Using the backward trellis one can compute the likelihood simply as:.
 P(X=x) = \mathrm{backward}(0, \text{\tt start}).
 \end{equation}
 Moreover, with the forward and backward 
-probabilities, we can compute the likelihood of a given sentence using any position $i$ in the sentence
+probabilities, we can compute the likelihood of a given sequence using any position $i$ in the sequence
 as follows:
 \begin{eqnarray}
 \label{eq::fbsanity}
@@ -417,7 +417,7 @@ Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm.
 \begin{algorithm}[t]
    \caption{Forward-Backward algorithm \label{alg:fb}}
 \begin{algorithmic}[1]
-   \STATE {\bfseries input:} sentence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
+   \STATE {\bfseries input:} sequence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
         \STATE  \emph{Forward pass}: Compute the forward probabilities
         \STATE \emph{Initialization}
         \FOR{$c_k \in \statevocab$ }
@@ -574,7 +574,7 @@ then pick the arg-max at each position:
 %  forward and backward formulas \ref{eq::forward},\ref{eq::backward}, convince yourself that formulas
 %  \ref{eq::nodePosterior2},\ref{eq::edgePosterior2} are correct. 
 
-Compute the node posteriors for the first training sentence (use the provided \emph{compute\_posteriors} function), and look at
+Compute the node posteriors for the first training sequence (use the provided \emph{compute\_posteriors} function), and look at
 the output. Note that the state posteriors are a proper
 probability distribution (the lines of the result sum to 1).
 
@@ -602,7 +602,7 @@ walk/rainy walk/rainy shop/sunny clean/sunny
 walk/rainy walk/sunny shop/sunny clean/sunny 
 \end{python}
 
-Do the same for the second test sentence:
+Do the same for the second test sequence:
 \begin{python}
 >>> y_pred = hmm.posterior_decode(simple.test.seq_list[1])
 >>> print "Prediction test 1:", y_pred
@@ -611,7 +611,7 @@ clean/rainy walk/rainy tennis/rainy walk/rainy
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
 
-What is wrong? Note the observations for the second test sentence: the
+What is wrong? Note the observations for the second test sequence: the
 observation {\tt tennis} was never seen at training time, so the probability for
 it will be zero (no matter what state). This will make all possible state
 sequences have zero probability.
@@ -753,7 +753,7 @@ The only differences are:
 \begin{algorithm}[t]
    \caption{Viterbi algorithm \label{alg:viterbi}}
 \begin{algorithmic}[1]
-   \STATE {\bfseries input:} sentence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
+   \STATE {\bfseries input:} sequence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
         \STATE  \emph{Forward pass}: Compute the best paths for every end state
         \STATE \emph{Initialization}
         \FOR{$c_k \in \statevocab$ }
@@ -801,7 +801,7 @@ in the module {\tt sequence\_classifier.py}.
 %
 %posterior decoding (the function \emph{posterior\_decode}) for reference.
 
-Test your method on both test sentences and compare the results with
+Test your method on both test sequences and compare the results with
 the ones given.
 \todo{NOTA-MA: O segundo dataset ainda não foi definido.}
 \begin{python}
