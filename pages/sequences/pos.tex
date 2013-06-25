@@ -17,7 +17,7 @@ is the sequence of possible PoS tags.
 The first step is to load the corpus. We will start by loading
 1000 sentences for training and 200 sentences both for development and
 testing. Then we train the HMM model by maximum likelihood estimation.
-NOTA-MA: codigo usa 1000 em toodos os conjuntos... 
+\todo{NOTA-MA: codigo usa 1000 em toodos os conjuntos... }
 \begin{python}
 >>> import readers.pos_corpus as pcc
 >>> corpus = pcc.PostagCorpus()
@@ -50,7 +50,7 @@ state. Note the high probability of having Noun after Adjective, or of having Ve
 \begin{exercise}
 Test the model using both posterior decoding and Viterbi decoding on
 both the train and test set, using the methods in class HMM:
-NOTA-MA: a funcao viterbi_decode_corpus imprime muita infromaçao.
+\todo{NOTA-MA: a funcao viterbi\_decode\_corpus imprime muita infromaçao.}
 \begin{python}
 >>> viterbi_pred_train = hmm.viterbi_decode_corpus(train_seq)
 >>> posterior_pred_train = hmm.posterior_decode_corpus(train_seq)
