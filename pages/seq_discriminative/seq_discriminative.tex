@@ -54,7 +54,7 @@ As in the previous section, $y = y_1\ldots y_N$ is a sequence so the maximizatio
 is over an exponential number of objects, making it intractable by brute force methods. Again
 we will make an assumption analogous to the ``first order Markov independence property,'' so that the
 features may decompose as a sum over nodes and edges in a trellis. 
-This is done by assuming expression~\ref{eq::struc_pred} can be written as:
+This is done by assuming that expression~\ref{eq::struc_pred} can be written as:
 \begin{equation}
 \argmax_{y \in \statevocab^N} 
 \sum_{i=1}^N \underbrace{\W \cdot \F_{\mathrm{emiss}}(i,x,y_i)}_{\mathrm{score}_{\mathrm{emiss}}}  + 
@@ -125,6 +125,7 @@ This would lead to an awkward model if we wanted to insist on a generative appro
 \item We may use features that depend arbitrarily on the \emph{entire input sequence} $x$. On the other hand, 
 we still need to resort to ``local'' features with respect to the \emph{outputs} (\emph{e.g.} looking only at consecutive state pairs), 
 otherwise decoding algorithms will become more expensive.  
+NOTA-MA: Nos HMM (de order superior) tb, certo?
 \end{itemize}
 Table~\ref{ex-features} shows examples of features that are traditionally used in POS tagging with discriminative models.  
 Of course, we could have much more complex features, looking arbitrarily to 
@@ -258,7 +259,7 @@ where the normalizing factor $Z(\W,x)$ is called the \emph{partition function}:
 For decoding,  
 there are three important problems that need to be solved: 
 \begin{enumerate}
-\item Given $X=x$, computing the most likely output sequence $\widehat{y}$ (the one which maximizes $P_{\W}(Y=y|X=x)$. 
+\item Given $X=x$, computing the most likely output sequence $\widehat{y}$ (the one which maximizes $P_{\W}(Y=y|X=x)$). 
 \item Compute the posterior marginals $P_{\W}(Y_i=y_i|X=x)$ at each position $i$.
 \item Evaluate the partition function $Z(\W,x)$. 
 \end{enumerate}
@@ -406,6 +407,8 @@ You will receive feedback when each epoch is finished, note that
 running the 20 epochs might take a while.
 
 After training is done, evaluate the learned model on the training, development and test sets.
+NOTA-MA: a) O development set não é usado. b) É suposto os conjuntos de teste e desenvolvimento terem 1000 frases (e não 200)?
+	
 \begin{python}
 pred_train = crf_online.viterbi_decode_corpus(train_seq)
 pred_dev = crf_online.viterbi_decode_corpus(dev_seq)
@@ -670,6 +673,7 @@ print "Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f 
 \end{python}
 
 And here are the expected results:
+NOTA-MA: ainda tenho de terminar o codigo.
 \begin{python}
 Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test: 0.890
 \end{python}
