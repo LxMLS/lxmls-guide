@@ -1,4 +1,4 @@
-Part-of-Speech tagging is one the most important NLP tasks. The
+Part-of-Speech tagging is one of the most important NLP tasks. The
 task is to assign each word a grammatical category, or Part-of-Speech, \emph{i.e.} noun,
 verb, adjective,... Recalling the defined notation, $\vocab$ is a 
 vocabulary of word types, and 
@@ -16,14 +16,14 @@ is the sequence of possible PoS tags.
 
 The first step is to load the corpus. We will start by loading
 1000 sentences for training and 200 sentences both for development and
-testing. Then we train the HMM model by maximum 
-likelihood estimation.
+testing. Then we train the HMM model by maximum likelihood estimation.
+NOTA-MA: codigo usa 1000 em toodos os conjuntos... 
 \begin{python}
 >>> import readers.pos_corpus as pcc
 >>> corpus = pcc.PostagCorpus()
 >>> train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
->>> test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=15,max_nr_sent=1000)
->>> dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=15,max_nr_sent=1000)
+>>> test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=15,max_nr_sent=200)
+>>> dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=15,max_nr_sent=200)
 >>> hmm = hmmc.HMM(corpus.word_dict, corpus.tag_dict)
 >>> hmm.train_supervised(train_seq)
 >>> hmm.print_transition_matrix()
@@ -50,6 +50,7 @@ state. Note the high probability of having Noun after Adjective, or of having Ve
 \begin{exercise}
 Test the model using both posterior decoding and Viterbi decoding on
 both the train and test set, using the methods in class HMM:
+NOTA-MA: a funcao viterbi_decode_corpus imprime muita infromaçao.
 \begin{python}
 >>> viterbi_pred_train = hmm.viterbi_decode_corpus(train_seq)
 >>> posterior_pred_train = hmm.posterior_decode_corpus(train_seq)
