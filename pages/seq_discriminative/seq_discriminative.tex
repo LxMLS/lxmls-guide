@@ -54,7 +54,7 @@ As in the previous section, $y = y_1\ldots y_N$ is a sequence so the maximizatio
 is over an exponential number of objects, making it intractable by brute force methods. Again
 we will make an assumption analogous to the ``first order Markov independence property,'' so that the
 features may decompose as a sum over nodes and edges in a trellis. 
-This is done by assuming expression~\ref{eq::struc_pred} ... ... can be written as:
+This is done by assuming that expression~\ref{eq::struc_pred} can be written as:
 \begin{equation}
 \argmax_{y \in \statevocab^N} 
 \sum_{i=1}^N \underbrace{\W \cdot \F_{\mathrm{emiss}}(i,x,y_i)}_{\mathrm{score}_{\mathrm{emiss}}}  + 
