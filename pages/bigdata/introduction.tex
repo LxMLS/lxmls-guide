@@ -2,6 +2,10 @@ In this lab, we will work with Amazon.com's Web Services\footnote{http://aws.ama
 to run some simple analyses. Then, in the next lab, we will build on these
 tools to construct a larger learning system.
 
+\section*{Today's Assignment}
+
+Today we will show you how to solve a simple problem (counting words in documents) in a distributed manner. We will then ask you to implement a distributed solution for a problem you already know (Na\"{i}ve Bayes classification).
+
 \section{Introduction}
 
 AWS is a set of services of different types. We will focus on the \emph{Elastic
@@ -38,7 +42,9 @@ has a standard collection of editors and other tools. It is an Ubuntu based
 installation and you can access super user powers with \texttt{sudo} (if you're not familiar with Unix-based environments, you might not understand this last sentence -- don't worry about it for now).
 
 
-\section{MapReduce \& Hadoop}
+\section{MapReduce for Word Count}
+
+\subsection{Running Word Count locally}
 
 The initial idea of MapReduce was an implementation by google\footnote{http://research.google.com/archive/mapreduce.html}, but very soon
 Hadoop appeared as an open-source implementation of the same paradigm.\footnote{http://hadoop.apache.org/}
@@ -49,8 +55,6 @@ The basic idea is to take your original problem, whichever it may be, and tackle
 \item \textbf{Map step:} Divide the data into several parts and send each part to a different computer. Each computer does some computation using \emph{only} that part of the data, and returns some output.\footnote{The name "map" is completely unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced in day 1.}
 \item \textbf{Reduce step:} Collect all the outputs from all the different computers and compute the final solution from those outputs.
 \end{enumerate}
-
-\subsection{Example: Word Count}
 
 The classic example of application of MapReduce is the word count problem:
 
@@ -112,7 +116,7 @@ preinstalled on your machine:
 python wordcount.py /datasets/small-text-file.txt
 \end{verbatim}
 
-\subsubsection{Running Word Count using Hadoop}
+\subsection{Running Word Count on Amazon EC2}
 
 We are now going to use the AWS Key and AWS Secret. These are like a username
 and password for Amazon Webservices.
@@ -134,10 +138,8 @@ python wordcount.py \
 
 This runs the code on Elastic Map Reduce with 2 instances.
 
-\subsubsection{Running Word Count on Wikipedia}
-
-This file is not very big, but running on a cluster of machine allows us to
-scale up run on Wikipedia
+The file we used on the previous exercises is not very big, but running on a cluster of machines allows us to
+scale up enough to use Wikipedia as input:
 
 \begin{verbatim}
 python wordcount.py \
@@ -149,36 +151,75 @@ python wordcount.py \
 
 This should take about 3 minutes.
 
-\subsection{Using Naïve Bayes for Language Detection}
+\section{Using Na\"{i}ve Bayes for Language Detection}
 
-The implementation of binary Naïve Bayes is very similar to counting words: we just
-need to keep track of the class of each document and maintain.
+Language detection is surprisingly easy if you have enough data to train your system. In our case, we're going to use triplets of characters (or "trimers") as features. For example, if your whole training corpus is a sentence in English which reads "I love Lisbon" (length: 13 characters) and a sentence in Portuguese which reads "Adoro Lisboa" (length: 12 characters), you would say that you saw the following features: "I l", " lo", "lov", "ove", "ve ", and so on in the English data, and "Ado", "dor", "oro", "ro ", and so on in the Portuguese data. Note the presence of whitespace on some of these trimers.
 
-\begin{python}
-# Import the necessary libraries:
-from mrjob.job import MRJob
-import re
+You can now use the exact same Na\"{i}ve Bayes algorithm which you used for sentiment analysis on Day 1. Instead of classifying text into two classes (positive and negative) we're going to classify text into two other classes (Portuguese and English). Our training data will be parts of the Portuguese and English Wikipedias.\footnote{We will use 10\% of the Portuguese Wikipedia and 1\% of the English Wikipedia to ensure that you can complete this exercise in the time of this lab session. However, Amazon's infrastructure is easily capable of handling the whole Wikipedia.}
 
-class TrimerCount(MRJob):
-    def mapper(self, _, doc):
-        c = {}
-        # Process the document
-        for i in xrange(len(doc)-3):
-            w = doc[i:i+3]
-            if w in c:
-                c[w] += 1
-            else:
-                c[w] = 1
+The implementation of binary Na\"{i}ve Bayes is very similar to counting words:
+\begin{enumerate}
+	\item The map step takes the whole training data of the Portuguese language and splits it into documents. The mapper function computes the frequency of each trimer on one document.
+	\item The reduce step compiles the information from all the documents and sums the counts of every Portuguese document.
+	\item The previous two steps are repeated for the English training data.
+	\item After the MapReduce part, a post-processing step uses these counts with similar formulas as in Day 1 to classify new unseen text into the two classes: English or Portuguese. For convenience, we repeat these formulas below.
+\end{enumerate}
 
-        # Now, output the results
-        for w,c in c.items():
-            yield w,c
+Once you have the counts of trimer occurrences on each language, you need to estimate:
+\begin{itemize}
+	\item The \emph{prior} probability of each language appearing at test time, ${\hat P}(\text{PT})$ and ${\hat P}(\text{EN})$. For simplicity, instead of using Maximum Likelihood estimation, let's assume that the users of your language detector are equally likely to try English and Portuguese sentences. Thus, ${\hat P}(\text{PT}) = {\hat P}(\text{EN}) = \frac{1}{2}$.\footnote{You could also assume, as in Day 1, that the probability of a given language appearing at test time is proportional to the size of the training data of that language. Each assumption makes sense in different contexts.}
+	\item The probability of each feature (trimer) given the class, ${\hat P}(t_j | c)$. We will again use Maximum Likelihood estimation, which means that the probability of trimer $t$ given language $c$ is equal to the number of times $t$ occurred in documents of language $c$, divided by the total number of trimers in language $c$. Mathematically:
+\begin{equation}
+{\hat P}(t_j|\text{PT}) = \frac{n(t_j,\text{PT})}{\sum_j n(t_j,\text{PT})},
+\end{equation}
+where $n(t_j,\text{PT})$ is the number of times the trimer $t_j$ occurred in your Portuguese training corpus. A similar formula is used for ${\hat P}(t_j|\text{EN})$.
+\end{itemize}
 
-    def reducer(self, key, cs):
-        yield key, sum(cs)
+Then, given a test sentence $x$, we can compute the following argmax for the two classes $c = \text{PT}$ and $c = \text{EN}$:
+%
+\begin{eqnarray}
+\argmax_c {\hat P}(c | x) &= \argmax_c {\hat P}(c) {\hat P}(x | c) \nonumber\\
+&= \argmax_c {\hat P}(c) \prod_j {\hat P}(c | t_j) \nonumber\\
+&= \argmax_c \prod_j {\hat P}(c | t_j) \nonumber\\
+&= \argmax_c \sum_j \log({\hat P}(c | t_j))\label{eq:NBformula}
+\end{eqnarray}
+%
+In the first equality we used Bayes' Theorem. In the second one we used the assumption of conditional independence of features given the class, which is at the core of Na\"{i}ve Bayes. In the third one, we used that ${\hat P}(\text{PT}) = {\hat P}(\text{EN}) = \frac{1}{2}$, thus the prior does not affect the argmax. In the last equation, we used the fact that the argmax is not affected by the application of a logarithm. Logarithms will prevent your program from encountering underflow errors when multiplying many numbers which are very small.
 
-TrimerCount.run()
-\end{python}
+\section{Assignment}
+
+Using the Word Count example we've given you above, implement the Na\"{i}ve Bayes language detector described above. You should do this in two parts:
+
+\begin{itemize}
+	\item Steps 1 to 3 (counting occurrences of trimers in train data, for both languages), should be run on EC2. If you run the script named ??, these counts will run on EC2 and their output to files named ?? and ??. However, there is some code missing in file ?? which you must complete.
+	\item Step 4 should be run locally (it is quite fast even with just one computer). It should use the two files mentioned in the previous point and implement the formula given in equation \eqref{eq:NBformula}.
+\end{itemize}
+
+%\begin{python}
+%# Import the necessary libraries:
+%from mrjob.job import MRJob
+%import re
+%
+%class TrimerCount(MRJob):
+%    def mapper(self, _, doc):
+%        c = {}
+%        # Process the document
+%        for i in xrange(len(doc)-3):
+%            w = doc[i:i+3]
+%            if w in c:
+%                c[w] += 1
+%            else:
+%                c[w] = 1
+%
+%        # Now, output the results
+%        for w,c in c.items():
+%            yield w,c
+%
+%    def reducer(self, key, cs):
+%        yield key, sum(cs)
+%
+%TrimerCount.run()
+%\end{python}
 
 We will run two jobs, one on a selection of the Portuguese Wikipedia (10\%) and
 another on the English Wikipedia (only 1\% as this is much larger).
@@ -200,44 +241,43 @@ python trimercount.py \
 These should run in a few minutes as well. Running it on the whole Wikipedia
 could be done with the same system in just a few hours.
 
-\subsection{Building a Classifier}
-
-We need to load the outputs from the Hadoop runs:
-
-\begin{python}
-def load_counts(ifile):
-    counts = {}
-    with open(ifile) as input:
-        for line in input:
-            word, count = line.strip().split()
-            word = word[1:-1]
-            counts[word] = float(count)
-    return counts
-\end{python}
-
-We write a function for the classification:
-
-\begin{python}
-def score(counts_pt, counts_en, test):
-    val = 1.
-    for i in xrange(len(test)-3):
-        tri = test[i:i+3]
-        tri_pt = counts_pt.get(tri, 1.)
-        tri_en = counts_en.get(tri, 1.)
-        val *= tri_pt/tr_en
-    return val
-\end{python}
-
-We now load the two files and then classify any sentences the user types:
-
-\begin{python}
-counts_pt = load_counts('output.pt.txt')
-counts_en = load_counts('output.en.txt')
-
-while True:
-    test = raw_input("Type a test sentence? ")
-    if not test: break
-    print score(counts_pt, counts_en, test)
-\end{python}
-
+%\subsection{Building a Classifier}
+%
+%We need to load the outputs from the Hadoop runs:
+%
+%\begin{python}
+%def load_counts(ifile):
+%    counts = {}
+%    with open(ifile) as input:
+%        for line in input:
+%            word, count = line.strip().split()
+%            word = word[1:-1]
+%            counts[word] = float(count)
+%    return counts
+%\end{python}
+%
+%We write a function for the classification:
+%
+%\begin{python}
+%def score(counts_pt, counts_en, test):
+%    val = 1.
+%    for i in xrange(len(test)-3):
+%        tri = test[i:i+3]
+%        tri_pt = counts_pt.get(tri, 1.)
+%        tri_en = counts_en.get(tri, 1.)
+%        val *= tri_pt/tr_en
+%    return val
+%\end{python}
+%
+%We now load the two files and then classify any sentences the user types:
+%
+%\begin{python}
+%counts_pt = load_counts('output.pt.txt')
+%counts_en = load_counts('output.en.txt')
+%
+%while True:
+%    test = raw_input("Type a test sentence? ")
+%    if not test: break
+%    print score(counts_pt, counts_en, test)
+%\end{python}
 
