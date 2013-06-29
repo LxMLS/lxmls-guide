@@ -29,12 +29,7 @@ In what follows,
 we assume a finite set of \emph{observation labels}, 
 $\vocab := \{w_1,\ldots,w_J\}$,
 and a finite set of \emph{state labels}, 
-$\statevocab := \{c_1,\ldots, c_K\}$.
-Let $\varepsilon$ be the empty string, 
-we denote by 
-$\vocab^* := \{\varepsilon\} \cup \vocab \cup \vocab^2 \cup \ldots$ and 
-$\statevocab^* := \{\varepsilon\} \cup \statevocab \cup \statevocab^2  \cup \ldots$ the Kleene closure 
-of each of the two sets above. 
+$\statevocab := \{c_1,\ldots, c_K\}$. We denote by $\vocab^*$, $\statevocab^*$ the two infinite sets of sequences obtained by grouping the elements of each label set including repetitions and the empty string $\varepsilon$\footnotemark\footnotetext{More formally, we say $\vocab^* := \{\varepsilon\} \cup \vocab \cup \vocab^2 \cup \ldots$ and $\statevocab^* := \{\varepsilon\} \cup \statevocab \cup \statevocab^2  \cup \ldots$ is the Kleene closure of each of the two sets above.}. 
 Elements of $\vocab^*$ and $\statevocab^*$ 
 are \emph{strings of observations} and \emph{strings of states}, 
 respectively. 

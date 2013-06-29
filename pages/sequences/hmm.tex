@@ -67,7 +67,7 @@ Figure \ref{hmm} shows the HMM model for the first sequence of the training set,
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.7\textwidth]{figs/sequences/hmm_new}
-\caption[HMM running example]{\label{fig:hmm}HMM structure for the first sentence of the training set of the simple example.}
+\caption[HMM running example]{\label{fig:hmm}Diagram showing the conditional independence relations of the HMM. As an example, the variables are given the values of the first sentence of the training set of the simple sequence.}
 \end{figure}
 
 \begin{table}[h]
@@ -116,6 +116,25 @@ and test set.
 >>> print simple.test
 [walk/rainy walk/sunny shop/sunny clean/sunny , clean/sunny walk/sunny tennis/sunny walk/sunny ]
 \end{python}
+Get in touch with the classes used to store the sequences, you will need this for the next exercise. Note that each label is internally stored as a number. This number can be used as index of an array to store information regarding that label.
+\begin{python}
+>>> for sequence in simple.train.seq_list:
+	print sequence
+walk/rainy walk/sunny shop/sunny clean/sunny
+walk/rainy walk/rainy shop/rainy clean/sunny
+walk/sunny shop/sunny shop/sunny clean/sunny
+>>> for sequence in simple.train.seq_list:
+	print sequence.x
+[0, 0, 1, 2]
+[0, 0, 1, 2]
+[0, 1, 1, 2]
+>>> for sequence in simple.train.seq_list:
+	print sequence.y
+[0, 1, 1, 1]
+[0, 0, 0, 1]
+[1, 1, 1, 1]
+\end{python}
+
 \end{exercise}
 
 The probability distributions $P(Y_{i}|Y_{i-1})$ are called \emph{transition probabilities}; the distributions 
