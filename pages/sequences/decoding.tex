@@ -1,7 +1,6 @@
 Given the learned parameters and a new
-observation sequence $x = x_1\ldots x_N$, we want to find ``the best'' sequence of hidden states 
-$y^* = y_1^* \ldots y_N^*$;
- this is called the \emph{decoding} problem. There are several ways to define what we mean by the best
+observation sequence $x = x_1\ldots x_N$, we want to find the sequence of hidden states $y^* = y_1^* \ldots y_N^*$; that explains it ``best''.
+ This is called the \emph{decoding} problem. There are several ways to define what we mean by the ``best''
 $y^*$, depending on our goal: for instance, we may want to minimize the probability of error
 on each hidden
 variable $Y_i$, or we may want to find the best assignment
@@ -789,8 +788,7 @@ file {\tt sequence\_classification\_decoder.py}.
 \begin{python}
         def run_viterbi(self, initial_scores, transition_scores, final_scores, emission_scores):
 \end{python}
-Hint: look at the implementation of 
-{\tt run\_forward}.
+Hint: look at the implementation of {\tt run\_forward}. Also check the help for the numpy methods max and argmax.
 
 This method will be called 
 by 
