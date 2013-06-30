@@ -161,9 +161,8 @@ A first order HMM model has the following independence assumptions over the join
     making a transition from state $c_l$ to state $c_k$ is independent of
     the particular position in the sequence. That is, for all $i,t \in \{1,\ldots,N\}$,
      \begin{equation*}
-    P (Y_i = c_k | Y_{i-1} = c_l) =  P (Y_{i+t} = c_k | Y_{i+t-1} = c_l)
+    P (Y_i = c_k | Y_{i-1} = c_l) =  P (Y_{t} = c_k | Y_{t-1} = c_l)
      \end{equation*}
-     \todo{\small nao percebo o i+t, que podemos vir a ter (i+t) $>$ N. nao sera so t? }
     % , so we can simply write //novamente, P_{\mathrm{trans}} so e introduzido depois
      %\begin{equation*}
     %P (Y_i = c_k | Y_{i-1} = c_l) = P_{\mathrm{trans}}(c_k|c_l)
