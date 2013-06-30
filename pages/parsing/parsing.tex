@@ -392,6 +392,8 @@ where $\mathbf{s_{\boldsymbol{\theta}}}$ is short-hand notation for the set of a
 $$P_{\boldsymbol{\theta}}(\langle h,m \rangle \in t) = \frac{\partial \log Z(\mathbf{s_{\boldsymbol{\theta}}})}{\partial s_{\boldsymbol{\theta}}( h,m )}.$$
 \end{enumerate}
 
+\todo{Skip this exercise and write down an optional one at the end asking to implement
+Eisner's algorithm given some pseudo-code and evaluate it on English data.}
 \begin{exercise}
 \textbf{(Warning: this exercise is somewhat complex. Feel free to think about it after the lab and ask your questions later!)}
 In \emph{projective} dependency parsing using arc-factored models, the three tasks above can be solved in time $O(N^3)$. 
@@ -578,9 +580,103 @@ To get a sense of which errors are being made, you can
 check the sentences that differ from the gold standard (see the data in {\tt data/deppars/english\_test.conll}) 
 and visualize those sentences, \emph{e.g.}, in 
 \url{http://www.ark.cs.cmu.edu/treeviz/}. 
-\end{enumerate}
 
+\item (Optional.) Implement Eisner's algorithm for \emph{projective} dependency parsing. 
+The pseudo-code is shown as Algorithm~\ref{alg:eisner}. Implement this algorithm as the function
+\begin{python}
+    def parse_proj(self, scores):
+        '''
+        Parse using Eisner's algorithm.
+        '''
+\end{python}
+in file ${\tt{dependency\_decoder.py}}$. The input is a matrix of arc scores, whose dimension is 
+$(N+1)$-by-$(N+1)$, and whose $(h,m)$ entry contains the score $s_{\boldsymbol{\theta}}(h,m)$. 
+In particular, the first row contains the scores for the arcs that depart from the root, 
+and the first column's values, along with the main diagonal, are to be ignored (since no arcs 
+point to the root, and there are not self-pointing arcs).
+
+To test the algorithm, retrain the parser on the English data (where the trees are actually all
+projective) by setting the flag ${\tt{dp.projective}}$ to ${\tt{True}}$:
+\begin{python}
+dp = depp.DependencyParser()
+dp.features.use_lexical = True
+dp.features.use_distance = True
+dp.features.use_contextual = True
+dp.read_data("english")
+dp.projective = True
+dp.train_perceptron(10)
+dp.test()
+\end{python}
+
+You should get the following results:
+\begin{python}
+Number of sentences: 8044
+Number of tokens: 80504
+Number of words: 12202
+Number of pos: 48
+Number of features: 338014
+Epoch 1
+Training accuracy: 0.835637168541
+Epoch 2
+Training accuracy: 0.922426254687
+Epoch 3
+Training accuracy: 0.947621628947
+Epoch 4
+Training accuracy: 0.960326602521
+Epoch 5
+Training accuracy: 0.967689840538
+Epoch 6
+Training accuracy: 0.97263631025
+Epoch 7
+Training accuracy: 0.97619370285
+Epoch 8
+Training accuracy: 0.979209016579
+Epoch 9
+Training accuracy: 0.98127569228
+Epoch 10
+Training accuracy: 0.981320865519
+Test accuracy (509 test instances): 0.886732599366
+\end{python}
+
+\end{enumerate}
 \end{exercise}
+
+\begin{algorithm}[t]
+   \caption{Eisner's algorithm for first-order projective dependency parsing\label{alg:eisner}}
+\begin{algorithmic}[1]
+   \STATE {\bfseries input:} Arc scores $s_{\boldsymbol{\theta}}(h,m)$, for $h \in \{0,\ldots,N\}$, 
+   $m \in \{1,\ldots,N\}$, and $h \ne m$, associated with a sentence $s=w_1\ldots w_N$.
+   \STATE \COMMENT{Initialization}
+	\FOR{$i=0$ {\bfseries to} $N$}
+	\STATE \COMMENT{Initialize incomplete spans.}
+	\STATE $\mathrm{incomplete}[i,i,\leftarrow] := 0.0$
+	\STATE $\mathrm{incomplete}[i,i,\rightarrow] := 0.0$
+	\STATE
+	\STATE \COMMENT{Initialize complete spans.}
+	\STATE $\mathrm{complete}[i,i,\leftarrow] := 0.0$
+	\STATE $\mathrm{complete}[i,i,\rightarrow] := 0.0$
+	\ENDFOR
+	\STATE
+	\STATE \COMMENT{Induction}
+	\FOR[$k$ is length of span]{$k=1$ {\bfseries to} $N$} 
+	\FOR[$s$ is start of span]{$s=1$ {\bfseries to} $N-k$}
+	\STATE Set $t := s + k$ \COMMENT{$t$ is end of span}
+	\STATE
+	\STATE \COMMENT{First, create incomplete spans.}
+	\STATE $\mathrm{incomplete}[s,t,\leftarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\rightarrow] + \mathrm{complete}[r+1][t][\leftarrow] + s_{\boldsymbol{\theta}}(t,s)) $
+	\STATE $\mathrm{incomplete}[s,t,\rightarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\rightarrow] + \mathrm{complete}[r+1][t][\leftarrow] + s_{\boldsymbol{\theta}}(s,t))$
+	\STATE
+	\STATE \COMMENT{Then, create complete spans.}
+	\STATE $\mathrm{complete}[s,t,\leftarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\leftarrow] + \mathrm{incomplete}[r][t][\leftarrow]$
+	\STATE $\mathrm{complete}[s,t,\rightarrow] := \max_{s < r \le t} (\mathrm{incomplete}[s][r][\rightarrow] + \mathrm{complete}[r][t][\rightarrow])$
+	\ENDFOR
+	\ENDFOR
+	\STATE
+	\STATE \COMMENT{Termination}
+	\STATE Backtrack to obtain the actual tree, whose score is $\mathrm{complete}[0,N,\rightarrow]$.
+\end{algorithmic}
+\end{algorithm}
+
 
 \subsection{Model Refinements}
 
@@ -601,13 +697,42 @@ a greedy method \citep{McDonald2006CoNLL},
 loopy belief propagation \citep{DSmith2008}, a linear programming relaxation \citep{Martins2009ACL}, 
 and a dual decomposition method \citep{Koo2010EMNLP}. 
 \item[Third-order models.]
-For the projective case, third order models have also been considered \citep{Koo2010}
+For the projective case, third order models have also been considered \citep{Koo2010}. This was 
+extended to the non-projective case by \citet{Martins2013ACL}.
 \item[Transition-based parsers.]
 Like in the phrase-based case, there is a totally different line of work which models parsers as a sequence of greedy 
 shift-reduce decisions \citep{Nivre2006CoNLL,Huang2010}. These parsers seem to be very fast (expected linear time) 
 and only slightly less accurate than 
 the state-of-the-art. Solutions have been worked out for the non-projective case also \citep{Nivre2009}. 
 \end{description}
+
+\subsection{External Links}
+
+If you want to check a demo of a parser that use some of the extensions above, you can do so 
+at 
+\begin{quote}
+{\url{http://demo.ark.cs.cmu.edu/parse}} 
+\end{quote}
+This demo uses  
+TurboParser ({\url{http://www.ark.cs.cmu.edu/TurboParser}}), a free software implementation of a fast and accurate dependency parser 
+that can parse thousands of tokens per second with state-of-the-art accuracies 
+(way faster than the Python implementation that you have used at the labs). 
+Feel free to try it at home!
+
+Other well-known software toolkits that implement dependency parsers are:
+\begin{itemize}
+\item MSTParser ({\url{http://www.seas.upenn.edu/~strctlrn/MSTParser/MSTParser.html}}), a graph-based dependency parser;
+\item MaltParser ({\url{http://www.maltparser.org/}}), a transition-based parser;
+\item DPO3 ({\url{http://groups.csail.mit.edu/nlp/dpo3/}}), a third-order projective parser;
+\item Linear-time dynamic programming parser ({\url{http://acl.cs.qc.edu/~lhuang/}}), a fast transition-based parser.
+\end{itemize}
+
+
+
+
+
+
+
 
 %% \begin{figure}
 %% \small
