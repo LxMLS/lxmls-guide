@@ -2,6 +2,14 @@ In this lab, we will work with Amazon.com's Web Services\footnote{http://aws.ama
 to run some simple analyses. Then, in the next lab, we will build on these
 tools to construct a larger learning system.
 
+\section*{If you use your own computer}
+
+The instructions we will provide here assume that you are using one of our own computers, which have some software preinstalled. Unfortunately, EC2 installation guides and tutorials are not very widespread. If you are using your own machine, please follow the installation instructions for the EC2 tools available at
+
+http://aws.amazon.com/developertools/351
+
+in the "Download" section.
+
 \section*{Today's Assignment}
 
 Today we will show you how to solve a simple problem (counting words in documents) in a distributed manner. We will then ask you to implement a distributed solution for a problem you already know (Na\"{i}ve Bayes classification).
@@ -41,10 +49,9 @@ The machine has all of the necessary Python packages for you to work. It also
 has a standard collection of editors and other tools. It is an Ubuntu based
 installation and you can access super user powers with \texttt{sudo} (if you're not familiar with Unix-based environments, you might not understand this last sentence -- don't worry about it for now).
 
-
 \section{MapReduce for Word Count}
 
-\subsection{Running Word Count locally}
+
 
 The initial idea of MapReduce was an implementation by google\footnote{http://research.google.com/archive/mapreduce.html}, but very soon
 Hadoop appeared as an open-source implementation of the same paradigm.\footnote{http://hadoop.apache.org/}
@@ -75,6 +82,8 @@ dictionary of a count for each word.
 \item You sum up the counts for each word to get the final count. This is the
 \emph{reduce} step. Notice that you can now parallelize over words.
 \end{enumerate}
+
+\subsection{Running Word Count locally}
 
 In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
 as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. On your Amazon machine, the package
@@ -108,13 +117,13 @@ wc = WordCount()
 wc.run()
 \end{python}
 
-You can save this as \texttt{wordcount.py} and run this on your machine
-directly. We will also make use of the \texttt{/datasets} directory that is
-preinstalled on your machine:
+This file already exists as \texttt{wordcount.py} (inside the \texttt{big_data} folder). To run it on your machine (without using Amazon EC2), navigate to the \texttt{labs} folder\todo{No final temos de ver se e esta a pasta.} and type this into a terminal:
 
 \begin{verbatim}
-python wordcount.py /datasets/small-text-file.txt
+python wordcount.py ../data/wikipedia/en_perline001.txt > results.txt
 \end{verbatim}
+
+Open the \texttt{results.txt} file in your favorite text editor. Each line of this file contains a word and the corresponding count.
 
 \subsection{Running Word Count on Amazon EC2}
 
