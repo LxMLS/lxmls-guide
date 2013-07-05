@@ -25,7 +25,7 @@
 %\end{table}
 
 One important problem in HMMs is to estimate the 
-model parameters, \emph{ i.e.}, 
+model parameters, \emph{i.e.}, 
 the distributions depicted in Table~\ref{tab:hmm-dist}. 
 We will refer to the set of all these parameters 
 as $\theta$. 
@@ -76,7 +76,7 @@ C_{\mathrm{emiss}}(w_j,c_k) = \sum_{m=1}^M
 Note that $\Ind$ is an indicator function that has the value 1 when the
 particular event happens, and zero otherwise. In other words, the previous
 equations go through the training corpus and count how
-often each event occurs. For example, Eq.~\ref{eq::transitionCounts} counts how often state $c_k$ follows state $c_l$. Therefore, $C_{\mathrm{trans}}(\text{\tt sunny},\text{\tt rainy})$ contains the number of times that a sunny day followed a rainy day.
+often each event occurs. For example, Eq.~\ref{eq::transitionCounts} counts how many times $c_k$ follows state $c_j$. Therefore, $C_{\mathrm{trans}}(\text{\tt sunny},\text{\tt rainy})$ contains the number of times that a sunny day followed a rainy day.
 
 %
 %: e.g. the word ``w'' appears with state

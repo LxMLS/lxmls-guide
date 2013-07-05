@@ -1,0 +1,2997 @@
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.3.18)  5 JUL 2013 10:15
+entering extended mode
+**D:/GitHub/lxmls_guide/guide.tex
+(D:/GitHub/lxmls_guide/guide.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2012-05-30, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, latin, latvian,
+ lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerman, n
+german-x-2012-05-30, nynorsk, oriya, panjabi, pinyin, polish, portuguese, roman
+ian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swissgerm
+an, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, usengl
+ishmax, welsh, loaded.
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\report.cls"
+Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\size10.clo"
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("C:\Program Files\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count88
+\Gm@cntv=\count89
+\c@Gm@tempcnt=\count90
+\Gm@bindingoffset=\dimen103
+\Gm@wd@mp=\dimen104
+\Gm@odd@mp=\dimen105
+\Gm@even@mp=\dimen106
+\Gm@layoutwidth=\dimen107
+\Gm@layoutheight=\dimen108
+\Gm@layouthoffset=\dimen109
+\Gm@layoutvoffset=\dimen110
+\Gm@dimlist=\toks15
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\geometry\geometry.cfg"))
+("C:\Program Files\MiKTeX 2.9\tex\latex\ltxmisc\url.sty"
+\Urlmuskip=\muskip10
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\palatino.sty"
+Package: palatino 2005/04/12 PSNFSS-v9.2a (SPQR) 
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\mathpazo.sty"
+Package: mathpazo 2005/04/12 PSNFSS-v9.2a Palatino w/ Pazo Math (D.Puga, WaS) 
+\symupright=\mathgroup4
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.sty
+\lst@mode=\count91
+\lst@gtempboxa=\box26
+\lst@token=\toks16
+\lst@length=\count92
+\lst@currlwidth=\dimen111
+\lst@column=\count93
+\lst@pos=\count94
+\lst@lostspace=\dimen112
+\lst@width=\dimen113
+\lst@newlines=\count95
+\lst@lineno=\count96
+\lst@maxwidth=\dimen114
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstmisc.sty
+File: lstmisc.sty 2007/02/22 1.4 (Carsten Heinz)
+\c@lstnumber=\count97
+\lst@skipnumbers=\count98
+\lst@framebox=\box27
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\listings.cfg
+File: listings.cfg 2007/02/22 1.4 listings configuration
+))
+Package: listings 2007/02/22 1.4 (Carsten Heinz)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\tools\bm.sty"
+Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup5
+\symboldletters=\mathgroup6
+\symboldsymbols=\mathgroup7
+\symboldupright=\mathgroup8
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 138.
+LaTeX Info: Redefining \bm on input line 204.
+)
+(D:\GitHub\lxmls_guide\pythonlisting.tex
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\xcolor\xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count99
+)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\setspace\setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\textcomp.sty"
+Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
+Package textcomp Info: Sub-encoding information:
+(textcomp)               5 = only ISO-Adobe without \textcurrency
+(textcomp)               4 = 5 + \texteuro
+(textcomp)               3 = 4 + \textohm
+(textcomp)               2 = 3 + \textestimated + \textcurrency
+(textcomp)               1 = TS1 - \textcircled - \t
+(textcomp)               0 = TS1 (full)
+(textcomp)             Font families with sub-encoding setting implement
+(textcomp)             only a restricted character set as indicated.
+(textcomp)             Family '?' is the default used for unknown fonts.
+(textcomp)             See the documentation for details.
+Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 71.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ts1enc.def"
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+)
+LaTeX Info: Redefining \oldstylenums on input line 266.
+Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 281.
+Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 282.
+Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 283.
+Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 284.
+Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 285.
+Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 286.
+Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 287.
+Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 288.
+Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 289.
+Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 290.
+Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 291.
+Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 292.
+Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 293.
+Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 294.
+Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 295.
+Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 296.
+Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 297.
+Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 298.
+Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 299.
+Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 300.
+Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 301.
+Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 302.
+Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 303.
+Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 304.
+
+Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 305.
+Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 306.
+Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 307.
+Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 308.
+Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 309.
+Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 310.
+Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 311.
+Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 312.
+Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 313.
+Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 314.
+Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 315.
+Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 316.
+Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 317.
+Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 318.
+Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 319.
+Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 320.
+Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 321.
+Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 322.
+Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 323.
+Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 324.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 325.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 326.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 327.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 328.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 329.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 330.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 331.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 332.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 333.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 334.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 335.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 336.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 337.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 338.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 339.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 340.
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty"
+Package: amssymb 2009/06/22 v3.00
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\@emptytoks=\toks17
+\symAMSa=\mathgroup9
+\symAMSb=\mathgroup10
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsmath.sty"
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks18
+\ex@=\dimen115
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+LaTeX Info: Redefining \boldsymbol on input line 54.
+\pmbraise@=\dimen116
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\ams\math\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count100
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count101
+\leftroot@=\count102
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count103
+\DOTSCASE@=\count104
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box28
+\strutbox@=\box29
+\big@size=\dimen117
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count105
+\c@MaxMatrixCols=\count106
+\dotsspace@=\muskip11
+\c@parentequation=\count107
+\dspbrk@lvl=\count108
+\tag@help=\toks19
+\row@=\count109
+\column@=\count110
+\maxfields@=\count111
+\andhelp@=\toks20
+\eqnshift@=\dimen118
+\alignsep@=\dimen119
+\tagshift@=\dimen120
+\tagwidth@=\dimen121
+\totwidth@=\dimen122
+\lineht@=\dimen123
+\@envbody=\toks21
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks22
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\eucal.sty"
+Package: eucal 2009/06/22 v3.00 Euler Script fonts
+LaTeX Font Info:    Overwriting math alphabet `\EuScript' in version `bold'
+(Font)                  U/eus/m/n --> U/eus/b/n on input line 33.
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\latexsym.sty"
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup11
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 47.
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+)
+\Gin@req@height=\dimen124
+\Gin@req@width=\dimen125
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty"
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty"
+Package: hobsub-hyperref 2012/04/25 v1.12 Bundle oberdiek, subset hyperref (HO)
+
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty"
+Package: hobsub-generic 2012/04/25 v1.12 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/04/25 v1.12 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package hobsub Info: Skipping package `ifvtex' (already loaded).
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package hobsub Info: Skipping package `ifpdf' (already loaded).
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2011/06/24 v1.1 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty"
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen126
+\Hy@linkcounter=\count112
+\Hy@pagecounter=\count113
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def"
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
+)
+\Hy@SavedSpaceFactor=\count114
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing OFF on input line 4463.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4688.
+\c@Hy@tempcnt=\count115
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen127
+\Fld@menulength=\count116
+\Field@Width=\dimen128
+\Fld@charsize=\dimen129
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing OFF on input line 6310.
+Package hyperref Info: Link coloring OFF on input line 6315.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
+\Hy@abspage=\count117
+\c@Item=\count118
+\c@Hfootnote=\count119
+)
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def"
+File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
+\Fld@listcount=\count120
+\c@bookmark@seq@number=\count121
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty"
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip46
+)
+(D:\GitHub\lxmls_guide\algorithm2e.sty
+Package: algorithm2e 2005/10/04 v3.9 algorithms environments
+\c@AlgoLine=\count122
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty"
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\tools\xspace.sty"
+Package: xspace 2009/10/20 v1.13 Space after command names (DPC,MH)
+)
+********************************************************
+Package `algorithm2e' Release 3.9 -- october 04 2005 --
+- algorithm2e-announce@lirmm.fr mailing list for announcement about releases
+- algorithm2e-discussion@lirmm.fr mailing list for discussion about package
+subscribe by emailing sympa@lirmm.fr with 'subscribe <list> <firstname name>'
+- Author: Christophe Fiorio (fiorio@lirmm.fr)
+********************************************************
+\skiptotal=\skip47
+\skiprule=\skip48
+\skiphlne=\skip49
+\skiptext=\skip50
+\skiplength=\skip51
+\algomargin=\skip52
+\skipalgocfslide=\skip53
+\algowidth=\dimen130
+\inoutsize=\dimen131
+\inoutline=\dimen132
+\algocf@inoutbox=\box30
+\algocf@inputbox=\box31
+\AlCapSkip=\skip54
+\AlCapHSkip=\skip55
+\algocf@capbox=\box32
+\c@algocfline=\count123
+\c@algocf=\count124
+\algocf@algoframe=\box33
+\algocf@algobox=\box34
+) (D:\GitHub\lxmls_guide\natbib.sty
+Package: natbib 1998/07/14 6.8c (PWD)
+\bibhang=\skip56
+\bibsep=\skip57
+LaTeX Info: Redefining \cite on input line 467.
+\c@NAT@ctr=\count125
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\algorithms\algorithmic.st
+y
+Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+\c@ALC@unique=\count126
+\c@ALC@line=\count127
+\c@ALC@rem=\count128
+\c@ALC@depth=\count129
+\ALC@tlm=\skip58
+\algorithmicindent=\skip59
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\algorithms\algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count130
+\float@exts=\toks23
+\float@box=\box35
+\@float@everytoks=\toks24
+\@floatcapt=\box36
+)
+\@float@every@algorithm=\toks25
+\c@algorithm=\count131
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\todonotes\todonotes.sty
+Package: todonotes 2012/07/25 .dtx Todonotes source and documentation.
+Package: todonotes 2012/07/25
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\xkeyval\xkeyval.sty"
+Package: xkeyval 2012/10/14 v2.6b package option processing (HA)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\xkeyval\xkeyval.tex"
+\XKV@toks=\toks26
+\XKV@tempa@toks=\toks27
+\XKV@depth=\count132
+File: xkeyval.tex 2012/10/14 v2.6b key=value parser (HA)
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\frontendlayer\tikz.st
+y (C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\basiclayer\pgf.sty
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\utilities\pgfrcs.sty
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgfutil-c
+ommon.tex
+\pgfutil@everybye=\toks28
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgfutil-l
+atex.def
+\pgfutil@abb=\box37
+ (C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\ms\everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgfrcs.co
+de.tex
+Package: pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+))
+Package: pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\basiclayer\pgfcore.st
+y
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\systemlayer\pgfsys.st
+y
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\systemlayer\pgfsys.
+code.tex
+Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgfkeys.c
+ode.tex
+\pgfkeys@pathtoks=\toks29
+\pgfkeys@temptoks=\toks30
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgfkeysfi
+ltered.code.tex
+\pgfkeys@tmptoks=\toks31
+))
+\pgf@x=\dimen133
+\pgf@y=\dimen134
+\pgf@xa=\dimen135
+\pgf@ya=\dimen136
+\pgf@xb=\dimen137
+\pgf@yb=\dimen138
+\pgf@xc=\dimen139
+\pgf@yc=\dimen140
+\w@pgf@writea=\write3
+\r@pgf@reada=\read1
+\c@pgf@counta=\count133
+\c@pgf@countb=\count134
+\c@pgf@countc=\count135
+\c@pgf@countd=\count136
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\systemlayer\pgf.cfg
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 900.
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\systemlayer\pgfsys-
+pdftex.def
+File: pgfsys-pdftex.def 2009/05/22  (rcs-revision 1.26)
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\systemlayer\pgfsys-
+common-pdf.def
+File: pgfsys-common-pdf.def 2008/05/19  (rcs-revision 1.10)
+)))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\systemlayer\pgfsyss
+oftpath.code.tex
+File: pgfsyssoftpath.code.tex 2008/07/18  (rcs-revision 1.7)
+\pgfsyssoftpath@smallbuffer@items=\count137
+\pgfsyssoftpath@bigbuffer@items=\count138
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\systemlayer\pgfsysp
+rotocol.code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcore.
+code.tex
+Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmath.code.t
+ex
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathcalc.co
+de.tex
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathutil.co
+de.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathparser.
+code.tex
+\pgfmath@dimen=\dimen141
+\pgfmath@count=\count139
+\pgfmath@box=\box38
+\pgfmath@toks=\toks32
+\pgfmath@stack@operand=\toks33
+\pgfmath@stack@operation=\toks34
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.code.tex
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.basic.code.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.trigonometric.code.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.random.code.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.comparison.code.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.base.code.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.round.code.tex)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfunctio
+ns.misc.code.tex)))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\math\pgfmathfloat.c
+ode.tex
+\c@pgfmathroundto@lastzeros=\count140
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorep
+oints.code.tex
+File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
+\pgf@picminx=\dimen142
+\pgf@picmaxx=\dimen143
+\pgf@picminy=\dimen144
+\pgf@picmaxy=\dimen145
+\pgf@pathminx=\dimen146
+\pgf@pathmaxx=\dimen147
+\pgf@pathminy=\dimen148
+\pgf@pathmaxy=\dimen149
+\pgf@xx=\dimen150
+\pgf@xy=\dimen151
+\pgf@yx=\dimen152
+\pgf@yy=\dimen153
+\pgf@zx=\dimen154
+\pgf@zy=\dimen155
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorep
+athconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
+\pgf@path@lastx=\dimen156
+\pgf@path@lasty=\dimen157
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorep
+athusage.code.tex
+File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
+\pgf@shorten@end@additional=\dimen158
+\pgf@shorten@start@additional=\dimen159
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcores
+copes.code.tex
+File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
+\pgfpic=\box39
+\pgf@hbox=\box40
+\pgf@layerbox@main=\box41
+\pgf@picture@serial@count=\count141
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcoreg
+raphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
+\pgflinewidth=\dimen160
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcoret
+ransformations.code.tex
+File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
+\pgf@pt@x=\dimen161
+\pgf@pt@y=\dimen162
+\pgf@pt@temp=\dimen163
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcoreq
+uick.code.tex
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcoreo
+bjects.code.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorep
+athprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/10/09  (rcs-revision 1.8)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorea
+rrows.code.tex
+File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcores
+hade.code.tex
+File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
+\pgf@max=\dimen164
+\pgf@sys@shading@range@num=\count142
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorei
+mage.code.tex
+File: pgfcoreimage.code.tex 2010/03/25  (rcs-revision 1.16)
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcoree
+xternal.code.tex
+File: pgfcoreexternal.code.tex 2010/09/01  (rcs-revision 1.17)
+\pgfexternal@startupbox=\box42
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorel
+ayers.code.tex
+File: pgfcorelayers.code.tex 2010/08/27  (rcs-revision 1.2)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcoret
+ransparency.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\basiclayer\pgfcorep
+atterns.code.tex
+File: pgfcorepatterns.code.tex 2009/07/02  (rcs-revision 1.3)
+)))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\modules\pgfmodulesh
+apes.code.tex
+File: pgfmoduleshapes.code.tex 2010/09/09  (rcs-revision 1.13)
+\pgfnodeparttextbox=\box43
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\modules\pgfmodulepl
+ot.code.tex
+File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\compatibility\pgfcomp
+-version-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen165
+\pgf@nodesepend=\dimen166
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\compatibility\pgfcomp
+-version-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\utilities\pgffor.sty
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\pgf\utilities\pgfkeys.sty
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgfkeys.c
+ode.tex))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\utilities\pgffor.co
+de.tex
+Package: pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
+\pgffor@iter=\dimen167
+\pgffor@skip=\dimen168
+\pgffor@stack=\toks35
+\pgffor@toks=\toks36
+))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\frontendlayer\tikz\
+tikz.code.tex
+Package: tikz 2010/10/13 v2.10 (rcs-revision 1.76)
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\libraries\pgflibrar
+yplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2010/05/31 v2.10 (rcs-revision 1.15)
+\pgf@plot@mark@count=\count143
+\pgfplotmarksize=\dimen169
+)
+\tikz@lastx=\dimen170
+\tikz@lasty=\dimen171
+\tikz@lastxsaved=\dimen172
+\tikz@lastysaved=\dimen173
+\tikzleveldistance=\dimen174
+\tikzsiblingdistance=\dimen175
+\tikz@figbox=\box44
+\tikz@tempbox=\box45
+\tikztreelevel=\count144
+\tikznumberofchildren=\count145
+\tikznumberofcurrentchild=\count146
+\tikz@fig@count=\count147
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\modules\pgfmodulema
+trix.code.tex
+File: pgfmodulematrix.code.tex 2010/08/24  (rcs-revision 1.4)
+\pgfmatrixcurrentrow=\count148
+\pgfmatrixcurrentcolumn=\count149
+\pgf@matrix@numberofcolumns=\count150
+)
+\tikz@expandcount=\count151
+
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\frontendlayer\tikz\
+libraries\tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/06/17 v2.10 (rcs-revision 1.2)
+)))
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\generic\pgf\frontendlayer\tikz\
+libraries\tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2008/10/06 v2.10 (rcs-revision 1.7)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\tools\calc.sty"
+Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count152
+\calc@Bcount=\count153
+\calc@Adimen=\dimen176
+\calc@Bdimen=\dimen177
+\calc@Askip=\skip60
+\calc@Bskip=\skip61
+LaTeX Info: Redefining \setlength on input line 76.
+LaTeX Info: Redefining \addtolength on input line 77.
+\calc@Ccount=\count154
+\calc@Cskip=\skip62
+)
+\c@@todonotes@numberoftodonotes=\count155
+)
+(D:\GitHub\lxmls_guide\multirow.sty
+\bigstrutjot=\dimen178
+)
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\fancybox\fancybox.sty
+Package: fancybox 2010/05/15 1.4
+
+Style option: `fancybox' v1.4 <2010/05/15> (tvz)
+\@fancybox=\box46
+\shadowsize=\dimen179
+\@Sbox=\box47
+\do@VerbBox=\toks37
+\the@fancyput=\toks38
+\this@fancyput=\toks39
+\EndVerbatimTokens=\toks40
+\Verbatim@Outfile=\write4
+\Verbatim@Infile=\read2
+) (D:\GitHub\lxmls_guide\qtree.sty
+Package: 2006/07/10 v.3.1Qtree: tree-drawing for linguistics
+Package: qtree 2006/07/10 v.3.1Qtree: tree-drawing for linguistics
+(D:\GitHub\lxmls_guide\pict2e.sty
+Package: pict2e 2008/07/22 v0.2w Improved picture commands (HjG,RN,JT)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\00miktex\pict2e.cfg"
+File: pict2e.cfg 2005/12/29 v1.0 MiKTeX 'pict2e' configuration
+)
+Package pict2e Info: Driver file: pdftex.def on input line 100.
+Package pict2e Info: Driver file for pict2e: p2e-pdftex.def on input line 102.
+
+(D:\GitHub\lxmls_guide\p2e-pdftex.def
+File: p2e-pdftex.def 2004/06/25 v0.1r Driver-dependant file (RN,HjG)
+)
+\pIIe@GRAPH=\toks41
+\@arclen=\dimen180
+\@arcrad=\dimen181
+\@tempdimd=\dimen182
+)
+\c@treecount=\count156
+\c@branchcount=\count157
+\parentbox=\box48
+\treebox=\box49
+\treeboxone=\box50
+\treeboxtwo=\box51
+\treeboxthree=\box52
+\treeboxfour=\box53
+\treeboxfive=\box54
+\treeboxsix=\box55
+\treeboxseven=\box56
+\treeboxeight=\box57
+\treeboxnine=\box58
+\treeboxten=\box59
+\treeboxeleven=\box60
+\treeboxtwelve=\box61
+\treeboxthirteen=\box62
+\treeboxfourteen=\box63
+\treeboxfifteen=\box64
+\treeboxsixteen=\box65
+\treeboxseventeen=\box66
+\treeboxeighteen=\box67
+\treeboxnineteen=\box68
+\treeboxtwenty=\box69
+\treeoffsetone=\skip63
+\treeoffsettwo=\skip64
+\treeoffsetthree=\skip65
+\treeoffsetfour=\skip66
+\treeoffsetfive=\skip67
+\treeoffsetsix=\skip68
+\treeoffsetseven=\skip69
+\treeoffseteight=\skip70
+\treeoffsetnine=\skip71
+\treeoffsetten=\skip72
+\treeoffseteleven=\skip73
+\treeoffsettwelve=\skip74
+\treeoffsetthirteen=\skip75
+\treeoffsetfourteen=\skip76
+\treeoffsetfifteen=\skip77
+\treeoffsetsixteen=\skip78
+\treeoffsetseventeen=\skip79
+\treeoffseteighteen=\skip80
+\treeoffsetnineteen=\skip81
+\treeoffsettwenty=\skip82
+\treeshiftone=\skip83
+\treeshifttwo=\skip84
+\treeshiftthree=\skip85
+\treeshiftfour=\skip86
+\treeshiftfive=\skip87
+\treeshiftsix=\skip88
+\treeshiftseven=\skip89
+\treeshifteight=\skip90
+\treeshiftnine=\skip91
+\treeshiftten=\skip92
+\treeshifteleven=\skip93
+\treeshifttwelve=\skip94
+\treeshiftthirteen=\skip95
+\treeshiftfourteen=\skip96
+\treeshiftfifteen=\skip97
+\treeshiftsixteen=\skip98
+\treeshiftseventeen=\skip99
+\treeshifteighteen=\skip100
+\treeshiftnineteen=\skip101
+\treeshifttwenty=\skip102
+\treewidthone=\skip103
+\treewidthtwo=\skip104
+\treewidththree=\skip105
+\treewidthfour=\skip106
+\treewidthfive=\skip107
+\treewidthsix=\skip108
+\treewidthseven=\skip109
+\treewidtheight=\skip110
+\treewidthnine=\skip111
+\treewidthten=\skip112
+\treewidtheleven=\skip113
+\treewidthtwelve=\skip114
+\treewidththirteen=\skip115
+\treewidthfourteen=\skip116
+\treewidthfifteen=\skip117
+\treewidthsixteen=\skip118
+\treewidthseventeen=\skip119
+\treewidtheighteen=\skip120
+\treewidthnineteen=\skip121
+\treewidthtwenty=\skip122
+\daughteroffsetone=\skip123
+\daughteroffsettwo=\skip124
+\daughteroffsetthree=\skip125
+\daughteroffsetfour=\skip126
+\branchwidthone=\skip127
+\branchwidthtwo=\skip128
+\branchwidththree=\skip129
+\branchwidthfour=\skip130
+\parentoffset=\skip131
+\treeoffset=\skip132
+\daughteroffset=\skip133
+\branchwidth=\skip134
+\parentwidth=\skip135
+\treewidth=\skip136
+\qta=\toks42
+\qtb=\toks43
+\nbranches=\count158
+\qroofx=\count159
+\qroofy=\count160
+\@qrscratchbox=\box70
+)
+(D:\GitHub\lxmls_guide\listings_def.tex
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\latex\listings\lstlang1.sty
+File: lstlang1.sty 2004/09/05 1.3 listings language file
+))
+(D:\GitHub\lxmls_guide\math.tex)
+\c@theorem=\count161
+\c@definition=\count162
+\c@example=\count163
+\c@remark=\count164
+\c@exercise=\count165
+
+No file guide.aux.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 62.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 62.
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ts1cmr.fd"
+File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 62.
+LaTeX Font Info:    ... okay on input line 62.
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 62.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1ppl.fd"
+File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
+* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=483.69687pt
+* \textheight=731.23584pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-52.36449pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+\c@lstlisting=\count166
+(C:\Users\Carlos\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count167
+\scratchdimen=\dimen183
+\scratchbox=\box71
+\nofMPsegments=\count168
+\nofMParguments=\count169
+\everyMPshowfont=\toks44
+\MPscratchCnt=\count170
+\MPscratchDim=\dimen184
+\MPnumerator=\count171
+\makeMPintoPDFobject=\count172
+\everyMPtoPDFconversion=\toks45
+)
+\AtBeginShipoutBox=\box72
+Package hyperref Info: Link coloring OFF on input line 62.
+ ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count173
+)
+LaTeX Info: Redefining \ref on input line 62.
+LaTeX Info: Redefining \pageref on input line 62.
+LaTeX Info: Redefining \nameref on input line 62.
+\@outlinefile=\write5
+
+ABD: EveryShipout initializing macros
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 69.
+
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omlzplm.fd"
+File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 69.
+
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omszplm.fd"
+File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 69.
+
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omxzplm.fd"
+File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
+)
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 69.
+
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1zplm.fd"
+File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
+)
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 12.50409pt on input line 69.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 9.37807pt on input line 69.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 7.29405pt on input line 69.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 12.50409pt on input line 69.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 9.37807pt on input line 69.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 7.29405pt on input line 69.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 69.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ulasy.fd"
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+
+LaTeX Warning: No \author given.
+
+[1
+
+{C:/Users/Carlos/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+Day 0.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <20.74> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 74.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <24.88> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 74.
+(D:\GitHub\lxmls_guide\pages/intro/intro.tex
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 9.
+
+(D:\GitHub\lxmls_guide\pages/intro/python.tex
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 1.
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 3.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 10.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <9> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 13.
+LaTeX Font Info:    Try loading font information for TS1+pcr on input line 13.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ts1pcr.fd"
+File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
+)
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 10.42007pt on input line 29.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 7.91925pt on input line 29.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 6.25204pt on input line 29.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 10.42007pt on input line 29.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 7.91925pt on input line 29.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 6.25204pt on input line 29.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 8.33606pt on input line 29.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 5.21004pt on input line 29.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 8.33606pt on input line 29.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 5.21004pt on input line 29.
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.39 Out[
+         ]: Hello, World! [1
+
+]
+LaTeX Font Info:    Try loading font information for TS1+ppl on input line 62.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ts1ppl.fd"
+File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
+)
+
+Package natbib Warning: Citation `PER-GRA:2007' on page 2 undefined on input li
+ne 68.
+
+[2]
+LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <10> not available
+(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 135.
+LaTeX Font Info:    Font shape `OT1/pcr/m/it' in size <9> not available
+(Font)              Font shape `OT1/pcr/m/sl' tried instead on input line 135.
+LaTeX Font Info:    Font shape `OT1/pcr/bx/it' in size <9> not available
+(Font)              Font shape `OT1/pcr/b/it' tried instead on input line 137.
+LaTeX Font Info:    Font shape `OT1/pcr/b/it' in size <9> not available
+(Font)              Font shape `OT1/pcr/b/sl' tried instead on input line 137.
+ [3] [4] [5pdfTeX warning (ext4): destination with the same identifier (name{ta
+ble.0.1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.285 \begin{python}
+                    ] [6]
+LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
+(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 376.
+ [7]
+Overfull \hbox (21.46883pt too wide) in paragraph at lines 445--446
+[]\OT1/ppl/m/n/10 Other func-tions take a whole ar-ray and com-pute a sin-gle v
+alue from it. For ex-am-ple, \OT1/pcr/m/n/10 np.sum\OT1/ppl/m/n/10 , \OT1/pcr/m
+/n/10 np.mean\OT1/ppl/m/n/10 ,...These
+ []
+
+) (D:\GitHub\lxmls_guide\pages/intro/la.tex [8]
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 29.
+
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ufplmbb.fd"
+File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
+) [9]
+LaTeX Font Info:    Font shape `OT1/ppl/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ppl/b/it' tried instead on input line 119.
+ [10] [11])
+(D:\GitHub\lxmls_guide\pages/intro/probs.tex
+LaTeX Font Info:    Try loading font information for U+eus on input line 1.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\ueus.fd"
+File: ueus.fd 2009/06/22 v3.00 Euler Script
+)
+Overfull \hbox (35.80017pt too wide) in paragraph at lines 4--5
+[]\OT1/ppl/m/it/10 Let H de-note ``heads'' and T de-note ``tails.'' If we toss 
+a coin twice, then $\U/eus/m/n/10 X \OT1/zplm/m/n/10 = \OMS/zplm/m/n/10 f\OML/z
+plm/m/it/10 HH\OT1/ppl/m/n/10 , \OML/zplm/m/it/10 HT\OT1/ppl/m/n/10 , \OML/zplm
+/m/it/10 TH\OT1/ppl/m/n/10 , \OML/zplm/m/it/10 TT\OMS/zplm/m/n/10 g$\OT1/ppl/m/
+it/10 .
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--26
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--40
+
+ []
+
+[12]
+
+LaTeX Warning: Reference `eq:condprob' on page 13 undefined on input line 75.
+
+
+LaTeX Warning: Reference `eq:totprob' on page 13 undefined on input line 75.
+
+[13] [14] <figs/intro/normal.png, id=379, 664.4825pt x 441.65pt>
+File: figs/intro/normal.png Graphic file (type png)
+
+<use figs/intro/normal.png>
+Package pdftex.def Info: figs/intro/normal.png used on input line 206.
+(pdftex.def)             Requested size: 290.22107pt x 192.89792pt.
+
+
+LaTeX Warning: Reference `fig:normaldist' on page 15 undefined on input line 21
+1.
+
+
+LaTeX Warning: Reference `bernoulli-eq' on page 15 undefined on input line 224.
+
+
+[15pdfTeX warning (ext4): destination with the same identifier (name{figure.0.1
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.229 \item $
+             \likelihood(0.6,x) = f(1,0.6)^5 = 0.6^5 = 0.07776$ <D:/GitHub/lxml
+s_guide/figs/intro/normal.png>]
+Overfull \hbox (4.0294pt too wide) in paragraph at lines 268--269
+[]\OT1/ppl/m/it/10 Use the \OT1/pcr/m/sl/10 load() \OT1/ppl/m/it/10 func-tion i
+n the \OT1/pcr/m/sl/10 galton.py \OT1/ppl/m/it/10 file to load the dataset. The
+ file is lo-cated un-der the \OT1/pcr/m/sl/10 lxmls/readers
+ []
+
+[16]) (D:\GitHub\lxmls_guide\pages/intro/no.tex
+
+Package natbib Warning: Citation `Nocedal1999' on page 17 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `bertsekas1995np' on page 17 undefined on inpu
+t line 7.
+
+
+Package natbib Warning: Citation `boyd2004convex' on page 17 undefined on input
+ line 7.
+
+
+LaTeX Warning: Reference `fig:convexfn' on page 17 undefined on input line 14.
+
+
+LaTeX Warning: Reference `fig:nonconvexfn' on page 17 undefined on input line 1
+4.
+
+<figs/intro/convexfn.png, id=392, 963.6pt x 359.3425pt>
+File: figs/intro/convexfn.png Graphic file (type png)
+
+<use figs/intro/convexfn.png>
+Package pdftex.def Info: figs/intro/convexfn.png used on input line 19.
+(pdftex.def)             Requested size: 290.22107pt x 108.22577pt.
+
+<figs/intro/nonconvexfn.png, id=393, 583.17876pt x 427.5975pt>
+File: figs/intro/nonconvexfn.png Graphic file (type png)
+
+<use figs/intro/nonconvexfn.png>
+Package pdftex.def Info: figs/intro/nonconvexfn.png used on input line 21.
+(pdftex.def)             Requested size: 241.84843pt x 177.32568pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `fig:convexfn' on page 17 undefined on input line 27.
+
+
+LaTeX Warning: Reference `fig:nonconvexfn' on page 17 undefined on input line 2
+7.
+
+[17]
+
+LaTeX Warning: Reference `tb::derivatives' on page 18 undefined on input line 6
+2.
+
+
+LaTeX Warning: Reference `fig:tangents' on page 18 undefined on input line 98.
+
+[18pdfTeX warning (ext4): destination with the same identifier (name{figure.0.2
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.99 
+     pdfTeX warning (ext4): destination with the same identifier (name{figure.0
+.3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.99 
+     pdfTeX warning (ext4): destination with the same identifier (name{table.0.
+2}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.99 
+      <D:/GitHub/lxmls_guide/figs/intro/convexfn.png> <D:/GitHub/lxmls_guide/fi
+gs/intro/nonconvexfn.png>]
+<figs/intro/tangents.png, id=416, 578.16pt x 433.62pt>
+File: figs/intro/tangents.png Graphic file (type png)
+
+<use figs/intro/tangents.png>
+Package pdftex.def Info: figs/intro/tangents.png used on input line 117.
+(pdftex.def)             Requested size: 290.22107pt x 217.663pt.
+
+
+Package natbib Warning: Citation `Nocedal1999' on page 19 undefined on input li
+ne 139.
+
+[19pdfTeX warning (ext4): destination with the same identifier (name{figure.0.4
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.140 \item \textbf
+                   {Descent Direction}  A second problem is that using the n...
+ <D:/GitHub/lxmls_guide/figs/intro/tangents.png>]
+
+Package natbib Warning: Citation `Nocedal1999' on page 20 undefined on input li
+ne 140.
+
+
+LaTeX Warning: Reference `alg:graddescent' on page 20 undefined on input line 1
+44.
+
+
+LaTeX Warning: Reference `fig:graddescent' on page 20 undefined on input line 1
+44.
+
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 147.
+<figs/intro/graddescent.png, id=437, 483.8075pt x 530.98375pt>
+File: figs/intro/graddescent.png Graphic file (type png)
+
+<use figs/intro/graddescent.png>
+Package pdftex.def Info: figs/intro/graddescent.png used on input line 161.
+(pdftex.def)             Requested size: 290.22107pt x 318.53598pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[20] <figs/intro/gradex1.png, id=469, 578.16pt x 433.62pt>
+File: figs/intro/gradex1.png Graphic file (type png)
+
+<use figs/intro/gradex1.png>
+Package pdftex.def Info: figs/intro/gradex1.png used on input line 237.
+(pdftex.def)             Requested size: 483.69687pt x 362.76945pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `fig:gradex1' on page 21 undefined on input line 247.
+
+[21pdfTeX warning (ext4): destination with the same identifier (name{figure.0.5
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.254 plot(
+           res[:,0],res[:,1],'+') <D:/GitHub/lxmls_guide/figs/intro/graddescent
+.png (PNG copy)>] <figs/intro/gradex2.png, id=496, 578.16pt x 433.62pt>
+File: figs/intro/gradex2.png Graphic file (type png)
+
+<use figs/intro/gradex2.png>
+Package pdftex.def Info: figs/intro/gradex2.png used on input line 260.
+(pdftex.def)             Requested size: 483.69687pt x 362.76945pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: Reference `fig:gradex2' on page 22 undefined on input line 270.
+
+)) (D:\GitHub\lxmls_guide\pages/day0/scipy.tex [22pdfTeX warning (ext4): destin
+ation with the same identifier (name{figure.0.6}) has been already used, duplic
+ate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.58 \begin{python}
+                    <D:/GitHub/lxmls_guide/figs/intro/gradex1.png>] [23pdfTeX w
+arning (ext4): destination with the same identifier (name{figure.0.7}) has been
+ already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.82 \end{python}
+                  <D:/GitHub/lxmls_guide/figs/intro/gradex2.png>] [24])
+[25]
+Day 1.
+(D:\GitHub\lxmls_guide\pages/classification/classification.tex
+
+Package natbib Warning: Citation `Mitchell1997' on page 26 undefined on input l
+ine 6.
+
+
+Package natbib Warning: Citation `Duda2001' on page 26 undefined on input line 
+6.
+
+
+Package natbib Warning: Citation `Schoelkopf2002' on page 26 undefined on input
+ line 6.
+
+
+Package natbib Warning: Citation `Joachims2002' on page 26 undefined on input l
+ine 6.
+
+
+Package natbib Warning: Citation `Bishop2006' on page 26 undefined on input lin
+e 6.
+
+
+Package natbib Warning: Citation `Manning2008' on page 26 undefined on input li
+ne 6.
+
+[26
+
+]
+
+LaTeX Warning: Reference `simpleDataSet_bo' on page 27 undefined on input line 
+89.
+
+<figs/classification/gaussian_separabale_bo.png, id=579, 578.16pt x 433.62pt>
+File: figs/classification/gaussian_separabale_bo.png Graphic file (type png)
+
+<use figs/classification/gaussian_separabale_bo.png>
+Package pdftex.def Info: figs/classification/gaussian_separabale_bo.png used on
+ input line 93.
+(pdftex.def)             Requested size: 435.32422pt x 326.49118pt.
+Missing character: There is no 2 in font eusm7!
+Missing character: There is no 2 in font eusm7!
+ [27pdfTeX warning (ext4): destination with the same identifier (name{figure.1.
+1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.109 A
+       fter we are done training, we are given a new input $x \in \mathcal{X...
+ <D:/GitHub/lxmls_guide/figs/classification/gaussian_separabale_bo.png>]
+[28]
+
+Package natbib Warning: Citation `blitzer2007biographies' on page 29 undefined 
+on input line 294.
+
+
+LaTeX Warning: Reference `eq:mlemultinomial' on page 29 undefined on input line
+ 327.
+
+
+Package natbib Warning: Citation `Manning1999' on page 29 undefined on input li
+ne 339.
+
+
+Package natbib Warning: Citation `Manning2008' on page 29 undefined on input li
+ne 339.
+
+[29]
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <7.6> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 354.
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 354.
+ [30]
+
+LaTeX Warning: Reference `eq:jointfeatsimple' on page 31 undefined on input lin
+e 439.
+
+
+Package natbib Warning: Citation `Rosenblatt1958' on page 31 undefined on input
+ line 497.
+
+
+LaTeX Warning: Reference `alg:perceptron' on page 31 undefined on input line 50
+4.
+
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
+ine 509.
+Missing character: There is no ç in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ´ in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+
+Overfull \hbox (6.71208pt too wide) in paragraph at lines 509--509
+\OT1/ppl/m/n/9 quadratico, 
+ []
+
+Missing character: There is no ç in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ´ in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+
+Overfull \hbox (6.71208pt too wide) in paragraph at lines 509--509
+\OT1/ppl/m/n/9 quadratico, 
+ []
+
+Missing character: There is no ç in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ´ in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+
+Overfull \hbox (6.71208pt too wide) in paragraph at lines 509--509
+\OT1/ppl/m/n/9 quadratico, 
+ []
+
+Missing character: There is no ç in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ´ in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+
+Overfull \hbox (6.71208pt too wide) in paragraph at lines 509--509
+\OT1/ppl/m/n/9 quadratico, 
+ []
+
+
+Overfull \hbox (14.71893pt too wide) in paragraph at lines 577--579
+[]\OT1/ppl/m/it/10 We pro-vide an im-ple-men-ta-tion of the per-cep-tron al-go-
+rithm in the class \OT1/pcr/m/n/10 Perceptron \OT1/ppl/m/it/10 (file \OT1/pcr/m
+/n/10 perceptron.py\OT1/ppl/m/it/10 ). 
+ []
+
+[31]
+
+Package natbib Warning: Citation `Crammer2002' on page 32 undefined on input li
+ne 611.
+
+
+Package natbib Warning: Citation `Crammer2006' on page 32 undefined on input li
+ne 611.
+
+
+LaTeX Warning: Reference `eq:miraupdates' on page 32 undefined on input line 62
+1.
+
+LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 625.
+
+LaTeX Warning: Reference `sec:svms' on page 32 undefined on input line 625.
+
+
+LaTeX Warning: Reference `eq:miraupdates' on page 32 undefined on input line 62
+7.
+
+[32]
+
+LaTeX Warning: Reference `alg:mira' on page 33 undefined on input line 646.
+
+
+Package natbib Warning: Citation `Crammer2006' on page 33 undefined on input li
+ne 646.
+
+[33]
+
+Package natbib Warning: Citation `Shannon1948' on page 34 undefined on input li
+ne 738.
+
+
+Package natbib Warning: Citation `Jaynes1982' on page 34 undefined on input lin
+e 741.
+
+
+Package natbib Warning: Citation `Cover1991' on page 34 undefined on input line
+ 741.
+
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 757.
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <5> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 757.
+
+LaTeX Warning: Reference `eq:loglinear' on page 34 undefined on input line 769.
+
+
+[34]
+
+LaTeX Warning: Reference `numerical_optimization' on page 35 undefined on input
+ line 807.
+
+
+LaTeX Warning: Reference `eq:maxent' on page 35 undefined on input line 809.
+
+
+LaTeX Warning: Reference `eq:maxent' on page 35 undefined on input line 809.
+
+
+LaTeX Warning: Reference `eq:maxent' on page 35 undefined on input line 817.
+
+
+LaTeX Warning: Reference `alg:maxent_gd' on page 35 undefined on input line 817
+.
+
+
+LaTeX Warning: Reference `alg:maxent_gd' on page 35 undefined on input line 817
+.
+
+
+Package natbib Warning: Citation `Nocedal1999' on page 35 undefined on input li
+ne 824.
+
+
+LaTeX Warning: Reference `eq:maxent' on page 35 undefined on input line 825.
+
+
+LaTeX Warning: Reference `alg:maxent_sgd' on page 35 undefined on input line 86
+6.
+
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no é in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no ã in font pplr7t!
+Missing character: There is no é in font pplr7t!
+[35] [36]
+
+Package natbib Warning: Citation `Vapnik1995' on page 37 undefined on input lin
+e 961.
+
+
+Package natbib Warning: Citation `Crammer2002' on page 37 undefined on input li
+ne 964.
+
+
+Package natbib Warning: Citation `Schoelkopf2002' on page 37 undefined on input
+ line 966.
+
+
+Package natbib Warning: Citation `ShaweTaylor2004' on page 37 undefined on inpu
+t line 966.
+
+
+LaTeX Warning: Reference `eq:costfunc' on page 37 undefined on input line 972.
+
+
+LaTeX Warning: Reference `eq:hingeloss' on page 37 undefined on input line 981.
+
+
+[37]
+
+LaTeX Warning: Reference `eq:svm' on page 38 undefined on input line 992.
+
+
+LaTeX Warning: Reference `eq:svm' on page 38 undefined on input line 1000.
+
+
+LaTeX Warning: Reference `eq:svm' on page 38 undefined on input line 1000.
+
+
+LaTeX Warning: Reference `eq:svm' on page 38 undefined on input line 1004.
+
+
+LaTeX Warning: Reference `alg:svm_ssd' on page 38 undefined on input line 1004.
+
+
+
+LaTeX Warning: Reference `alg:maxent_sgd' on page 38 undefined on input line 10
+05.
+
+
+Package natbib Warning: Citation `ShalevShwartz2007ICML' on page 38 undefined o
+n input line 1038.
+
+
+LaTeX Warning: Reference `alg:maxent_sgd' on page 38 undefined on input line 10
+46.
+
+
+LaTeX Warning: Reference `alg:svm_ssd' on page 38 undefined on input line 1046.
+
+
+[38]
+
+LaTeX Warning: Reference `tab:comparison_lab1' on page 39 undefined on input li
+ne 1098.
+
+) [39pdfTeX warning (ext4): destination with the same identifier (name{table.1.
+1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.93 \chapter
+             {\label{day:seq}Sequence Models}]
+Day 2.
+(D:\GitHub\lxmls_guide\pages/sequences/sequences.tex
+
+LaTeX Warning: Reference `notation' on page 40 undefined on input line 11.
+
+
+LaTeX Warning: Reference `hmm' on page 40 undefined on input line 12.
+
+
+LaTeX Warning: Reference `ml' on page 40 undefined on input line 12.
+
+
+LaTeX Warning: Reference `decoding' on page 40 undefined on input line 12.
+
+
+LaTeX Warning: Reference `pos-tagging' on page 40 undefined on input line 16.
+
+
+LaTeX Warning: Reference `unsupervised' on page 40 undefined on input line 18.
+
+
+LaTeX Warning: Reference `tab:hmm_notation' on page 40 undefined on input line 
+57.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+(D:\GitHub\lxmls_guide\pages/sequences/hmm.tex [40
+
+]
+
+LaTeX Warning: Reference `hmm' on page 41 undefined on input line 63.
+
+
+LaTeX Warning: Reference `tab:hmm-simple-notation' on page 41 undefined on inpu
+t line 64.
+
+<figs/sequences/hmm_new.pdf, id=907, 572.84521pt x 194.19182pt>
+File: figs/sequences/hmm_new.pdf Graphic file (type pdf)
+
+<use figs/sequences/hmm_new.pdf>
+Package pdftex.def Info: figs/sequences/hmm_new.pdf used on input line 69.
+(pdftex.def)             Requested size: 338.58632pt x 114.77663pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[41pdfTeX warning (ext4): destination with the same identifier (name{table.2.1}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.115 [w
+        alk/rainy walk/sunny shop/sunny clean/sunny , walk/rainy walk/rainy ...
+] [42pdfTeX warning (ext4): destination with the same identifier (name{figure.2
+.1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.148 A
+        first order HMM model has the following independence assumptions ove...
+pdfTeX warning (ext4): destination with the same identifier (name{table.2.2}) h
+as been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.148 A
+        first order HMM model has the following independence assumptions ove...
+ <D:/GitHub/lxmls_guide/figs/sequences/hmm_new.pdf>]
+
+LaTeX Warning: Reference `tab:hmm-dist' on page 43 undefined on input line 192.
+
+
+
+LaTeX Warning: Reference `fig:hmm' on page 43 undefined on input line 230.
+
+) (D:\GitHub\lxmls_guide\pages/sequences/ml.tex
+
+LaTeX Warning: Reference `tab:hmm-dist' on page 43 undefined on input line 29.
+
+[43pdfTeX warning (ext4): destination with the same identifier (name{table.2.3}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.35 \begin{equation}
+                     ]
+
+LaTeX Warning: Reference `eqn:hmm' on page 44 undefined on input line 38.
+
+
+LaTeX Warning: Reference `eq::transitionCounts' on page 44 undefined on input l
+ine 80.
+
+
+LaTeX Warning: Reference `eq::transitionCounts' on page 44 undefined on input l
+ine 82.
+
+
+Overfull \hbox (7.91356pt too wide) in paragraph at lines 76--84
+\OT1/ppl/m/n/10 each event oc-curs. For ex-am-ple, Eq. [] counts how of-ten sta
+te $\OML/zplm/m/it/10 c[]$ \OT1/ppl/m/n/10 fol-lows state $\OML/zplm/m/it/10 c[
+]$\OT1/ppl/m/n/10 . There-fore, $\OML/zplm/m/it/10 C[]\OT1/zplm/m/n/10 ([]\OT1/
+ppl/m/n/10 , []\OT1/zplm/m/n/10 )$
+ []
+
+[44]) (D:\GitHub\lxmls_guide\pages/sequences/decoding.tex
+
+LaTeX Warning: Reference `posterior' on page 45 undefined on input line 37.
+
+
+LaTeX Warning: Reference `viterbi' on page 45 undefined on input line 37.
+
+
+LaTeX Warning: Reference `fig:trellis' on page 45 undefined on input line 42.
+
+
+LaTeX Warning: Reference `fig:hmm' on page 45 undefined on input line 43.
+
+<figs/sequences/trellis_new.pdf, id=986, 572.84521pt x 186.38844pt>
+File: figs/sequences/trellis_new.pdf Graphic file (type pdf)
+
+<use figs/sequences/trellis_new.pdf>
+Package pdftex.def Info: figs/sequences/trellis_new.pdf used on input line 47.
+(pdftex.def)             Requested size: 338.58632pt x 110.16446pt.
+
+
+LaTeX Warning: Reference `fig:hmm' on page 45 undefined on input line 50.
+
+
+LaTeX Warning: Reference `fig:hmm' on page 45 undefined on input line 50.
+
+[45]
+
+LaTeX Warning: Reference `sec:logdomain' on page 46 undefined on input line 67.
+
+
+
+LaTeX Warning: Reference `eqn:hmm_ex' on page 46 undefined on input line 166.
+
+[46pdfTeX warning (ext4): destination with the same identifier (name{figure.2.2
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.195 >>>
+          print emission_scores <D:/GitHub/lxmls_guide/figs/sequences/trellis_n
+ew.pdf>]
+
+Package natbib Warning: Citation `rabiner' on page 47 undefined on input line 2
+14.
+
+
+Overfull \hbox (31.95998pt too wide) in paragraph at lines 232--242
+[]\OT1/ppl/m/it/10 Look at the mod-ule \OT1/pcr/m/n/10 sequences/log[]domain.py
+\OT1/ppl/m/it/10 . This mod-ule im-ple-ments a func-tion \OT1/pcr/m/n/10 logsum
+[]pair(logx,
+ []
+
+[47]
+
+LaTeX Warning: Reference `eqn:hmm' on page 48 undefined on input line 300.
+
+[48]
+
+LaTeX Warning: Reference `alg:fb' on page 49 undefined on input line 419.
+
+[49]
+
+LaTeX Warning: Reference `eq::fbsanity' on page 50 undefined on input line 497.
+
+
+
+LaTeX Warning: Reference `fig:posteriors' on page 50 undefined on input line 51
+2.
+
+<figs/sequences/posteriors.pdf, id=1136, 1215.24522pt x 297.48169pt>
+File: figs/sequences/posteriors.pdf Graphic file (type pdf)
+
+<use figs/sequences/posteriors.pdf>
+Package pdftex.def Info: figs/sequences/posteriors.pdf used on input line 520.
+(pdftex.def)             Requested size: 483.69687pt x 118.405pt.
+ [50pdfTeX warning (ext4): destination with the same identifier (name{figure.2.
+3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.598 \end{python}
+                   <D:/GitHub/lxmls_guide/figs/sequences/posteriors.pdf>]
+
+LaTeX Warning: Reference `forwardRecursion' on page 51 undefined on input line 
+684.
+
+[51]
+
+LaTeX Warning: Reference `alg:viterbi' on page 52 undefined on input line 718.
+
+
+Overfull \hbox (9.45944pt too wide) in paragraph at lines 790--793
+[]\OT1/ppl/m/it/10 Implement a method for per-form-ing Viterbi de-cod-ing in fi
+le \OT1/pcr/m/n/10 sequence[]classification[]decoder.py\OT1/ppl/m/it/10 .
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 790--793
+
+ []
+
+[52]
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+) (D:\GitHub\lxmls_guide\pages/sequences/pos.tex
+
+Package natbib Warning: Citation `pennTreeBank' on page 53 undefined on input l
+ine 4.
+
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no ¡ in font pplr7t!
+
+Package natbib Warning: Citation `pennTreeBank' on page 53 undefined on input l
+ine 15.
+
+
+LaTeX Warning: Reference `fig:transProbs' on page 53 undefined on input line 48
+.
+
+<figs/sequences/transition_probs.png, id=1239, 578.16pt x 433.62pt>
+File: figs/sequences/transition_probs.png Graphic file (type png)
+
+<use figs/sequences/transition_probs.png>
+Package pdftex.def Info: figs/sequences/transition_probs.png used on input line
+ 53.
+(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no § in font pplr7t!
+
+Overfull \hbox (39.90152pt too wide) in paragraph at lines 62--62
+\OT1/ppl/m/n/8 viterbi[]decode[]corpus 
+ []
+
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no § in font pplr7t!
+
+Overfull \hbox (39.90152pt too wide) in paragraph at lines 62--62
+\OT1/ppl/m/n/8 viterbi[]decode[]corpus 
+ []
+
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no § in font pplr7t!
+
+Overfull \hbox (39.90152pt too wide) in paragraph at lines 62--62
+\OT1/ppl/m/n/8 viterbi[]decode[]corpus 
+ []
+
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no § in font pplr7t!
+
+Overfull \hbox (39.90152pt too wide) in paragraph at lines 62--62
+\OT1/ppl/m/n/8 viterbi[]decode[]corpus 
+ []
+
+[53]
+
+LaTeX Warning: Reference `fig:cm_uns' on page 54 undefined on input line 106.
+
+[54pdfTeX warning (ext4): destination with the same identifier (name{figure.2.4
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.107 
+       <D:/GitHub/lxmls_guide/figs/sequences/transition_probs.png>]
+<figs/sequences/cm_sup.png, id=1311, 578.16pt x 433.62pt>
+File: figs/sequences/cm_sup.png Graphic file (type png)
+
+<use figs/sequences/cm_sup.png>
+Package pdftex.def Info: figs/sequences/cm_sup.png used on input line 117.
+(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
+)
+(D:\GitHub\lxmls_guide\pages/sequences/unsupervised.tex
+
+Package natbib Warning: Citation `schutze1995distributional' on page 55 undefin
+ed on input line 11.
+
+
+Package natbib Warning: Citation `merialdo1994tet' on page 55 undefined on inpu
+t line 11.
+
+
+Package natbib Warning: Citation `clark03combining' on page 55 undefined on inp
+ut line 11.
+
+
+Package natbib Warning: Citation `klein2004acl' on page 55 undefined on input l
+ine 12.
+
+
+Package natbib Warning: Citation `smith2006annealing' on page 55 undefined on i
+nput line 12.
+
+
+Package natbib Warning: Citation `klein2004acl' on page 55 undefined on input l
+ine 12.
+
+
+Package natbib Warning: Citation `brown94mathematic' on page 55 undefined on in
+put line 13.
+
+
+Package natbib Warning: Citation `charniak2009works' on page 55 undefined on in
+put line 13.
+
+[55pdfTeX warning (ext4): destination with the same identifier (name{figure.2.5
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.37 T
+      he most common optimization method in the presence of hidden (latent) ...
+ <D:/GitHub/lxmls_guide/figs/sequences/cm_sup.png>]
+
+LaTeX Warning: Reference `posi' on page 56 undefined on input line 37.
+
+(D:\GitHub\lxmls_guide\pages/sequences/em.tex
+
+LaTeX Warning: Reference `ml' on page 56 undefined on input line 17.
+
+
+LaTeX Warning: Reference `ml' on page 56 undefined on input line 20.
+
+
+LaTeX Warning: Reference `eq::nodePosterior' on page 56 undefined on input line
+ 30.
+
+
+LaTeX Warning: Reference `eq::edgePosterior' on page 56 undefined on input line
+ 30.
+
+
+LaTeX Warning: Reference `ml' on page 56 undefined on input line 63.
+
+
+LaTeX Warning: Reference `eq::initialCounts' on page 56 undefined on input line
+ 63.
+
+
+LaTeX Warning: Reference `eq::emissionCounts' on page 56 undefined on input lin
+e 63.
+
+
+LaTeX Warning: Reference `eq::initialCountsPost' on page 56 undefined on input 
+line 82.
+
+
+LaTeX Warning: Reference `eq::transitionCountsPost' on page 56 undefined on inp
+ut line 83.
+
+
+LaTeX Warning: Reference `eq::finalCountsPost' on page 56 undefined on input li
+ne 84.
+
+
+LaTeX Warning: Reference `eq::emissionCountsPost' on page 56 undefined on input
+ line 85.
+
+
+LaTeX Warning: Reference `ml' on page 56 undefined on input line 87.
+
+
+Package natbib Warning: Citation `Neal1998' on page 56 undefined on input line 
+98.
+
+[56]
+
+LaTeX Warning: Reference `alg::em' on page 57 undefined on input line 144.
+
+
+LaTeX Warning: Reference `eq::initialCountsPost' on page 57 undefined on input 
+line 160.
+
+
+LaTeX Warning: Reference `eq::emissionCountsPost' on page 57 undefined on input
+ line 160.
+
+
+LaTeX Warning: Reference `alg::em' on page 57 undefined on input line 171.
+
+
+Overfull \hbox (18.42622pt too wide) in paragraph at lines 203--206
+[]\OT1/ppl/m/it/10 You now have all the pieces to im-ple-ment the EM al-go-rith
+m. Look at the code for EM al-go-rithm in file \OT1/ppl/m/n/10 se-quences/hmm.p
+y
+ []
+
+[57]) (D:\GitHub\lxmls_guide\pages/sequences/pos-induction.tex
+
+Package natbib Warning: Citation `Reichart09' on page 58 undefined on input lin
+e 9.
+
+
+Package natbib Warning: Citation `haghighi2006naacl' on page 58 undefined on in
+put line 9.
+
+
+Package natbib Warning: Citation `Meila07' on page 58 undefined on input line 9
+.
+
+
+Package natbib Warning: Citation `RosenbergH07' on page 58 undefined on input l
+ine 9.
+
+
+LaTeX Warning: Reference `fig:cm_uns' on page 58 undefined on input line 9.
+
+<figs/sequences/cm_uns1.png, id=1386, 578.16pt x 433.62pt>
+File: figs/sequences/cm_uns1.png Graphic file (type png)
+
+<use figs/sequences/cm_uns1.png>
+Package pdftex.def Info: figs/sequences/cm_uns1.png used on input line 13.
+(pdftex.def)             Requested size: 289.07928pt x 216.80946pt.
+ [58pdfTeX warning (ext4): destination with the same identifier (name{figure.2.
+6}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.32 Iter:
+           3 Log Likelihood: -77813.725501 <D:/GitHub/lxmls_guide/figs/sequence
+s/cm_uns1.png>]
+
+Package natbib Warning: Citation `JoaoThesis' on page 59 undefined on input lin
+e 76.
+
+
+Package natbib Warning: Citation `bergkirkpatrick2010naacl' on page 59 undefine
+d on input line 76.
+
+
+Package natbib Warning: Citation `das-petrov:2011:ACL-HLT2011' on page 59 undef
+ined on input line 76.
+
+
+LaTeX Warning: Reference `fig:cm_uns' on page 59 undefined on input line 78.
+
+
+Package natbib Warning: Citation `johnson2007dtf' on page 59 undefined on input
+ line 83.
+
+
+Package natbib Warning: Citation `graca2009nips' on page 59 undefined on input 
+line 84.
+
+))) [59]
+Day 3.
+(D:\GitHub\lxmls_guide\pages/seq_discriminative/seq_discriminative.tex
+
+LaTeX Warning: Reference `disc_seq_summary' on page 60 undefined on input line 
+14.
+
+
+Package natbib Warning: Citation `collins2002discriminative' on page 60 undefin
+ed on input line 20.
+
+
+Package natbib Warning: Citation `lafferty2001conditional' on page 60 undefined
+ on input line 21.
+
+
+LaTeX Warning: Reference `day:classification' on page 60 undefined on input lin
+e 26.
+
+
+LaTeX Warning: Reference `s::naiveBayes' on page 60 undefined on input line 39.
+
+
+
+LaTeX Warning: Reference `hmm' on page 60 undefined on input line 39.
+
+
+LaTeX Warning: Reference `s:perceptron' on page 60 undefined on input line 43.
+
+
+LaTeX Warning: Reference `s:spercetron' on page 60 undefined on input line 43.
+
+
+LaTeX Warning: Reference `s:me' on page 60 undefined on input line 45.
+
+
+LaTeX Warning: Reference `s:crf' on page 60 undefined on input line 45.
+
+Missing character: There is no Ž in font pplr7t!
+Missing character: There is no Ž in font pplr7t!
+Missing character: There is no Ž in font pplr7t!
+Missing character: There is no Ž in font pplr7t!
+
+LaTeX Warning: Reference `eq::struc_pred' on page 60 undefined on input line 65
+.
+
+[60
+
+pdfTeX warning (ext4): destination with the same identifier (name{table.3.1}) h
+as been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.66 \begin{equation}
+                     ]
+
+LaTeX Warning: Reference `id-features' on page 61 undefined on input line 100.
+
+
+LaTeX Warning: Reference `ex-features' on page 61 undefined on input line 139.
+
+[61pdfTeX warning (ext4): destination with the same identifier (name{table.3.2}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.218 \end{equation}
+                    ] [62pdfTeX warning (ext4): destination with the same ident
+ifier (name{table.3.3}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.301 \end{enumerate}
+                     ]
+
+Package natbib Warning: Citation `lafferty2001conditional' on page 63 undefined
+ on input line 318.
+
+
+Package natbib Warning: Citation `mccallum2000maximum' on page 63 undefined on 
+input line 324.
+
+
+Package natbib Warning: Citation `Bottou1991' on page 63 undefined on input lin
+e 324.
+
+
+Package natbib Warning: Citation `lafferty2001conditional' on page 63 undefined
+ on input line 324.
+
+
+LaTeX Warning: Reference `eq:disc_formula' on page 63 undefined on input line 3
+26.
+
+
+LaTeX Warning: Reference `alg:crf_online' on page 63 undefined on input line 34
+2.
+
+
+LaTeX Warning: Reference `eq:disc_formula' on page 63 undefined on input line 3
+57.
+
+
+LaTeX Warning: Reference `id-features' on page 63 undefined on input line 380.
+
+[63]
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no © in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no ‰ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no © in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no ‰ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no © in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no ‰ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no © in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no ‰ in font pplr7t!
+Missing character: There is no Ã in font pplr7t!
+Missing character: There is no £ in font pplr7t!
+
+
+LaTeX Warning: Marginpar on page 64 moved.
+
+[64] [65]
+
+Package natbib Warning: Citation `collins2002discriminative' on page 66 undefin
+ed on input line 523.
+
+
+LaTeX Warning: Reference `s:perceptron' on page 66 undefined on input line 531.
+
+
+
+LaTeX Warning: Reference `alg:structured-perceptron' on page 66 undefined on in
+put line 532.
+
+[66]
+
+LaTeX Warning: Reference `alg:structured-perceptron' on page 67 undefined on in
+put line 590.
+
+
+LaTeX Warning: Reference `exer:crf1' on page 67 undefined on input line 595.
+
+
+LaTeX Warning: Reference `exer:crf2' on page 67 undefined on input line 595.
+
+[67]) [68]
+Day 4.
+(D:\GitHub\lxmls_guide\pages/parsing/parsing.tex
+
+Package natbib Warning: Citation `Hopcroft1979' on page 69 undefined on input l
+ine 15.
+
+[69
+
+] [70] [71]
+
+Package natbib Warning: Citation `Manning1999' on page 72 undefined on input li
+ne 148.
+
+
+LaTeX Warning: Reference `alg:cky' on page 72 undefined on input line 149.
+
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 157.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omsppl.fd"
+File: omsppl.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 157.
+ [72]
+
+Package natbib Warning: Citation `Manning1999' on page 73 undefined on input li
+ne 196.
+
+
+Package natbib Warning: Citation `Klein2002' on page 73 undefined on input line
+ 197.
+
+
+Package natbib Warning: Citation `Smith2005' on page 73 undefined on input line
+ 197.
+
+
+Package natbib Warning: Citation `Cohen2008' on page 73 undefined on input line
+ 197.
+
+
+Package natbib Warning: Citation `Johnson1998' on page 73 undefined on input li
+ne 261.
+
+
+Package natbib Warning: Citation `Klein2003' on page 73 undefined on input line
+ 261.
+
+
+LaTeX Warning: Reference `fig:lexicalizedtree' on page 73 undefined on input li
+ne 265.
+
+
+Package natbib Warning: Citation `Magerman1995' on page 73 undefined on input l
+ine 268.
+
+
+Package natbib Warning: Citation `Charniak1997' on page 73 undefined on input l
+ine 268.
+
+
+Package natbib Warning: Citation `Collins1999' on page 73 undefined on input li
+ne 268.
+
+[73]
+
+Package natbib Warning: Citation `Taskar2004' on page 74 undefined on input lin
+e 274.
+
+
+Package natbib Warning: Citation `Finkel2008' on page 74 undefined on input lin
+e 274.
+
+
+Package natbib Warning: Citation `Petrov2007NAACL' on page 74 undefined on inpu
+t line 276.
+
+
+Package natbib Warning: Citation `Petrov2008NIPS' on page 74 undefined on input
+ line 276.
+
+
+Package natbib Warning: Citation `Petrov2008EMNLP' on page 74 undefined on inpu
+t line 276.
+
+
+Package natbib Warning: Citation `Charniak2006' on page 74 undefined on input l
+ine 277.
+
+
+Package natbib Warning: Citation `Ratnaparkhi1999' on page 74 undefined on inpu
+t line 279.
+
+
+Package natbib Warning: Citation `Henderson2003' on page 74 undefined on input 
+line 279.
+
+
+LaTeX Warning: Reference `fig:lexicalizedtree' on page 74 undefined on input li
+ne 304.
+
+[74pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.309 T
+       his representation is called a \emph{dependency tree}; it can be alte...
+]
+
+LaTeX Warning: Reference `fig:deptree_proj' on page 75 undefined on input line 
+309.
+
+
+Package natbib Warning: Citation `Chomsky1965' on page 75 undefined on input li
+ne 313.
+
+
+Package natbib Warning: Citation `Tesniere1959' on page 75 undefined on input l
+ine 314.
+
+
+Package natbib Warning: Citation `Hudson1984' on page 75 undefined on input lin
+e 314.
+
+
+Package natbib Warning: Citation `Melcuk1988' on page 75 undefined on input lin
+e 314.
+
+
+Package natbib Warning: Citation `Covington1990' on page 75 undefined on input 
+line 314.
+
+<figs/parsing/example_proj.pdf, id=1816, 236.885pt x 58.2175pt>
+File: figs/parsing/example_proj.pdf Graphic file (type pdf)
+
+<use figs/parsing/example_proj.pdf>
+Package pdftex.def Info: figs/parsing/example_proj.pdf used on input line 321.
+(pdftex.def)             Requested size: 290.22107pt x 71.32814pt.
+
+
+LaTeX Warning: Reference `fig:deptree_nonproj' on page 75 undefined on input li
+ne 359.
+
+<figs/parsing/example_nonproj.pdf, id=1818, 367.3725pt x 55.20625pt>
+File: figs/parsing/example_nonproj.pdf Graphic file (type pdf)
+
+<use figs/parsing/example_nonproj.pdf>
+Package pdftex.def Info: figs/parsing/example_nonproj.pdf used on input line 36
+3.
+(pdftex.def)             Requested size: 483.69687pt x 72.69135pt.
+ [75pdfTeX warning (ext4): destination with the same identifier (name{figure.4.
+2}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.374 
+       <D:/GitHub/lxmls_guide/figs/parsing/example_proj.pdf>]
+
+Package natbib Warning: Citation `Eisner1996' on page 76 undefined on input lin
+e 408.
+
+[76pdfTeX warning (ext4): destination with the same identifier (name{figure.4.3
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.417 \begin{itemize}
+                      <D:/GitHub/lxmls_guide/figs/parsing/example_nonproj.pdf>]
+
+Package natbib Warning: Citation `Chu1965' on page 77 undefined on input line 4
+20.
+
+
+Package natbib Warning: Citation `Edmonds1967' on page 77 undefined on input li
+ne 420.
+
+
+Package natbib Warning: Citation `Tarjan1977' on page 77 undefined on input lin
+e 421.
+
+
+Package natbib Warning: Citation `McDonald2005b' on page 77 undefined on input 
+line 422.
+
+
+Package natbib Warning: Citation `Tutte1984' on page 77 undefined on input line
+ 424.
+
+
+Package natbib Warning: Citation `DSmithSmith2007' on page 77 undefined on inpu
+t line 425.
+
+
+Package natbib Warning: Citation `Koo2007' on page 77 undefined on input line 4
+25.
+
+
+Package natbib Warning: Citation `McDonald2007' on page 77 undefined on input l
+ine 425.
+
+
+Package natbib Warning: Citation `conll06st' on page 77 undefined on input line
+ 478.
+
+
+Package natbib Warning: Citation `Surdeanu2008' on page 77 undefined on input l
+ine 478.
+
+[77] [78]
+
+LaTeX Warning: Reference `alg:eisner' on page 79 undefined on input line 585.
+
+[79]
+
+Package natbib Warning: Citation `Eisner1999' on page 80 undefined on input lin
+e 691.
+
+
+Package natbib Warning: Citation `Carreras2007' on page 80 undefined on input l
+ine 692.
+
+
+Package natbib Warning: Citation `McDonald2007' on page 80 undefined on input l
+ine 694.
+
+
+Package natbib Warning: Citation `McDonald2006CoNLL' on page 80 undefined on in
+put line 696.
+
+
+Package natbib Warning: Citation `DSmith2008' on page 80 undefined on input lin
+e 697.
+
+
+Package natbib Warning: Citation `Martins2009ACL' on page 80 undefined on input
+ line 697.
+
+
+Package natbib Warning: Citation `Koo2010EMNLP' on page 80 undefined on input l
+ine 698.
+
+
+Package natbib Warning: Citation `Koo2010' on page 80 undefined on input line 7
+00.
+
+
+Package natbib Warning: Citation `Martins2013ACL' on page 80 undefined on input
+ line 701.
+
+[80]
+
+Package natbib Warning: Citation `Nivre2006CoNLL' on page 81 undefined on input
+ line 704.
+
+
+Package natbib Warning: Citation `Huang2010' on page 81 undefined on input line
+ 704.
+
+
+Package natbib Warning: Citation `Nivre2009' on page 81 undefined on input line
+ 706.
+
+) [81]
+Day 5.
+(D:\GitHub\lxmls_guide\pages/bigdata/introduction.tex
+Overfull \hbox (159.07877pt too wide) in paragraph at lines 37--41
+[]\OT1/ppl/m/n/10 We will ig-nore the last two items for the mo-ment. Your host
+-name will be some-thing like \OT1/pcr/m/n/10 ec2-54-234-117-69.compute-1.amazo
+naws.com
+ []
+
+[82
+
+] [83]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.120 ...rdcount.py} (inside the \texttt{big_data}
+                                                   folder). To run it on you...
+
+? 
+! Extra }, or forgotten $.
+<recently read> \egroup 
+                        
+l.120 ...rdcount.py} (inside the \texttt{big_data}
+                                                   folder). To run it on you...
+
+? 
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.120 ...No final temos de ver se e esta a pasta.}
+                                                   and type this into a term...
+
+? 
+! Missing $ inserted.
+<inserted text> 
+                $
+l.121 
+      
+? 
+
+Overfull \hbox (281.00122pt too wide) in paragraph at lines 120--121
+[]\OT1/ppl/m/n/10 This file al-ready ex-ists as \OT1/pcr/m/n/10 wordcount.py \O
+T1/ppl/m/n/10 (in-side the \OT1/pcr/m/n/10 big$[]\OML/zplm/m/it/10 atafolder\OT
+1/zplm/m/n/10 )\OT1/ppl/m/n/10 .\OML/zplm/m/it/10 Torunitonyourmachine\OT1/zplm
+/m/n/10 (\OML/zplm/m/it/10 withoutusingAmazonEC\OT1/ppl/m/n/10 2\OT1/zplm/m/n/1
+0 )\OT1/ppl/m/n/10 , \OML/zplm/m/it/10 navigatetothe[]folder[][][]andtypethisin
+toaterminal \OT1/zplm/m/n/10 :$ 
+ []
+
+
+Overfull \hbox (5.30313pt too wide) in paragraph at lines 126--127
+[]\OT1/pcr/m/n/10 Open the results.txt file in your favorite text editor. Each 
+line of this file
+ []
+
+
+Overfull \hbox (8.30313pt too wide) in paragraph at lines 130--132
+\OT1/pcr/m/n/10 We are now going to use the AWS Key and AWS Secret. These are l
+ike a username and
+ []
+
+
+Overfull \hbox (11.30313pt too wide) in paragraph at lines 133--134
+[]\OT1/pcr/m/n/10 One of the advantages of MrJob is that you can use the exact 
+same Python code as
+ []
+
+
+Overfull \hbox (14.30313pt too wide) in paragraph at lines 133--134
+\OT1/pcr/m/n/10 before, but changing a few arguments in the command line will r
+un the Word Count on
+ []
+
+
+Overfull \hbox (26.30313pt too wide) in paragraph at lines 133--134
+\OT1/pcr/m/n/10 Amazon's computers instead of on the computer where the file is
+. This is what Amazon
+ []
+
+
+Overfull \hbox (29.30313pt too wide) in paragraph at lines 135--136
+[]\OT1/pcr/m/n/10 To run the exact same code as before using EMR, type the foll
+owing into the command
+ []
+
+
+Overfull \hbox (35.30313pt too wide) in paragraph at lines 150--152
+[]\OT1/pcr/m/n/10 The file we used on the previous exercises is not very big, b
+ut running on a cluster
+ []
+
+
+Overfull \hbox (26.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 Language detection is surprisingly easy if you have enough data
+ to train your system.
+ []
+
+
+Overfull \hbox (8.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 In our case, we're going to use triplets of characters (or "tri
+mers") as features.
+ []
+
+
+Overfull \hbox (8.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 For example, if your whole training corpus is a sentence in Eng
+lish which reads "I
+ []
+
+
+Overfull \hbox (26.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 love Lisbon" (length: 13 characters) and a sentence in Portugue
+se which reads "Adoro
+ []
+
+
+Overfull \hbox (20.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 Lisboa" (length: 12 characters), you would say that you saw the
+ following features:
+ []
+
+
+Overfull \hbox (14.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 "I l", " lo", "lov", "ove", "ve ", and so on in the English dat
+a, and "Ado", "dor",
+ []
+
+
+Overfull \hbox (14.30313pt too wide) in paragraph at lines 165--166
+\OT1/pcr/m/n/10 "oro", "ro ", and so on in the Portuguese data. Note the presen
+ce of whitespace on
+ []
+
+
+Overfull \hbox (17.30313pt too wide) in paragraph at lines 167--168
+[]\OT1/pcr/m/n/10 You can now use the exact same Na[]ve Bayes algorithm which 
+you used for sentiment
+ []
+
+
+Overfull \hbox (44.30313pt too wide) in paragraph at lines 167--168
+\OT1/pcr/m/n/10 analysis on Day 1. Instead of classifying text into two classes
+ (positive and negative)
+ []
+
+
+Overfull \hbox (8.30313pt too wide) in paragraph at lines 167--168
+\OT1/pcr/m/n/10 we're going to classify text into two other classes (Portuguese
+ and English). Our
+ []
+
+[84]
+Overfull \hbox (21.30316pt too wide) in paragraph at lines 171--172
+[]\OT1/pcr/m/n/10 The map step takes the whole training data of the Portuguese 
+language and splits
+ []
+
+
+Overfull \hbox (3.30316pt too wide) in paragraph at lines 171--172
+\OT1/pcr/m/n/10 it into documents. The mapper function computes the frequency o
+f each trimer
+ []
+
+
+Overfull \hbox (39.30316pt too wide) in paragraph at lines 172--173
+[]\OT1/pcr/m/n/10 The reduce step compiles the information from all the documen
+ts and sums the counts
+ []
+
+
+Overfull \hbox (15.30316pt too wide) in paragraph at lines 174--175
+[]\OT1/pcr/m/n/10 After the MapReduce part, a post-processing step uses these c
+ounts with similar
+ []
+
+
+Overfull \hbox (15.30316pt too wide) in paragraph at lines 174--175
+\OT1/pcr/m/n/10 formulas as in Day 1 to classify new unseen text into the two c
+lasses: English
+ []
+
+
+Overfull \hbox (47.30313pt too wide) in paragraph at lines 177--178
+[]\OT1/pcr/m/n/10 Once you have the counts of trimer occurrences on each langua
+ge, you need to estimate: 
+ []
+
+
+Overfull \hbox (9.94312pt too wide) in paragraph at lines 179--180
+[]\OT1/pcr/m/n/10 The \OT1/pcr/m/sl/10 prior \OT1/pcr/m/n/10 probability of eac
+h language appearing at test time, $[]\OT1/zplm/m/n/10 ([])$ \OT1/pcr/m/n/10 an
+d $[]\OT1/zplm/m/n/10 ([])$\OT1/pcr/m/n/10 .
+ []
+
+
+Overfull \hbox (27.30316pt too wide) in paragraph at lines 179--180
+\OT1/pcr/m/n/10 For simplicity, instead of using Maximum Likelihood estimation,
+ let's assume that
+ []
+
+
+Overfull \hbox (45.30316pt too wide) in paragraph at lines 179--180
+\OT1/pcr/m/n/10 the users of your language detector are equally likely to try E
+nglish and Portuguese
+ []
+
+
+Overfull \hbox (14.55164pt too wide) in paragraph at lines 180--181
+[]\OT1/pcr/m/n/10 The probability of each feature (trimer) given the class, $[]
+\OT1/zplm/m/n/10 (\OML/zplm/m/it/10 t[]\OMS/zplm/m/n/10 j\OML/zplm/m/it/10 c\OT
+1/zplm/m/n/10 )$\OT1/pcr/m/n/10 . We will again
+ []
+
+
+Overfull \hbox (3.30316pt too wide) in paragraph at lines 180--181
+\OT1/pcr/m/n/10 use Maximum Likelihood estimation, which means that the probabi
+lity of trimer
+ []
+
+
+Overfull \hbox (50.78284pt too wide) in paragraph at lines 180--181
+$\OML/zplm/m/it/10 t$ \OT1/pcr/m/n/10 given language $\OML/zplm/m/it/10 c$ \OT1
+/pcr/m/n/10 is equal to the number of times $\OML/zplm/m/it/10 t$ \OT1/pcr/m/n/
+10 occurred in documents of language
+ []
+
+
+Overfull \hbox (53.15698pt too wide) in paragraph at lines 183--185
+\OT1/pcr/m/n/10 where $\OML/zplm/m/it/10 n\OT1/zplm/m/n/10 (\OML/zplm/m/it/10 t
+[]\OT1/ppl/m/n/10 , []\OT1/zplm/m/n/10 )$ \OT1/pcr/m/n/10 is the number of time
+s the trimer $\OML/zplm/m/it/10 t[]$ \OT1/pcr/m/n/10 occurred in your Portugues
+e training
+ []
+
+
+Overfull \hbox (46.82301pt too wide) in paragraph at lines 187--189
+[]\OT1/pcr/m/n/10 Then, given a test sentence $\OML/zplm/m/it/10 x$\OT1/pcr/m/n
+/10 , we can compute the following argmax for the two classes
+ []
+
+
+Overfull \hbox (38.30313pt too wide) in paragraph at lines 194--197
+\OT1/pcr/m/n/10 In the first equality we used Bayes' Theorem. In the second one
+ we used the assumption
+ []
+
+
+Overfull \hbox (32.30313pt too wide) in paragraph at lines 194--197
+\OT1/pcr/m/n/10 of conditional independence of features given the class, which 
+is at the core of Na[]ve
+ []
+
+
+Overfull \hbox (2.30313pt too wide) in paragraph at lines 194--197
+\OT1/pcr/m/n/10 affect the argmax. In the last equation, we used the fact that 
+the argmax is not
+ []
+
+
+Overfull \hbox (2.30313pt too wide) in paragraph at lines 194--197
+\OT1/pcr/m/n/10 affected by the application of a logarithm. Logarithms will pre
+vent your program
+ []
+
+
+Overfull \hbox (32.30313pt too wide) in paragraph at lines 194--197
+\OT1/pcr/m/n/10 from encountering underflow errors when multiplying many number
+s which are very small. 
+ []
+
+
+Overfull \hbox (32.30313pt too wide) in paragraph at lines 200--201
+\OT1/pcr/m/n/10 Using the Word Count example we've given you above, implement t
+he Na[]ve Bayes language
+ []
+
+
+Overfull \hbox (27.30316pt too wide) in paragraph at lines 203--204
+[]\OT1/pcr/m/n/10 Steps 1 to 3 (counting occurrences of trimers in train data, 
+for both languages),
+ []
+
+
+Overfull \hbox (15.30316pt too wide) in paragraph at lines 203--204
+\OT1/pcr/m/n/10 should be run on EC2. If you run the script named ??, these cou
+nts will run on
+ []
+
+
+Overfull \hbox (45.30316pt too wide) in paragraph at lines 203--204
+\OT1/pcr/m/n/10 EC2 and their output to files named ?? and ??. However, there i
+s some code missing
+ []
+
+[85]
+
+LaTeX Warning: Reference `eq:NBformula' on page 86 undefined on input line 204.
+
+
+
+Overfull \hbox (21.30316pt too wide) in paragraph at lines 204--205
+[]\OT1/pcr/m/n/10 Step 4 should be run locally (it is quite fast even with just
+ one computer). It
+ []
+
+
+Overfull \hbox (33.30316pt too wide) in paragraph at lines 204--205
+\OT1/pcr/m/n/10 should use the two files mentioned in the previous point and im
+plement the formula
+ []
+
+
+Overfull \hbox (47.30313pt too wide) in paragraph at lines 233--235
+[]\OT1/pcr/m/n/10 We will run two jobs, one on a selection of the Portuguese Wi
+kipedia (10%) and another
+ []
+
+
+Overfull \hbox (29.30313pt too wide) in paragraph at lines 250--252
+[]\OT1/pcr/m/n/10 These should run in a few minutes as well. Running it on the 
+whole Wikipedia could
+ []
+
+)
+No file guide.bbl.
+
+Package natbib Warning: There were undefined citations.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 118.
+[86]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 118.
+ (D:\GitHub\lxmls_guide\guide.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 118.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 118.
+
+
+Package rerunfilecheck Warning: File `guide.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `guide.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  453144C1FBC4858E7B01649BB899982C;6258.
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 0.43996pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 118.
+ )
+(\end occurred inside a group at level 1)
+
+### simple group (level 1) entered at line 120 ({)
+### bottom level 
+Here is how much of TeX's memory you used:
+ 23435 strings out of 493921
+ 382456 string characters out of 3147279
+ 684441 words of memory out of 3000000
+ 24528 multiletter control sequences out of 15000+200000
+ 84084 words of font info for 251 fonts, out of 3000000 for 9000
+ 841 hyphenation exceptions out of 8191
+ 63i,17n,76p,1416b,2119s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C
+:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Progra
+m Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.
+9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
+blic/amsfonts/euler/eusm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/
+amsfonts/euler/eusm7.pfb><C:/Users/Carlos/AppData/Roaming/MiKTeX/2.9/fonts/type
+1/public/mathpazo/fplmbb.pfb><C:/Users/Carlos/AppData/Roaming/MiKTeX/2.9/fonts/
+type1/public/mathpazo/fplmbi.pfb><C:/Users/Carlos/AppData/Roaming/MiKTeX/2.9/fo
+nts/type1/public/mathpazo/fplmr.pfb><C:/Users/Carlos/AppData/Roaming/MiKTeX/2.9
+/fonts/type1/public/mathpazo/fplmri.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
+1/public/amsfonts/symbols/msam10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/p
+ublic/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/
+courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrbo8a
+.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Progra
+m Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrro8a.pfb><C:/Program Files/MiKTeX
+ 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
+e1/urw/palatino/uplbi8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/palati
+no/uplr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/palatino/uplri8a.pfb
+>
+Output written on guide.pdf (87 pages, 1284604 bytes).
+PDF statistics:
+ 2492 PDF objects out of 2984 (max. 8388607)
+ 1648 named destinations out of 1728 (max. 500000)
+ 93 words of extra memory for PDF output out of 10000 (max. 10000000)
+

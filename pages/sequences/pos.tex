@@ -1,9 +1,12 @@
-Part of speech tagging is one of the most important NLP tasks. The
-task is to assign each word a grammatical category, \emph{i.e.} Noun,
-Verb, Adjective, ... . In English, using the Penn Treebank (PTB) corpus \citep{pennTreeBank}, the current
-state of the art for part of speech tagging is around 97\% (\textbf{what is 97\%? the accuracy?})
-for a variety of methods \footnote{See ACL state of the art wiki}. 
-NOTA-MA: A footnote está correcta?
+Part-of-Speech tagging is one of the most important NLP tasks. The
+task is to assign each word a grammatical category, or Part-of-Speech, \emph{i.e.} noun,
+verb, adjective,... Recalling the defined notation, $\vocab$ is a 
+vocabulary of word types, and 
+$\statevocab$ is the set of Part-of-Speech tags.
+
+In English, using the Penn Treebank (PTB) corpus \citep{pennTreeBank}, the current
+state of the art for part of speech tagging is around 97\% for a
+variety of methods (\textbf{what is $97\%$? the accuracy?}).
 
 In the rest of this class we will use a subset of the PTB corpus, but
 instead of using the original 45 tags we will use a reduced tag set of
@@ -14,7 +17,7 @@ is the sequence of possible PoS tags.
 The first step is to load the corpus. We will start by loading
 1000 sentences for training and 200 sentences both for development and
 testing. Then we train the HMM model by maximum likelihood estimation.
-NOTA-MA: codigo usa 1000 em toodos os conjuntos... 
+\todo{NOTA-MA: codigo usa 1000 em toodos os conjuntos... }
 \begin{python}
 >>> import readers.pos_corpus as pcc
 >>> corpus = pcc.PostagCorpus()
@@ -47,7 +50,7 @@ state. Note the high probability of having Noun after Adjective, or of having Ve
 \begin{exercise}
 Test the model using both posterior decoding and Viterbi decoding on
 both the train and test set, using the methods in class HMM:
-NOTA-MA: a funcao viterbi_decode_corpus imprime muita infromaçao.
+\todo{NOTA-MA: a funcao viterbi\_decode\_corpus imprime muita infromaçao.}
 \begin{python}
 >>> viterbi_pred_train = hmm.viterbi_decode_corpus(train_seq)
 >>> posterior_pred_train = hmm.posterior_decode_corpus(train_seq)
