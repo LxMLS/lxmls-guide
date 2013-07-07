@@ -4,7 +4,11 @@ tools to construct a larger learning system.
 
 \section*{If you use your own computer}
 
-The instructions we will provide here assume that you are using one of our own computers, which have some software preinstalled. Unfortunately, EC2 installation guides and tutorials are not very widespread. If you are using your own machine, please follow the installation instructions for the EC2 tools available at
+The instructions we will provide here assume that you are using one of our own
+computers, which have some software preinstalled. Unfortunately, EC2
+installation guides and tutorials are not very widespread. If you are using
+your own machine, please follow the installation instructions for the EC2 tools
+available at
 
 http://aws.amazon.com/developertools/351
 
@@ -12,7 +16,10 @@ in the "Download" section.
 
 \section*{Today's Assignment}
 
-Today we will show you how to solve a simple problem (counting words in documents) in a distributed manner. We will then ask you to implement a distributed solution for a problem you already know (Na\"{i}ve Bayes classification).
+Today we will show you how to solve a simple problem (counting words in
+documents) in a distributed manner. We will then ask you to implement a
+distributed solution for a problem you already know (Na\"{i}ve Bayes
+classification).
 
 \section{Introduction}
 
@@ -20,7 +27,9 @@ AWS is a set of services of different types. We will focus on the \emph{Elastic
 Compute Cluster}, EC2.\footnote{http://aws.amazon.com/ec2/}
 
 In this lab, we will be logging in to Linux-based machines using a command line
-interface. If you are not familiar with the command line, don't worry -- we will tell you everything you need regarding the command line, and your exercises only involve Python, just like the previous days.
+interface. If you are not familiar with the command line, don't worry -- we
+will tell you everything you need regarding the command line, and your
+exercises only involve Python, just like the previous days.
 
 \section{Useful Information}
 
@@ -41,27 +50,41 @@ were given! This is your personal server.
 
 If you are using the command line, you can just type:
 
+\begin{verbatim}
 ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
+\end{verbatim}
 
 (accept the RSA key and log in with the password we provided you).
 
 The machine has all of the necessary Python packages for you to work. It also
 has a standard collection of editors and other tools. It is an Ubuntu based
-installation and you can access super user powers with \texttt{sudo} (if you're not familiar with Unix-based environments, you might not understand this last sentence -- don't worry about it for now).
+installation and you can access super user powers with \texttt{sudo} (if you're
+not familiar with Unix-based environments, you might not understand this last
+sentence -- don't worry about it for now).
 
 \section{MapReduce for Word Count}
 
-
-
-The initial idea of MapReduce was an implementation by google\footnote{http://research.google.com/archive/mapreduce.html}, but very soon
-Hadoop appeared as an open-source implementation of the same paradigm.\footnote{http://hadoop.apache.org/}
+The initial idea of MapReduce was an implementation by
+google\footnote{http://research.google.com/archive/mapreduce.html}, but very
+soon Hadoop appeared as an open-source implementation of the same
+paradigm.\footnote{http://hadoop.apache.org/}
 
 The basic idea is to take your original problem, whichever it may be, and tackle it in two steps:
 %
 \begin{enumerate}
-\item \textbf{Map step:} Divide the data into several parts and send each part to a different computer. Each computer does some computation using \emph{only} that part of the data, and returns some output.\footnote{The name "map" is completely unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced in day 1.}
-\item \textbf{Reduce step:} Collect all the outputs from all the different computers and compute the final solution from those outputs.
+\item \textbf{Map step:} Divide the data into several parts and send each part
+to a different computer. Each computer does some computation using \emph{only}
+that part of the data, and returns some output. The name "map" is completely
+unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced
+in day 1. It comes from the functional programming world, and is actually
+present in Python as a builtin function, \verb+map+.
+\item \textbf{Reduce step:} Collect all the outputs from all the different
+computers and compute the final solution from those outputs. Again, this name
+comes from the functional programming and it present in Python as the builtin
+\verb+reduce+. However, as we will see the reduce step in MapReduce is a bit
+more inteligent than the tradtional reduce.
 \end{enumerate}
+
 
 The classic example of application of MapReduce is the word count problem:
 
