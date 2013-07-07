@@ -28,7 +28,7 @@ y^* &=& \argmax_{y = y_1\ldots y_N} P(Y_1=y_1,\ldots, Y_N=y_N | X_1=x_1,\ldots,X
 \end{eqnarray}
 \end{itemize}
 
-Both approaches (which will be explained in Sections~\ref{posterior} and~\ref{viterbi}, respectively) rely on dynamic programming and make use the
+Both approaches (which will be explained in Sections~\ref{posterior} and~\ref{viterbi}, respectively) rely on dynamic programming and make use of the
 independence assumptions of the HMM model. Moreover, they use an alternative
 representation of the HMM called a \emph{trellis}. 
 
@@ -700,7 +700,7 @@ P_{\mathrm{emiss}}(x_1 | c_k)
   \mathrm{backtrack}(N+1, \text{\tt stop}) &=& \argmax_{c_l \in \statevocab} P_{\mathrm{final}}(\text{\tt stop} | c_l) \times \mathrm{viterbi}(N, c_l).
 \end{eqnarray}
 
-\todo{\small tirar $\times P_{\mathrm{emiss}}(x_i | c_k)$ no calculo do backtrack? o mesmo no pseudo codigo do algoritmo.}
+\todo{\small tirar $\times P_{\mathrm{emiss}}(x_i | c_k)$ no calculo do backtrack? o mesmo no pseudo codigo do algoritmo. ou fazer o argmax de tudo}
 
 %\begin{eqnarray}
 %\delta_1(\hv_l) &=& \phi_1(l) \\
@@ -803,7 +803,8 @@ in the module {\tt sequence\_classifier.py}.
 
 Test your method on both test sequences and compare the results with
 the ones given.
-\todo{NOTA-MA: O segundo dataset ainda não foi definido.}
+\todo{NOTA-MA: O segundo dataset ainda nao foi definido.}
+\todo{NOTA-ZM: acho que ja esta definido. nao percebi bem a nota anterior.}
 \begin{python}
 >>> hmm.train_supervised(simple.train, smoothing=0.1)
 >>> y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])
