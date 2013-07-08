@@ -60,14 +60,14 @@ This will be our training set.
 
 %It is useful to artificially introduce a special ``STOP'' state at the end of the sequence, which marks its end. This is useful for two reasons: it simplifies the notation, and it also allows our model to cope with sequences of any finite size (otherwise, how would our model cope with natural sentences, which can range from one or two words to dozens?).
 
-Figure \ref{hmm} shows the HMM model for the first sequence of the training set, which already include the {\tt start} and 
+Figure \ref{hmm} shows the HMM model for the first sequence of the training set, which already includes the {\tt start} and 
 {\tt stop} symbols. The notation is summarized in Table \ref{tab:hmm-simple-notation}.
 \end{example}
  
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.7\textwidth]{figs/sequences/hmm_new}
-\caption[HMM running example]{\label{fig:hmm}Diagram showing the conditional independence relations of the HMM. As an example, the variables are given the values of the first sentence of the training set of the simple sequence.}
+\caption[HMM running example]{\label{fig:hmm}Diagram showing the conditional independence relations of the HMM. As an example, the variables are the values of the first sentence of the training set of the simple sequence.}
 \end{figure}
 
 \begin{table}[h]
