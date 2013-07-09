@@ -314,7 +314,7 @@ Using the Word Count example we've given you above, implement the Na\"{i}ve Baye
 You must run two jobs, one on a selection of the Portuguese Wikipedia (1\%) and
 another on the English Wikipedia (only 0.1\% as this is much larger). These files already exist on the LXMLS Toolkit as \texttt{pt\_perline01.txt} and \texttt{en\_perline001.txt}. They are small enough to run locally but should already produce a decent language detector.
 
-Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{> results\_pt.txt} and \texttt{> results\_en.txt} when you run the two jobs, to output the results to appropriate files.
+Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{en.counts.txt} and \texttt{> pt.counts.txt} when you run the two jobs, to output the results to appropriate files.
 
 If your code is in file \texttt{trimercount.py}, inside the \texttt{big_data} folder, the two commands you need to type into the terminal to run things locally are:
 
@@ -327,7 +327,7 @@ python big_data/trimercount.py ../data/wikipedia/en_perline001.txt  > en.counts.
 python big_data/trimercount.py ../data/wikipedia/pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
-Step 4 should use the two files \texttt{> results\_pt.txt} and \texttt{> results\_en.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
+Step 4 should use the two files \texttt{en.counts.txt} and \texttt{> pt.counts.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
 
 After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
 
