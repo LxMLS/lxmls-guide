@@ -6,7 +6,7 @@ We will only look at small problems, such that you can run them both locally and
 
 \section*{IMPORTANT: If you use your own computer}
 
-The instructions we will provide here assume that you are using one of our own computers, which have some software preinstalled. Unfortunately, EC2 installation guides and tutorials are not very widespread. If you are using your own machine, please follow the installation instructions for the EC2 tools available at \texttt{http://aws.amazon.com/developertools/351} in the "Download" section. If you are using Linux, there is probably a release of the EC2 API for your system (on Ubuntu, the name of the package is \texttt{ec2-api-tools}).
+The instructions we will provide here assume that you are using one of our own computers, which have some software preinstalled. Unfortunately, EC2 installation guides and tutorials are not very widespread. If you are using your own machine, please follow the installation instructions for the EC2 tools available at \texttt{http://aws.amazon.com/developertools/351} in the "Download" section. If you are using Linux, there is probably a release of the EC2 API for your system (on Ubuntu, run the command \texttt{sudo apt-get install ec2-api-tools}).
 
 You will also need the Python package \texttt{MrJob}. You can install it by running \texttt{pip install mrjob}.
 
@@ -83,7 +83,6 @@ comes from the functional programming and it present in Python as the builtin
 more inteligent than the tradtional reduce.
 \end{enumerate}
 
-
 The classic example of application of MapReduce is the word count problem:
 
 \begin{itemize}
@@ -104,14 +103,69 @@ dictionary of a count for each word.
 \emph{reduce} step. Notice that you can now parallelize over words.
 \end{enumerate}
 
-\subsection{Running Word Count locally}
+\subsection{Keys, Values, and the MRJob package}
+In fact, what we stated above is a bit of an over-simplification. In MapReduce, the map step actually outputs zero or more pairs of the form (\emph{key}, \emph{value}). Let's suppose that you want to run the wordcount example in the following document which contains only two sentences:
+
+\begin{verbatim}
+the center of Lisbon is the best part of the city
+the campus of IST is located near Alameda
+\end{verbatim}
+
+Suppose that you send each sentence to a separate worker. The output of the first worker (which is processing the first sentence) would be:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline\\
+Key & Value \\
+\hline\hline\\
+"the" & 3 \\
+"center" & 1 \\
+"of" & 2\\
+\vdots & \vdots \\
+\end{tabular}
+\end{center}
+
+and the output of the second worker (which is processing the second sentence) would be:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline\\
+Key & Value \\
+\hline\hline\\
+"the" & 1 \\
+"campus" & 1 \\
+"of" & 1\\
+\vdots & \vdots \\
+\end{tabular}
+\end{center}
+
+Keys can be anything you want: when counting words, it makes sense to have each worker use words as keys, and values as the counts of those keys in the text that was passed onto that worker.
+
+In the reduce step, the reducer will receive these key/value pairs and do something with them. In word counting, the natural operation for the reduce step is to sum the counts with the same key, in order to produce this:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline\\
+Key & Value \\
+\hline\hline\\
+"the" & 4 \\
+"center" & 1 \\
+"campus" & 1 \\
+"of" & 3\\
+\vdots & \vdots \\
+\end{tabular}
+\end{center}
+
+Note that the reduce step also produces key/value pairs. As you can see, this last table is the correct output of the Word Count algorithm.
 
 In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
-as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. On your Amazon machine, the package
-is already installed with all its dependencies, so you can just go ahead and
-use it.
+as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}.
 
-We are going to implement the word count algorithm now:
+In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.
+
+\subsection{Running Word Count locally}
+
+Here is an implementation of the Word Count algorithm in Python, using MRJob:
 
 \begin{python}
 # Import the necessary libraries:
@@ -141,17 +195,27 @@ wc.run()
 This file already exists as \texttt{wordcount.py} (inside the \texttt{big\_data} folder). To run it on your machine (without using Amazon EC2), navigate to the \texttt{labs} folder\todo{No final temos de ver se e esta a pasta.} and type this into a terminal:
 
 \begin{verbatim}
-python big_data/wordcount.py ../data/wikipedia/en_perline001.txt
+python big_data/wordcount.py ../data/wikipedia/en_perline001.txt > results.txt
 \end{verbatim}
 
 Open the \texttt{results.txt} file in your favorite text editor. Each line of this file contains a word and the corresponding count.
 
+Here are a few important points which you need to remember for the exercise of this session:
+%
+\begin{enumerate}
+	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line \texttt{class WordCount(MRJob):}.
+	\item You should create functions with the special names \texttt{mapper} and \texttt{reducer}. These functions always have three inputs: \texttt{self}, which all class functions have, \texttt{key}, and \texttt{value}. In our case, the mapper's input is just text which doesn't have a key; in Python, it is common to use an underscore, \texttt{_}, to denote unused input/output arguments.
+	\item The \texttt{mapper} function takes the input text (the \texttt{doc} argument), splits it into words using the command \texttt{doc.split()}, and then counts the words in that text.
+	\item The \texttt{reducer} function has a \texttt{key} argument which is just a string containing a word. It also has a \texttt{cs} argument, which is a generator object. For most purposes, you can treat this argument as a list.
+\end{enumerate}
+
+We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set_trace()} at multiple places within the code to see what is contained in each variable.
+
 \subsection{Running Word Count on Amazon EC2}
 
-We are now going to use the AWS Key and AWS Secret. These are like a username
-and password for Amazon Webservices.
+We are now going to use the AWS Key and AWS Secret. These are like a username and password for Amazon Webservices.
 
-One of the advantages of MrJob is that you can use the exact same Python code as before, but changing a few arguments in the command line will run the Word Count on Amazon's computers instead of on the computer where the file is. This is what Amazon calls Elastic Map Reduce (EMR).
+One of the advantages of MRJob is that you can use the exact same Python code as before, but changing a few arguments in the command line will run the Word Count on Amazon's computers instead of on the computer where the file is. This is what Amazon calls Elastic Map Reduce (EMR).
 
 To run the exact same code as before using EMR, type the following into the command line.
 
