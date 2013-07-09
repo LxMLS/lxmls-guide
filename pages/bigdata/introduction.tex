@@ -1,6 +1,8 @@
-In this lab, we will work with Amazon.com's Web Services\footnote{http://aws.amazon.com/}, a cloud based solution
+In this lab, we will work with Amazon.com's Web Services (AWS)\footnote{http://aws.amazon.com/}, a cloud based solution
 to run some simple analyses. Then, in the next lab, we will build on these
 tools to construct a larger learning system.
+
+We will only look at small problems, such that you can run them both locally and on AWS quickly. This way, you can learn how to use them within the limited time of these lab sessions. Unfortunately, this also means that you will not be dealing with truly large-scale problems where AWS is faster than local computations. You should consider these last two days as a proof-of-concept giving you the knowledge necessary to run things on AWS, which you can apply to your own large-scale problems after this summer school.
 
 \section*{IMPORTANT: If you use your own computer}
 
@@ -139,7 +141,7 @@ wc.run()
 This file already exists as \texttt{wordcount.py} (inside the \texttt{big\_data} folder). To run it on your machine (without using Amazon EC2), navigate to the \texttt{labs} folder\todo{No final temos de ver se e esta a pasta.} and type this into a terminal:
 
 \begin{verbatim}
-python wordcount.py ../data/wikipedia/en_perline001.txt > results.txt
+python big_data/wordcount.py ../data/wikipedia/en_perline001.txt
 \end{verbatim}
 
 Open the \texttt{results.txt} file in your favorite text editor. Each line of this file contains a word and the corresponding count.
@@ -157,11 +159,7 @@ To run the exact same code as before using EMR, type the following into the comm
 export AWS_ACCESS_KEY_ID=<YOUR ACCESS KEY>
 export AWS_SECRET_ACCESS_KEY=<YOUR SECRET KEY>
 
-python wordcount.py \
-        -r emr \
-        /datasets/small-text-file.txt /
-        --num-ec2-instances 2 \
-        --aws-region eu-west-1
+python big_data/wordcount.py -r emr ../data/wikipedia/en_perline001.txt --num-ec2-instances 2 --aws-region eu-west-1
 \end{verbatim}
 
 This runs the code on Elastic Map Reduce with 2 instances.
