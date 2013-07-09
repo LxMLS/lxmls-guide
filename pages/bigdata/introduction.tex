@@ -204,12 +204,12 @@ Here are a few important points which you need to remember for the exercise of t
 %
 \begin{enumerate}
 	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line \texttt{class WordCount(MRJob):}.
-	\item You should create functions with the special names \texttt{mapper} and \texttt{reducer}. These functions always have three inputs: \texttt{self}, which all class functions have, \texttt{key}, and \texttt{value}. In our case, the mapper's input is just text which doesn't have a key; in Python, it is common to use an underscore, \texttt{_}, to denote unused input/output arguments.
+	\item You should create functions with the special names \texttt{mapper} and \texttt{reducer}. These functions always have three inputs: \texttt{self}, which all class functions have, \texttt{key}, and \texttt{value}. In our case, the mapper's input is just text which doesn't have a key; in Python, it is common to use an underscore, \texttt{\_}, to denote unused input/output arguments.
 	\item The \texttt{mapper} function takes the input text (the \texttt{doc} argument), splits it into words using the command \texttt{doc.split()}, and then counts the words in that text.
 	\item The \texttt{reducer} function has a \texttt{key} argument which is just a string containing a word. It also has a \texttt{cs} argument, which is a generator object. For most purposes, you can treat this argument as a list.
 \end{enumerate}
 
-We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set_trace()} at multiple places within the code to see what is contained in each variable.
+We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set\_trace()} at multiple places within the code to see what is contained in each variable.
 
 \subsection{Running Word Count on Amazon EC2}
 
@@ -311,25 +311,31 @@ Using the Word Count example we've given you above, implement the Na\"{i}ve Baye
 %TrimerCount.run()
 %\end{python}
 
-We will run two jobs, one on a selection of the Portuguese Wikipedia (10\%) and
-another on the English Wikipedia (only 1\% as this is much larger).
+You must run two jobs, one on a selection of the Portuguese Wikipedia (1\%) and
+another on the English Wikipedia (only 0.1\% as this is much larger). These files already exist on the LXMLS Toolkit as \texttt{pt\_perline01.txt} and \texttt{en\_perline001.txt}. They are small enough to run locally but should already produce a decent language detector.
+
+Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{> results\_pt.txt} and \texttt{> results\_en.txt} when you run the two jobs, to output the results to appropriate files.
+
+If your code is in file \texttt{trimercount.py}, inside the \texttt{big_data} folder, the two commands you need to type into the terminal to run things locally are:
+
+%
+%
 
 \begin{verbatim}
-python trimercount.py \
-        -r emr \
-        s3://lxmls-labs/pt_perline10.txt
-        --num-ec2-instances 10 \
-        --aws-region eu-west-1 > pt.counts.txt
+python big_data/trimercount.py ../data/wikipedia/en_perline001.txt  > en.counts.txt
 
-python trimercount.py \
-        -r emr \
-        s3://lxmls-labs/en_perline01.txt
-        --num-ec2-instances 10 \
-        --aws-region eu-west-1 > en.counts.txt
+python big_data/trimercount.py ../data/wikipedia/pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
-These should run in a few minutes as well. Running it on the whole Wikipedia
-could be done with the same system in just a few hours.
+Step 4 should use the two files \texttt{> results\_pt.txt} and \texttt{> results\_en.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
+
+After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
+
+\begin{verbatim}
+python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt --num-ec2-instances 10 --aws-region eu-west-1 > en.counts.txt
+
+python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt --num-ec2-instances 10 --aws-region eu-west-1 > pt.counts.txt
+\end{verbatim}
 
 %\subsection{Building a Classifier}
 %
