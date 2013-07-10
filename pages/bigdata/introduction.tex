@@ -90,7 +90,7 @@ The classic example of application of MapReduce is the word count problem:
 \item You want to count how many times each word appears in the whole collection.
 \end{itemize}
 
-If the text corpus is small, this is trivially easy to do on any computer. However, for big corpora, one computer alone would take a long time. For example, the whole English Wikipedia is about 10 GB compressed, and several times that when uncompressed. It would take a considerable time to count the occurrence of each word on the whole dataset using only one computer.
+If the text corpus is small, this is trivial to do on a single machine. However, for big corpora, one computer alone would take a long time. For example, the whole English Wikipedia is about 10 GB compressed, and several times that when uncompressed. It would take a considerable amount of time to count the occurrence of each word on the whole dataset using only one computer.
 
 However, this problem is quite easy to parallelize using the MapReduce framework:
 
@@ -115,12 +115,12 @@ Suppose that you send each sentence to a separate worker. The output of the firs
 
 \begin{center}
 \begin{tabular}{|c|c|}
-\hline\\
+\hline
 Key & Value \\
-\hline\hline\\
-"the" & 3 \\
-"center" & 1 \\
-"of" & 2\\
+\hline\hline
+``the" & 3 \\
+``center" & 1 \\
+``of" & 2\\
 \vdots & \vdots \\
 \end{tabular}
 \end{center}
@@ -129,12 +129,12 @@ and the output of the second worker (which is processing the second sentence) wo
 
 \begin{center}
 \begin{tabular}{|c|c|}
-\hline\\
+\hline
 Key & Value \\
-\hline\hline\\
-"the" & 1 \\
-"campus" & 1 \\
-"of" & 1\\
+\hline\hline
+``the" & 1 \\
+``campus" & 1 \\
+``of" & 1\\
 \vdots & \vdots \\
 \end{tabular}
 \end{center}
@@ -145,13 +145,13 @@ In the reduce step, the reducer will receive these key/value pairs and do someth
 
 \begin{center}
 \begin{tabular}{|c|c|}
-\hline\\
+\hline
 Key & Value \\
-\hline\hline\\
-"the" & 4 \\
-"center" & 1 \\
-"campus" & 1 \\
-"of" & 3\\
+\hline\hline
+``the" & 4 \\
+``center" & 1 \\
+``campus" & 1 \\
+``of" & 3\\
 \vdots & \vdots \\
 \end{tabular}
 \end{center}
@@ -203,7 +203,10 @@ Open the \texttt{results.txt} file in your favorite text editor. Each line of th
 Here are a few important points which you need to remember for the exercise of this session:
 %
 \begin{enumerate}
-	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line \texttt{class WordCount(MRJob):}.
+	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
+\begin{python}
+	class WordCount(MRJob):
+\end{python}
 	\item You should create functions with the special names \texttt{mapper} and \texttt{reducer}. These functions always have three inputs: \texttt{self}, which all class functions have, \texttt{key}, and \texttt{value}. In our case, the mapper's input is just text which doesn't have a key; in Python, it is common to use an underscore, \texttt{\_}, to denote unused input/output arguments.
 	\item The \texttt{mapper} function takes the input text (the \texttt{doc} argument), splits it into words using the command \texttt{doc.split()}, and then counts the words in that text.
 	\item The \texttt{reducer} function has a \texttt{key} argument which is just a string containing a word. It also has a \texttt{cs} argument, which is a generator object. For most purposes, you can treat this argument as a list.
@@ -223,7 +226,8 @@ To run the exact same code as before using EMR, type the following into the comm
 export AWS_ACCESS_KEY_ID=<YOUR ACCESS KEY>
 export AWS_SECRET_ACCESS_KEY=<YOUR SECRET KEY>
 
-python big_data/wordcount.py -r emr ../data/wikipedia/en_perline001.txt --num-ec2-instances 2 --aws-region eu-west-1
+python big_data/wordcount.py -r emr ../data/wikipedia/en_perline001.txt \
+       --num-ec2-instances 2 --aws-region eu-west-1
 \end{verbatim}
 
 This runs the code on Elastic Map Reduce with 2 instances.
@@ -332,9 +336,11 @@ Step 4 should use the two files \texttt{en.counts.txt} and \texttt{> pt.counts.t
 After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
 
 \begin{verbatim}
-python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt --num-ec2-instances 10 --aws-region eu-west-1 > en.counts.txt
+python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt \
+       --num-ec2-instances 10 --aws-region eu-west-1 > en.counts.txt
 
-python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt --num-ec2-instances 10 --aws-region eu-west-1 > pt.counts.txt
+python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt \
+       --num-ec2-instances 10 --aws-region eu-west-1 > pt.counts.txt
 \end{verbatim}
 
 To test your language detector, you might not know Portuguese. Here are a few sentences you can use to test it (from the Portuguese Wikipedia):
