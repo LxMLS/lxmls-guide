@@ -139,7 +139,7 @@ Key & Value \\
 \end{tabular}
 \end{center}
 
-Keys can be anything you want: when counting words, it makes sense to have each worker use words as keys, and values as the counts of those keys in the text that was passed onto that worker.
+Keys can be anything you want: when counting words, it makes sense to have each worker use words as keys, and values as the counts of those words in the text that was passed onto that worker.
 
 In the reduce step, the reducer will receive these key/value pairs and do something with them. In word counting, the natural operation for the reduce step is to sum the counts with the same key, in order to produce this:
 
@@ -336,6 +336,15 @@ python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt --num-ec2
 
 python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt --num-ec2-instances 10 --aws-region eu-west-1 > pt.counts.txt
 \end{verbatim}
+
+To test your language detector, you might not know Portuguese. Here are a few sentences you can use to test it (from the Portuguese Wikipedia):
+
+\begin{itemize}
+\item Portugal, oficialmente Rep\'ublica Portuguesa, \'e um pa\'is soberano unit\'ario localizado no Sudoeste da Europa.
+\item Portugal \'e a na\c{c}\~ao mais a ocidente do continente europeu.
+\item O nome do pa\'is prov\'em da sua segunda maior cidade, Porto, cujo nome latino era Portus Cale.
+\item Lisboa \'e a capital, bem como a maior e mais importante cidade de Portugal.
+\end{itemize}
 
 %\subsection{Building a Classifier}
 %
