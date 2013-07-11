@@ -37,8 +37,6 @@ information:
 \begin{enumerate}
 \item A host name
 \item A password
-\item A ``AWS Key''
-\item A ``AWS Secret''
 \end{enumerate}
 
 %We will ignore the last two items for the moment.  Your hostname will be
@@ -223,14 +221,8 @@ One of the advantages of MRJob is that you can use the exact same Python code as
 To run the exact same code as before using EMR, type the following into the command line.
 
 \begin{verbatim}
-export AWS_ACCESS_KEY_ID=<YOUR ACCESS KEY>
-export AWS_SECRET_ACCESS_KEY=<YOUR SECRET KEY>
-
-python big_data/wordcount.py -r emr ../data/wikipedia/en_perline001.txt \
-       --num-ec2-instances 2 --aws-region eu-west-1
+python big_data/wordcount.py -r emr ../data/wikipedia/en_perline001.txt
 \end{verbatim}
-
-This runs the code on Elastic Map Reduce with 2 instances.
 
 The file we used on the previous exercises is not very big, but running on a cluster of machines allows us to
 scale up enough to use Wikipedia as input:
@@ -239,8 +231,6 @@ scale up enough to use Wikipedia as input:
 python wordcount.py \
         -r emr \
         s3://lxmls-labs/pt_perline10.txt
-        --num-ec2-instances 10 \
-        --aws-region eu-west-1
 \end{verbatim}
 
 This should take about 3 minutes.
@@ -336,11 +326,9 @@ Step 4 should use the two files \texttt{en.counts.txt} and \texttt{> pt.counts.t
 After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
 
 \begin{verbatim}
-python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt \
-       --num-ec2-instances 10 --aws-region eu-west-1 > en.counts.txt
+python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt > en.counts.txt
 
-python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt \
-       --num-ec2-instances 10 --aws-region eu-west-1 > pt.counts.txt
+python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt > pt.counts.txt
 \end{verbatim}
 
 To test your language detector, you might not know Portuguese. Here are a few sentences you can use to test it (from the Portuguese Wikipedia):
