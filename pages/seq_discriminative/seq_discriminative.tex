@@ -1,15 +1,27 @@
 In this class, we will continue to focus on sequence classification,
 but instead of following a \emph{generative} approach (like in the previous
-chapter) we move towards \emph{discriminative} approaches. Recall that the difference between these approaches is that generative approaches attempt to model the probability distribution of the data, $P(X,Y)$, whereas discriminative ones only model the conditional probability of the sequence, given the observed data, $P(Y|X)$.
+chapter) we move towards \emph{discriminative} approaches. Recall that the difference between these approaches is that generative approaches attempt to model the probability distribution of the data, $P(X,Y)$ whereas discriminative ones only model the conditional probability of the sequence, given the observed data, $P(Y|X)$.
 
+\begin{table}
+\centering
+\begin{tabular}{|l|l|}
+\hline
 
-
-\section*{Today's Assignment}
-
-The assignment of today's class is to implement the structured version of the perceptron algorithm.
-
-\section{Classification vs Sequential Classification}
-
+\multicolumn{1}{|c|}{\textbf{Classification}} & \multicolumn{1}{|c|}{\textbf{Sequences}} \\
+\hline
+\multicolumn{2}{|c|}{\emph{Generative}}\\
+\hline
+Na\"{i}ve Bayes~\ref{s::naiveBayes} & Hidden Markov Models~\ref{hmm} \\
+\hline
+\multicolumn{2}{|c|}{\emph{Discriminative}}\\
+\hline
+Perceptron \ref{s:perceptron} & Structured Perceptron \ref{s:spercetron}\\
+\hline
+Maximum Entropy \ref{s:me} & Conditional Random Fields \ref{s:crf}\\
+\hline
+\end{tabular}
+\caption{\label{disc_seq_summary}Summary of the methods that we will be covering this lecture.}
+\end{table}
 
 Table \ref{disc_seq_summary} shows how the models for classification 
 have counterparts in \emph{sequential} classification. In fact, in
@@ -26,34 +38,14 @@ Although we will not cover all the methods described in
 Chapter \ref{day:classification}, bear in mind that all of those have a structured counterpart. 
 It should be intuitive after this lecture how those methods could be
 extended to structured problems, given the perceptron example.
-%Before we explain the particular methods, the next section will talk a bit about feature representation for sequences. 
-
-\begin{table}[ht]
-\centering
-\begin{tabular}{|l|l|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Classification}} & \multicolumn{1}{|c|}{\textbf{Sequences}} \\
-\hline
-\multicolumn{2}{|c|}{\emph{Generative}}\\
-\hline
-Na\"{i}ve Bayes~(Sec.~\ref{s::naiveBayes}) & Hidden Markov Models~(Sec.~\ref{hmm}) \\
-\hline
-\multicolumn{2}{|c|}{\emph{Discriminative}}\\
-\hline
-Perceptron~(Sec.~\ref{s:perceptron}) & Structured Perceptron~(Sec.~\ref{s:spercetron})\\
-\hline
-Maximum Entropy~(Sec.~\ref{s:me}) & Conditional Random Fields~(Sec.~\ref{s:crf})\\
-\hline
-\end{tabular}
-\caption{\label{disc_seq_summary}Summary of the methods used for classification and sequential classification covered in this guide.}
-\end{table}
-
+Before we explain the particular methods, the next section will talk a
+bit about feature representation for sequences. 
 
 Throughout this chapter, we will be searching for the solution of 
 \begin{equation}
 \argmax_{y \in \statevocab^N} P(Y=y | X=x) = \argmax_{y \in \statevocab^N} \W \cdot  \F(x,y). \label{eq::struc_pred} 
 \end{equation}
-where $\W$ is a weight vector, and $\F(x,y)$ is a feature vector. We will see that this sort of linear models are more flexible than HMMs, in the sense that they may incorporate 
+where $\W$ is a weight vector, and $\F(x,y)$ is a feature vector. We will see that these sort of linear models are more flexible than HMMs, in the sense that they may incorporate 
 more general features while being able to reuse the same decoders (based on the Viterbi and forward-backward algorithms). In fact, \emph{the exercises in this lab will not touch the decoders that 
 have been developed in the previous lab}. \todo{nao percebo muito bem esta nota em italico... Ou � "in fact, .. will touch" ou "However, ... will touch."} Only the training algorithms and the function that 
 compute the scores will change.
@@ -79,28 +71,17 @@ The feature vectors depend locally on the output variable
 (\emph{i.e.}, they only look at a single $y_i$ or a pair $y_i,y_{i+1}$);
 however they may depend globally on the observed input $x=x_{1},\ldots,x_{N}$.
 
+\section{\label{seq::features} Feature Extraction}
 
-\section{\label{seq::features} Features}
-
-In this section we will define two simple feature sets.\footnote{Although not required, all the features we will use are binary features, indicating whether a given condition 
-is satisfied or not.} The first feature set
+In this section we will define two simple feature sets. The first one
 will only use identity features, and will mimic the features used by
 the HMM model from the previous section. This will allow us to directly
 compare the performance of a generative vs a discriminative
-approach. %\begin{example}
-%Simple ID Feature set containing the same features as an HMM model.
-%\begin{python}
-%0 Ms./NOUN NF: id:Ms.::NOUN init_tag:NOUN 
-%1 Haag/NOUN NF: id:Haag::NOUN EF: prev_tag:NOUN::NOUN 
-%2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
-%3 Elianti/NOUN NF: id:Elianti::NOUN EF: prev_tag:VERB::NOUN 
-%4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
-%\end{python}
-%\end{example}
-Table~\ref{id-features} depicts the features that are implicit in the HMM, which was the subject of 
-the previous chapter. These features are indicators of initial, transition, final, and emission events.
+approach. Note that although not required, all the features we will use
+in this section are binary features, indicating whether a given condition 
+is satisfied or not. 
 
-\begin{table}[ht]
+\begin{table}[h!]
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
@@ -119,9 +100,21 @@ $x_i = w_j \text{  } \& \text{  } y_i = c_k$ & Emission Features \\
   replicates the features used by the HMM model.}
 \end{center}
 \end{table}
- 
- 
-Note that the fact that we were using a generative model has forced us (in some sense) to 
+
+%\begin{example}
+%Simple ID Feature set containing the same features as an HMM model.
+%\begin{python}
+%0 Ms./NOUN NF: id:Ms.::NOUN init_tag:NOUN 
+%1 Haag/NOUN NF: id:Haag::NOUN EF: prev_tag:NOUN::NOUN 
+%2 plays/VERB NF: id:plays::VERB EF: prev_tag:NOUN::VERB 
+%3 Elianti/NOUN NF: id:Elianti::NOUN EF: prev_tag:VERB::NOUN 
+%4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
+%\end{python}
+%\end{example}
+
+Table~\ref{id-features} depicts the features that are implicit in the HMM, which was the subject of 
+the previous chapter. These features are indicators of initial, transition, final, and emission events. 
+The fact that we were using a generative model has forced us (in some sense) to 
 make strong independence assumptions. 
 However, since we now move to a discriminative approach, where we model $P(Y|X)$ rather than $P(X,Y)$, we are not tied anymore to 
 some of these assumptions. In particular: 
@@ -132,16 +125,14 @@ This would lead to an awkward model if we wanted to insist on a generative appro
 \item We may use features that depend arbitrarily on the \emph{entire input sequence} $x$. On the other hand, 
 we still need to resort to ``local'' features with respect to the \emph{outputs} (\emph{e.g.} looking only at consecutive state pairs), 
 otherwise decoding algorithms will become more expensive.  
-\todo{NOTA-MA: Nos HMM (de order superior) tb, certo?}
+NOTA-MA: Nos HMM (de order superior) tb, certo?
 \end{itemize}
-
-
-This leads us to the second feature set, composed of features that are traditionally used in POS tagging with discriminative models. See Table~\ref{ex-features} for some examples.
+Table~\ref{ex-features} shows examples of features that are traditionally used in POS tagging with discriminative models.  
 Of course, we could have much more complex features, looking arbitrarily to 
 the input sequence. We are not going to have them in this
 exercise only for performance reasons (to have less features and smaller caches). State-of-the-art sequence classifiers can easily reach over one million features!
 
-\begin{table}[h!t]
+\begin{table}
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
@@ -165,11 +156,10 @@ $x_i = w_j \text{  } \& \text{  } w_j[0..i] \forall i \in [1,2,3]
 $x_i = w_j \text{  } \& \text{  } w_j[|w_j|-i..|w_j|] \forall i \in [1,2,3] \text{  } \& \text{  } y_i = c_k$& Suffix Features \\
 \hline
 \end{tabular}
-\caption{\label{ex-features} {\tt Extended} feature set. Some features in this set could not be included in the HMM model. The features included in the bottom row are all considered emission features 
+\caption{\label{ex-features} Extended feature set. Some features in this set could not be included in the HMM model. The features included in the bottom row are all considered emission features 
 for the purpose of our implementation, since they all depend on $i$, $x$ and $y_i$.}
 \end{center}
 \end{table}
-
 
 
 %\begin{example}
@@ -182,8 +172,6 @@ for the purpose of our implementation, since they all depend on $i$, $x$ and $y_
 %4 ./. NF: id:.::. EF: last_prev_tag:NOUN::. 
 %\end{python}
 %\end{example}
-
-
 
 Our features subdivide into two groups: 
 $\F_{\mathrm{emiss}}$, $\F_{\mathrm{init}}$, 
@@ -242,9 +230,6 @@ They are given by
 %\end{itemize}
 %
 %Let $\boldsymbol{\theta} = (\boldsymbol{\theta}_N, \boldsymbol{\theta}_E)$. 
-
-\section{Discriminative Sequential Classifiers}
-
 Given a weight vector $\W$, the conditional probability $P_{\W}(Y=y|X=x)$ is then defined as follows: 
 \begin{eqnarray}
 \lefteqn{P_{\W}(Y=y|X=x) =}\nonumber\\
@@ -271,8 +256,16 @@ where the normalizing factor $Z(\W,x)$ is called the \emph{partition function}:
 \right).
 \end{eqnarray}
 
-
-\subsection{Training}
+For decoding,  
+there are three important problems that need to be solved: 
+\begin{enumerate}
+\item Given $X=x$, computing the most likely output sequence $\widehat{y}$ (the one which maximizes $P_{\W}(Y=y|X=x)$). 
+\item Compute the posterior marginals $P_{\W}(Y_i=y_i|X=x)$ at each position $i$.
+\item Evaluate the partition function $Z(\W,x)$. 
+\end{enumerate}
+Interestingly, all these problems can be solved by using the very same
+algorithms that were 
+already implemented for HMMs: the Viterbi algorithm (for 1) and the forward-backward algorithm (for 2--3). All that changes is the way the scores are computed. 
 
 For training, 
 the important problem is that of obtaining the weight vector $\W$ that lead to an accurate 
@@ -300,18 +293,8 @@ We will see that this simple strategy achieves results which are competitive
 with conditional log-likelihood maximization.
 \end{enumerate}
 
-\subsection{Decoding}
 
-For decoding,  
-there are three important problems that need to be solved: 
-\begin{enumerate}
-\item Given $X=x$, compute the most likely output sequence $\widehat{y}$ (the one which maximizes $P_{\W}(Y=y|X=x)$). 
-\item Compute the posterior marginals $P_{\W}(Y_i=y_i|X=x)$ at each position $i$.
-\item Evaluate the partition function $Z(\W,x)$. 
-\end{enumerate}
-Interestingly, all these problems can be solved by using the very same
-algorithms that were 
-already implemented for HMMs: the Viterbi algorithm (for 1) and the forward-backward algorithm (for 2--3). All that changes is the way the scores are computed. 
+
 
 \section{\label{s:crf}Conditional Random Fields}
 
@@ -345,7 +328,7 @@ the stochastic gradient descent (SGD) algorithm
 which converges faster, but for the purpose of this exercise, we will 
 stick with SGD). 
 
-\begin{algorithm}[t]
+\begin{algorithm}[h!]
    \caption{SGD for Conditional Random Fields \label{alg:crf_online}}
 \begin{algorithmic}[1]
    \STATE {\bfseries input:} $\mathcal{D}$, $\lambda$, number of rounds $T$,
@@ -354,7 +337,7 @@ stick with SGD).
 	\FOR{$t=1$ {\bfseries to} $T$}
 	\STATE choose $m=m(t)$ randomly
 	\STATE take training pair $(x^m, y^m)$ and compute the probability 
-	$P_{\W}(Y=y^m|X=x^m)$ using the current model ${\W}$ and Eq.~\ref{eq:disc_formula}.
+	$P_{\W}(Y=y^m|X=x^m)$ through the Viterbi algorithm, using the current model ${\W}$ and Eq.~\ref{eq:disc_formula}.
 	\STATE for every $i$, $y_i'$, and $y_{i+1}'$, 
 	compute marginal probabilities $P(Y_i=y_i' | X=x)$ and  $P(Y_i=y_i', Y_{i+1}=y_{i+1}'| X=x^m)$ 
 	using the current model $\W$, for each node and edge, 
@@ -419,13 +402,12 @@ Epoch: 17 Objective value: -1.368518
 Epoch: 18 Objective value: -1.339566
 Epoch: 19 Objective value: -1.312636
 \end{python}
-\todo{Acho que nao vale a pena ter o output de tantas epocas}
 
 You will receive feedback when each epoch is finished, note that
 running the 20 epochs might take a while.
 
 After training is done, evaluate the learned model on the training, development and test sets.
-\todo{NOTA-MA: a) O development set não é usado. b) É suposto os conjuntos de teste e desenvolvimento terem 1000 frases (e não 200)?}
+NOTA-MA: a) O development set não é usado. b) É suposto os conjuntos de teste e desenvolvimento terem 1000 frases (e não 200)?
 	
 \begin{python}
 pred_train = crf_online.viterbi_decode_corpus(train_seq)
@@ -502,7 +484,6 @@ You should get values close to the following:
 CRF - Extended Features Accuracy Train: 0.984 Dev: 0.899 Test: 0.894
 \end{python}
 
-
 Compare the errors obtained with the two different feature
 sets. Do some error analysis: what errors were correct by using
 more features? Can you think of other features to use to solve the
@@ -512,8 +493,11 @@ errors found?
 The main lesson to learn from this exercise is that, usually, if you are not satisfied by the accuracy of your algorithm, you can perform some error analysis and find out which errors your algorithm is making. You can then add more features which attempt to improve those specific errors (this is known as \emph{feature engineering}). This can lead to two problems:
 \begin{itemize}
 \item More features will make training and decoding more expensive. For example, if you add features that depend on the current word and the previous word, the number of new features is the square of the number of different words, which is quite large. For example, the Penn Treebank has around 40000 different words, so you are adding a lot of new features, even though not all pairs of words will ever occur. Features that depend on three words (previous, current, and next) are even more numerous.
-\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfit problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
+\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfitting problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
 \end{itemize}
+
+
+
 
 
 
@@ -527,11 +511,11 @@ behaves remarkably well in a variety of problems. These two
 characteristics make the structured perceptron algorithm a natural
 first choice to try and test a new problem or a new feature set. 
 
-Recall what you learned about the
-perceptron algorithm (Section \ref{s:perceptron}) and compare it against the structured perceptron
+Recall what you learned from \S\ref{s:perceptron} on the
+perceptron algorithm and compare it against the structured perceptron
 (Algorithm \ref{alg:structured-perceptron}). 
 
-\begin{algorithm}[ht]
+\begin{algorithm}[h!]
    \caption{Averaged Structured perceptron \label{alg:structured-perceptron}}
 \begin{algorithmic}[1]
    \STATE {\bfseries input:} $\mathcal{D}$, number of rounds $T$
@@ -565,11 +549,11 @@ it updates only the node and edge features at the positions where the
 
 
 
-\section{Assignment}
+
 
 \begin{exercise}\label{exer:strucperc1}
 Implement the structured perceptron algorithm. 
-To do this, edit file {\tt structured\_perceptron.py} 
+To do this, edit file { \tt sequences/structured\_perce\\ ptron.py} 
 and implement the function
 \begin{python}
 def perceptron_update(self, sequence):
@@ -584,7 +568,7 @@ Hint: adapt the function
 \begin{python}
 def gradient_update(self, sequence, eta):
 \end{python}
-defined in file {\tt crf\_online.py}. 
+defined in file {\tt sequences/crf\_online.py}. 
 You will need to replace the computation of posterior marginals 
 by the Viterbi algorithm, and to change the parameter updates 
 according to Algorithm \ref{alg:structured-perceptron}.
@@ -689,7 +673,7 @@ print "Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f 
 \end{python}
 
 And here are the expected results:
-\todo{NOTA-MA: ainda tenho de terminar o codigo.}
+NOTA-MA: ainda tenho de terminar o codigo.
 \begin{python}
 Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test: 0.890
 \end{python}
