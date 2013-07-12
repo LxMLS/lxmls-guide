@@ -47,11 +47,11 @@ Throughout this chapter, we will be searching for the solution of
 \end{equation}
 where $\W$ is a weight vector, and $\F(x,y)$ is a feature vector. We will see that these sort of linear models are more flexible than HMMs, in the sense that they may incorporate 
 more general features while being able to reuse the same decoders (based on the Viterbi and forward-backward algorithms). In fact, \emph{the exercises in this lab will not touch the decoders that 
-have been developed in the previous lab}. Only the training algorithms and the function that 
+have been developed in the previous lab}. \todo{nao percebo muito bem esta nota em italico... Ou � "in fact, .. will touch" ou "However, ... will touch."} Only the training algorithms and the function that 
 compute the scores will change.
 
 As in the previous section, $y = y_1\ldots y_N$ is a sequence so the maximization
-is over an exponential number of objects, making it intractable by brute force methods. Again
+is over an exponential number of objects, making it intractable for brute force methods. Again
 we will make an assumption analogous to the ``first order Markov independence property,'' so that the
 features may decompose as a sum over nodes and edges in a trellis. 
 This is done by assuming that expression~\ref{eq::struc_pred} can be written as:

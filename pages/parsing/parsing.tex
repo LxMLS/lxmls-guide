@@ -138,7 +138,7 @@ is the subject of the next section.
 
 
 
-One of the most widely algorithm for parsing natural language sentences is the 
+One of the most widely known algorithm for parsing natural language sentences is the 
 Cocke-Kasami-Younger (CKY) algorithm. 
 Given a grammar in CNF with $|\mathcal{R}|$ production rules, its runtime complexity for parsing a sentence of length $N$ 
 is $O(N^3 |\mathcal{R}| )$. 
@@ -147,7 +147,7 @@ that obtains the most likely parse tree of a sentence, along with its probabilit
 \footnote{Similarly, the forward-backward algorithm for computing posterior marginals in sequence models can be extended for 
 context-free parsing. It takes the name \emph{inside-outside algorithm}. See \citet{Manning1999} for details.} %
 This is displayed in Alg.~\ref{alg:cky}. 
-
+NOTA-MA: Acho que ajudava definir $\delta(j,i,Z)$, para que o método se torne mais intiutivo e menos uma sequencia de insruções. Embora haja uma referencia para o "`inside-outside"' algorithm, o guia não é "`self-contained"' sobre esse ponto para quem (como eu :)) não está por dentro do tema.
 
 \begin{algorithm}[t]
    \caption{CKY algorithm \label{alg:cky}}
@@ -369,7 +369,7 @@ The dependency tree in Fig.~\ref{fig:deptree_nonproj} is non-projective: note th
 We end this section by mentioning that dependency trees can have their arcs labeled, to provide more detailed syntactic information. 
 For example, the arc $\langle enjoys, She \rangle$ could be labeled as {\tt SUBJ} to denote that the modifier \emph{She} has a subject function, and 
 the arc $\langle enjoys, school \rangle$ could be labeled as {\tt OBJ} to denote that the modifier \emph{school} has an object function. 
-For simplicity, we resort to \emph{unlabeled} trees, which just convey the backbone structure. The cope with the labels, one can use either a joint model 
+For simplicity, we resort to \emph{unlabeled} trees, which just convey the backbone structure. To cope with the labels, one can use either a joint model 
 that infers the backbone and labels altogether, or to have a two-stage approach that first gets the backbone structure, and then the arc labels. 
 
 \subsection{Algorithms for Projective Dependency Parsing}
@@ -503,7 +503,7 @@ Observe the statistics which are shown. How many features are there in total?
 \item We will now have a close look on the \emph{features} that can be used in the parser. 
 Examine the file:
 \begin{quote}
-{\tt lxmls/parsing/dependency\_features.py}. 
+{\tt code/parsing/dependency\_features.py}. 
 \end{quote}
 The following method takes a sentence and computes a vector of features for each possible arc $\langle h, m \rangle$: 
 \begin{python}
@@ -583,6 +583,8 @@ and visualize those sentences, \emph{e.g.}, in
 
 \item (Optional.) Implement Eisner's algorithm for \emph{projective} dependency parsing. 
 The pseudo-code is shown as Algorithm~\ref{alg:eisner}. Implement this algorithm as the function
+NOTA-MA: Senti falta de uma intuição para o funcionamento do algoritmo; talvez ajudasse esclarecer o significado das variaveis "`complete"' e "`incomplete"'.
+
 \begin{python}
     def parse_proj(self, scores):
         '''

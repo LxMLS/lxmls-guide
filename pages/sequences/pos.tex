@@ -6,7 +6,7 @@ $\statevocab$ is the set of Part-of-Speech tags.
 
 In English, using the Penn Treebank (PTB) corpus \citep{pennTreeBank}, the current
 state of the art for part of speech tagging is around 97\% for a
-variety of methods.
+variety of methods (\textbf{what is $97\%$? the accuracy?}).
 
 In the rest of this class we will use a subset of the PTB corpus, but
 instead of using the original 45 tags we will use a reduced tag set of
@@ -44,8 +44,8 @@ about the English language (e.g. adjectives tend to come before nouns).
 \centering
 \includegraphics[scale=.5]{figs/sequences/transition_probs}
 \caption{\label{fig:transProbs} Transition probabilities of the
-trained model. Each column is previous state and row is current
-state. Note the high probability of having Noun after Adjective, or of having Verb after Nouns or Pronouns, as expected.}
+trained model. Each column is the previous state and row is the current
+state. Note the high probability of having Noun after Determinant or Adjective, or of having Verb after Nouns or Pronouns, as expected.}
 \end{figure}
 
 \begin{exercise}
@@ -95,7 +95,7 @@ Best Smoothing 0.100000 --  Test Set Accuracy: Posterior Decode 0.837, Viterbi D
 
 Perform some error analysis to understand were the errors are coming
 from. You can start by visualizing the confusion matrix (true tags vs
-predicted tags). You should get something like \ref{fig:cmuns}.
+predicted tags). You should get something like what is shown in Figure~\ref{fig:cmuns}.
 
 \begin{python}
 >>> import sequences.confusion_matrix as cm
@@ -110,7 +110,7 @@ predicted tags). You should get something like \ref{fig:cmuns}.
 \centering
 \includegraphics[scale=.4]{figs/sequences/cm_sup.png}
 \caption{\label{fig:cmuns} Confusion Matrix for the previous
-  example. Predict tags are columns and the true tags corresponds to
+  example. Predicted tags are columns and the true tags corresponds to
   the constituents of each column.}
 \end{figure}
 

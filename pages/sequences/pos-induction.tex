@@ -69,7 +69,7 @@ Iter: 19 Accuracy: 0.385409
 >>> cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, 
                             xrange(hmm.get_num_states()), 'Confusion matrix')
 \end{python}
-Note: your results may not be the same as in this example since we are using a random start, but the trend should be the same, with likelihood decreasing at every iteration. 
+Note: your results may not be the same as in this example since we are using a random start, but the trend should be the same, with likelihood decreasing at every iteration (\textbf{the values in the example are the log likelihood, or the negative log likelihood? if it is the first, it is actually increasing}). 
 %Also note that in some iterations the likelihood does not go down because of some rounding errors, however the general trend is that likelihood decreases over iterations. 
 \end{exercise}
 
@@ -79,10 +79,10 @@ Note that normally you will run this algorithm for 200 iterations, we stopped ea
 
 Looking at Figure \ref{fig:cm_uns}, it shows the confusion matrix for this particular example. 
 A first observation is that most clusters are mapped to nouns, verbs or punctuation. 
-This is a known fact since there are many more nouns and verbs than any other tags, since maximum likelihood prefers probabilities 
-to be uniform (imagine two parameters, in one setting both have value 0.5 so the likelihood will be 0.5*0.5 = 0.25, 
+This is a known fact since there are many more nouns and verbs than any other tags. Since maximum likelihood prefers probabilities 
+to be uniform (imagine two parameters: in one setting both have value 0.5 so the likelihood will be 0.5*0.5 = 0.25, 
 while in the other case one as 0.1 and 0.9 so the maximum likelihood is 0.09). Several approaches have been proposed to 
-address this problem by moving towards a Bayesian setting \citep{johnson2007dtf} or using 
+address this problem, moving towards a Bayesian setting \citep{johnson2007dtf}, or using 
 Posterior Regularization \citep{graca2009nips}. 
 %more about this later today. 
 %Part-of-Speech induction is a very active field of research, in fact in the last two ACL conferences (Association for Computational Linguistics) the short paper award (2010) and the best paper award (2011) were about this topic~\citep{lamar-EtAl:2010:Short,das-petrov:2011:ACL-HLT2011}.

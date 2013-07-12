@@ -1,0 +1,10 @@
+\section*{Today's Assignment}
+In the previous lesson, you learned the fundamentals of MapReduce and applied it to a simple classification problem (language detection, using the Na\"{i}ve Bayes classifier). Today we're going to use MapReduce again to solve a trickier problem: using EM to perform unsupervised POS induction.
+
+\section{Distributed EM}
+
+Before you read this section, if you haven't already, please read section \ref{unsupervised} about the non-distributed version of EM. If necessary, review that part of the guide, especially the pseudocode in Algorithm \ref{alg::em}.
+
+EM is an iterative method: for $T$ iterations, we have to alternate between the E-Step and the M-Step. Both steps can be done in a distributed manner; in this lesson, we're going to focus on a simple way to distribute the E-Step; the M-Step will be non-distributed. To see how to distribute both steps in various configurations see, \emph{e.g.}, \cite{Wolfe2008}.
+
+So how can we distribute the E-Step? Recall from equations \eqref{eq::initialCountsPost}--\eqref{eq::emissionCountsPost} that the E-Step involves \emph{summing} over $m$, where $m$ indexes each datum in your dataset. In POS induction, $m$ indexes every sentence. In the last lesson, you saw in the Word Count and Na\"{i}ve Bayes algorithms two examples where we counted something in the Map step and then summed them in the Reduce step. That is the intuition behind what we will do today: we will distribute our data to several clusters in the map step, count things separately, then sum those counts in the reduce step. Everything else will be exactly the same as in section \ref{unsupervised}.
