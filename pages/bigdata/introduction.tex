@@ -159,7 +159,7 @@ Note that the reduce step also produces key/value pairs. As you can see, this la
 In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
 as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}.
 
-In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.
+In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
 
 \subsection{Running Word Count locally}
 
