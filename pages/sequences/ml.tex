@@ -72,7 +72,7 @@ C_{\mathrm{emiss}}(w_j,c_k) = \sum_{m=1}^M
 \sum_{i = 1}^{N}
 \Ind (x^m_i = w_j \wedge y^m_i = c_k); \label{eq::emissionCounts}
 \end{align}
-
+Here $y^m_i$,  the underscript denotes the state index position for a given sequence, and the superscript denotes the sequence index in the dataset, and the same applies for the observations.
 Note that $\Ind$ is an indicator function that has the value 1 when the
 particular event happens, and zero otherwise. In other words, the previous
 equations go through the training corpus and count how

@@ -28,7 +28,7 @@ It should be intuitive after this lecture how those methods could be
 extended to structured problems, given the perceptron example.
 %Before we explain the particular methods, the next section will talk a bit about feature representation for sequences. 
 
-\begin{table}[ht]
+\begin{table}[h!]
 \centering
 \begin{tabular}{|l|l|}
 \hline
@@ -55,7 +55,7 @@ Throughout this chapter, we will be searching for the solution of
 \end{equation}
 where $\W$ is a weight vector, and $\F(x,y)$ is a feature vector. We will see that this sort of linear models are more flexible than HMMs, in the sense that they may incorporate 
 more general features while being able to reuse the same decoders (based on the Viterbi and forward-backward algorithms). In fact, \emph{the exercises in this lab will not touch the decoders that 
-have been developed in the previous lab}. \todo{nao percebo muito bem esta nota em italico... Ou ÔøΩ "in fact, .. will touch" ou "However, ... will touch."} Only the training algorithms and the function that 
+have been developed in the previous lab}. \todo{nao percebo muito bem esta nota em italico... Ou ? "in fact, .. will touch" ou "However, ... will touch."} Only the training algorithms and the function that 
 compute the scores will change.
 
 As in the previous section, $y = y_1\ldots y_N$ is a sequence so the maximization
@@ -100,7 +100,7 @@ approach. %\begin{example}
 Table~\ref{id-features} depicts the features that are implicit in the HMM, which was the subject of 
 the previous chapter. These features are indicators of initial, transition, final, and emission events.
 
-\begin{table}[ht]
+\begin{table}[h!]
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
@@ -141,7 +141,7 @@ Of course, we could have much more complex features, looking arbitrarily to
 the input sequence. We are not going to have them in this
 exercise only for performance reasons (to have less features and smaller caches). State-of-the-art sequence classifiers can easily reach over one million features!
 
-\begin{table}[h!t]
+\begin{table}[h!]
 \begin{center}
 \begin{tabular}{|l|l|}
 \hline
@@ -345,7 +345,7 @@ the stochastic gradient descent (SGD) algorithm
 which converges faster, but for the purpose of this exercise, we will 
 stick with SGD). 
 
-\begin{algorithm}[t]
+\begin{algorithm}[h!]
    \caption{SGD for Conditional Random Fields \label{alg:crf_online}}
 \begin{algorithmic}[1]
    \STATE {\bfseries input:} $\mathcal{D}$, $\lambda$, number of rounds $T$,
@@ -425,8 +425,8 @@ You will receive feedback when each epoch is finished, note that
 running the 20 epochs might take a while.
 
 After training is done, evaluate the learned model on the training, development and test sets.
-\todo{NOTA-MA: a) O development set n√£o √© usado. b) √â suposto os conjuntos de teste e desenvolvimento terem 1000 frases (e n√£o 200)?}
-	
+\todo{NOTA-MA: a) O development set não é usado. b) É suposto os conjuntos de teste e desenvolvimento terem 1000 frases (e não 200)?}
+
 \begin{python}
 pred_train = crf_online.viterbi_decode_corpus(train_seq)
 pred_dev = crf_online.viterbi_decode_corpus(dev_seq)
@@ -531,7 +531,7 @@ Recall what you learned about the
 perceptron algorithm (Section \ref{s:perceptron}) and compare it against the structured perceptron
 (Algorithm \ref{alg:structured-perceptron}). 
 
-\begin{algorithm}[ht]
+\begin{algorithm}[h!]
    \caption{Averaged Structured perceptron \label{alg:structured-perceptron}}
 \begin{algorithmic}[1]
    \STATE {\bfseries input:} $\mathcal{D}$, number of rounds $T$
@@ -568,8 +568,8 @@ it updates only the node and edge features at the positions where the
 \section{Assignment}
 
 \begin{exercise}\label{exer:strucperc1}
-Implement the structured perceptron algorithm. 
-To do this, edit file {\tt structured\_perceptron.py} 
+Implement the structured perceptron algorithm.\\ 
+To do this, edit file {\tt sequences/structured\_perceptron.py} 
 and implement the function
 \begin{python}
 def perceptron_update(self, sequence):
@@ -584,7 +584,7 @@ Hint: adapt the function
 \begin{python}
 def gradient_update(self, sequence, eta):
 \end{python}
-defined in file {\tt crf\_online.py}. 
+defined in file {\tt sequences/crf\_online.py}. 
 You will need to replace the computation of posterior marginals 
 by the Viterbi algorithm, and to change the parameter updates 
 according to Algorithm \ref{alg:structured-perceptron}.
@@ -791,7 +791,7 @@ Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test:
 %The main lesson to learn from this exercise is that, usually, if you are not satisfied by the accuracy of your algorithm, you can perform some error analysis and find out which errors your algorithm is making. You can then add more features which attempt to improve those specific errors (this is known as \emph{feature engineering}). This can lead to two problems:
 %\begin{itemize}
 %\item More features will make training and decoding more expensive. For example, if you add features that depend on the current word and the previous word, the number of new features is the square of the number of different words, which is quite large. For example, the Penn Treebank has around 40000 different words, so you are adding a lot of new features, even though not all pairs of words will ever occur. Features that depend on three words (previous, current, and next) are even more numerous.
-%\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfit problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
+%\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfitting problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
 %\end{itemize}
 
 
