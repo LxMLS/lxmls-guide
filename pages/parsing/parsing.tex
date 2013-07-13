@@ -341,7 +341,7 @@ are descendents from $h$ (i.e. there is a directed path of dependency links from
 Conditions 1--3 ensure that the set of dependency links form a well-formed tree, rooted in the dummy symbol, which spans all the words of the sentence. 
 Condition 4 requires that there is a single link departing from the root. 
 Finally, a tree satisfying condition 5 is said \emph{projective}: it implies that arcs cannot cross (\emph{e.g.}, we cannot have arcs $\langle h,m \rangle$ and $\langle h',m' \rangle$ 
-such that $h < h' < m < m'$). \todo{isto sao os spans o que estamos a comparar a order por que aparecem. Eu nao percebi bem esta parte do projective. E so quando os arcos nao se cruzam?}
+such that the positions $h < h' < m < m'$). 
 
 In many languages (\emph{e.g.}, those which have free-order) we would like to relax the assumption that all trees must be projective. Even in languages which have fixed word order 
 (such as English) there are syntactic phenomena which are awkward to characterize using projective trees arising from the context-free assumption. Usually, 
@@ -352,9 +352,9 @@ We learned a lesson in 1987 about volatility.
 \end{quote}
 There, the prepositional phrase \emph{in 1987} should be attached to the verb phrase headed by \emph{learned} (since this is \emph{when} we learned the lesson), 
 but the other prepositional phrase \emph{about volatility} should be attached to the noun phrase headed by \emph{lesson} (since the \emph{lesson} was about volatility). 
-\todo{volatility should be attached to lesson ou to learned? ou e o 1987 que deveria estar ligado ao lesson}
+\todo{about should be attached to lesson ou to learned ? ou sera o volatility?e o in e que deveria estar ligado ao lesson? eu nao consegui perceber bem.}
 To explain such phenomenon, 
-context-free grammars need to use additional machinery which allows words to be scrambled (in this case, via a movement transformation and the consequent insertion of a trace). 
+context-free grammars need to use additional machinery which allows words to be scrambled (in this case, via a movement transformation and the consequent insertion of a trace).  \todo{o que e o trace nest contexto?}
 In the dependency-based formalism, we can get rid of all those artifacts altogether by allowing \emph{non-projective} parse trees. 
 These are trees that satisfy conditions 1--3 above, but not necessarily conditions 4 or 5.%
 \footnote{It is also common to impose conditions 1--4, in which case the tree need not be projective, but it must have a 
@@ -529,8 +529,8 @@ train the parser by running $10$ epochs of the structured perceptron algorithm:
 dp.train_perceptron(10)
 dp.test()
 \end{python}
-What is the accuracy obtained in the test set? (Note: the shown accuracy is the fraction of words whose parent was correctly predicted.) 
-
+What is the accuracy obtained in the test set? (Note: the shown accuracy is the fraction of words whose parent was correctly predicted.)\\
+{\emph{Ans}: I obtained an accuracy of 49.52\% for 109 test instances (142 features) (so para ajudar nos labs)}
 \item Repeat the previous exercise by 
 subsequently enabling the lexical, distance and contextual features:
 \begin{python}
@@ -550,13 +550,19 @@ dp.train_perceptron(10)
 dp.test()
 \end{python}
 For each configuration, write down the number of features and test set accuracies. 
-Observe the improvements obtained when more features were added. 
+Observe the improvements obtained when more features were added.\\
+{\emph{Ans}: Lexical features: accuracy of 57.66\% (46216 features).\\
+Distance features: accuracy of 71.46\% (46224 features).\\
+Contextual features: accuracy of 87.45\% (92918 features).\\
+for 109 test instances (so para ajudar nos labs)}\\
 Feel free to engineer new features!
 
 \item Which of the three important inference tasks discussed above (computing the most likely tree, 
 computing the partition function, and computing the marginals) need to be performed in the structured perceptron algorithm? 
 What about a maximum entropy classifier, with stochastic gradient descent?  
-Check your answers by looking at the following two methods in {\tt code/dependency\_parser.py}:
+Check your answers by looking at the following two methods in {\tt code/dependency\_parser.py}:\\
+{\emph{Ans}: structured perceptron is done with function \emph{parse\_nonproj} for computing Chu-Liu-Edmonds algorithm for computing the most likely tree.\\
+Maxent with CRF is done with function \emph{parse\_marginals\_nonproj} for computing marginals and the log-partition function using the matrix-tree theorem.}
 \begin{python}
 def train_perceptron(self, n_epochs):
 ...
@@ -570,7 +576,8 @@ using $\lambda = 0.01$ and a initial stepsize of $\eta_0 = 0.1$:
 dp.train_crf_sgd(10, 0.01, 0.1)
 dp.test()
 \end{python}
-Compare the results with those obtained by the perceptron algorithm. 
+Compare the results with those obtained by the perceptron algorithm.\\
+{\emph{Ans:}CRF\_SGD accuracy: 88.12\%.}
 
 \item Train a parser for English using your favourite learning algorithm: 
 \begin{python}
@@ -578,6 +585,8 @@ dp.read_data("english")
 dp.train_perceptron(10)
 dp.test()
 \end{python}
+{\emph{Ans}: accuracy: 88.56\% for 338014 features and 509 test instances.}\\
+
 The predicted trees are placed in the file {\tt data/deppars/english\_test.conll.pred}. 
 To get a sense of which errors are being made, you can 
 check the sentences that differ from the gold standard (see the data in {\tt data/deppars/english\_test.conll}) 
@@ -586,7 +595,7 @@ and visualize those sentences, \emph{e.g.}, in
 
 \item (Optional.) Implement Eisner's algorithm for \emph{projective} dependency parsing. 
 The pseudo-code is shown as Algorithm~\ref{alg:eisner}. Implement this algorithm as the function
-NOTA-MA: Senti falta de uma intuição para o funcionamento do algoritmo; talvez ajudasse esclarecer o significado das variaveis "`complete"' e "`incomplete"'.
+\todo{NOTA-MA: Senti falta de uma intuição para o funcionamento do algoritmo; talvez ajudasse esclarecer o significado das variaveis "`complete"' e "`incomplete"'.}
 
 \begin{python}
     def parse_proj(self, scores):
@@ -598,7 +607,7 @@ in file ${\tt{dependency\_decoder.py}}$. The input is a matrix of arc scores, wh
 $(N+1)$-by-$(N+1)$, and whose $(h,m)$ entry contains the score $s_{\boldsymbol{\theta}}(h,m)$. 
 In particular, the first row contains the scores for the arcs that depart from the root, 
 and the first column's values, along with the main diagonal, are to be ignored (since no arcs 
-point to the root, and there are not self-pointing arcs).
+point to the root, and there are no self-pointing arcs).
 
 To test the algorithm, retrain the parser on the English data (where the trees are actually all
 projective) by setting the flag ${\tt{dp.projective}}$ to ${\tt{True}}$:
@@ -646,7 +655,7 @@ Test accuracy (509 test instances): 0.886732599366
 \end{enumerate}
 \end{exercise}
 
-\begin{algorithm}[t]
+\begin{algorithm}[h!]
    \caption{Eisner's algorithm for first-order projective dependency parsing\label{alg:eisner}}
 \begin{algorithmic}[1]
    \STATE {\bfseries input:} Arc scores $s_{\boldsymbol{\theta}}(h,m)$, for $h \in \{0,\ldots,N\}$, 
@@ -710,6 +719,7 @@ shift-reduce decisions \citep{Nivre2006CoNLL,Huang2010}. These parsers seem to b
 and only slightly less accurate than 
 the state-of-the-art. Solutions have been worked out for the non-projective case also \citep{Nivre2009}. 
 \end{description}
+\todo{o que sao shift-reduce decisions?}
 
 \subsection{External Links}
 
