@@ -211,7 +211,10 @@ be properly serialized to the output.
 Based on your function \verb+sum_partials+ and the code we provided you, fill in
 the map and reduce steps.
 
-Read the next few paragraphs before you start.
+For the moment, your reduce function should have a single emission of the form
+\verb+yield 'result', hmm+. Later, we will see more sofisticated methods.
+
+You may want to read the next few paragraphs before you start.
 \end{exercise}
 
 In order to test this code on the cluster, you need to run it with the
@@ -252,7 +255,7 @@ else:
 \end{verbatim}
 
 We needed to be careful with the string escapes in the above code, but
-otherwise were able to just rely on Python \verb+pickle+ to load ther results.
+otherwise were able to just rely on Python \verb+pickle+ to load the results.
 
 And you can now call it again (\emph{passing the hmm.pkl file on the command
 line}!):
@@ -299,8 +302,9 @@ python emjob.py \
 The \verb+-r emr+ flags runs the code on Elastic MapReduce now. Run it multiple
 times using \verb+--file=hmm.pkl+ to get the next iteration.
 
-\emph{This will take a few minutes per iteration, so do not run 20 iterations
-yet. We will be working on making the code faster before you can do so.}
+\emph{This will take a few minutes per iteration, so do not run many
+iterations. We will be working on making the code faster before you can do
+so.}
 
 \subsubsection{A note on dependencies}
 
@@ -308,17 +312,19 @@ This code depends on packages such as numpy or the lxmls package (which
 contains the implementation of the HMM we are using and which you helped write
 on the lab tutorial of day 2).
 
-On the cluster, they are already installed, and you can just use them without
-any special effort. If you are attempting to use your own computer or reproduce
-the steps at thome; please note that these packages need to be installed before
-hand. Check the documentation of mrjob on how to install python packages on the
-Elastic MapReduce cluster you are using.
+On the cluster we provide you, they are already installed, and you can just use
+them without any special effort. If you are attempting to use your own computer
+or reproduce the steps at thome; please note that these packages need to be
+installed before hand. Check the documentation of mrjob on how to install
+python packages on the Elastic MapReduce cluster if you want to run it on your
+own Amazon account.
 
 \subsection{Introducing \texttt{map\_final}}
 
-While the code you wrote in the last exercise works, it is horribly
+While the code you wrote in the last exercise works correctly, it is horribly
 inefficient. The problems is that \emph{we output several matrices for each
-sequence}. This results in too much communication between processes.
+sequence}. This results in too much communication between processes and the
+reduce step needs to load all these large matrices.
 
 In order to address this problem we need to introduce a new operation, the
 \verb+map_final+. This called, for each mapper, when all the input has been
@@ -359,7 +365,7 @@ class WordCount(MRJob):
 \end{python}
 
 Note that the reduce method is still necessary: although each map job will emit
-the final result for all the documents it saw, but we need to combine the
+the final result for all the documents it saw, we still need to combine the
 results from different map jobs (which run on different machines and processed
 different documents).
 
@@ -381,8 +387,6 @@ in the map function. Emit only in the \verb+map_final+ method.
 
 The reduce function should not need to be changed at all.
 
-\textbf{Important:} You now need to keep track of how many sequences you saw. % FIXME Check this.
-
 Use the previous naïve version as a benchmark. The results should not change
 beyond a rounding error (they may change slightly).
 \end{exercise}
@@ -401,22 +405,26 @@ python emjob.py \
 
 If you try this with your previous version, which did not use the map\_final
 optimization; you will simply wait a long time before running out of
-resources. With this new version, it runs to completion faster. Still too long
-for you to be able to run many iterations before the lab is over, but now you
-can see that you could run this on a million sequences in a few hours if you
-had enough machines. See the note on Hadoop latency and Big Data at the end of
-this chapter.
+resources. With this new version, it runs to completion. It might still take
+too long for you to be able to run many iterations before the lab is over, but
+now you can see that you could run this on a million sequences in a few hours
+if you had enough machines. See the note on Hadoop latency and Big Data at the
+end of this chapter.
 
 \subsection{Parallelizing Reduce*}
 
 \emph{If you ran out of time to complete this next section, don't worry, this
 section is an advanced module and you have already seen the major take-home
-points of the tutorial.}
+points of the tutorial with the previous exercise.}
 
 Our code can still be improved in two ways: (1) there is a single reduce call,
 which does not take advantage of the fact that we havea cluster of machines;
 and (2) because the emission matrices are sparse we are emitting large matrices
 with many zeros. %% FIXME Actually, check if they are still sparse using the map final method
+
+The previous code also had reduce use resources that grow with the number of
+processes. This may still be too much if you use a thousand of machines. We
+will also avoid this problem.
 
 In order to parallelize reduce, we need to start emitting partial results at a
 more fine grained level. Here are the types of emissions we want to consider:
@@ -429,7 +437,13 @@ more fine grained level. Here are the types of emissions we want to consider:
 \item The \textbf{log likelihood}.
 \end{enumerate}
 
-In order to distinguish all of these, we will emit them as a complex key:
+In order to distinguish all of these, we will emit them as numbers with
+different keys. For example, the log likelihood will simply have the key ``log
+likelihood'', while the matrix will have keys which identify the matrix and the
+cell.
+
+The code below exemplifies how we could emit the log likelihood and the vector
+of final counts:
 
 \begin{python}
 yield 'log likelihood', log_likelihood
