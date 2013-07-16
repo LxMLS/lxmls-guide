@@ -319,7 +319,7 @@ installed before hand. Check the documentation of mrjob on how to install
 python packages on the Elastic MapReduce cluster if you want to run it on your
 own Amazon account.
 
-\subsection{Introducing \texttt{map\_final}}
+\subsection{Introducing \texttt{mapper\_final}}
 
 While the code you wrote in the last exercise works correctly, it is horribly
 inefficient. The problems is that \emph{we output several matrices for each
@@ -403,7 +403,7 @@ python emjob.py \
     s3://lxmls-labs/all-sequences-for-em.txt
 \end{verbatim}
 
-If you try this with your previous version, which did not use the map\_final
+If you try this with your previous version, which did not use the mapper\_final
 optimization; you will simply wait a long time before running out of
 resources. With this new version, it runs to completion. It might still take
 too long for you to be able to run many iterations before the lab is over, but
