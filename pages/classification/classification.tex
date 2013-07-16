@@ -11,7 +11,7 @@ will be adapted to structured inputs and outputs. For now, we concern only with 
 
 \section*{Today's assignment}
 
-The assignment of today's class is to implement a classifier called Na\ "{i}ve Bayes, and use it to perform sentiment analysis on a corpus of book reviews from Amazon.
+The assignment of today's class is to implement a classifier called Na\"{i}ve Bayes, and use it to perform sentiment analysis on a corpus of book reviews from Amazon.
 
 
 \section{Notation}
@@ -306,7 +306,7 @@ This will load the data in a bag-of-words representation where rare words (occur
 \begin{enumerate}
 \item Open the file {\tt multinomial\_naive\_bayes.py}. Inside the {\tt MultinomialNaiveBayes} class you will find the {\tt train} method. We have already placed some code in that file to help you get started.
 
-\item Run na\"ive Bayes with the multinomial model on the Amazon
+\item Run Na\"ive Bayes with the multinomial model on the Amazon
   dataset (sentiment classification) and report results both for
   training and testing: 
     
@@ -580,9 +580,14 @@ There are other variants of the perceptron (e.g., with regularization) which we 
 We provide an implementation of the perceptron algorithm in the class {\tt Perceptron} 
 (file {\tt perceptron.py}).  
 \begin{enumerate}
+\item Run the following commands to generate a simple dataset similar to the one plotted on Figure \ref{simpleDataSet_bo}:
+
+\begin{python}
+sd = sds.SimpleDataSet(nr_examples=100, g1 = [[-1,-1],1], g2 = [[1,1],1], balance=0.5, split=[0.5,0,0.5])
+\end{python}
+
 \item Run the perceptron algorithm on the simple dataset
 previously generated and report its train and test set accuracy: 
-\todo{Falta definir o sd ("`simple dataset"') anterirormente. Apenas se definiu o dataset da Amazon.}
 
 \begin{python}
 import perceptron as percc
@@ -866,7 +871,7 @@ construct second order (Hessian) approximations.
 
 In large-scale problems (very large $M$) batch methods are slow. 
 \emph{Online} or \emph{stochastic} optimization are attractive alternative methods. Stochastic gradient methods make ``noisy'' gradient updates 
-by considering only a single instance at the time. The resulting algorithm is shown as Alg.~\ref{alg:maxent_sgd}. 
+by considering only a single instance at the time. The resulting algorithm, called Stochastic Gradient Descent (SGD) is shown as Alg.~\ref{alg:maxent_sgd}. 
 At each round $t$, an instance $m(t)$ is chosen, either randomly  (stochastic variant) or by cycling through the dataset (online variant). 
 The stepsize sequence must decrease with $t$: typically, $\eta_t = \eta_0 t^{-\alpha}$ for some $\eta_0 > 0$ and $\alpha \in [1, 2]$, tuned 
 in a development partition or with cross-validation. 
@@ -908,7 +913,6 @@ in a development partition or with cross-validation.
 \begin{exercise}
 We provide an implementation of the L-BFGS algorithm for training maximum entropy models in the class {\tt MaxEnt\_batch}, 
 as well as an implementation of the SGD algorithm in the class {\tt MaxEnt\_online}. 
-\todo{NOTE-MA: A sigla SGD (stochastic gradient descent?) não foi definida; não e percebe o que é.}
 \begin{enumerate}
 \item Train a  maximum entropy model using L-BFGS on the Simple data
   set (try different values of $\lambda$). Compare the results with the previous methods. Plot the decision boundary. 
