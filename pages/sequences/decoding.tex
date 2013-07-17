@@ -692,14 +692,13 @@ P_{\mathrm{emiss}}(x_1 | c_k)
  \\
  \mathrm{viterbi}(i, c_k) &=& \left( \displaystyle \max_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)  \label{viterbiRecursion}
  \\
- \mathrm{backtrack}(i, c_k) &=& \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k) 
+ \mathrm{backtrack}(i, c_k) &=& \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) 
  \\
   \mathrm{viterbi}(N+1, \text{\tt stop}) &=& \max_{c_l \in \statevocab} P_{\mathrm{final}}(\text{\tt stop} | c_l) \times \mathrm{viterbi}(N, c_l)
  \\
   \mathrm{backtrack}(N+1, \text{\tt stop}) &=& \argmax_{c_l \in \statevocab} P_{\mathrm{final}}(\text{\tt stop} | c_l) \times \mathrm{viterbi}(N, c_l).
 \end{eqnarray}
 
-\todo{\small tirar $\times P_{\mathrm{emiss}}(x_i | c_k)$ no calculo do backtrack? o mesmo no pseudo codigo do algoritmo. ou fazer o argmax de tudo}
 
 %\begin{eqnarray}
 %\delta_1(\hv_l) &=& \phi_1(l) \\
@@ -762,7 +761,7 @@ P_{\mathrm{emiss}}(x_1 | c_k)$
         \FOR{$i=2$ {\bfseries to} $N$}
          \FOR{$c_k \in \statevocab$ }
           \STATE $\mathrm{viterbi}(i, c_k) = \left( \displaystyle \max_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)$
-          \STATE $\mathrm{backtrack}(i, c_k) = \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)$
+          \STATE $\mathrm{backtrack}(i, c_k) = \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right)$
          \ENDFOR 
         \ENDFOR 
        \STATE 
@@ -801,8 +800,6 @@ in the module {\tt sequence\_classifier.py}.
 
 Test your method on both test sequences and compare the results with
 the ones given.
-\todo{NOTA-MA: O segundo dataset ainda nao foi definido.}
-\todo{NOTA-ZM: acho que ja esta definido. nao percebi bem a nota anterior.}
 \begin{python}
 >>> hmm.train_supervised(simple.train, smoothing=0.1)
 >>> y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])
