@@ -18,11 +18,11 @@ The first step is to load the corpus. We will start by loading
 1000 sentences for training and 1000 sentences both for development and
 testing. Then we train the HMM model by maximum likelihood estimation.
 \begin{python}
->>> import readers.pos_corpus as pcc
+>>> import lxmls.readers.pos_corpus as pcc
 >>> corpus = pcc.PostagCorpus()
->>> train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
->>> test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=15,max_nr_sent=1000)
->>> dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=15,max_nr_sent=1000)
+>>> train_seq = corpus.read_sequence_list_conll("data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
+>>> test_seq = corpus.read_sequence_list_conll("data/test-23.conll",max_sent_len=15,max_nr_sent=1000)
+>>> dev_seq = corpus.read_sequence_list_conll("data/dev-22.conll",max_sent_len=15,max_nr_sent=1000)
 >>> hmm = hmmc.HMM(corpus.word_dict, corpus.tag_dict)
 >>> hmm.train_supervised(train_seq)
 >>> hmm.print_transition_matrix()
@@ -94,7 +94,7 @@ from. You can start by visualizing the confusion matrix (true tags vs
 predicted tags). You should get something like what is shown in Figure~\ref{fig:cmuns}.
 
 \begin{python}
->>> import sequences.confusion_matrix as cm
+>>> import lxmls.sequences.confusion_matrix as cm
 >>> import matplotlib.pyplot as plt
 >>> confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test, len(corpus.tag_dict), hmm.get_num_states())
 >>> cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, xrange(hmm.get_num_states()), 'Confusion matrix')
