@@ -157,7 +157,7 @@ The provided function \emph{train\_supervised} from the \emph{hmm.py} file imple
 Run this function given the simple dataset above and look at the estimated probabilities. Are they correct? You can also check the variables ending in \emph{\_counts} instead of \emph{\_probs} to see the raw counts (for example, typing \emph{hmm.initial\_counts} will show you the raw counts of initial states). How are the counts related to the probabilities?
 
 \begin{python}
->>> import sequences.hmm as hmmc
+>>> import lxmls.sequences.hmm as hmmc
 >>> hmm = hmmc.HMM(simple.x_dict, simple.y_dict)
 >>> hmm.train_supervised(simple.train)
 >>> print "Initial Probabilities:", hmm.initial_probs

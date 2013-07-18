@@ -549,9 +549,9 @@ $15$ words; this yielded the files:
 \item After importing all the necessary libraries, load the Portuguese dataset: 
 \begin{python}
 import sys
-sys.path.append("parsing/" )
+sys.path.append('.' )
 
-import dependency_parser as depp
+import lxmls.parsing.dependency_parser as depp
 
 dp = depp.DependencyParser()
 dp.read_data("portuguese")
