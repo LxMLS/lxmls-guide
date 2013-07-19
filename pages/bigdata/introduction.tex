@@ -31,32 +31,38 @@ exercises only involve Python, just like the previous days.
 
 \section{Useful Information}
 
-You should have received a piece of paper with the following four pieces of
-information:
+You should have received a piece of paper with the following two pieces of information:
 
 \begin{enumerate}
 \item A host name
 \item A password
 \end{enumerate}
 
-%We will ignore the last two items for the moment.  Your hostname will be
-%something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
-%should be able to log in with username \texttt{ubuntu} and the password you
-%were given! This is your personal server.
-%
-%If you are using the command line, you can just type:
-%
-%\begin{verbatim}
-%ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
-%\end{verbatim}
-%
-%(accept the RSA key and log in with the password we provided you).
-%
-%The machine has all of the necessary Python packages for you to work. It also
-%has a standard collection of editors and other tools. It is an Ubuntu based
-%installation and you can access super user powers with \texttt{sudo} (if you're
-%not familiar with Unix-based environments, you might not understand this last
-%sentence -- don't worry about it for now).
+Your hostname will be
+something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
+should be able to log in with username \texttt{ubuntu} and the password you
+were given. This is your personal server running on Amazon's infrastructure!
+
+If you are using the command line, you can just type:
+
+\begin{verbatim}
+ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
+\end{verbatim}
+(accept the RSA key and log in with the password we provided you).
+
+The machine has all of the necessary Python packages for you to work. It also
+has a standard collection of editors and other tools, including \texttt{emacs} and \texttt{vi}. If you're not used to the command line, you should probably use \texttt{nano} which is a very simple text editor. To open a file, type in the terminal
+
+\begin{verbatim}
+nano your_filename
+\end{verbatim}
+
+From within \texttt{nano}, use \texttt{CTRL-O} to save a file and \texttt{CTRL-X} to exit (you will be asked to save any modified files). Use \texttt{CTRL-K} to cut an entire line and \texttt{CTRL-U} to paste it back (to copy instead of cut, use cut, then paste in the original location, then paste in the other desired location).
+
+This machine is an Ubuntu based
+installation and you can access super user powers with \texttt{sudo} (if you're
+not familiar with Unix-based environments, you might not understand this last
+sentence -- don't worry about it for now).
 
 \section{MapReduce for Word Count}
 
@@ -201,7 +207,7 @@ Open the \texttt{results.txt} file in your favorite text editor. Each line of th
 Here are a few important points which you need to remember for the exercise of this session:
 %
 \begin{enumerate}
-	\item By default, MRJob splits the input (the \texttt{en_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
+	\item By default, MRJob splits the input (the \texttt{en\_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
 	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
 \begin{python}
 	class WordCount(MRJob):

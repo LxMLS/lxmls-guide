@@ -76,6 +76,8 @@ it you will find a few data and code files:
 \item A few other files we will use below (but ignore for the moment).
 \end{itemize}
 
+We recommend that you make a copy of \verb+emstep.py+ and edit it, adding the code snippets we provide below.
+
 \subsection{Loading data}
 
 The datafiles are in a different format from what was used in the previous EM
@@ -83,17 +85,17 @@ tutorial \emph{because the simplest way to use Hadoop is make each mapper
 receive a single line of the file}.
 
 To load a single line of the input file, we have provided a function
-\verb+load_sequence(line, word_dict, tag_dict, mapping)+., which takes the
-input data and the metadata in the auxiliary file. Here is how you can use it
+\verb+load_sequence(line, word_dict, tag_dict)+., which takes the
+input data and the metadata in the auxiliary file. Here is how you would use it
 to just count the number of tokens in the dataset:
 
 \begin{python}
 import pickle
-word_dict, tag_dict, mapping = pickle.load(open('word_dict_mapping.pkl'))
+word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
 
 n = 0
-for line in open('sequences100.txt'):
-    s = load_sequence(line, word_dict, tag_dict, mapping)
+for line in open('sequences200.txt'):
+    s = load_sequence(line, word_dict, tag_dict)
     n += len(s)
 print 'Nr of tokens: ', n
 \end{python}
