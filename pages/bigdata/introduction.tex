@@ -70,13 +70,13 @@ The basic idea is to take your original problem, whichever it may be, and tackle
 \begin{enumerate}
 \item \textbf{Map step:} Divide the data into several parts and send each part
 to a different computer. Each computer does some computation using \emph{only}
-that part of the data, and returns some output. The name "map" is completely
+that part of the data, and returns some output.\footnote{The name "map" is completely
 unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced
-in day 1. It comes from the functional programming world, and is actually
+in day 1.} It comes from the functional programming world, and is actually
 present in Python as a builtin function, \verb+map+.
 \item \textbf{Reduce step:} Collect all the outputs from all the different
 computers and compute the final solution from those outputs. Again, this name
-comes from the functional programming and it present in Python as the builtin
+comes from the functional programming and it is present in Python as the builtin
 \verb+reduce+. However, as we will see the reduce step in MapReduce is a bit
 more inteligent than the tradtional reduce.
 \end{enumerate}
@@ -157,9 +157,7 @@ Key & Value \\
 Note that the reduce step also produces key/value pairs. As you can see, this last table is the correct output of the Word Count algorithm.
 
 In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
-as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}.
-
-In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
+as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
 
 \subsection{Running Word Count locally}
 
@@ -192,8 +190,7 @@ wc.run()
 
 This file already exists as \texttt{wordcount.py} (inside the
 \texttt{wordcount} folder). To run it on your machine (without using Amazon
-EC2), navigate to the \texttt{wordcount} folder\todo{No final temos de ver se e esta
-a pasta.} and type this into a terminal:
+EC2), navigate to the \texttt{wordcount} folder and type this into a terminal:
 
 \begin{verbatim}
 python wordcount.py en_perline001.txt > results.txt
@@ -204,6 +201,7 @@ Open the \texttt{results.txt} file in your favorite text editor. Each line of th
 Here are a few important points which you need to remember for the exercise of this session:
 %
 \begin{enumerate}
+	\item By default, MRJob splits the input (the \texttt{en_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently.
 	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
 \begin{python}
 	class WordCount(MRJob):
