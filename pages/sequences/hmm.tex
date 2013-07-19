@@ -109,7 +109,7 @@ From the ipython command line (note: start ipython from the {\tt lxmls}
 directory), create a simple sequence object and look at the training
 and test set.
 \begin{python}
->>> import readers.simple_sequence as ssr
+>>> import lxmls.readers.simple_sequence as ssr
 >>> simple = ssr.SimpleSequence()
 >>> print simple.train
 [walk/rainy walk/sunny shop/sunny clean/sunny , walk/rainy walk/rainy shop/rainy clean/sunny , walk/sunny shop/sunny shop/sunny clean/sunny ]
@@ -176,9 +176,8 @@ A first order HMM model has the following independence assumptions over the join
       This probability is independent of the
     particular position so, for every $i$ and $t$, we can write:  
      \begin{equation*}
-    P(X_i = w_j | Y_i = c_k) = P(X_{i+t} = w_j | Y_{i+t} = c_k)
+    P(X_i = w_j | Y_i = c_k) = P(X_{t} = w_j | Y_{t} = c_k)
      \end{equation*}
-     \todo{\small o mesmo aqui (so t) }
     % = P_{\mathrm{emiss}}(w_j|c_k)$.
 \end{itemize}
 These conditional independence assumptions are crucial to allow

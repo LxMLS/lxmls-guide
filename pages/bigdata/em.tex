@@ -59,9 +59,9 @@ The structure of this lab tutorial is as follows:
 \begin{enumerate}
 \item You will first look at the code we already provide for you.
 \item Based on it, we will run a version that is not distributed.
-\item We will convert this to a distributed version that is naïve and very inefficient.
+\item We will convert this to a distributed version that is na\"{i}ve and very inefficient.
 \item We will then improve this version to be more efficient.
-\item Finally, we will run this code on a large dataset
+\item Finally, we will run this code on a large dataset.
 \end{enumerate}
 
 \section{First MapReduce Version}
@@ -72,7 +72,7 @@ it you will find a few data and code files:
 \begin{itemize}
 \item \verb+sequences100.txt+ contains the first 100~sequences.
 \item \verb+word_dict_mapping.pkl+ is an auxiliary file.
-\item \verb+parallel_em.py+ contains a skeleton of the code we will be writing.
+\item \verb+emstep.py+ contains a skeleton of the code we will be writing.
 \item A few other files we will use below (but ignore for the moment).
 \end{itemize}
 
@@ -143,11 +143,15 @@ If you look back to equations,
 \subsection{Combining Partial Results}
 At this point, you should understand the code we provided.
 
-The goal of the next exercise is to write a function called \verb+sum_partials+
+The goal of the next exercise is to write a function called \verb+combine_partials+
 that can take all the sequence statistics and output the final statistics.
 
 \begin{python}
-hmm = \ldots
+import lxmls.sequences.hmm as hmmc
+import pickle
+word_dict, tag_dict, mapping = pickle.load(open('word_tag_dict_mapping.pkl'))
+hmm = hmmc.HMM(word_dict, tag_dict)
+hmm.initialize_random()
 statistics = []
 for line in open('sequences100.txt'):
     s = load_sequence(line, word_dict, tag_dict)
@@ -155,22 +159,23 @@ for line in open('sequences100.txt'):
         sequence_statistics(seq, hmm)
         )
 
-final = sum_partials(statistics, hmm)
+final = combine_partials(statistics, hmm)
 \end{python}
 
 \begin{exercise}
-Write the function \verb+sum_partials+. This function should take a list of all
+Write the function \verb+combine_partials+. This function should take a list of all
 the statistics and an HMM object. It should modify the HMM object to reflect
 the results of all the sequences.
 
 Your function should perform some computations and then assign to the hmm object:
 
 \begin{python}
-def sum_partials(statistics, hmm):
-    hmm.log_likelihood = \ldots
+def combine_partials(statistics, hmm):
+    hmm.log_likelihood = ...
+    hmm.initial_counts = ...
 \end{python}
 
-A template is provided in \verb+parallel_em.py+
+A template is provided in \verb+emstep.py+
 \end{exercise}
 
 Note that this separation into sequence statistics and combination does not
@@ -222,7 +227,7 @@ following flags (we are also directing the output to the file
 \verb+next_iteration.pkl+):
 
 \begin{verbatim}
-python emjob.py \
+python emstep.py \
     -r local \
     --file=word_dict_mapping.pkl \
     encoded200.txt > next_iteration.pkl
@@ -261,7 +266,7 @@ And you can now call it again (\emph{passing the hmm.pkl file on the command
 line}!):
 
 \begin{verbatim}
-python emjob.py \
+python emstep.py \
     -r local \
     --file=word_dict_mapping.pkl \
     --file=hmm.pkl
@@ -278,7 +283,7 @@ perform two steps:
 
 The \emph{following is a mistake!}
 \begin{verbatim}
-python emjob.py \
+python emstep.py \
     -r local \
     --file=word_dict_mapping.pkl \
     --file=hmm.pkl \
@@ -293,7 +298,7 @@ the new output) before your program has a chance to read it!
 When you are happy with your code, you can now run it on the cluster:
 
 \begin{verbatim}
-python emjob.py \
+python emstep.py \
     -r emr \
     --file=word_dict_mapping.pkl \
     encoded200.txt
@@ -319,7 +324,7 @@ installed before hand. Check the documentation of mrjob on how to install
 python packages on the Elastic MapReduce cluster if you want to run it on your
 own Amazon account.
 
-\subsection{Introducing \texttt{map\_final}}
+\subsection{Introducing \texttt{mapper\_final}}
 
 While the code you wrote in the last exercise works correctly, it is horribly
 inefficient. The problems is that \emph{we output several matrices for each
@@ -327,7 +332,7 @@ sequence}. This results in too much communication between processes and the
 reduce step needs to load all these large matrices.
 
 In order to address this problem we need to introduce a new operation, the
-\verb+map_final+. This called, for each mapper, when all the input has been
+\verb+mapper_final+. This called, for each mapper, when all the input has been
 processed.
 
 You can perhaps understand this by imagining that mrjob is running the
@@ -336,13 +341,13 @@ following loop (in Python pseudo-code):
 \begin{python}
 for key,value in input:
     job.mapper(key,value)
-job.map_final()
+job.mapper_final()
 \end{python}
 
-You can delay emission of partial results until the \verb+map_final+ step and
+You can delay emission of partial results until the \verb+mapper_final+ step and
 then emit the partial output of every sequence this job processed.
 
-For example, here is how WordCount can be performed using \verb+map_final+:
+For example, here is how WordCount can be performed using \verb+mapper_final+:
 
 \begin{python}
 class WordCount(MRJob):
@@ -356,7 +361,7 @@ class WordCount(MRJob):
             else:
                 self.counts[word] = 1
 
-    def map_final(self):
+    def mapper_final(self):
         for k in self.counts:
             yield k, self.counts[k]
 
@@ -369,7 +374,7 @@ the final result for all the documents it saw, we still need to combine the
 results from different map jobs (which run on different machines and processed
 different documents).
 
-By only emitting results in the \verb+map_final+ method, we have converted the
+By only emitting results in the \verb+mapper_final+ method, we have converted the
 implementation to use a batch system: the dataset is partioned into a block for
 each processor, each processor works on that whole block, and the reduction is
 only made to combine the results of different processors.
@@ -381,9 +386,9 @@ sequence. Resource usage for reduction now only depends on the number of
 machines used and not the size of the input.
 
 \begin{exercise}
-Use \verb+map_final+ to improve your MapReduce implementation. Initialize the
+Use \verb+mapper_final+ to improve your MapReduce implementation. Initialize the
 matrices and log likelihood to zero in the constructor and update partial sums
-in the map function. Emit only in the \verb+map_final+ method.
+in the map function. Emit only in the \verb+mapper_final+ method.
 
 The reduce function should not need to be changed at all.
 
@@ -397,13 +402,13 @@ on S3 on yesterday's guide). You can now test you code on the cluster using the
 full dataset:
 
 \begin{verbatim}
-python emjob.py \
+python emstep.py \
     -r emr \
     --file=word_dict_mapping.pkl \
     s3://lxmls-labs/all-sequences-for-em.txt
 \end{verbatim}
 
-If you try this with your previous version, which did not use the map\_final
+If you try this with your previous version, which did not use the mapper\_final
 optimization; you will simply wait a long time before running out of
 resources. With this new version, it runs to completion. It might still take
 too long for you to be able to run many iterations before the lab is over, but
@@ -473,7 +478,7 @@ and we avoid extraneous computation.
 Look in the file \verb+emission_snippets.py+. This contains the for loops above
 and more.
 
-Use these to improve your \verb+map_final+ function. Write the corresponding
+Use these to improve your \verb+mapper_final+ function. Write the corresponding
 reduce function. Do not change the keys used for the emission as they are
 needed below (see the next paragraph after this exercise).
 

@@ -69,13 +69,22 @@ Iter: 19 Accuracy: 0.385409
 >>> cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, 
                             xrange(hmm.get_num_states()), 'Confusion matrix')
 \end{python}
-Note: your results may not be the same as in this example since we are using a random start, but the trend should be the same, with likelihood decreasing at every iteration (\textbf{the values in the example are the log likelihood, or the negative log likelihood? if it is the first, it is actually increasing}). 
+Note: your results may not be the same as in this example since we are using a random start, but the trend should be the same, 
+with log-likelihood increasing at every iteration. 
 %Also note that in some iterations the likelihood does not go down because of some rounding errors, however the general trend is that likelihood decreases over iterations. 
 \end{exercise}
 
-In the previous exercise we used an HMM to do Part-of-Speech induction using 12 clusters (by omission the HMM uses as number of hidden states the one provided by the corpus). A first observation is that the log-likelihood is always increasing as expected. Another observation is that the accuracy goes up from 33\% to 41\%. 
-\todo{no exemplo e de 30.4\% a 38.5\%}
-Note that normally you will run this algorithm for 200 iterations, we stopped earlier for time constraints. Another observation is that the accuracy is not monotonic increasing, this is because the likelihood is not a perfect proxy for the accuracy. In fact all that the likelihood is measuring are co-occurrences of words in the corpus; it has no idea of pos tags. The fact that we are improving derives from the fact that language is not random but follows some specific hidden patterns. In fact this patterns are what true pos-tags try to capture. A final observation is that the performance is really bad compared to the supervised scenario, so there is a lot of space for improvement. The actual state of the art is around 71\% for fully unsupervised~\citep{JoaoThesis,bergkirkpatrick2010naacl} and 80\% \citep{das-petrov:2011:ACL-HLT2011} using parallel data and information from labels in the other language. 
+In the previous exercise we used an HMM to do Part-of-Speech induction using 12 clusters (by omission the HMM uses as number 
+of hidden states the one provided by the corpus). A first observation is that the log-likelihood is always increasing as expected. 
+Another observation is that the accuracy goes up from 32\% to 38\%. 
+Note that normally you will run this algorithm for 200 iterations, we stopped earlier for time constraints. 
+Another observation is that the accuracy is not monotonic increasing, this is because the likelihood is not a perfect proxy 
+for the accuracy. In fact all that the likelihood is measuring are co-occurrences of words in the corpus; it has no idea of pos tags. 
+The fact that we are improving derives from the fact that language is not random but follows some specific hidden patterns. 
+In fact this patterns are what true pos-tags try to capture. A final observation is that the performance is really bad 
+compared to the supervised scenario, so there is a lot of space for improvement. The actual state of the 
+art is around 71\% for fully unsupervised~\citep{JoaoThesis,bergkirkpatrick2010naacl} and 80\% \citep{das-petrov:2011:ACL-HLT2011} 
+using parallel data and information from labels in the other language. 
 
 Looking at Figure \ref{fig:cm_uns}, it shows the confusion matrix for this particular example. 
 A first observation is that most clusters are mapped to nouns, verbs or punctuation. 

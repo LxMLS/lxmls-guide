@@ -11,7 +11,7 @@ will be adapted to structured inputs and outputs. For now, we concern only with 
 
 \section*{Today's assignment}
 
-The assignment of today's class is to implement a classifier called Na\ "{i}ve Bayes, and use it to perform sentiment analysis on a corpus of book reviews from Amazon.
+The assignment of today's class is to implement a classifier called Na\"{i}ve Bayes, and use it to perform sentiment analysis on a corpus of book reviews from Amazon.
 
 
 \section{Notation}
@@ -296,8 +296,8 @@ where the goal is to classify text documents as expressing a \emph{positive} or 
 (i.e., a classification problem with two classes). We are going to focus on book reviews. 
 To load the data, type:
 \begin{python}
-import sentiment_reader as srs
-import naive_bayes as nb
+import lxmls.readers.sentiment_reader as srs
+import lxmls.classifiers.naive_bayes as nb
 
 scr = srs.SentimentCorpus("books")
 \end{python}
@@ -306,12 +306,12 @@ This will load the data in a bag-of-words representation where rare words (occur
 \begin{enumerate}
 \item Open the file {\tt multinomial\_naive\_bayes.py}. Inside the {\tt MultinomialNaiveBayes} class you will find the {\tt train} method. We have already placed some code in that file to help you get started.
 
-\item Run na\"ive Bayes with the multinomial model on the Amazon
+\item Run Na\"ive Bayes with the multinomial model on the Amazon
   dataset (sentiment classification) and report results both for
   training and testing: 
     
 \begin{python}
-import multinomial_naive_bayes as mnbb
+import lxmls.classifiers.multinomial_naive_bayes as mnbb
 
 mnb = mnbb.MultinomialNaiveBayes()
 params_nb_sc = mnb.train(scr.train_X,scr.train_y)
@@ -505,8 +505,11 @@ Alg.~\ref{alg:perceptron} shows the pseudo-code of the perceptron algorithm. As 
 often better than the Na\"ive Bayes, and usually not much worse than maximum entropy models or SVMs (which will be 
 described in the following section).
 \footnote{Actually, we are showing a more robust variant of the perceptron, 
-which averages the weight vector as a post-processing step.}  \todo{\small O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
-e também tem uma versão bach.}
+which averages the weight vector as a post-processing step.}  
+
+%% \todo{\small O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? 
+%% Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
+%% e também tem uma versão bach.}
 
 \begin{algorithm}[t]
 
@@ -577,12 +580,17 @@ There are other variants of the perceptron (e.g., with regularization) which we 
 We provide an implementation of the perceptron algorithm in the class {\tt Perceptron} 
 (file {\tt perceptron.py}).  
 \begin{enumerate}
-\item Run the perceptron algorithm on the simple dataset
-previously generated and report its train and test set accuracy: 
-\todo{Falta definir o sd ("`simple dataset"') anterirormente. Apenas se definiu o dataset da Amazon.}
+\item Run the following commands to generate a simple dataset similar to the one plotted on Figure \ref{simpleDataSet_bo}:
 
 \begin{python}
-import perceptron as percc
+sd = sds.SimpleDataSet(nr_examples=100, g1 = [[-1,-1],1], g2 = [[1,1],1], balance=0.5, split=[0.5,0,0.5])
+\end{python}
+
+\item Run the perceptron algorithm on the simple dataset
+previously generated and report its train and test set accuracy: 
+
+\begin{python}
+import lxmls.classifiers.perceptron as percc
 
 perc = percc.Perceptron()
 params_perc_sd = perc.train(sd.train_X,sd.train_y)
@@ -703,7 +711,7 @@ Implement the MIRA algorithm (Hint: use the perceptron algorithm
   Then, 
   repeat the perceptron exercise now using MIRA, for several values of $\lambda$: 
 \begin{python}
-import mira as mirac
+import lxmls.classifiers.mira as mirac
 
 mira = mirac.Mira()
 mira.regularizer = 1.0 # This is lambda
@@ -863,7 +871,7 @@ construct second order (Hessian) approximations.
 
 In large-scale problems (very large $M$) batch methods are slow. 
 \emph{Online} or \emph{stochastic} optimization are attractive alternative methods. Stochastic gradient methods make ``noisy'' gradient updates 
-by considering only a single instance at the time. The resulting algorithm is shown as Alg.~\ref{alg:maxent_sgd}. 
+by considering only a single instance at the time. The resulting algorithm, called Stochastic Gradient Descent (SGD) is shown as Alg.~\ref{alg:maxent_sgd}. 
 At each round $t$, an instance $m(t)$ is chosen, either randomly  (stochastic variant) or by cycling through the dataset (online variant). 
 The stepsize sequence must decrease with $t$: typically, $\eta_t = \eta_0 t^{-\alpha}$ for some $\eta_0 > 0$ and $\alpha \in [1, 2]$, tuned 
 in a development partition or with cross-validation. 
@@ -905,12 +913,11 @@ in a development partition or with cross-validation.
 \begin{exercise}
 We provide an implementation of the L-BFGS algorithm for training maximum entropy models in the class {\tt MaxEnt\_batch}, 
 as well as an implementation of the SGD algorithm in the class {\tt MaxEnt\_online}. 
-\todo{NOTE-MA: A sigla SGD (stochastic gradient descent?) não foi definida; não e percebe o que é.}
 \begin{enumerate}
 \item Train a  maximum entropy model using L-BFGS on the Simple data
   set (try different values of $\lambda$). Compare the results with the previous methods. Plot the decision boundary. 
 \begin{python}
-import max_ent_batch as mebc
+import lxmls.classifiers.max_ent_batch as mebc
 
 me_lbfgs = mebc.MaxEnt_batch()
 me_lbfgs.regularizer = 1.0
@@ -938,7 +945,7 @@ print "Max-Ent Batch Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,ac
 \item Now, fix $\lambda = 1.0$ and train with SGD (you might try to adjust the initial step). 
 Compare the objective values obtained during training with those obtained with L-BFGS. What do you observe? 
 \begin{python}
-import max_ent_online as meoc
+import lxmls.classifiers.max_ent_online as meoc
 
 me_sgd = meoc.MaxEnt_online()
 me_sgd.regularizer = 1.0
@@ -1065,7 +1072,7 @@ Implement the SVM primal algorithm (Hint: look at the models
   Then, 
   repeat the MaxEnt exercise now using SVMs, for several values of $\lambda$: 
 \begin{python}
-import svm as svmc
+import lxmls.classifiers.svm as svmc
 
 svm = svmc.SVM()
 svm.regularizer = 1.0 # This is lambda

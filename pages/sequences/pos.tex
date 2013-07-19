@@ -6,7 +6,7 @@ $\statevocab$ is the set of Part-of-Speech tags.
 
 In English, using the Penn Treebank (PTB) corpus \citep{pennTreeBank}, the current
 state of the art for part of speech tagging is around 97\% for a
-variety of methods (\textbf{what is $97\%$? the accuracy?}).
+variety of methods.
 
 In the rest of this class we will use a subset of the PTB corpus, but
 instead of using the original 45 tags we will use a reduced tag set of
@@ -15,16 +15,14 @@ class. In this task, $x$ is a sentence (\emph{i.e.}, a sequence of word tokens) 
 is the sequence of possible PoS tags.
 
 The first step is to load the corpus. We will start by loading
-1000 sentences for training and 200 sentences both for development and
+1000 sentences for training and 1000 sentences both for development and
 testing. Then we train the HMM model by maximum likelihood estimation.
-\todo{NOTA-MA: codigo usa 1000 em toodos os conjuntos... }
-\todo{o script usa 1000 mas pode ser ate 400 no test seq se for menos da erro no plot final.}
 \begin{python}
->>> import readers.pos_corpus as pcc
+>>> import lxmls.readers.pos_corpus as pcc
 >>> corpus = pcc.PostagCorpus()
->>> train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
->>> test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=15,max_nr_sent=200)
->>> dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll",max_sent_len=15,max_nr_sent=200)
+>>> train_seq = corpus.read_sequence_list_conll("data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
+>>> test_seq = corpus.read_sequence_list_conll("data/test-23.conll",max_sent_len=15,max_nr_sent=1000)
+>>> dev_seq = corpus.read_sequence_list_conll("data/dev-22.conll",max_sent_len=15,max_nr_sent=1000)
 >>> hmm = hmmc.HMM(corpus.word_dict, corpus.tag_dict)
 >>> hmm.train_supervised(train_seq)
 >>> hmm.print_transition_matrix()
@@ -51,7 +49,6 @@ state. Note the high probability of having Noun after Determinant or Adjective, 
 \begin{exercise}
 Test the model using both posterior decoding and Viterbi decoding on
 both the train and test set, using the methods in class HMM:
-\todo{NOTA-MA: a funcao viterbi\_decode\_corpus imprime muita infromaao. ZM: mts warnings apenas}
 \begin{python}
 >>> viterbi_pred_train = hmm.viterbi_decode_corpus(train_seq)
 >>> posterior_pred_train = hmm.posterior_decode_corpus(train_seq)
@@ -66,7 +63,6 @@ Train Set Accuracy: Posterior Decode 0.985, Viterbi Decode: 0.985
 >>> print "Test Set Accuracy: Posterior Decode \%.3f, Viterbi Decode: \%.3f"\%(eval_posterior_test,eval_viterbi_test)
 Test Set Accuracy: Posterior Decode 0.350, Viterbi Decode: 0.509
 \end{python}
-\todo{NOTA-ZM: eu obtive 0.531 no viterbi}
 What do you observe? Remake the previous exercise but now train the HMM
 using smoothing. Try different values (0,0.1,0.01,1) and report the results on the
 train and development set. (Use function
@@ -98,13 +94,12 @@ from. You can start by visualizing the confusion matrix (true tags vs
 predicted tags). You should get something like what is shown in Figure~\ref{fig:cmuns}.
 
 \begin{python}
->>> import sequences.confusion_matrix as cm
+>>> import lxmls.sequences.confusion_matrix as cm
 >>> import matplotlib.pyplot as plt
 >>> confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test, len(corpus.tag_dict), hmm.get_num_states())
 >>> cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, xrange(hmm.get_num_states()), 'Confusion matrix')
 >>> plt.show()
 \end{python}
-\todo{the code gives an error when plotting the graph if we consider less than 400 samples for (test seq)}
 
 \begin{figure}[h!]
 \centering
