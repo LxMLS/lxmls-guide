@@ -70,13 +70,13 @@ The basic idea is to take your original problem, whichever it may be, and tackle
 \begin{enumerate}
 \item \textbf{Map step:} Divide the data into several parts and send each part
 to a different computer. Each computer does some computation using \emph{only}
-that part of the data, and returns some output. The name "map" is completely
+that part of the data, and returns some output.\footnote{The name "map" is completely
 unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced
-in day 1. It comes from the functional programming world, and is actually
+in day 1.} It comes from the functional programming world, and is actually
 present in Python as a builtin function, \verb+map+.
 \item \textbf{Reduce step:} Collect all the outputs from all the different
 computers and compute the final solution from those outputs. Again, this name
-comes from the functional programming and it present in Python as the builtin
+comes from the functional programming and it is present in Python as the builtin
 \verb+reduce+. However, as we will see the reduce step in MapReduce is a bit
 more inteligent than the tradtional reduce.
 \end{enumerate}
@@ -157,9 +157,7 @@ Key & Value \\
 Note that the reduce step also produces key/value pairs. As you can see, this last table is the correct output of the Word Count algorithm.
 
 In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
-as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}.
-
-In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
+as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
 
 \subsection{Running Word Count locally}
 
@@ -190,10 +188,12 @@ wc = WordCount()
 wc.run()
 \end{python}
 
-This file already exists as \texttt{wordcount.py} (inside the \texttt{big\_data} folder). To run it on your machine (without using Amazon EC2), navigate to the \texttt{labs} folder\todo{No final temos de ver se e esta a pasta.} and type this into a terminal:
+This file already exists as \texttt{wordcount.py} (inside the
+\texttt{wordcount} folder). To run it on your machine (without using Amazon
+EC2), navigate to the \texttt{wordcount} folder and type this into a terminal:
 
 \begin{verbatim}
-python big_data/wordcount.py ../data/wikipedia/en_perline001.txt > results.txt
+python wordcount.py en_perline001.txt > results.txt
 \end{verbatim}
 
 Open the \texttt{results.txt} file in your favorite text editor. Each line of this file contains a word and the corresponding count.
@@ -201,13 +201,14 @@ Open the \texttt{results.txt} file in your favorite text editor. Each line of th
 Here are a few important points which you need to remember for the exercise of this session:
 %
 \begin{enumerate}
+	\item By default, MRJob splits the input (the \texttt{en_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
 	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
 \begin{python}
 	class WordCount(MRJob):
 \end{python}
 	\item You should create functions with the special names \texttt{mapper} and \texttt{reducer}. These functions always have three inputs: \texttt{self}, which all class functions have, \texttt{key}, and \texttt{value}. In our case, the mapper's input is just text which doesn't have a key; in Python, it is common to use an underscore, \texttt{\_}, to denote unused input/output arguments.
 	\item The \texttt{mapper} function takes the input text (the \texttt{doc} argument), splits it into words using the command \texttt{doc.split()}, and then counts the words in that text.
-	\item The \texttt{reducer} function has a \texttt{key} argument which is just a string containing a word. It also has a \texttt{cs} argument, which is a generator object. For most purposes, you can treat this argument as a list.
+	\item The \texttt{reducer} function has a \texttt{key} argument which is just a string containing a word. It also has a \texttt{cs} argument, which is a generator object. For most purposes, you can treat this argument as a list of \emph{all} the counts in \emph{all} the documents of the word in the \texttt{key} argument. This sum is, naturally, the output of the Word Count algorithm for this word.
 \end{enumerate}
 
 We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set\_trace()} at multiple places within the code to see what is contained in each variable.
@@ -221,11 +222,20 @@ One of the advantages of MRJob is that you can use the exact same Python code as
 To run the exact same code as before using EMR, type the following into the command line.
 
 \begin{verbatim}
-python big_data/wordcount.py -r emr ../data/wikipedia/en_perline001.txt
+python wordcount.py -r emr en_perline001.txt > results2.txt
 \end{verbatim}
 
-The file we used on the previous exercises is not very big, but running on a cluster of machines allows us to
-scale up enough to use Wikipedia as input:
+Since the two files don't have to have the same order for the words, it's hard to compare them visually. Try these two commands in the terminal, which will check how often you counted the word \texttt{will}:
+
+\begin{verbatim}
+grep will results.txt
+grep will results2.txt
+\end{verbatim}
+
+You should see that the word "will" appears 2151 times on the English file, with both commands.
+
+The file we used on the previous exercises is not very big (it contains around 0.1\% of the text from the English Wikipedia), but running on a cluster of machines allows us to
+scale up enough to use larger files as input. For example, let's run the same on 10\% of the Portuguese Wikipedia, using a file which is present on Amazon's S3 storage service:
 
 \begin{verbatim}
 python wordcount.py \
@@ -241,7 +251,7 @@ Language detection is surprisingly easy if you have enough data to train your sy
 
 You can now use the exact same Na\"{i}ve Bayes algorithm which you used for sentiment analysis on Day 1. Instead of classifying text into two classes (positive and negative) we're going to classify text into two other classes (Portuguese and English). Our training data will be parts of the Portuguese and English Wikipedias.\footnote{We will use 10\% of the Portuguese Wikipedia and 1\% of the English Wikipedia to ensure that you can complete this exercise in the time of this lab session. However, Amazon's infrastructure is easily capable of handling the whole Wikipedia.}
 
-The implementation of binary Na\"{i}ve Bayes is very similar to counting words:
+The implementation of distributed Na\"{i}ve Bayes is very similar to counting words:
 \begin{enumerate}
 	\item The map step takes the whole training data of the Portuguese language and splits it into documents. The mapper function computes the frequency of each trimer on one document.
 	\item The reduce step compiles the information from all the documents and sums the counts of every Portuguese document.
@@ -316,22 +326,36 @@ If your code is in file \texttt{trimercount.py}, inside the \texttt{big\_data} f
 %
 
 \begin{verbatim}
-python big_data/trimercount.py ../data/wikipedia/en_perline001.txt  > en.counts.txt
+python trimercount.py en_perline001.txt  > en.counts.txt
 
-python big_data/trimercount.py ../data/wikipedia/pt_perline01.txt > pt.counts.txt
+python trimercount.py pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
 Step 4 should use the two files \texttt{en.counts.txt} and \texttt{> pt.counts.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
 
 After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
 
-\begin{verbatim}
-python big_data/trimercount.py -r emr s3://lxmls-labs/en_perline01.txt > en.counts.txt
+%\begin{verbatim}
+%python trimercount.py -r emr s3://lxmls-labs/en_perline01.txt > en.counts.txt
+%
+%python trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt > pt.counts.txt
+%\end{verbatim}
 
-python big_data/trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt > pt.counts.txt
+\begin{verbatim}
+python trimercount.py -r emr en_perline001.txt > en.counts.txt
+
+python trimercount.py -r emr pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
-To test your language detector, you might not know Portuguese. Here are a few sentences you can use to test it (from the Portuguese Wikipedia):
+To check if things worked, try the command
+
+\begin{verbatim}
+grep acc en.counts.txt
+\end{verbatim}
+
+which should tell you that the trimer \texttt{acc} appeared 3448 times in the English file.
+
+To test your language detector, see if it classifies correctly some sentences which you make up. If you do not know Portuguese, here are a few sentences you can use to test (from the Portuguese Wikipedia):
 
 \begin{itemize}
 \item Portugal, oficialmente Rep\'ublica Portuguesa, \'e um pa\'is soberano unit\'ario localizado no Sudoeste da Europa.
