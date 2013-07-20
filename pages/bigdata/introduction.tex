@@ -207,7 +207,7 @@ Open the \texttt{results.txt} file in your favorite text editor. Each line of th
 Here are a few important points which you need to remember for the exercise of this session:
 %
 \begin{enumerate}
-	\item By default, MRJob splits the input (the \texttt{en_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
+	\item By default, MRJob splits the input (the \texttt{en\_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
 	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
 \begin{python}
 	class WordCount(MRJob):
