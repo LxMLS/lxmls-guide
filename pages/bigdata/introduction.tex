@@ -4,13 +4,19 @@ tools to construct a larger learning system.
 
 We will only look at small problems, such that you can run them both locally and on AWS quickly. This way, you can learn how to use them within the limited time of these lab sessions. Unfortunately, this also means that you will not be dealing with truly large-scale problems where AWS is faster than local computations. You should consider these last two days as a proof-of-concept giving you the knowledge necessary to run things on AWS, which you can apply to your own large-scale problems after this summer school.
 
-\section*{IMPORTANT: If you use your own computer}
+\section*{IMPORTANT: Connect to the Amazon WebServices Machine we Provide}
 
-The instructions we will provide here assume that you are using one of our own computers, which have some software preinstalled. Unfortunately, EC2 installation guides and tutorials are not very widespread. If you are using your own machine, please follow the installation instructions for the EC2 tools available at \texttt{http://aws.amazon.com/developertools/351} in the "Download" section. If you are using Linux, there is probably a release of the EC2 API for your system (on Ubuntu, run the command \texttt{sudo apt-get install ec2-api-tools}).
+The instructions we will provide here assume that you are using one of our own
+computers, which have some software preinstalled. Furthermore, we have set up
+permissions to allow you to run all the code in this way, but \emph{it will
+fail if you try to run it from your local machine}.
 
-You will also need the Python package \texttt{MrJob}. You can install it by running \texttt{pip install mrjob}.
+\subsection*{Running at Home}
 
-If you are not using Linux on your computer, our recommendation is that you install an open source virtual machine software such as VirtualBox and run an Ubuntu virtual machine on it, and follow the instructions from this section. This way, you can easily follow the instructions on this guide.
+After the summer school is over, you can run the same code on your local
+machine or your own AWS machine. For this, you will need to get an Amazon
+account for yourself. Then, you will receive AWS credentials which will give
+you full permissions to run it in multiple modes.
 
 \section*{Today's Assignment}
 
@@ -201,7 +207,7 @@ Open the \texttt{results.txt} file in your favorite text editor. Each line of th
 Here are a few important points which you need to remember for the exercise of this session:
 %
 \begin{enumerate}
-	\item By default, MRJob splits the input (the \texttt{en_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
+	\item By default, MRJob splits the input (the \texttt{en\_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
 	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
 \begin{python}
 	class WordCount(MRJob):
@@ -214,10 +220,12 @@ Here are a few important points which you need to remember for the exercise of t
 We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set\_trace()} at multiple places within the code to see what is contained in each variable.
 
 \subsection{Running Word Count on Amazon EC2}
+We will now run the algorithm on your own private cluster.
 
-We are now going to use the AWS Key and AWS Secret. These are like a username and password for Amazon Webservices.
-
-One of the advantages of MRJob is that you can use the exact same Python code as before, but changing a few arguments in the command line will run the Word Count on Amazon's computers instead of on the computer where the file is. This is what Amazon calls Elastic Map Reduce (EMR).
+One of the advantages of MRJob is that you can use the exact same Python code
+as before, but changing a few arguments in the command line will run the Word
+Count on Amazon's computers instead of on the computer where the file is. This
+is what Amazon calls Elastic Map Reduce (EMR).
 
 To run the exact same code as before using EMR, type the following into the command line.
 
