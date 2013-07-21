@@ -67,7 +67,7 @@ information:
 \section{MapReduce for Word Count}
 
 The initial idea of MapReduce was an implementation by
-google\footnote{http://research.google.com/archive/mapreduce.html}, but very
+Google\footnote{http://research.google.com/archive/mapreduce.html}, but very
 soon Hadoop appeared as an open-source implementation of the same
 paradigm.\footnote{http://hadoop.apache.org/}
 
@@ -195,8 +195,13 @@ wc.run()
 \end{python}
 
 This file already exists as \texttt{wordcount.py} (inside the
-\texttt{wordcount} folder). To run it on your machine (without using Amazon
-EC2), navigate to the \texttt{wordcount} folder and type this into a terminal:
+\texttt{wordcount} folder). You will first run it without using Amazon
+EC2. To do that, {\texttt{ssh}} your machine
+\begin{verbatim}
+ssh <username>@<prefix>.compute.amazonaws.com
+\end{verbatim}
+authenticating with the credentials provided in this lab.
+Then, navigate to the \texttt{wordcount} folder and type this into a terminal:
 
 \begin{verbatim}
 python wordcount.py en_perline001.txt > results.txt
