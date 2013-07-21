@@ -101,7 +101,7 @@ print 'Nr of tokens: ', n
 \subsection{Processing a single sequence}
 
 We have also provided code for you to compute the statistics for a single
-sequence in the function \verb+sequence_statistics(seq, hmm)+. Here is how you
+sequence in the function \verb+predict_sequence(seq, hmm)+. Here is how you
 could use it. First we need to initialize an HMM object:
 
 \begin{python}
@@ -115,15 +115,17 @@ hmm.initialize_random()
 Here we also made use of the word\_dict\_mapping.pkl file to get the
 dictionaries. Then, we initialized the HMM with a random initialization.
 
-Now, we can use the \verb+sequence_statistics+ function:
+Now, we can use the \verb+predict_sequence+ function:
 
 \begin{python}
+from emstep import load_sequence,predict_sequence
+
 for line in open('sequences200.txt'):
-    s = load_sequence(line, word_dict, tag_dict, mapping)
-    statistics = sequence_statistics(seq, hmm)
+    seq = load_sequence(line, word_dict, tag_dict, mapping)
+    statistics = predict_sequence(seq, hmm)
 \end{python}
 
-It is important to note that \verb+sequence_statistics+ is \emph{a pure
+It is important to note that \verb+predict_sequence+ is \emph{a pure
 function}! It does not change its inputs. This means that \emph{if you call it
 in a different order or in different machines, you will always get the same
 results}.
@@ -138,7 +140,7 @@ another MapReduce job to discover all the words in the dataset.
 
 If you look back to equations,
 \eqref{eq::initialCountsPost}--\eqref{eq::emissionCountsPost} you can see that
-\verb+sequence_statistics+ is computing the value inside the outer sums.
+\verb+predict_sequence+ is computing the value inside the outer sums.
 
 \subsection{Combining Partial Results}
 At this point, you should understand the code we provided.
@@ -149,15 +151,15 @@ that can take all the sequence statistics and output the final statistics.
 \begin{python}
 import lxmls.sequences.hmm as hmmc
 import pickle
-word_dict, tag_dict, mapping = pickle.load(open('word_dict_mapping.pkl'))
+from emstep import load_sequence,predict_sequence,combine_partials
+
+word_dict, tag_dict = pickle.load(open('word_dict_mapping.pkl'))
 hmm = hmmc.HMM(word_dict, tag_dict)
 hmm.initialize_random()
 statistics = []
 for line in open('sequences200.txt'):
-    s = load_sequence(line, word_dict, tag_dict)
-    statistics.append(
-        sequence_statistics(seq, hmm)
-        )
+    seq = load_sequence(line, word_dict, tag_dict)
+    statistics.append(predict_sequence(seq, hmm))
 
 final = combine_partials(statistics, hmm)
 \end{python}
@@ -230,7 +232,7 @@ following flags (we are also directing the output to the file
 python emstep.py \
     -r local \
     --file=word_dict_mapping.pkl \
-    encoded200.txt > next_iteration.pkl
+    sequences200.txt > next_iteration.pkl
 \end{verbatim}
 
 The first flag (\verb+-r local+) makes the code run locally, the second
@@ -270,7 +272,7 @@ python emstep.py \
     -r local \
     --file=word_dict_mapping.pkl \
     --file=hmm.pkl
-    encoded200.txt > next_iteration.pkl
+    sequences200.txt > next_iteration.pkl
 \end{verbatim}
 
 \textbf{Pitfall:} Be careful to not over-write your HMM file! You need to
@@ -287,7 +289,7 @@ python emstep.py \
     -r local \
     --file=word_dict_mapping.pkl \
     --file=hmm.pkl \
-    encoded200.txt > hmm.pkl
+    sequences200.txt > hmm.pkl
 \end{verbatim}
 
 This is a mistake because the \verb+hmm.pkl+ is now removed (to make space for
@@ -301,7 +303,7 @@ When you are happy with your code, you can now run it on the cluster:
 python emstep.py \
     -r emr \
     --file=word_dict_mapping.pkl \
-    encoded200.txt
+    sequences200.txt
 \end{verbatim}
 
 The \verb+-r emr+ flags runs the code on Elastic MapReduce now. Run it multiple
@@ -319,7 +321,7 @@ on the lab tutorial of day 2).
 
 On the cluster we provide you, they are already installed, and you can just use
 them without any special effort. If you are attempting to use your own computer
-or reproduce the steps at thome; please note that these packages need to be
+or reproduce the steps at home; please note that these packages need to be
 installed before hand. Check the documentation of mrjob on how to install
 python packages on the Elastic MapReduce cluster if you want to run it on your
 own Amazon account.
