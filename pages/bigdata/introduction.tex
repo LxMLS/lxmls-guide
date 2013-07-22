@@ -1,16 +1,30 @@
-In this lab, we will work with Amazon.com's Web Services (AWS)\footnote{http://aws.amazon.com/}, a cloud based solution
-to run some simple analyses. Then, in the next lab, we will build on these
+In this lab (and tomorrow), we will work with Amazon.com's Web Services
+(AWS)\footnote{http://aws.amazon.com/}, a cloud based solution to run some
+simple analyses. Then, in the next lab, we will build on these
 tools to construct a larger learning system.
 
 We will only look at small problems, such that you can run them both locally and on AWS quickly. This way, you can learn how to use them within the limited time of these lab sessions. Unfortunately, this also means that you will not be dealing with truly large-scale problems where AWS is faster than local computations. You should consider these last two days as a proof-of-concept giving you the knowledge necessary to run things on AWS, which you can apply to your own large-scale problems after this summer school.
 
-\section*{IMPORTANT: If you use your own computer}
+\section*{IMPORTANT: Connect to the Amazon WebServices Machine we Provide}
 
-The instructions we will provide here assume that you are using one of our own computers, which have some software preinstalled. Unfortunately, EC2 installation guides and tutorials are not very widespread. If you are using your own machine, please follow the installation instructions for the EC2 tools available at \texttt{http://aws.amazon.com/developertools/351} in the "Download" section. If you are using Linux, there is probably a release of the EC2 API for your system (on Ubuntu, run the command \texttt{sudo apt-get install ec2-api-tools}).
+In these two lab days, you will use three machines:
 
-You will also need the Python package \texttt{MrJob}. You can install it by running \texttt{pip install mrjob}.
+\begin{enumerate}
+\item Your \emph{local machine}, which may be your personal laptop or one of
+the computers at IST. From this machine, you will use SSH to login to:
+\item Your AWS machine, which is a regular Linux box which runs on the cloud
+and is private to you. You should use this machine to edit the code and test
+it.
+\item The Elastic MapReduce cluster machines. You cannot directly login to
+them, but will use automated tools to submit jobs and get back the results.
+\end{enumerate}
 
-If you are not using Linux on your computer, our recommendation is that you install an open source virtual machine software such as VirtualBox and run an Ubuntu virtual machine on it, and follow the instructions from this section. This way, you can easily follow the instructions on this guide.
+\subsection*{Running at Home}
+
+After the summer school is over, you can run the same code on your local
+machine or your own AWS machine. For this, you will need to get an Amazon
+account for yourself. Then, you will receive AWS credentials which will give
+you full permissions to run it in multiple modes.
 
 \section*{Today's Assignment}
 
@@ -67,7 +81,7 @@ sentence -- don't worry about it for now).
 \section{MapReduce for Word Count}
 
 The initial idea of MapReduce was an implementation by
-google\footnote{http://research.google.com/archive/mapreduce.html}, but very
+Google\footnote{http://research.google.com/archive/mapreduce.html}, but very
 soon Hadoop appeared as an open-source implementation of the same
 paradigm.\footnote{http://hadoop.apache.org/}
 
@@ -195,8 +209,13 @@ wc.run()
 \end{python}
 
 This file already exists as \texttt{wordcount.py} (inside the
-\texttt{wordcount} folder). To run it on your machine (without using Amazon
-EC2), navigate to the \texttt{wordcount} folder and type this into a terminal:
+\texttt{wordcount} folder). You will first run it without using Amazon
+EC2. To do that, {\texttt{ssh}} your machine
+\begin{verbatim}
+ssh <username>@<prefix>.compute.amazonaws.com
+\end{verbatim}
+authenticating with the credentials provided in this lab.
+Then, navigate to the \texttt{wordcount} folder and type this into a terminal:
 
 \begin{verbatim}
 python wordcount.py en_perline001.txt > results.txt
@@ -220,10 +239,12 @@ Here are a few important points which you need to remember for the exercise of t
 We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set\_trace()} at multiple places within the code to see what is contained in each variable.
 
 \subsection{Running Word Count on Amazon EC2}
+We will now run the algorithm on your own private cluster.
 
-We are now going to use the AWS Key and AWS Secret. These are like a username and password for Amazon Webservices.
-
-One of the advantages of MRJob is that you can use the exact same Python code as before, but changing a few arguments in the command line will run the Word Count on Amazon's computers instead of on the computer where the file is. This is what Amazon calls Elastic Map Reduce (EMR).
+One of the advantages of MRJob is that you can use the exact same Python code
+as before, but changing a few arguments in the command line will run the Word
+Count on Amazon's computers instead of on the computer where the file is. This
+is what Amazon calls Elastic Map Reduce (EMR).
 
 To run the exact same code as before using EMR, type the following into the command line.
 
@@ -246,7 +267,7 @@ scale up enough to use larger files as input. For example, let's run the same on
 \begin{verbatim}
 python wordcount.py \
         -r emr \
-        s3://lxmls-labs/pt_perline10.txt
+        s3://lxmls-labs/pt_perline10.txt > results_PT.txt
 \end{verbatim}
 
 This should take about 3 minutes.
@@ -324,7 +345,7 @@ Using the Word Count example we've given you above, implement the Na\"{i}ve Baye
 You must run two jobs, one on a selection of the Portuguese Wikipedia (1\%) and
 another on the English Wikipedia (only 0.1\% as this is much larger). These files already exist on the LXMLS Toolkit as \texttt{pt\_perline01.txt} and \texttt{en\_perline001.txt}. They are small enough to run locally but should already produce a decent language detector.
 
-Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{en.counts.txt} and \texttt{> pt.counts.txt} when you run the two jobs, to output the results to appropriate files.
+Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{> en.counts.txt} and \texttt{> pt.counts.txt} when you run the two jobs, to output the results to appropriate files.
 
 If your code is in file \texttt{trimercount.py}, inside the \texttt{big\_data} folder, the two commands you need to type into the terminal to run things locally are:
 
@@ -332,12 +353,12 @@ If your code is in file \texttt{trimercount.py}, inside the \texttt{big\_data} f
 %
 
 \begin{verbatim}
-python trimercount.py en_perline001.txt  > en.counts.txt
+python trimercount.py en_perline001.txt > en.counts.txt
 
 python trimercount.py pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
-Step 4 should use the two files \texttt{en.counts.txt} and \texttt{> pt.counts.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
+Step 4 should use the two files \texttt{en.counts.txt} and \texttt{pt.counts.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
 
 After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
 
