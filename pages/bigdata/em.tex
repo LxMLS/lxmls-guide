@@ -73,7 +73,7 @@ it you will find a few data and code files:
 
 \begin{itemize}
 \item \verb+sequences200.txt+ contains the first 200~sequences.
-\item \verb+word_tag_dict.pkl+ is an auxiliary file.
+\item \verb+word_tag_dict.pkl+ is an auxiliary file containing the dictionaries of words and tags.
 \item \verb+emstep.py+ contains a skeleton of the code we will be writing.
 \item A few other files we will use below (ignore them for the moment).
 \end{itemize}
@@ -154,12 +154,12 @@ could use it. First we need to initialize an HMM object:
 \begin{python}
 import lxmls.sequences.hmm as hmmc
 import pickle
-word_dict, tag_dict  = pickle.load(open('word_dict_mapping.pkl'))
+word_dict, tag_dict  = pickle.load(open('word_tag_dict.pkl'))
 hmm = hmmc.HMM(word_dict, tag_dict)
 hmm.initialize_random()
 \end{python}
 
-Here we also made use of the word\_dict\_mapping.pkl file to get the
+Here we also made use of the word\_tag\_dict.pkl file to get the
 dictionaries. Then, we initialized the HMM with a random initialization.
 
 Now, we can use the \verb+predict_sequence+ function:
@@ -200,7 +200,7 @@ import lxmls.sequences.hmm as hmmc
 import pickle
 from emstep import load_sequence,predict_sequence,combine_partials
 
-word_dict, tag_dict = pickle.load(open('word_dict_mapping.pkl'))
+word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
 hmm = hmmc.HMM(word_dict, tag_dict)
 hmm.initialize_random()
 statistics = []
@@ -278,13 +278,13 @@ following flags (we are also directing the output to the file
 \begin{verbatim}
 python emstep.py \
     -r local \
-    --file=word_dict_mapping.pkl \
+    --file=word_tag_dict.pkl \
     sequences200.txt > next_iteration.pkl
 \end{verbatim}
 
 The first flag (\verb+-r local+) makes the code run locally, the second
-(\verb+--file=word_dict_mapping.pkl+) declares that the file
-\verb+word_dict_mapping.pkl+ is needed to run the job.
+(\verb+--file=word_tag_dict.pkl+) declares that the file
+\verb+word_tag_dict.pkl+ is needed to run the job.
 
 In order to run multiple iterations, you need to save the results of the
 previous iteration to a file, which can be loaded at startup.
@@ -317,7 +317,7 @@ line}!):
 \begin{verbatim}
 python emstep.py \
     -r local \
-    --file=word_dict_mapping.pkl \
+    --file=word_tag_dict.pkl \
     --file=hmm.pkl
     sequences200.txt > next_iteration.pkl
 \end{verbatim}
@@ -334,7 +334,7 @@ The \emph{following is a mistake!}
 \begin{verbatim}
 python emstep.py \
     -r local \
-    --file=word_dict_mapping.pkl \
+    --file=word_tag_dict.pkl \
     --file=hmm.pkl \
     sequences200.txt > hmm.pkl
 \end{verbatim}
@@ -349,7 +349,7 @@ When you are happy with your code, you can now run it on the cluster:
 \begin{verbatim}
 python emstep.py \
     -r emr \
-    --file=word_dict_mapping.pkl \
+    --file=word_tag_dict.pkl \
     sequences200.txt
 \end{verbatim}
 
@@ -453,7 +453,7 @@ full dataset:
 \begin{verbatim}
 python emstep.py \
     -r emr \
-    --file=word_dict_mapping.pkl \
+    --file=word_tag_dict.pkl \
     s3://lxmls-labs/all-sequences-for-em.txt
 \end{verbatim}
 
