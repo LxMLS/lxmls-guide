@@ -79,7 +79,7 @@ it you will find a few data and code files:
 \subsection{Loading data}
 
 The datafiles are in a different format from what was used in the previous EM
-tutorial \emph{because the simplest way to use Hadoop is make each mapper
+tutorial \emph{because the simplest way to use Mapreduce is to make each mapper
 receive a single line of the file}.
 
 To load a single line of the input file, we have provided a function
@@ -107,7 +107,7 @@ could use it. First we need to initialize an HMM object:
 \begin{python}
 import lxmls.sequences.hmm as hmmc
 import pickle
-word_dict, tag_dict, mapping = pickle.load(open('word_tag_dict_mapping.pkl'))
+word_dict, tag_dict, mapping = pickle.load(open('word_dict_mapping.pkl'))
 hmm = hmmc.HMM(word_dict, tag_dict)
 hmm.initialize_random()
 \end{python}
@@ -149,7 +149,7 @@ that can take all the sequence statistics and output the final statistics.
 \begin{python}
 import lxmls.sequences.hmm as hmmc
 import pickle
-word_dict, tag_dict, mapping = pickle.load(open('word_tag_dict_mapping.pkl'))
+word_dict, tag_dict, mapping = pickle.load(open('word_dict_mapping.pkl'))
 hmm = hmmc.HMM(word_dict, tag_dict)
 hmm.initialize_random()
 statistics = []
