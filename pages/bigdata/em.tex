@@ -86,8 +86,28 @@ The datafiles are in a different format from what was used in the previous EM
 tutorial \emph{because the simplest way to use Hadoop is make each mapper
 receive a single line of the file}.
 
-To load a single line of the input file, we have provided a function
-\verb+load_sequence(line, word_dict, tag_dict)+., which takes the
+To load a single line of the input file, we have provided in file {\texttt{emstep.py}} a function
+\begin{python}
+def load_sequence(line, word_dict, tag_dict):
+    '''
+    seq = load_sequence(s, word_dict, tag_dict)
+
+    Load a sequence from a single line
+
+    word_dict & tag_dict should be loaded from the file ``word_tag_dict.pkl``
+
+    Parameters
+    ----------
+    s : str
+    word_dict : dict
+    tag_dict : dict
+
+    Returns
+    -------
+    seq : Sequence object
+    '''
+\end{python}
+which takes the
 input data and the metadata in the auxiliary file. Here is how you would use it
 to just count the number of tokens in the dataset:
 
@@ -105,7 +125,30 @@ print 'Nr of tokens: ', n
 \subsection{Processing a single sequence}
 
 We have also provided code for you to compute the statistics for a single
-sequence in the function \verb+predict_sequence(seq, hmm)+. Here is how you
+sequence in the function 
+\begin{python}
+def predict_sequence(sequence, hmm):
+    '''
+    log_likelihood, initial_counts, transition_counts, final_counts,\
+            emission_counts = predict_sequence(seq, hmm)
+
+    Run forward-backward on a single sentence.
+
+    Parameters
+    ----------
+    seq : Sequence object
+    hmm: HMM object
+
+    Returns
+    -------
+    log_likelihood : float
+    initial_counts : np.ndarray
+    transition_counts : ndarray
+    final_counts : ndarray
+    emission_counts : ndarray
+    '''
+\end{python}
+Here is how you
 could use it. First we need to initialize an HMM object:
 
 \begin{python}
