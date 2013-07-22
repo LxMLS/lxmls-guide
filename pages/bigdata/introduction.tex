@@ -1,15 +1,23 @@
-In this lab, we will work with Amazon.com's Web Services (AWS)\footnote{http://aws.amazon.com/}, a cloud based solution
-to run some simple analyses. Then, in the next lab, we will build on these
+In this lab (and tomorrow), we will work with Amazon.com's Web Services
+(AWS)\footnote{http://aws.amazon.com/}, a cloud based solution to run some
+simple analyses. Then, in the next lab, we will build on these
 tools to construct a larger learning system.
 
 We will only look at small problems, such that you can run them both locally and on AWS quickly. This way, you can learn how to use them within the limited time of these lab sessions. Unfortunately, this also means that you will not be dealing with truly large-scale problems where AWS is faster than local computations. You should consider these last two days as a proof-of-concept giving you the knowledge necessary to run things on AWS, which you can apply to your own large-scale problems after this summer school.
 
 \section*{IMPORTANT: Connect to the Amazon WebServices Machine we Provide}
 
-The instructions we will provide here assume that you are using one of our own
-computers, which have some software preinstalled. Furthermore, we have set up
-permissions to allow you to run all the code in this way, but \emph{it will
-fail if you try to run it from your local machine}.
+In these two lab days, you will use three machines:
+
+\begin{enumerate}
+\item Your \emph{local machine}, which may be your personal laptop or one of
+the computers at IST. From this machine, you will use SSH to login to:
+\item Your AWS machine, which is a regular Linux box which runs on the cloud
+and is private to you. You should use this machine to edit the code and test
+it.
+\item The Elastic MapReduce cluster machines. You cannot directly login to
+them, but will use automated tools to submit jobs and get back the results.
+\end{enumerate}
 
 \subsection*{Running at Home}
 
