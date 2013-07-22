@@ -78,7 +78,7 @@ it you will find a few data and code files:
 \item A few other files we will use below (ignore them for the moment).
 \end{itemize}
 
-We recommend that you make a copy of \verb+emstep.py+ and edit it, adding the code snippets we provide below.
+We recommend that leave the file \verb+emstep.py+ alone and experiment with the code snippets we provide below in a separate script until you get to section \ref{beginMR}.
 
 \subsection{Loading data}
 
@@ -113,6 +113,7 @@ to just count the number of tokens in the dataset:
 
 \begin{python}
 import pickle
+from emstep import load_sequence
 word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
 
 n = 0
@@ -121,6 +122,8 @@ for line in open('sequences200.txt'):
     n += len(s)
 print 'Nr of tokens: ', n
 \end{python}
+
+The format of \texttt{s} is the same as Day 2. If you need to refresh your memory, try placing a line with \texttt{import pdb; pdb.set\_trace()} after the call to the function to see the format of \texttt{s}.
 
 \subsection{Processing a single sequence}
 
@@ -159,7 +162,7 @@ hmm = hmmc.HMM(word_dict, tag_dict)
 hmm.initialize_random()
 \end{python}
 
-Here we also made use of the word\_tag\_dict.pkl file to get the
+Here we also made use of the \verb+word_tag_dict.pkl+ file to get the
 dictionaries. Then, we initialized the HMM with a random initialization.
 
 Now, we can use the \verb+predict_sequence+ function:
@@ -168,8 +171,10 @@ Now, we can use the \verb+predict_sequence+ function:
 from emstep import load_sequence,predict_sequence
 
 for line in open('sequences200.txt'):
-    seq = load_sequence(line, word_dict, tag_dict, mapping)
+    seq = load_sequence(line, word_dict, tag_dict)
     statistics = predict_sequence(seq, hmm)
+    
+print statistics
 \end{python}
 
 It is important to note that \verb+predict_sequence+ is \emph{a pure
@@ -185,11 +190,11 @@ implementation). In our case, we were able to compute the dictionaries using a
 simple Python script, but if the data was truly large, we could have written
 another MapReduce job to discover all the words in the dataset.
 
-If you look back to equations,
-\eqref{eq::initialCountsPost}--\eqref{eq::emissionCountsPost} you can see that
+If you look back to equations \eqref{eq::initialCountsPost}--\eqref{eq::emissionCountsPost} you can see that
 \verb+predict_sequence+ is computing the value inside the outer sums.
 
 \subsection{Combining Partial Results}
+\label{beginMR}
 At this point, you should understand the code we provided.
 
 The goal of the next exercise is to write a function called \verb+combine_partials+
@@ -232,8 +237,8 @@ really correspond to the expectation and maximisation steps.
 
 \subsection{Using MapReduce}
 The previous exercise resulted in code that was not distributed, but already
-had the map/reduce structure we needed to make it work. The reduce step is not
-distributed, but will run on a single machine (this will be improved on in the
+had the map/reduce structure we needed to make it work. For now, the reduce step is not
+distributed and will run on a single machine (this will be improved on in the
 next exercises).
 
 We will perform a complete mapreduce run for each iteration of EM that we
@@ -262,7 +267,7 @@ that we can emit a Python object in the reduce as the final output and it will
 be properly serialized to the output.
 
 \begin{exercise}
-Based on your function \verb+sum_partials+ and the code we provided you, fill in
+Based on your function \verb+combine_partials+ and the code we provided you, fill in
 the map and reduce steps.
 
 For the moment, your reduce function should have a single emission of the form
@@ -282,14 +287,14 @@ python emstep.py \
     sequences200.txt > next_iteration.pkl
 \end{verbatim}
 
-The first flag (\verb+-r local+) makes the code run locally, the second
+The first flag (\verb+-r local+) makes the code run on the present machine (the AWS machine), the second
 (\verb+--file=word_tag_dict.pkl+) declares that the file
 \verb+word_tag_dict.pkl+ is needed to run the job.
 
 In order to run multiple iterations, you need to save the results of the
 previous iteration to a file, which can be loaded at startup.
 
-So, once you have run the code the first time, rename the output file:
+So, once you have run the code the first time, rename the output file by typing this into the terminal:
 
 \begin{verbatim}
 mv next_iteration.pkl hmm.pkl
