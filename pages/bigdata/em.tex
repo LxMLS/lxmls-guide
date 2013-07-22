@@ -185,7 +185,7 @@ results}.
 This also explains why we need to have the word dictionaries precomputed: if we
 built them as we go, then the order in which the sequences are processed would
 make a difference. Thus, we could not process the sequences in parallel. We
-will comment on this later when we see an alternative (more sofisticated
+will comment on this later when we see an alternative (more sophisticated
 implementation). In our case, we were able to compute the dictionaries using a
 simple Python script, but if the data was truly large, we could have written
 another MapReduce job to discover all the words in the dataset.
@@ -229,7 +229,7 @@ def combine_partials(statistics, hmm):
     hmm.initial_counts = ...
 \end{python}
 
-A template is provided in \verb+emstep.py+
+A template is provided in \verb+emstep.py+.
 \end{exercise}
 
 Note that this separation into sequence statistics and combination does not
@@ -271,7 +271,7 @@ Based on your function \verb+combine_partials+ and the code we provided you, fil
 the map and reduce steps.
 
 For the moment, your reduce function should have a single emission of the form
-\verb+yield 'result', hmm+. Later, we will see more sofisticated methods.
+\verb+yield 'result', hmm+. Later, we will see more sophisticated methods.
 
 You may want to read the next few paragraphs before you start.
 \end{exercise}
@@ -302,14 +302,14 @@ mv next_iteration.pkl hmm.pkl
 
 Notice that in the \verb+__init__+ function we check whether the file \verb+hmm.pkl+ exists and load it if so:
 
-\begin{verbatim}
+\begin{python}
 from os import path
 if path.exists('hmm.pkl'):
     hmm = pickle.load(open('hmm.pkl').read().decode('string-escape'))
 else:
     hmm = hmmc.HMM(word_dict, tag_dict)
     hmm.initialize_random()
-\end{verbatim}
+\end{python}
 
 We needed to be careful with the string escapes in the above code, but
 otherwise were able to just rely on Python \verb+pickle+ to load the results.
@@ -321,7 +321,7 @@ line}!):
 python emstep.py \
     -r local \
     --file=word_tag_dict.pkl \
-    --file=hmm.pkl
+    --file=hmm.pkl \
     sequences200.txt > next_iteration.pkl
 \end{verbatim}
 
@@ -475,7 +475,7 @@ section is an advanced module and you have already seen the major take-home
 points of the tutorial with the previous exercise.}
 
 Our code can still be improved in two ways: (1) there is a single reduce call,
-which does not take advantage of the fact that we havea cluster of machines;
+which does not take advantage of the fact that we have a cluster of machines;
 and (2) because the emission matrices are sparse we are emitting large matrices
 with many zeros. %% FIXME Actually, check if they are still sparse using the map final method
 
