@@ -75,7 +75,7 @@ it you will find a few data and code files:
 \item \verb+sequences200.txt+ contains the first 200~sequences.
 \item \verb+word_tag_dict.pkl+ is an auxiliary file.
 \item \verb+emstep.py+ contains a skeleton of the code we will be writing.
-\item A few other files we will use below (but ignore for the moment).
+\item A few other files we will use below (ignore them for the moment).
 \end{itemize}
 
 We recommend that you make a copy of \verb+emstep.py+ and edit it, adding the code snippets we provide below.
@@ -83,7 +83,7 @@ We recommend that you make a copy of \verb+emstep.py+ and edit it, adding the co
 \subsection{Loading data}
 
 The datafiles are in a different format from what was used in the previous EM
-tutorial \emph{because the simplest way to use Hadoop is make each mapper
+tutorial \emph{because the simplest way to use Hadoop (which is the underlying framework of Amazon EC2) is make each mapper
 receive a single line of the file}.
 
 To load a single line of the input file, we have provided in file {\texttt{emstep.py}} a function
