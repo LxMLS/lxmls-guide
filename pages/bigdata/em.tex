@@ -283,7 +283,7 @@ following flags (we are also directing the output to the file
 \begin{verbatim}
 python emstep.py \
     -r local \
-    --file=word_tag_dict.pkl \
+    --file=word_tag_dict.pkl\
     sequences200.txt > next_iteration.pkl
 \end{verbatim}
 
@@ -300,15 +300,13 @@ So, once you have run the code the first time, rename the output file by typing 
 mv next_iteration.pkl hmm.pkl
 \end{verbatim}
 
-The code should check whether the file \verb+hmm.pkl+ exists and load it if so.
-Change your initialization code to read like this:
+Notice that in the \verb+__init__+ function we check whether the file \verb+hmm.pkl+ exists and load it if so:
 
 \begin{verbatim}
 from os import path
 if path.exists('hmm.pkl'):
     hmm = pickle.load(open('hmm.pkl').read().decode('string-escape'))
 else:
-    # This is as before
     hmm = hmmc.HMM(word_dict, tag_dict)
     hmm.initialize_random()
 \end{verbatim}
@@ -335,7 +333,7 @@ perform two steps:
 \item Rename the temporary file.
 \end{enumerate}
 
-The \emph{following is a mistake!}
+\emph{The following is a mistake!}
 \begin{verbatim}
 python emstep.py \
     -r local \
@@ -381,12 +379,12 @@ own Amazon account.
 \subsection{Introducing \texttt{mapper\_final}}
 
 While the code you wrote in the last exercise works correctly, it is horribly
-inefficient. The problems is that \emph{we output several matrices for each
+inefficient. The problem is that \emph{we output several matrices for each
 sequence}. This results in too much communication between processes and the
 reduce step needs to load all these large matrices.
 
 In order to address this problem we need to introduce a new operation, the
-\verb+mapper_final+. This called, for each mapper, when all the input has been
+\verb+mapper_final+. This is called, for each mapper, when all the input has been
 processed.
 
 You can perhaps understand this by imagining that mrjob is running the
@@ -441,12 +439,12 @@ machines used and not the size of the input.
 
 \begin{exercise}
 Use \verb+mapper_final+ to improve your MapReduce implementation. Initialize the
-matrices and log likelihood to zero in the constructor and update partial sums
+matrices and log likelihood to zero in the \verb+__init__+ constructor and update partial sums
 in the map function. Emit only in the \verb+mapper_final+ method.
 
 The reduce function should not need to be changed at all.
 
-Use the previous naïve version as a benchmark. The results should not change
+Use the previous na\"{i}ve version as a benchmark. The results should not change
 beyond a rounding error (they may change slightly).
 \end{exercise}
 
@@ -467,7 +465,7 @@ optimization; you will simply wait a long time before running out of
 resources. With this new version, it runs to completion. It might still take
 too long for you to be able to run many iterations before the lab is over, but
 now you can see that you could run this on a million sequences in a few hours
-if you had enough machines. See the note on Hadoop latency and Big Data at the
+if you had enough machines. See also the note on Hadoop latency and Big Data at the
 end of this chapter.
 
 \subsection{Parallelizing Reduce*}
