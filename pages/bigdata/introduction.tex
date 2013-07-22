@@ -5,7 +5,7 @@ tools to construct a larger learning system.
 
 We will only look at small problems, such that you can run them both locally and on AWS quickly. This way, you can learn how to use them within the limited time of these lab sessions. Unfortunately, this also means that you will not be dealing with truly large-scale problems where AWS is faster than local computations. You should consider these last two days as a proof-of-concept giving you the knowledge necessary to run things on AWS, which you can apply to your own large-scale problems after this summer school.
 
-\section*{IMPORTANT: Connect to the Amazon WebServices Machine we Provide}
+\subsection*{Connecting to Amazon WebServices}
 
 In these two lab days, you will use three machines:
 
@@ -43,7 +43,7 @@ interface. If you are not familiar with the command line, don't worry -- we
 will tell you everything you need regarding the command line, and your
 exercises only involve Python, just like the previous days.
 
-\section{Useful Information}
+\section{Using your AWS machine}
 
 You should have received a piece of paper with the following two pieces of information:
 
@@ -179,7 +179,7 @@ Note that the reduce step also produces key/value pairs. As you can see, this la
 In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
 as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
 
-\subsection{Running Word Count locally}
+\subsection{Running Word Count on one machine}
 
 Here is an implementation of the Word Count algorithm in Python, using MRJob:
 
@@ -313,7 +313,7 @@ Using the Word Count example we've given you above, implement the Na\"{i}ve Baye
 
 \begin{itemize}
 	\item Steps 1 to 3 (counting occurrences of trimers in train data, for both languages), should be run on EC2. 
-	\item Step 4 should be run locally (it is quite fast even with just one computer). It should implement the formula given in equation \eqref{eq:NBformula}.
+	\item Step 4 should be run on your AWS server (it is quite fast even with just one computer). It should implement the formula given in equation \eqref{eq:NBformula}.
 \end{itemize}
 
 %\begin{python}
@@ -343,11 +343,11 @@ Using the Word Count example we've given you above, implement the Na\"{i}ve Baye
 %\end{python}
 
 You must run two jobs, one on a selection of the Portuguese Wikipedia (1\%) and
-another on the English Wikipedia (only 0.1\% as this is much larger). These files already exist on the LXMLS Toolkit as \texttt{pt\_perline01.txt} and \texttt{en\_perline001.txt}. They are small enough to run locally but should already produce a decent language detector.
+another on the English Wikipedia (only 0.1\% as this is much larger). These files already exist on the LXMLS Toolkit as \texttt{pt\_perline01.txt} and \texttt{en\_perline001.txt}. They are small enough to run on your AWS machine only, and should already produce a decent language detector.
 
 Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{> en.counts.txt} and \texttt{> pt.counts.txt} when you run the two jobs, to output the results to appropriate files.
 
-If your code is in file \texttt{trimercount.py}, inside the \texttt{big\_data} folder, the two commands you need to type into the terminal to run things locally are:
+If your code is in file \texttt{trimercount.py}, inside the \texttt{big\_data} folder, the two commands you need to type into the terminal to run things in your AWS machine are:
 
 %
 %
@@ -358,9 +358,9 @@ python trimercount.py en_perline001.txt > en.counts.txt
 python trimercount.py pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
-Step 4 should use the two files \texttt{en.counts.txt} and \texttt{pt.counts.txt} to implement the language detector. This is all run locally -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
+Step 4 should use the two files \texttt{en.counts.txt} and \texttt{pt.counts.txt} to implement the language detector. This is all run on your AWS machine only -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
 
-After you've managed to get things working locally, you can easily run steps 1-3 on AWS, now using files which are 10 times larger (which are already stored on Amazon's online storage service, S3):
+After you've managed to get things working on one machine only, you can easily run steps 1-3 on AWS:
 
 %\begin{verbatim}
 %python trimercount.py -r emr s3://lxmls-labs/en_perline01.txt > en.counts.txt
@@ -385,10 +385,9 @@ which should tell you that the trimer \texttt{acc} appeared 3448 times in the En
 To test your language detector, see if it classifies correctly some sentences which you make up. If you do not know Portuguese, here are a few sentences you can use to test (from the Portuguese Wikipedia):
 
 \begin{itemize}
-\item Portugal, oficialmente Rep\'ublica Portuguesa, \'e um pa\'is soberano unit\'ario localizado no Sudoeste da Europa.
-\item Portugal \'e a na\c{c}\~ao mais a ocidente do continente europeu.
-\item O nome do pa\'is prov\'em da sua segunda maior cidade, Porto, cujo nome latino era Portus Cale.
-\item Lisboa \'e a capital, bem como a maior e mais importante cidade de Portugal.
+\item Esperamos que estejam a gostar desta Escola.
+\item Se tiverem qualquer coment\'{a}rio a fazer, por favor enviem-nos um email.
+\item Os organizadores gostariam de agradecer aos monitores das aulas pr\'{a}ticas pela grande ajuda na elabora\c{c}\~{a}o desta aula.
 \end{itemize}
 
 %\subsection{Building a Classifier}
