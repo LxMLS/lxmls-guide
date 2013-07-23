@@ -236,6 +236,7 @@ Note that this separation into sequence statistics and combination does not
 really correspond to the expectation and maximisation steps.
 
 \subsection{Using MapReduce}
+\label{sec:usingMR}
 The previous exercise resulted in code that was not distributed, but already
 had the map/reduce structure we needed to make it work. For now, the reduce step is not
 distributed and will run on a single machine (this will be improved on in the
@@ -476,7 +477,7 @@ points of the tutorial with the previous exercise.}
 
 Our code can still be improved in two ways: (1) there is a single reduce call,
 which does not take advantage of the fact that we have a cluster of machines;
-and (2) because the emission matrices are sparse we are emitting large matrices
+and (2) since the emission matrices are sparse, we are emitting large matrices
 with many zeros. %% FIXME Actually, check if they are still sparse using the map final method
 
 The previous code also had reduce use resources that grow with the number of
@@ -487,31 +488,29 @@ In order to parallelize reduce, we need to start emitting partial results at a
 more fine grained level. Here are the types of emissions we want to consider:
 
 \begin{enumerate}
-\item The \textbf{initial counts} this is per state.
-\item The \textbf{final counts} this is per state again.
-\item The \textbf{transition counts} this is for each pair of states (transition from A to B).
-\item The \textbf{emission counts} this is for each pair of state and word.
+\item The \textbf{initial counts}: this is per state.
+\item The \textbf{final counts}: this is per state again.
+\item The \textbf{transition counts}: this is for each pair of states (transition from A to B).
+\item The \textbf{emission counts}: this is for each pair of state and word.
 \item The \textbf{log likelihood}.
 \end{enumerate}
 
 In order to distinguish all of these, we will emit them as numbers with
 different keys. For example, the log likelihood will simply have the key ``log
-likelihood'', while the matrix will have keys which identify the matrix and the
+likelihood'', while the matrices will have keys which identify the matrix and the
 cell.
 
-The code below exemplifies how we could emit the log likelihood and the vector
-of final counts:
+The code below exemplifies how we could emit the log likelihood and the vector of final counts:
 
 \begin{python}
 yield 'log likelihood', log_likelihood
 
-# Assume that final is a vector of counts
 for i in xrange(len(counts)):
     name = hmm.get_state_name(i)
     yield 'final '+name, counts[i]
 \end{python} % FIXME does the function get_state_name exist?
 
-For the transition counts and emission counts, we will need a nested for loop:
+Note how we included the name of the state in the key. For the transition counts and emission counts, we will need a nested for loop:
 
 \begin{python}
 for i in xrange(transition.shape[0]):
@@ -522,9 +521,8 @@ for i in xrange(transition.shape[0]):
             yield 'transition %s %s' % (name_i, name_j), transition[i,j]
 \end{python}
 
-The check for zeros is important as it is useless to output zero counts. If the
-universe of words is large, then those matrices will be sparse (mostly zeros)
-and we avoid extraneous computation.
+Again, we are including the names of the states in the key. The check for zeros is important as it is useless to output zero counts. If the
+universe of words is large, then those matrices will be sparse and we avoid useless computation and communication.
 
 \begin{exercise}
 Look in the file \verb+emission_snippets.py+. This contains the for loops above
@@ -535,7 +533,7 @@ reduce function. Do not change the keys used for the emission as they are
 needed below (see the next paragraph after this exercise).
 
 \textbf{Important:} Now you should remove the \verb+OUTPUT_PROTOCOL+
-declaration! See the note above on what this means.
+declaration! See the note on section \ref{sec:usingMR} on what this means.
 \end{exercise}
 
 The resulting output is no longer a single HMM object which we can load from
@@ -555,7 +553,7 @@ a long time to start computing and finish running. In our case, this is a very
 significant part of the time it takes to run an iteration.
 
 Hadoop is heavy machinery: it takes a while to move, but then can be very
-powerful. The advantages are in the scaling: we had a trillion sequences which
+powerful. The advantages are in the scaling: if we had a trillion sequences which
 would take thousands of computing hours to process, then the minute or so that
 it takes to start up would not matter and we would reap the benefits of working
 with hundreds, even thousands, of machines. We can say that Hadoop has high
