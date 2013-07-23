@@ -585,7 +585,7 @@ dp.train_perceptron(10)
 dp.test()
 \end{python}
 What is the accuracy obtained in the test set? (Note: the shown accuracy is the fraction of words whose parent was correctly predicted.)\\
-{\emph{Ans}: I obtained an accuracy of 49.52\% for 109 test instances (142 features) (so para ajudar nos labs)}
+% {\emph{Ans}: I obtained an accuracy of 49.52\% for 109 test instances (142 features) (so para ajudar nos labs)}
 \item Repeat the previous exercise by 
 subsequently enabling the lexical, distance and contextual features:
 \begin{python}
@@ -606,18 +606,18 @@ dp.test()
 \end{python}
 For each configuration, write down the number of features and test set accuracies. 
 Observe the improvements obtained when more features were added.\\
-{\emph{Ans}: Lexical features: accuracy of 57.66\% (46216 features).\\
-Distance features: accuracy of 71.46\% (46224 features).\\
-Contextual features: accuracy of 87.45\% (92918 features).\\
-for 109 test instances (so para ajudar nos labs)}\\
+% {\emph{Ans}: Lexical features: accuracy of 57.66\% (46216 features).\\
+% Distance features: accuracy of 71.46\% (46224 features).\\
+% Contextual features: accuracy of 87.45\% (92918 features).\\
+% for 109 test instances (so para ajudar nos labs)}\\
 Feel free to engineer new features!
 
 \item Which of the three important inference tasks discussed above (computing the most likely tree, 
 computing the partition function, and computing the marginals) need to be performed in the structured perceptron algorithm? 
 What about a maximum entropy classifier, with stochastic gradient descent?  
 Check your answers by looking at the following two methods in {\tt code/dependency\_parser.py}:\\
-{\emph{Ans}: structured perceptron is done with function \emph{parse\_nonproj} for computing Chu-Liu-Edmonds algorithm for computing the most likely tree.\\
-Maxent with CRF is done with function \emph{parse\_marginals\_nonproj} for computing marginals and the log-partition function using the matrix-tree theorem.}
+% {\emph{Ans}: structured perceptron is done with function \emph{parse\_nonproj} for computing Chu-Liu-Edmonds algorithm for computing the most likely tree.\\
+% Maxent with CRF is done with function \emph{parse\_marginals\_nonproj} for computing marginals and the log-partition function using the matrix-tree theorem.}
 \begin{python}
 def train_perceptron(self, n_epochs):
 ...
@@ -632,7 +632,7 @@ dp.train_crf_sgd(10, 0.01, 0.1)
 dp.test()
 \end{python}
 Compare the results with those obtained by the perceptron algorithm.\\
-{\emph{Ans:}CRF\_SGD accuracy: 88.12\%.}
+%{\emph{Ans:}CRF\_SGD accuracy: 88.12\%.}
 
 \item Train a parser for English using your favourite learning algorithm: 
 \begin{python}
@@ -640,7 +640,7 @@ dp.read_data("english")
 dp.train_perceptron(10)
 dp.test()
 \end{python}
-{\emph{Ans}: accuracy: 88.56\% for 338014 features and 509 test instances.}\\
+%{\emph{Ans}: accuracy: 88.56\% for 338014 features and 509 test instances.}\\
 
 The predicted trees are placed in the file {\tt data/deppars/english\_test.conll.pred}. 
 To get a sense of which errors are being made, you can 
