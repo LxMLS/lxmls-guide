@@ -17,7 +17,7 @@ unsupervised learning is useful as a tool to study language acquisition.
 From a machine learning point of view, unsupervised learning is a fertile ground for testing new learning methods, 
 where significant improvements can yet be made. 
 From a more pragmatic perspective, unsupervised learning is required
-since annotated corpora is a scarce resource for different reasons. Independently of the reason, unsupervised learning is an increasing active field of research.
+since annotated corpora is a scarce resource for different reasons. Independently of the reason, unsupervised learning is an increasingly active field of research.
 
 A first problem with unsupervised learning, since we don't observe any labeled data (i.e., 
 the training set is now $\mathcal{D}_{U} = \{x^1,\ldots, x^M\}$), 
@@ -34,7 +34,7 @@ more difficult.%
 %with some remarkable exceptions~\citep{smith2005acl}, since the objective of discriminative models when no labels are observed are 
 %meaningless ($\sum_{y^m } P(y^m |x^m) = 1$); this rules out, for instance, Maximum Entropy classifiers.}
 
-The most common optimization method in the presence of hidden (latent) variables is the Expectation Maximization (EM) algorithm, described in the next section. Note that this algorithm is a generic optimization routine that does not depend on a particular model. Later, on Section \ref{posi} we will apply the EM algorithm to the task of part-of-speech induction, where one is given raw text and a number of clusters and the task is to cluster words that behave similarly in a grammatical sense. 
+The most common optimization method in the presence of hidden (latent) variables is the Expectation Maximization (EM) algorithm, described in the next section. Note that this algorithm is a generic optimization routine that does not depend on a particular model. Later, in Section \ref{posi} we will apply the EM algorithm to the task of part-of-speech induction, where one is given raw text and a number of clusters and the task is to cluster words that behave similarly in a grammatical sense. 
 
 \subsection{\label{em}Expectation Maximization Algorithm}
 \input{pages/sequences/em.tex}

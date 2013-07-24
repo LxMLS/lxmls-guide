@@ -25,7 +25,7 @@
 %\end{table}
 
 One important problem in HMMs is to estimate the 
-model parameters, \emph{ i.e.}, 
+model parameters, \emph{i.e.}, 
 the distributions depicted in Table~\ref{tab:hmm-dist}. 
 We will refer to the set of all these parameters 
 as $\theta$. 
@@ -72,11 +72,11 @@ C_{\mathrm{emiss}}(w_j,c_k) = \sum_{m=1}^M
 \sum_{i = 1}^{N}
 \Ind (x^m_i = w_j \wedge y^m_i = c_k); \label{eq::emissionCounts}
 \end{align}
-
+Here $y^m_i$,  the underscript denotes the state index position for a given sequence, and the superscript denotes the sequence index in the dataset, and the same applies for the observations.
 Note that $\Ind$ is an indicator function that has the value 1 when the
-particular event happens, and zero otherwise. In words, the previous
+particular event happens, and zero otherwise. In other words, the previous
 equations go through the training corpus and count how
-often each even occurs. For example, Eq.~\ref{eq::transitionCounts} counts how often state $c_k$ follows state $c_j$. Therefore, $C_{\mathrm{trans}}(\text{\tt sunny},\text{\tt rainy})$ contains the number of times that a sunny day followed a rainy day.
+often each event occurs. For example, Eq.~\ref{eq::transitionCounts} counts how many times $c_k$ follows state $c_l$. Therefore, $C_{\mathrm{trans}}(\text{\tt sunny},\text{\tt rainy})$ contains the number of times that a sunny day followed a rainy day.
 
 %
 %: e.g. the word ``w'' appears with state
@@ -154,10 +154,10 @@ The provided function \emph{train\_supervised} from the \emph{hmm.py} file imple
 %\begin{python}
 %def train_supervised(self,sequence_list):
 %\end{python}
-Run this function given the simple dataset above and look at the estimated probabilities. Are they correct? You can also check the variables ending in \emph{\_counts} instead of \emph{\_probs} to see the raw counts (for example, typing \emph{hmm.initial\_probs} will show you the raw counts of initial states). How are the counts related to the probabilities?
+Run this function given the simple dataset above and look at the estimated probabilities. Are they correct? You can also check the variables ending in \emph{\_counts} instead of \emph{\_probs} to see the raw counts (for example, typing \emph{hmm.initial\_counts} will show you the raw counts of initial states). How are the counts related to the probabilities?
 
 \begin{python}
->>> import sequences.hmm as hmmc
+>>> import lxmls.sequences.hmm as hmmc
 >>> hmm = hmmc.HMM(simple.x_dict, simple.y_dict)
 >>> hmm.train_supervised(simple.train)
 >>> print "Initial Probabilities:", hmm.initial_probs

@@ -1,6 +1,37 @@
-In this lab, we will work with Amazon.com's Web Services\footnote{http://aws.amazon.com/}, a cloud based solution
-to run some simple analyses. Then, in the next lab, we will build on these
+In this lab (and tomorrow), we will work with Amazon.com's Web Services
+(AWS)\footnote{http://aws.amazon.com/}, a cloud based solution to run some
+simple analyses. Then, in the next lab, we will build on these
 tools to construct a larger learning system.
+
+We will only look at small problems, such that you can run them both locally and on AWS quickly. This way, you can learn how to use them within the limited time of these lab sessions. Unfortunately, this also means that you will not be dealing with truly large-scale problems where AWS is faster than local computations. You should consider these last two days as a proof-of-concept giving you the knowledge necessary to run things on AWS, which you can apply to your own large-scale problems after this summer school.
+
+\subsection*{Connecting to Amazon WebServices}
+
+In these two lab days, you will use three machines:
+
+\begin{enumerate}
+\item Your \emph{local machine}, which may be your personal laptop or one of
+the computers at IST. From this machine, you will use SSH to login to:
+\item Your AWS machine, which is a regular Linux box which runs on the cloud
+and is private to you. You should use this machine to edit the code and test
+it.
+\item The Elastic MapReduce cluster machines. You cannot directly login to
+them, but will use automated tools to submit jobs and get back the results.
+\end{enumerate}
+
+\subsection*{Running at Home}
+
+After the summer school is over, you can run the same code on your local
+machine or your own AWS machine. For this, you will need to get an Amazon
+account for yourself. Then, you will receive AWS credentials which will give
+you full permissions to run it in multiple modes.
+
+\section*{Today's Assignment}
+
+Today we will show you how to solve a simple problem (counting words in
+documents) in a distributed manner. We will then ask you to implement a
+distributed solution for a problem you already know (Na\"{i}ve Bayes
+classification).
 
 \section{Introduction}
 
@@ -8,49 +39,67 @@ AWS is a set of services of different types. We will focus on the \emph{Elastic
 Compute Cluster}, EC2.\footnote{http://aws.amazon.com/ec2/}
 
 In this lab, we will be logging in to Linux-based machines using a command line
-interface. If you are not familiar with the command line, don't worry -- we will tell you everything you need regarding the command line, and your exercises only involve Python, just like the previous days.
+interface. If you are not familiar with the command line, don't worry -- we
+will tell you everything you need regarding the command line, and your
+exercises only involve Python, just like the previous days.
 
-\section{Useful Information}
+\section{Using your AWS machine}
 
-You should have received a piece of paper with the following four pieces of
-information:
+You should have received a piece of paper with the following two pieces of information:
 
 \begin{enumerate}
 \item A host name
 \item A password
-\item A ``AWS Key''
-\item A ``AWS Secret''
 \end{enumerate}
 
-We will ignore the last two items for the moment.  Your hostname will be
+Your hostname will be
 something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
 should be able to log in with username \texttt{ubuntu} and the password you
-were given! This is your personal server.
+were given. This is your personal server running on Amazon's infrastructure!
 
 If you are using the command line, you can just type:
 
+\begin{verbatim}
 ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
-
+\end{verbatim}
 (accept the RSA key and log in with the password we provided you).
 
 The machine has all of the necessary Python packages for you to work. It also
-has a standard collection of editors and other tools. It is an Ubuntu based
-installation and you can access super user powers with \texttt{sudo} (if you're not familiar with Unix-based environments, you might not understand this last sentence -- don't worry about it for now).
+has a standard collection of editors and other tools, including \texttt{emacs} and \texttt{vi}. If you're not used to the command line, you should probably use \texttt{nano} which is a very simple text editor. To open a file, type in the terminal
 
+\begin{verbatim}
+nano your_filename
+\end{verbatim}
 
-\section{MapReduce \& Hadoop}
+From within \texttt{nano}, use \texttt{CTRL-O} to save a file and \texttt{CTRL-X} to exit (you will be asked to save any modified files). Use \texttt{CTRL-K} to cut an entire line and \texttt{CTRL-U} to paste it back (to copy instead of cut, use cut, then paste in the original location, then paste in the other desired location).
 
-The initial idea of MapReduce was an implementation by google\footnote{http://research.google.com/archive/mapreduce.html}, but very soon
-Hadoop appeared as an open-source implementation of the same paradigm.\footnote{http://hadoop.apache.org/}
+This machine is an Ubuntu based
+installation and you can access super user powers with \texttt{sudo} (if you're
+not familiar with Unix-based environments, you might not understand this last
+sentence -- don't worry about it for now).
+
+\section{MapReduce for Word Count}
+
+The initial idea of MapReduce was an implementation by
+Google\footnote{http://research.google.com/archive/mapreduce.html}, but very
+soon Hadoop appeared as an open-source implementation of the same
+paradigm.\footnote{http://hadoop.apache.org/}
 
 The basic idea is to take your original problem, whichever it may be, and tackle it in two steps:
 %
 \begin{enumerate}
-\item \textbf{Map step:} Divide the data into several parts and send each part to a different computer. Each computer does some computation using \emph{only} that part of the data, and returns some output.\footnote{The name "map" is completely unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced in day 1.}
-\item \textbf{Reduce step:} Collect all the outputs from all the different computers and compute the final solution from those outputs.
+\item \textbf{Map step:} Divide the data into several parts and send each part
+to a different computer. Each computer does some computation using \emph{only}
+that part of the data, and returns some output.\footnote{The name "map" is completely
+unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced
+in day 1.} It comes from the functional programming world, and is actually
+present in Python as a builtin function, \verb+map+.
+\item \textbf{Reduce step:} Collect all the outputs from all the different
+computers and compute the final solution from those outputs. Again, this name
+comes from the functional programming and it is present in Python as the builtin
+\verb+reduce+. However, as we will see the reduce step in MapReduce is a bit
+more inteligent than the tradtional reduce.
 \end{enumerate}
-
-\subsection{Example: Word Count}
 
 The classic example of application of MapReduce is the word count problem:
 
@@ -59,7 +108,7 @@ The classic example of application of MapReduce is the word count problem:
 \item You want to count how many times each word appears in the whole collection.
 \end{itemize}
 
-If the text corpus is small, this is trivially easy to do on any computer. However, for big corpora, one computer alone would take a long time. For example, the whole English Wikipedia is about 10 GB compressed, and several times that when uncompressed. It would take a considerable time to count the occurrence of each word on the whole dataset using only one computer.
+If the text corpus is small, this is trivial to do on a single machine. However, for big corpora, one computer alone would take a long time. For example, the whole English Wikipedia is about 10 GB compressed, and several times that when uncompressed. It would take a considerable amount of time to count the occurrence of each word on the whole dataset using only one computer.
 
 However, this problem is quite easy to parallelize using the MapReduce framework:
 
@@ -72,12 +121,67 @@ dictionary of a count for each word.
 \emph{reduce} step. Notice that you can now parallelize over words.
 \end{enumerate}
 
-In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
-as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. On your Amazon machine, the package
-is already installed with all its dependencies, so you can just go ahead and
-use it.
+\subsection{Keys, Values, and the MRJob package}
+In fact, what we stated above is a bit of an over-simplification. In MapReduce, the map step actually outputs zero or more pairs of the form (\emph{key}, \emph{value}). Let's suppose that you want to run the wordcount example in the following document which contains only two sentences:
 
-We are going to implement the word count algorithm now:
+\begin{verbatim}
+the center of Lisbon is the best part of the city
+the campus of IST is located near Alameda
+\end{verbatim}
+
+Suppose that you send each sentence to a separate worker. The output of the first worker (which is processing the first sentence) would be:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Key & Value \\
+\hline\hline
+``the" & 3 \\
+``center" & 1 \\
+``of" & 2\\
+\vdots & \vdots \\
+\end{tabular}
+\end{center}
+
+and the output of the second worker (which is processing the second sentence) would be:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Key & Value \\
+\hline\hline
+``the" & 1 \\
+``campus" & 1 \\
+``of" & 1\\
+\vdots & \vdots \\
+\end{tabular}
+\end{center}
+
+Keys can be anything you want: when counting words, it makes sense to have each worker use words as keys, and values as the counts of those words in the text that was passed onto that worker.
+
+In the reduce step, the reducer will receive these key/value pairs and do something with them. In word counting, the natural operation for the reduce step is to sum the counts with the same key, in order to produce this:
+
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Key & Value \\
+\hline\hline
+``the" & 4 \\
+``center" & 1 \\
+``campus" & 1 \\
+``of" & 3\\
+\vdots & \vdots \\
+\end{tabular}
+\end{center}
+
+Note that the reduce step also produces key/value pairs. As you can see, this last table is the correct output of the Word Count algorithm.
+
+In this tutorial, we will be using the package \texttt{MrJob}\footnote{MrJob was developed by Yelp, the company behind the epinomious website; it is available
+as open source, under the Apache license -- see http://pythonhosted.org/mrjob/}. In MRJob, you should define \texttt{mapper} and \texttt{reducer} functions which implement the map and reduce steps. Whenever you are ready to produce a key/value pair, you should use the Python instruction \texttt{yield key, value}, where \texttt{key} and \texttt{value} are the variables containing the key and value.\footnote{Without going into too much detail, the \texttt{yield} instruction in Python is used for \emph{generators}, which are list-like objects which are more memory efficient. Instead of storing all the values in memory like a list, a generator simply knows how to produce the next element in a sequence. For example, \texttt{range(5)} produces a list with the values 0 to 4. \texttt{xrange(5)} produces a generator which knows that its first value is 0 and that following values get incremented by 1 each time, up to and including 4, but these values are never stored together in memory. If you want to learn more about generators in Python, visit http://docs.python.org/2/tutorial/classes.html -- but you probably don't need to read that for this lesson.}
+
+\subsection{Running Word Count on one machine}
+
+Here is an implementation of the Word Count algorithm in Python, using MRJob:
 
 \begin{python}
 # Import the necessary libraries:
@@ -104,140 +208,225 @@ wc = WordCount()
 wc.run()
 \end{python}
 
-You can save this as \texttt{wordcount.py} and run this on your machine
-directly. We will also make use of the \texttt{/datasets} directory that is
-preinstalled on your machine:
+This file already exists as \texttt{wordcount.py} (inside the
+\texttt{wordcount} folder). You will first run it without using Amazon
+EC2. To do that, {\texttt{ssh}} your machine
+\begin{verbatim}
+ssh <username>@<prefix>.compute.amazonaws.com
+\end{verbatim}
+authenticating with the credentials provided in this lab.
+Then, navigate to the \texttt{wordcount} folder and type this into a terminal:
 
 \begin{verbatim}
-python wordcount.py /datasets/small-text-file.txt
+python wordcount.py en_perline001.txt > results.txt
 \end{verbatim}
 
-\subsubsection{Running Word Count using Hadoop}
+Open the \texttt{results.txt} file in your favorite text editor. Each line of this file contains a word and the corresponding count.
 
-We are now going to use the AWS Key and AWS Secret. These are like a username
-and password for Amazon Webservices.
+Here are a few important points which you need to remember for the exercise of this session:
+%
+\begin{enumerate}
+	\item By default, MRJob splits the input (the \texttt{en\_perline001.txt} file) by lines. This means that each line may be sent to a different worker. We have taken care of this detail for you, but when you use MRJob for your own projects, remember that the input is split by lines unless you configure it differently. In the future, when we say that we "split the input into documents", we will be referring to this split by lines.
+	\item You must create a class and make it inherit from the \texttt{MRJob} class, as we did in the line 	
+\begin{python}
+	class WordCount(MRJob):
+\end{python}
+	\item You should create functions with the special names \texttt{mapper} and \texttt{reducer}. These functions always have three inputs: \texttt{self}, which all class functions have, \texttt{key}, and \texttt{value}. In our case, the mapper's input is just text which doesn't have a key; in Python, it is common to use an underscore, \texttt{\_}, to denote unused input/output arguments.
+	\item The \texttt{mapper} function takes the input text (the \texttt{doc} argument), splits it into words using the command \texttt{doc.split()}, and then counts the words in that text.
+	\item The \texttt{reducer} function has a \texttt{key} argument which is just a string containing a word. It also has a \texttt{cs} argument, which is a generator object. For most purposes, you can treat this argument as a list of \emph{all} the counts in \emph{all} the documents of the word in the \texttt{key} argument. This sum is, naturally, the output of the Word Count algorithm for this word.
+\end{enumerate}
 
-One of the advantages of MrJob is that you can use the exact same Python code as before, but changing a few arguments in the command line will run the Word Count on Amazon's computers instead of on the computer where the file is. This is what Amazon calls Elastic Map Reduce (EMR).
+We suggest that you spend a few minutes studying this simple code. Try putting the Python line \texttt{import pdb; pdb.set\_trace()} at multiple places within the code to see what is contained in each variable.
+
+\subsection{Running Word Count on Amazon EC2}
+We will now run the algorithm on your own private cluster.
+
+One of the advantages of MRJob is that you can use the exact same Python code
+as before, but changing a few arguments in the command line will run the Word
+Count on Amazon's computers instead of on the computer where the file is. This
+is what Amazon calls Elastic Map Reduce (EMR).
 
 To run the exact same code as before using EMR, type the following into the command line.
 
 \begin{verbatim}
-export AWS_ACCESS_KEY_ID=<YOUR ACCESS KEY>
-export AWS_SECRET_ACCESS_KEY=<YOUR SECRET KEY>
-
-python wordcount.py \
-        -r emr \
-        /datasets/small-text-file.txt /
-        --num-ec2-instances 2 \
-        --aws-region eu-west-1
+python wordcount.py -r emr en_perline001.txt > results2.txt
 \end{verbatim}
 
-This runs the code on Elastic Map Reduce with 2 instances.
+Since the two files don't have to have the same order for the words, it's hard to compare them visually. Try these two commands in the terminal, which will check how often you counted the word \texttt{will}:
 
-\subsubsection{Running Word Count on Wikipedia}
+\begin{verbatim}
+grep will results.txt
+grep will results2.txt
+\end{verbatim}
 
-This file is not very big, but running on a cluster of machine allows us to
-scale up run on Wikipedia
+You should see that the word "will" appears 2151 times on the English file, with both commands.
+
+The file we used on the previous exercises is not very big (it contains around 0.1\% of the text from the English Wikipedia), but running on a cluster of machines allows us to
+scale up enough to use larger files as input. For example, let's run the same on 10\% of the Portuguese Wikipedia, using a file which is present on Amazon's S3 storage service:
 
 \begin{verbatim}
 python wordcount.py \
         -r emr \
-        s3://lxmls-labs/pt_perline10.txt
-        --num-ec2-instances 10 \
-        --aws-region eu-west-1
+        s3://lxmls-labs/pt_perline10.txt > results_PT.txt
 \end{verbatim}
 
 This should take about 3 minutes.
 
-\subsection{Using Naïve Bayes for Language Detection}
+\section{Using Na\"{i}ve Bayes for Language Detection}
 
-The implementation of binary Naïve Bayes is very similar to counting words: we just
-need to keep track of the class of each document and maintain.
+Language detection is surprisingly easy if you have enough data to train your system. In our case, we're going to use triplets of characters (or "trimers") as features. For example, if your whole training corpus is a sentence in English which reads "I love Lisbon" (length: 13 characters) and a sentence in Portuguese which reads "Adoro Lisboa" (length: 12 characters), you would say that you saw the following features: "I l", " lo", "lov", "ove", "ve ", and so on in the English data, and "Ado", "dor", "oro", "ro ", and so on in the Portuguese data. Note the presence of whitespace on some of these trimers.
 
-\begin{python}
-# Import the necessary libraries:
-from mrjob.job import MRJob
-import re
+You can now use the exact same Na\"{i}ve Bayes algorithm which you used for sentiment analysis on Day 1. Instead of classifying text into two classes (positive and negative) we're going to classify text into two other classes (Portuguese and English). Our training data will be parts of the Portuguese and English Wikipedias.\footnote{We will use 10\% of the Portuguese Wikipedia and 1\% of the English Wikipedia to ensure that you can complete this exercise in the time of this lab session. However, Amazon's infrastructure is easily capable of handling the whole Wikipedia.}
 
-class TrimerCount(MRJob):
-    def mapper(self, _, doc):
-        c = {}
-        # Process the document
-        for i in xrange(len(doc)-3):
-            w = doc[i:i+3]
-            if w in c:
-                c[w] += 1
-            else:
-                c[w] = 1
+The implementation of distributed Na\"{i}ve Bayes is very similar to counting words:
+\begin{enumerate}
+	\item The map step takes the whole training data of the Portuguese language and splits it into documents. The mapper function computes the frequency of each trimer on one document.
+	\item The reduce step compiles the information from all the documents and sums the counts of every Portuguese document.
+	\item The previous two steps are repeated for the English training data.
+	\item After the MapReduce part, a post-processing step uses these counts with similar formulas as in Day 1 to classify new unseen text into the two classes: English or Portuguese. For convenience, we repeat these formulas below.
+\end{enumerate}
 
-        # Now, output the results
-        for w,c in c.items():
-            yield w,c
+Once you have the counts of trimer occurrences on each language, you need to estimate:
+\begin{itemize}
+	\item The \emph{prior} probability of each language appearing at test time, ${\hat P}(\text{PT})$ and ${\hat P}(\text{EN})$. For simplicity, instead of using Maximum Likelihood estimation, let's assume that the users of your language detector are equally likely to try English and Portuguese sentences. Thus, ${\hat P}(\text{PT}) = {\hat P}(\text{EN}) = \frac{1}{2}$.\footnote{You could also assume, as in Day 1, that the probability of a given language appearing at test time is proportional to the size of the training data of that language. Each assumption makes sense in different contexts.}
+	\item The probability of each feature (trimer) given the class, ${\hat P}(t_j | c)$. We will again use Maximum Likelihood estimation, which means that the probability of trimer $t$ given language $c$ is equal to the number of times $t$ occurred in documents of language $c$, divided by the total number of trimers in language $c$. Mathematically:
+\begin{equation}
+{\hat P}(t_j|\text{PT}) = \frac{n(t_j,\text{PT})}{\sum_j n(t_j,\text{PT})},
+\end{equation}
+where $n(t_j,\text{PT})$ is the number of times the trimer $t_j$ occurred in your Portuguese training corpus. A similar formula is used for ${\hat P}(t_j|\text{EN})$.
+\end{itemize}
 
-    def reducer(self, key, cs):
-        yield key, sum(cs)
+Then, given a test sentence $x$, we can compute the following argmax for the two classes $c = \text{PT}$ and $c = \text{EN}$:
+%
+\begin{eqnarray}
+\argmax_c {\hat P}(c | x) &= \argmax_c {\hat P}(c) {\hat P}(x | c) \nonumber\\
+&= \argmax_c {\hat P}(c) \prod_j {\hat P}(c | t_j) \nonumber\\
+&= \argmax_c \prod_j {\hat P}(c | t_j) \nonumber\\
+&= \argmax_c \sum_j \log({\hat P}(c | t_j))\label{eq:NBformula}
+\end{eqnarray}
+%
+In the first equality we used Bayes' Theorem. In the second one we used the assumption of conditional independence of features given the class, which is at the core of Na\"{i}ve Bayes. In the third one, we used that ${\hat P}(\text{PT}) = {\hat P}(\text{EN}) = \frac{1}{2}$, thus the prior does not affect the argmax. In the last equation, we used the fact that the argmax is not affected by the application of a logarithm. Logarithms will prevent your program from encountering underflow errors when multiplying many numbers which are very small.
 
-TrimerCount.run()
-\end{python}
+\section{Assignment}
 
-We will run two jobs, one on a selection of the Portuguese Wikipedia (10\%) and
-another on the English Wikipedia (only 1\% as this is much larger).
+Using the Word Count example we've given you above, implement the Na\"{i}ve Bayes language detector described above. You should do this in two parts:
+
+\begin{itemize}
+	\item Steps 1 to 3 (counting occurrences of trimers in train data, for both languages), should be run on EC2. 
+	\item Step 4 should be run on your AWS server (it is quite fast even with just one computer). It should implement the formula given in equation \eqref{eq:NBformula}.
+\end{itemize}
+
+%\begin{python}
+%# Import the necessary libraries:
+%from mrjob.job import MRJob
+%import re
+%
+%class TrimerCount(MRJob):
+%    def mapper(self, _, doc):
+%        c = {}
+%        # Process the document
+%        for i in xrange(len(doc)-3):
+%            w = doc[i:i+3]
+%            if w in c:
+%                c[w] += 1
+%            else:
+%                c[w] = 1
+%
+%        # Now, output the results
+%        for w,c in c.items():
+%            yield w,c
+%
+%    def reducer(self, key, cs):
+%        yield key, sum(cs)
+%
+%TrimerCount.run()
+%\end{python}
+
+You must run two jobs, one on a selection of the Portuguese Wikipedia (1\%) and
+another on the English Wikipedia (only 0.1\% as this is much larger). These files already exist on the LXMLS Toolkit as \texttt{pt\_perline01.txt} and \texttt{en\_perline001.txt}. They are small enough to run on your AWS machine only, and should already produce a decent language detector.
+
+Steps 1-3 are very similar to the word count code which we gave you. The main difference is that you are splitting the document into trimers instead of words. Remember to use the syntax \texttt{> en.counts.txt} and \texttt{> pt.counts.txt} when you run the two jobs, to output the results to appropriate files.
+
+If your code is in file \texttt{trimercount.py}, inside the \texttt{big\_data} folder, the two commands you need to type into the terminal to run things in your AWS machine are:
+
+%
+%
 
 \begin{verbatim}
-python trimercount.py \
-        -r emr \
-        s3://lxmls-labs/pt_perline10.txt
-        --num-ec2-instances 10 \
-        --aws-region eu-west-1 > pt.counts.txt
+python trimercount.py en_perline001.txt > en.counts.txt
 
-python trimercount.py \
-        -r emr \
-        s3://lxmls-labs/en_perline01.txt
-        --num-ec2-instances 10 \
-        --aws-region eu-west-1 > en.counts.txt
+python trimercount.py pt_perline01.txt > pt.counts.txt
 \end{verbatim}
 
-These should run in a few minutes as well. Running it on the whole Wikipedia
-could be done with the same system in just a few hours.
+Step 4 should use the two files \texttt{en.counts.txt} and \texttt{pt.counts.txt} to implement the language detector. This is all run on your AWS machine only -- you don't need to use MRJob and you can use plain Python as you did in the previous lab sessions. If you don't have time to implement this part, you can use our own implementation in file \texttt{postprocess.py}.
 
-\subsection{Building a Classifier}
+After you've managed to get things working on one machine only, you can easily run steps 1-3 on AWS:
 
-We need to load the outputs from the Hadoop runs:
+%\begin{verbatim}
+%python trimercount.py -r emr s3://lxmls-labs/en_perline01.txt > en.counts.txt
+%
+%python trimercount.py -r emr s3://lxmls-labs/pt_perline10.txt > pt.counts.txt
+%\end{verbatim}
 
-\begin{python}
-def load_counts(ifile):
-    counts = {}
-    with open(ifile) as input:
-        for line in input:
-            word, count = line.strip().split()
-            word = word[1:-1]
-            counts[word] = float(count)
-    return counts
-\end{python}
+\begin{verbatim}
+python trimercount.py -r emr en_perline001.txt > en.counts.txt
 
-We write a function for the classification:
+python trimercount.py -r emr pt_perline01.txt > pt.counts.txt
+\end{verbatim}
 
-\begin{python}
-def score(counts_pt, counts_en, test):
-    val = 1.
-    for i in xrange(len(test)-3):
-        tri = test[i:i+3]
-        tri_pt = counts_pt.get(tri, 1.)
-        tri_en = counts_en.get(tri, 1.)
-        val *= tri_pt/tr_en
-    return val
-\end{python}
+To check if things worked, try the command
 
-We now load the two files and then classify any sentences the user types:
+\begin{verbatim}
+grep acc en.counts.txt
+\end{verbatim}
 
-\begin{python}
-counts_pt = load_counts('output.pt.txt')
-counts_en = load_counts('output.en.txt')
+which should tell you that the trimer \texttt{acc} appeared 3448 times in the English file.
 
-while True:
-    test = raw_input("Type a test sentence? ")
-    if not test: break
-    print score(counts_pt, counts_en, test)
-\end{python}
+To test your language detector, see if it classifies correctly some sentences which you make up. If you do not know Portuguese, here are a few sentences you can use to test (from the Portuguese Wikipedia):
 
+\begin{itemize}
+\item Esperamos que estejam a gostar desta Escola.
+\item Se tiverem qualquer coment\'{a}rio a fazer, por favor enviem-nos um email.
+\item Os organizadores gostariam de agradecer aos monitores das aulas pr\'{a}ticas pela grande ajuda na elabora\c{c}\~{a}o desta aula.
+\end{itemize}
+
+%\subsection{Building a Classifier}
+%
+%We need to load the outputs from the Hadoop runs:
+%
+%\begin{python}
+%def load_counts(ifile):
+%    counts = {}
+%    with open(ifile) as input:
+%        for line in input:
+%            word, count = line.strip().split()
+%            word = word[1:-1]
+%            counts[word] = float(count)
+%    return counts
+%\end{python}
+%
+%We write a function for the classification:
+%
+%\begin{python}
+%def score(counts_pt, counts_en, test):
+%    val = 1.
+%    for i in xrange(len(test)-3):
+%        tri = test[i:i+3]
+%        tri_pt = counts_pt.get(tri, 1.)
+%        tri_en = counts_en.get(tri, 1.)
+%        val *= tri_pt/tr_en
+%    return val
+%\end{python}
+%
+%We now load the two files and then classify any sentences the user types:
+%
+%\begin{python}
+%counts_pt = load_counts('output.pt.txt')
+%counts_en = load_counts('output.en.txt')
+%
+%while True:
+%    test = raw_input("Type a test sentence? ")
+%    if not test: break
+%    print score(counts_pt, counts_en, test)
+%\end{python}
 

@@ -1,35 +1,41 @@
 Given the learned parameters and a new
-observation sequence $x = x_1\ldots x_N$, we want to find ``the best'' sequence of hidden states 
-$y^* = y_1^* \ldots y_N^*$;
- this is called the \emph{decoding} problem. There are several ways to define what we mean by the best
-$y^*$---for instance, we may will to minimize the probability of error
+observation sequence $x = x_1\ldots x_N$, we want to find the sequence of hidden states $y^* = y_1^* \ldots y_N^*$ that ``best'' explains it.
+ This is called the \emph{decoding} problem. There are several ways to define what we mean by the ``best''
+$y^*$, depending on our goal: for instance, we may want to minimize the probability of error
 on each hidden
-variable $Y_i$; or, we may want the best assignment
-to the sequence $Y_1\ldots Y_N$ as a whole.
+variable $Y_i$, or we may want to find the best assignment
+to the sequence $Y_1\ldots Y_N$ as a whole. 
+Therefore, finding the best sequence
+can be accomplished through different approaches:
 
-The first way, normally called \textbf{posterior decoding} or \textbf{minimum risk decoding}, consists
+\begin{itemize}
+\item A first approach, normally called \textbf{posterior decoding} or \textbf{minimum risk decoding}, consists
 in picking the highest state posterior for each position $i$ in the sequence:
 \begin{equation}
 y_i^* = \argmax_{y_i \in \Lambda} P(Y_i=y_i | X_1=x_1,\ldots,X_N =x_N).
 \end{equation}
 %where $\gamma_i(\hs_i)$ is the posterior probability $P(\hs_i|\sent)$. 
-This method does not guarantee that the sequence $y^*=y_1^* \ldots y_N^*$ will be a
-valid sequence of the model. For instance there might be a transition
-probability between two of the best state posteriors with probability
-zero. 
+Note, however, that this approach does not guarantee that the sequence $y^*=y_1^* \ldots y_N^*$ will be a
+valid sequence of the model. For instance, there might be a transition
+between two of the best state posteriors with probability zero. 
 
-The second approach, called \textbf{Viterbi decoding}, consists in
+\item A second approach, called \textbf{Viterbi decoding}, consists in
 picking the best global hidden state sequence: 
 \begin{eqnarray}
 y^* &=& \argmax_{y = y_1\ldots y_N} P(Y_1=y_1,\ldots, Y_N=y_N | X_1=x_1,\ldots,X_N =x_N)\nonumber\\
 &=& \argmax_{y = y_1\ldots y_N} P(Y_1=y_1,\ldots, Y_N=y_N, X_1=x_1,\ldots,X_N =x_N).
 \end{eqnarray}
+\end{itemize}
 
-Both approaches rely on dynamic programming, making use of the
-independence assumptions of the HMM model. They use an alternative
-representation of the HMM called a Trellis (Figure~\ref{fig:trellis}). 
+Both approaches (which will be explained in Sections~\ref{posterior} and~\ref{viterbi}, respectively) rely on dynamic programming and make use of the
+independence assumptions of the HMM model. Moreover, they use an alternative
+representation of the HMM called a \emph{trellis}. 
 
-\begin{figure}
+A trellis unfolds all possible states for each position and it makes explicit the independence assumption: each position only
+depends on the previous position. Here, each column represents a position in the sequence and each row represents a possible state. Figure \ref{fig:trellis} shows the
+trellis for the particular example in Figure \ref{fig:hmm}. 
+
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.7\textwidth]{figs/sequences/trellis_new}
 \caption[HMM Trellis representation.]{\label{fig:trellis} Trellis
@@ -37,41 +43,32 @@ representation of the HMM called a Trellis (Figure~\ref{fig:trellis}).
   sequence ``{\tt walk} {\tt walk} {\tt shop} {\tt clean}'', where each hidden variable can take the values {\tt rainy} or {\tt sunny}.}
 \end{figure}
 
-This representation unfolds all possible states for each position and
-makes explicit the independence assumption: each position only
-depends on the previous position. Figure \ref{fig:trellis} shows the
-trellis for the particular example in Figure \ref{fig:hmm}. 
 
 
-Each column represents a position in the sentence, and each row represents a possible state. 
-We can associate to each arrow in 
-Figure~\ref{fig:trellis} a \emph{transition 
-probability} (or, in the arrows that depart from 
-the start symbol, a \emph{initial probability}, and 
-in the arrows that point to 
-the stop symbol, a \emph{final probability}), 
-and to each circle in 
-Figure~\ref{fig:trellis} an 
-\emph{emission probability}, 
-which is the probability that the observed symbol is emitted by that particular state.
+
+Considering the trellis representation, note that we can include the following information:
+\begin{itemize}
+\item an \emph{initial probability} to the arrows that depart from the start symbol;
+\item a \emph{final probability} to the arrows that reach the stop symbol;
+\item a \emph{transition probability} to the remaining arrows; and,
+\item an \emph{emission probability} to each circle, which is the probability that the observed symbol is emitted by that particular state.
+\end{itemize}
 
 For convenience, we will be working with 
-log-probabilities, rather than probabilities.
-This will be motivated further in Section~\ref{sec:logdomain}, where we describe 
+log-probabilities, rather than probabilities.\footnote{This will be motivated further in Section~\ref{sec:logdomain}, where we describe 
 how operations can be performed efficiently
-in the log-domain. 
-If we associate to each circle and arrow in
-Figure~\ref{fig:trellis} a score which corresponds
+in the log-domain.} Therefore, if we associate to each circle and arrow in
+the trellis a score that corresponds
 to the log-probabilities above, 
-and if we define the score of a path in the trellis
+and if we define the score of a path
 connecting the {\tt start} and  {\tt stop} symbols as
 the sum of the scores of the circles and arrows
 it traverses, 
 then 
 the goal of finding the most likely sequence of states (Viterbi decoding) corresponds to 
-finding the path with the largest score.
+finding the path with the highest score.
 
-In the next exercise, you will compute the trellis scores.
+
 
 
 %---since 
@@ -127,7 +124,7 @@ In the next exercise, you will compute the trellis scores.
 %will be reproducing several values (for instance the transition
 %parameters for each position).
 
-\begin{exercise}
+
 The trellis scores are given by the following expressions:
 \begin{itemize}
 \item For each state $c_k$:
@@ -140,7 +137,7 @@ The trellis scores are given by the following expressions:
 \mathrm{score}_{\mathrm{trans}}(i, c_k, c_l) &=&
 \log P_{\mathrm{trans}}(Y_{i+1} = c_k | Y_i = c_l).
 \end{eqnarray}
-\item For each state $c_l$:
+\item For each state $c_l$ (\textbf{verify equation: remove $i$ from score?}):
 \begin{eqnarray}
 \mathrm{score}_{\mathrm{final}}(i, c_l) &=&
 \log P_{\mathrm{final}}(\text{\tt stop} | Y_N = c_l).
@@ -152,9 +149,12 @@ The trellis scores are given by the following expressions:
 \end{eqnarray}
 \end{itemize}
 
+In the next exercise, you will compute the trellis scores.
+
+\begin{exercise}
 Convince yourself that the score of a path in the trellis 
 (summing over the scores above) is equivalent 
-gives the log-probability $\log P(X=x,Y=y)$, 
+to the log-probability $\log P(X=x,Y=y)$, 
 as defined in 
 Eq.~\ref{eqn:hmm_ex}. 
 Use the given function \emph{compute\_scores} on the first training sequence and confirm that the values are correct. You should get the same values as presented below.
@@ -192,11 +192,11 @@ Use the given function \emph{compute\_scores} on the first training sequence and
  [       -inf -0.98082925]] 
 \end{python}
 
-Note that scores which are $-\infty$ correspond
+Note that scores which are $-\infty$ (\texttt{-inf}) correspond
 to zero-probability events. 
 \end{exercise}
 
-\subsection{Computing in log-domain}
+\subsection{Computing in log-domain}\label{sec:logdomain}
 
 We will see that the decoding algorithms 
 will need to multiply twice as many probability terms as 
@@ -243,7 +243,7 @@ following:
 93.159220940569128
 >>> np.log(sum(np.exp(1000*a)))
 inf
->>> from sequences.log_domain import *
+>>> from lxmls.sequences.log_domain import *
 >>> logsum(a)
 2.8397172643228665
 >>> logsum(10*a)
@@ -256,21 +256,21 @@ inf
 \end{exercise}
 
 
-\subsection{Posterior Decoding}
+\subsection{Posterior Decoding}\label{posterior}
 Posterior decoding consists
 in picking state with the highest posterior for each position in the sequence independently; for 
 each $i = 1,\ldots,N$:
 \begin{equation}
 y_i^* = \argmax_{y_i \in \statevocab} P(Y_i=y_i | X = x).
 \end{equation}
-For a given sequence, the \textbf{sequence posterior distribution} is the probability of a particular
+The \textbf{sequence posterior distribution} is the probability of a particular
 hidden state sequence given that we have observed a particular
-sentence. Moreover, we will be interested in two other posteriors distributions:
+sequence. Moreover, we will be interested in two other posteriors distributions:
 the \textbf{state posterior distribution}, corresponding to the
 probability of being in a given state in a certain position given the
-observed sentence; and the \textbf{transition posterior distribution},
+observed sequence; and the \textbf{transition posterior distribution},
 which is the probability of making a particular transition, from position $i$ to
-$i+1$, given the observed sentence. 
+$i+1$, given the observed sequence. They are formally defined as follows:
 \begin{align}
   \mathbf{Sequence \ Posterior\!:}\;\;\;\; &P(Y=y|X=x) = \frac{P(X=x,Y=y)}{P(X=x)}; \label{eq::posteriorDistribution} \\
  \mathbf{State \ Posterior\!:}\;\;\;\;  & P(Y_i=y_i | X=x); \label{eq::nodePosterior} \\
@@ -286,16 +286,17 @@ possible hidden state sequences.
 \mathbf{Likelihood\!:}\;\;\;\; P(X=x) = \displaystyle \sum_{y \in \statevocab^N} P(X=x,Y=y).
 \end{equation}
 The number of possible hidden state sequences is exponential in the
-length of the sentence ($|\statevocab|^N$),
- which makes summing over all of them hard. In this particular small
- example there are $2^4 = 16$ such paths and we can actually enumerate
- them explicitly and calculate their probability using Equation \ref{eqn:hmm}. But this is as far as it goes: for part-of-speech
- induction with a small tagset of 12 tags and a medium size
+length of the sequence ($|\statevocab|^N$),
+ which makes the sum over all of them hard. 
+ In our simple
+ example, there are $2^4 = 16$ paths, which we can actually explicitly enumerate
+ and calculate their probability using Equation \ref{eqn:hmm}. But this is as far as it goes: for example, for Part-of-Speech
+ tagging with a small tagset of 12 tags and a medium size
  sentence of length 10, there are $12^{10} = 61 917 364 224$ such
  paths. 
 Yet, we must be able to compute this sum (sum over $y \in \statevocab^N$) to compute the above likelihood
 formula; this is called the inference problem. For sequence models, there is a well known dynamic programming algorithm,
-the \textbf{Forward-Backward} (FB) algorithm, that allows the computation
+the \textbf{Forward-Backward} (FB) algorithm, which allows the computation
 to be performed in linear time,%
 \footnote{The runtime is linear with respect
 to the sequence length. More precisely, 
@@ -305,7 +306,7 @@ by making use of the independence assumptions.
 
 The FB algorithm relies on the independence of previous states
 assumption, which  
-is illustrated in the trellis view by only having arrows between consecutive states. 
+is illustrated in the trellis view by having arrows only between consecutive states. 
 The FB algorithm defines two auxiliary probabilities, the forward probability and the backward probability. 
 \begin{equation}
 \label{eq::forward}
@@ -391,7 +392,7 @@ Using the backward trellis one can compute the likelihood simply as:.
 P(X=x) = \mathrm{backward}(0, \text{\tt start}).
 \end{equation}
 Moreover, with the forward and backward 
-probabilities, we can compute the likelihood of a given sentence using any position $i$ in the sentence
+probabilities, we can compute the likelihood of a given sequence using any position $i$ in the sequence
 as follows:
 \begin{eqnarray}
 \label{eq::fbsanity}
@@ -415,7 +416,7 @@ Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm.
 \begin{algorithm}[t]
    \caption{Forward-Backward algorithm \label{alg:fb}}
 \begin{algorithmic}[1]
-   \STATE {\bfseries input:} sentence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
+   \STATE {\bfseries input:} sequence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
         \STATE  \emph{Forward pass}: Compute the forward probabilities
         \STATE \emph{Initialization}
         \FOR{$c_k \in \statevocab$ }
@@ -502,14 +503,15 @@ and transition posteriors
 \end{align}
 
 A graphical representation of these posteriors is illustrated in Figure~\ref{fig:posteriors}. 
-On the left it is shown that $\mathrm{forward}(i, y_i) \mathrm{backward}(i, y_i)$ returns the sum of all paths that contain the state $y_i$, weighted by $P(X=x)$; on the right we can see that $\mathrm{forward}(i, y_i) P_{\mathrm{trans}}(y_{i+1}|y_i)P_{\mathrm{emiss}}(x_{i+1}|y_{i+1}) \mathrm{backward}(i+1, y_{i+1})$  returns the same for all paths containing the edge from $y_i$ to $y_{i+1}$.
+On the left it is shown that $\mathrm{forward}(i, y_i)  \times \mathrm{backward}(i, y_i)$ returns the sum of all paths that contain the state $y_i$, weighted by $P(X=x)$; on the right we can see that $\mathrm{forward}(i, y_i) \times P_{\mathrm{trans}}(y_{i+1}|y_i) \times P_{\mathrm{emiss}}(x_{i+1}|y_{i+1}) \times \mathrm{backward}(i+1, y_{i+1})$  returns the same for all paths containing the edge from $y_i$ to $y_{i+1}$.
 %Thus, these posteriors can be seen as the ratio of the number of paths that contain the given state or transition (weighted by $P(X=x)$) and the number of possible paths in the graph $\marginal$.
-As a practical example, given that the person perform the sequence of actions ``{\tt walk} {\tt walk} {\tt shop} {\tt clean}", we want to know the probability of having been raining in the second day. The state posterior probability for this event can be seen as the probability that the sequence of actions above was generated by a sequence of weathers and where it was raining in the second day. In this case, the possible sequences would be all the sequences which have {\tt rainy} in the second position.
+
+As a practical example, given that the person performs the sequence of actions ``{\tt walk} {\tt walk} {\tt shop} {\tt clean}", we want to know the probability of having been raining in the second day. The state posterior probability for this event can be seen as the probability that the sequence of actions above was generated by a sequence of weathers and where it was raining in the second day. In this case, the possible sequences would be all the sequences which have {\tt rainy} in the second position.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=1\textwidth]{figs/sequences/posteriors}
-\caption[Posterior Illustration.]{\label{fig:posteriors} A graphical representation of the components in the state and transition posteriors.}
+\caption[Posterior Illustration.]{\label{fig:posteriors} A graphical representation of the components in the state and transition posteriors. Recall that the observation sequence is ``\texttt{walk walk shop clean}''.}
 \end{center}
 \end{figure}
 
@@ -571,7 +573,7 @@ then pick the arg-max at each position:
 %  forward and backward formulas \ref{eq::forward},\ref{eq::backward}, convince yourself that formulas
 %  \ref{eq::nodePosterior2},\ref{eq::edgePosterior2} are correct. 
 
-Compute the node posteriors for the first training sentence (use the provided \emph{compute\_posteriors} function), and look at
+Compute the node posteriors for the first training sequence (use the provided \emph{compute\_posteriors} function), and look at
 the output. Note that the state posteriors are a proper
 probability distribution (the lines of the result sum to 1).
 
@@ -599,7 +601,7 @@ walk/rainy walk/rainy shop/sunny clean/sunny
 walk/rainy walk/sunny shop/sunny clean/sunny 
 \end{python}
 
-Do the same for the second test sentence:
+Do the same for the second test sequence:
 \begin{python}
 >>> y_pred = hmm.posterior_decode(simple.test.seq_list[1])
 >>> print "Prediction test 1:", y_pred
@@ -608,7 +610,7 @@ clean/rainy walk/rainy tennis/rainy walk/rainy
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
 
-What is wrong? Note the observations for the second test sentence: the
+What is wrong? Note the observations for the second test sequence: the
 observation {\tt tennis} was never seen at training time, so the probability for
 it will be zero (no matter what state). This will make all possible state
 sequences have zero probability.
@@ -657,7 +659,8 @@ clean/sunny walk/sunny tennis/sunny walk/sunny
 %\end{exercise}
 
 
-\subsection{Viterbi Decoding}
+\subsection{Viterbi Decoding}\label{viterbi}
+
 
 \textbf{Viterbi decoding} consists in
 picking the best global hidden state sequence 
@@ -689,7 +692,7 @@ P_{\mathrm{emiss}}(x_1 | c_k)
  \\
  \mathrm{viterbi}(i, c_k) &=& \left( \displaystyle \max_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)  \label{viterbiRecursion}
  \\
- \mathrm{backtrack}(i, c_k) &=& \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k) 
+ \mathrm{backtrack}(i, c_k) &=& \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) 
  \\
   \mathrm{viterbi}(N+1, \text{\tt stop}) &=& \max_{c_l \in \statevocab} P_{\mathrm{final}}(\text{\tt stop} | c_l) \times \mathrm{viterbi}(N, c_l)
  \\
@@ -748,7 +751,7 @@ The only differences are:
 \begin{algorithm}[t]
    \caption{Viterbi algorithm \label{alg:viterbi}}
 \begin{algorithmic}[1]
-   \STATE {\bfseries input:} sentence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
+   \STATE {\bfseries input:} sequence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
         \STATE  \emph{Forward pass}: Compute the best paths for every end state
         \STATE \emph{Initialization}
         \FOR{$c_k \in \statevocab$ }
@@ -758,7 +761,7 @@ P_{\mathrm{emiss}}(x_1 | c_k)$
         \FOR{$i=2$ {\bfseries to} $N$}
          \FOR{$c_k \in \statevocab$ }
           \STATE $\mathrm{viterbi}(i, c_k) = \left( \displaystyle \max_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)$
-          \STATE $\mathrm{backtrack}(i, c_k) = \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)$
+          \STATE $\mathrm{backtrack}(i, c_k) = \left( \displaystyle \argmax_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{viterbi}(i-1, c_l) \right)$
          \ENDFOR 
         \ENDFOR 
        \STATE 
@@ -784,8 +787,7 @@ file {\tt sequence\_classification\_decoder.py}.
 \begin{python}
         def run_viterbi(self, initial_scores, transition_scores, final_scores, emission_scores):
 \end{python}
-Hint: look at the implementation of 
-{\tt run\_forward}.
+Hint: look at the implementation of {\tt run\_forward}. Also check the help for the numpy methods max and argmax.
 
 This method will be called 
 by 
@@ -796,9 +798,8 @@ in the module {\tt sequence\_classifier.py}.
 %
 %posterior decoding (the function \emph{posterior\_decode}) for reference.
 
-Test your method on both test sentences and compare the results with
+Test your method on both test sequences and compare the results with
 the ones given.
-NOTA-MA: O segundo dataset ainda não foi definido.
 \begin{python}
 >>> hmm.train_supervised(simple.train, smoothing=0.1)
 >>> y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])

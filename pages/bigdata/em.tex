@@ -1,0 +1,573 @@
+\section*{Today's Assignment}
+In the previous lesson, you learned the fundamentals of MapReduce and applied
+it to a simple classification problem (language detection, using the Na\"{i}ve
+Bayes classifier).
+
+Today, we're going to use MapReduce again to solve a trickier
+problem: using EM to perform unsupervised POS induction.
+
+\emph{Use the same login information you used yesterday to access your Amazon
+machine.}
+
+\section{Distributed EM}
+
+Before you read this section, if you haven't already, please read section
+\ref{unsupervised} about the non-distributed version of EM. If necessary,
+review that part of the guide, especially the pseudocode in Algorithm
+\ref{alg::em}.
+
+EM is an iterative method: for $T$ iterations, we have to alternate between the
+E-Step and the M-Step. Both steps can be done in a distributed manner; in this
+lesson, we're going to focus on a simple way to distribute the E-Step; the
+M-Step will be non-distributed (at first). To see how to distribute both steps
+in various configurations see, \emph{e.g.}, \cite{Wolfe2008}.
+
+How can we distribute the E-Step? Recall from equations
+\eqref{eq::initialCountsPost}--\eqref{eq::emissionCountsPost} that the E-Step
+involves \emph{summing} over $m$, where $m$ indexes each datum in your dataset.
+In POS induction, $m$ indexes every sentence. The important factor to
+understand is that each sequence can be processed completely independently of
+each other (these are the inner expressions) \emph{given the previous
+iterations' $\theta^t$}. This will correspond to a map step. The sums over $m$
+will be the \emph{reduce} step.
+
+In the last lesson, you already saw the Word Count and Na\"{i}ve Bayes
+algorithms. In these two examples, we counted something in the Map step and
+then summed them in the Reduce step. That is the intuition behind what we will
+do today: we will distribute our data to several workers in the map step, count
+things separately, then sum those counts in the reduce step. Everything else
+will be exactly the same as in section \ref{unsupervised}.
+
+The most important concepts that you should get out of today's tutorial are:
+
+\begin{enumerate}
+\item Since we can process each sequence independently, this is naturally a
+\emph{map} step.
+\item A full Map/Reduce call will correspond to a single iteration of the
+algorithm.
+\item To run multiple iterations, you will need to run multiple MapReduce
+calls.
+\item For each call after the first, you will need to pass in the results of
+the previous call.
+\end{enumerate}
+
+This is a step up from yesterday's mode of working where a single Map/Reduce
+call would solve your problem.
+
+The structure of this lab tutorial is as follows:
+
+\begin{enumerate}
+\item You will first look at the code we already provide for you.
+\item Based on it, we will run a version that is not distributed.
+\item We will convert this to a distributed version that is na\"{i}ve and very inefficient.
+\item We will then improve this version to be more efficient.
+\item Finally, we will run this code on a large dataset.
+\end{enumerate}
+
+This is a rather large set of exercises -- we decided to push you harder on this last day. Don't feel discouraged if you cannot complete everything.
+
+\section{First MapReduce Version}
+
+In your Amazon machine you will find the directory \texttt{distributed\_em}. In
+it you will find a few data and code files:
+
+\begin{itemize}
+\item \verb+sequences200.txt+ contains the first 200~sequences.
+\item \verb+word_tag_dict.pkl+ is an auxiliary file containing the dictionaries of words and tags.
+\item \verb+emstep.py+ contains a skeleton of the code we will be writing.
+\item A few other files we will use below (ignore them for the moment).
+\end{itemize}
+
+We recommend that leave the file \verb+emstep.py+ alone and experiment with the code snippets we provide below in a separate script until you get to section \ref{beginMR}.
+
+\subsection{Loading data}
+
+The datafiles are in a different format from what was used in the previous EM
+tutorial \emph{because the simplest way to use Hadoop (which is the underlying framework of Amazon EC2) is make each mapper
+receive a single line of the file}.
+
+To load a single line of the input file, we have provided in file {\texttt{emstep.py}} a function
+\begin{python}
+def load_sequence(line, word_dict, tag_dict):
+    '''
+    seq = load_sequence(s, word_dict, tag_dict)
+
+    Load a sequence from a single line
+
+    word_dict & tag_dict should be loaded from the file ``word_tag_dict.pkl``
+
+    Parameters
+    ----------
+    s : str
+    word_dict : dict
+    tag_dict : dict
+
+    Returns
+    -------
+    seq : Sequence object
+    '''
+\end{python}
+which takes the
+input data and the metadata in the auxiliary file. Here is how you would use it
+to just count the number of tokens in the dataset:
+
+\begin{python}
+import pickle
+from emstep import load_sequence
+word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
+
+n = 0
+for line in open('sequences200.txt'):
+    s = load_sequence(line, word_dict, tag_dict)
+    n += len(s)
+print 'Nr of tokens: ', n
+\end{python}
+
+The format of \texttt{s} is the same as Day 2. If you need to refresh your memory, try placing a line with \texttt{import pdb; pdb.set\_trace()} after the call to the function to see the format of \texttt{s}.
+
+\subsection{Processing a single sequence}
+
+We have also provided code for you to compute the statistics for a single
+sequence in the function 
+\begin{python}
+def predict_sequence(sequence, hmm):
+    '''
+    log_likelihood, initial_counts, transition_counts, final_counts,\
+            emission_counts = predict_sequence(seq, hmm)
+
+    Run forward-backward on a single sentence.
+
+    Parameters
+    ----------
+    seq : Sequence object
+    hmm: HMM object
+
+    Returns
+    -------
+    log_likelihood : float
+    initial_counts : np.ndarray
+    transition_counts : ndarray
+    final_counts : ndarray
+    emission_counts : ndarray
+    '''
+\end{python}
+Here is how you
+could use it. First we need to initialize an HMM object:
+
+\begin{python}
+import lxmls.sequences.hmm as hmmc
+import pickle
+word_dict, tag_dict  = pickle.load(open('word_tag_dict.pkl'))
+hmm = hmmc.HMM(word_dict, tag_dict)
+hmm.initialize_random()
+\end{python}
+
+Here we also made use of the \verb+word_tag_dict.pkl+ file to get the
+dictionaries. Then, we initialized the HMM with a random initialization.
+
+Now, we can use the \verb+predict_sequence+ function:
+
+\begin{python}
+from emstep import load_sequence,predict_sequence
+
+for line in open('sequences200.txt'):
+    seq = load_sequence(line, word_dict, tag_dict)
+    statistics = predict_sequence(seq, hmm)
+    
+print statistics
+\end{python}
+
+It is important to note that \verb+predict_sequence+ is \emph{a pure
+function}! It does not change its inputs. This means that \emph{if you call it
+in a different order or in different machines, you will always get the same
+results}.
+
+This also explains why we need to have the word dictionaries precomputed: if we
+built them as we go, then the order in which the sequences are processed would
+make a difference. Thus, we could not process the sequences in parallel. We
+will comment on this later when we see an alternative (more sophisticated
+implementation). In our case, we were able to compute the dictionaries using a
+simple Python script, but if the data was truly large, we could have written
+another MapReduce job to discover all the words in the dataset.
+
+If you look back to equations \eqref{eq::initialCountsPost}--\eqref{eq::emissionCountsPost} you can see that
+\verb+predict_sequence+ is computing the value inside the outer sums.
+
+\subsection{Combining Partial Results}
+\label{beginMR}
+At this point, you should understand the code we provided.
+
+The goal of the next exercise is to write a function called \verb+combine_partials+
+that can take all the sequence statistics and output the final statistics.
+
+\begin{python}
+import lxmls.sequences.hmm as hmmc
+import pickle
+from emstep import load_sequence,predict_sequence,combine_partials
+
+word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
+hmm = hmmc.HMM(word_dict, tag_dict)
+hmm.initialize_random()
+statistics = []
+for line in open('sequences200.txt'):
+    seq = load_sequence(line, word_dict, tag_dict)
+    statistics.append(predict_sequence(seq, hmm))
+
+final = combine_partials(statistics, hmm)
+\end{python}
+
+\begin{exercise}
+Write the function \verb+combine_partials+. This function should take a list of all
+the statistics and an HMM object. It should modify the HMM object to reflect
+the results of all the sequences.
+
+Your function should perform some computations and then assign to the hmm object:
+
+\begin{python}
+def combine_partials(statistics, hmm):
+    hmm.log_likelihood = ...
+    hmm.initial_counts = ...
+\end{python}
+
+A template is provided in \verb+emstep.py+.
+\end{exercise}
+
+Note that this separation into sequence statistics and combination does not
+really correspond to the expectation and maximisation steps.
+
+\subsection{Using MapReduce}
+\label{sec:usingMR}
+The previous exercise resulted in code that was not distributed, but already
+had the map/reduce structure we needed to make it work. For now, the reduce step is not
+distributed and will run on a single machine (this will be improved on in the
+next exercises).
+
+We will perform a complete mapreduce run for each iteration of EM that we
+compute. In order to run multiple iterations, we will run mapreduce repeatedly.
+
+In what follows, we will save our output to a file called \verb+hmm.pkl+ on
+each iteration and then load it from there on the next iteration. Naturally,
+the first iteration needs to be a special case and we initialize randomly that
+time.
+
+We will also output a Python object from our reduce method. For this, we need a
+bit of magic (which is filled in the template we provide and now explain):
+
+\begin{python}
+class EMStep(MRJob):
+    INTERNAL_PROTOCOL   = PickleProtocol
+    OUTPUT_PROTOCOL     = PickleValueProtocol
+
+    def reducer(self, _, partials):
+        ...
+        yield 'result', a_python_object
+\end{python}
+
+By declaring our output protocol to be \verb+PickleValueProtocol+, this means
+that we can emit a Python object in the reduce as the final output and it will
+be properly serialized to the output.
+
+\begin{exercise}
+Based on your function \verb+combine_partials+ and the code we provided you, fill in
+the map and reduce steps.
+
+For the moment, your reduce function should have a single emission of the form
+\verb+yield 'result', hmm+. Later, we will see more sophisticated methods.
+
+You may want to read the next few paragraphs before you start.
+\end{exercise}
+
+In order to test this code on the cluster, you need to run it with the
+following flags (we are also directing the output to the file
+\verb+next_iteration.pkl+):
+
+\begin{verbatim}
+python emstep.py \
+    -r local \
+    --file=word_tag_dict.pkl\
+    sequences200.txt > next_iteration.pkl
+\end{verbatim}
+
+The first flag (\verb+-r local+) makes the code run on the present machine (the AWS machine), the second
+(\verb+--file=word_tag_dict.pkl+) declares that the file
+\verb+word_tag_dict.pkl+ is needed to run the job.
+
+In order to run multiple iterations, you need to save the results of the
+previous iteration to a file, which can be loaded at startup.
+
+So, once you have run the code the first time, rename the output file by typing this into the terminal:
+
+\begin{verbatim}
+mv next_iteration.pkl hmm.pkl
+\end{verbatim}
+
+Notice that in the \verb+__init__+ function we check whether the file \verb+hmm.pkl+ exists and load it if so:
+
+\begin{python}
+from os import path
+if path.exists('hmm.pkl'):
+    hmm = pickle.load(open('hmm.pkl').read().decode('string-escape'))
+else:
+    hmm = hmmc.HMM(word_dict, tag_dict)
+    hmm.initialize_random()
+\end{python}
+
+We needed to be careful with the string escapes in the above code, but
+otherwise were able to just rely on Python \verb+pickle+ to load the results.
+
+And you can now call it again (\emph{passing the hmm.pkl file on the command
+line}!):
+
+\begin{verbatim}
+python emstep.py \
+    -r local \
+    --file=word_tag_dict.pkl \
+    --file=hmm.pkl \
+    sequences200.txt > next_iteration.pkl
+\end{verbatim}
+
+\textbf{Pitfall:} Be careful to not over-write your HMM file! You need to
+perform two steps:
+
+\begin{enumerate}
+\item Run the code, outputing to a temporary file.
+\item Rename the temporary file.
+\end{enumerate}
+
+\emph{The following is a mistake!}
+\begin{verbatim}
+python emstep.py \
+    -r local \
+    --file=word_tag_dict.pkl \
+    --file=hmm.pkl \
+    sequences200.txt > hmm.pkl
+\end{verbatim}
+
+This is a mistake because the \verb+hmm.pkl+ is now removed (to make space for
+the new output) before your program has a chance to read it!
+
+\subsection{Running it on the cluster}
+
+When you are happy with your code, you can now run it on the cluster:
+
+\begin{verbatim}
+python emstep.py \
+    -r emr \
+    --file=word_tag_dict.pkl \
+    sequences200.txt
+\end{verbatim}
+
+The \verb+-r emr+ flags runs the code on Elastic MapReduce now. Run it multiple
+times using \verb+--file=hmm.pkl+ to get the next iteration.
+
+\emph{This will take a few minutes per iteration, so do not run many
+iterations. We will be working on making the code faster before you can do
+so.}
+
+\subsubsection{A note on dependencies}
+
+This code depends on packages such as numpy or the lxmls package (which
+contains the implementation of the HMM we are using and which you helped write
+on the lab tutorial of day 2).
+
+On the cluster we provide you, they are already installed, and you can just use
+them without any special effort. If you are attempting to use your own computer
+or reproduce the steps at home; please note that these packages need to be
+installed before hand. Check the documentation of mrjob on how to install
+python packages on the Elastic MapReduce cluster if you want to run it on your
+own Amazon account.
+
+\subsection{Introducing \texttt{mapper\_final}}
+
+While the code you wrote in the last exercise works correctly, it is horribly
+inefficient. The problem is that \emph{we output several matrices for each
+sequence}. This results in too much communication between processes and the
+reduce step needs to load all these large matrices.
+
+In order to address this problem we need to introduce a new operation, the
+\verb+mapper_final+. This is called, for each mapper, when all the input has been
+processed.
+
+You can perhaps understand this by imagining that mrjob is running the
+following loop (in Python pseudo-code):
+
+\begin{python}
+for key,value in input:
+    job.mapper(key,value)
+job.mapper_final()
+\end{python}
+
+You can delay emission of partial results until the \verb+mapper_final+ step and
+then emit the partial output of every sequence this job processed.
+
+For example, here is how WordCount can be performed using \verb+mapper_final+:
+
+\begin{python}
+class WordCount(MRJob):
+    def __(init)__:
+        self.counts = {}
+    
+    def mapper(self, _, values):
+        for word in values.split():
+            if word in self.counts:
+                self.counts[word] += 1
+            else:
+                self.counts[word] = 1
+
+    def mapper_final(self):
+        for k in self.counts:
+            yield k, self.counts[k]
+
+    def reducer(self, key, values):
+        yield key, sum(values)
+\end{python}
+
+Note that the reduce method is still necessary: although each map job will emit
+the final result for all the documents it saw, we still need to combine the
+results from different map jobs (which run on different machines and processed
+different documents).
+
+By only emitting results in the \verb+mapper_final+ method, we have converted the
+implementation to use a batch system: the dataset is partioned into a block for
+each processor, each processor works on that whole block, and the reduction is
+only made to combine the results of different processors.
+
+This cuts down the communication overhead drastically and also makes the reduce
+function be faster and less resource intensive. Now, it only needs to work with
+a single set of statistics per compute node instead of one for each input
+sequence. Resource usage for reduction now only depends on the number of
+machines used and not the size of the input.
+
+\begin{exercise}
+Use \verb+mapper_final+ to improve your MapReduce implementation. Initialize the
+matrices and log likelihood to zero in the \verb+__init__+ constructor and update partial sums
+in the map function. Emit only in the \verb+mapper_final+ method.
+
+The reduce function should not need to be changed at all.
+
+Use the previous na\"{i}ve version as a benchmark. The results should not change
+beyond a rounding error (they may change slightly).
+\end{exercise}
+
+The implementation that you have now can now be run on a larger dataset. As we
+did for yesterday's lab, we have put the full datasets on S3 (you can read back
+on S3 on yesterday's guide). You can now test you code on the cluster using the
+full dataset:
+
+\begin{verbatim}
+python emstep.py \
+    -r emr \
+    --file=word_tag_dict.pkl \
+    s3://lxmls-labs/all-sequences-for-em.txt
+\end{verbatim}
+
+If you try this with your previous version, which did not use the mapper\_final
+optimization; you will simply wait a long time before running out of
+resources. With this new version, it runs to completion. It might still take
+too long for you to be able to run many iterations before the lab is over, but
+now you can see that you could run this on a million sequences in a few hours
+if you had enough machines. See also the note on Hadoop latency and Big Data at the
+end of this chapter.
+
+\subsection{Parallelizing Reduce*}
+
+\emph{If you ran out of time to complete this next section, don't worry, this
+section is an advanced module and you have already seen the major take-home
+points of the tutorial with the previous exercise.}
+
+Our code can still be improved in two ways: (1) there is a single reduce call,
+which does not take advantage of the fact that we have a cluster of machines;
+and (2) since the emission matrices are sparse, we are emitting large matrices
+with many zeros. %% FIXME Actually, check if they are still sparse using the map final method
+
+The previous code also had reduce use resources that grow with the number of
+processes. This may still be too much if you use a thousand of machines. We
+will also avoid this problem.
+
+In order to parallelize reduce, we need to start emitting partial results at a
+more fine grained level. Here are the types of emissions we want to consider:
+
+\begin{enumerate}
+\item The \textbf{initial counts}: this is per state.
+\item The \textbf{final counts}: this is per state again.
+\item The \textbf{transition counts}: this is for each pair of states (transition from A to B).
+\item The \textbf{emission counts}: this is for each pair of state and word.
+\item The \textbf{log likelihood}.
+\end{enumerate}
+
+In order to distinguish all of these, we will emit them as numbers with
+different keys. For example, the log likelihood will simply have the key ``log
+likelihood'', while the matrices will have keys which identify the matrix and the
+cell.
+
+The code below exemplifies how we could emit the log likelihood and the vector of final counts:
+
+\begin{python}
+yield 'log likelihood', log_likelihood
+
+for i in xrange(len(counts)):
+    name = hmm.get_state_name(i)
+    yield 'final '+name, counts[i]
+\end{python} % FIXME does the function get_state_name exist?
+
+Note how we included the name of the state in the key. For the transition counts and emission counts, we will need a nested for loop:
+
+\begin{python}
+for i in xrange(transition.shape[0]):
+    for j in xrange(transition.shape[1]):
+        if transition[i,j]: # <----- IGNORE ZEROS
+            name_i = hmm.get_state_name(i)
+            name_j = hmm.get_state_name(j)
+            yield 'transition %s %s' % (name_i, name_j), transition[i,j]
+\end{python}
+
+Again, we are including the names of the states in the key. The check for zeros is important as it is useless to output zero counts. If the
+universe of words is large, then those matrices will be sparse and we avoid useless computation and communication.
+
+\begin{exercise}
+Look in the file \verb+emission_snippets.py+. This contains the for loops above
+and more.
+
+Use these to improve your \verb+mapper_final+ function. Write the corresponding
+reduce function. Do not change the keys used for the emission as they are
+needed below (see the next paragraph after this exercise).
+
+\textbf{Important:} Now you should remove the \verb+OUTPUT_PROTOCOL+
+declaration! See the note on section \ref{sec:usingMR} on what this means.
+\end{exercise}
+
+The resulting output is no longer a single HMM object which we can load from
+Python, but a text file which encodes all the matrices. If you have used our
+snippets exactly, you can also use the code in the function
+\verb+parse_hmm_from_output+ to parse this file and generate a new HMM object.
+
+Note that with this output method, we do not need to have the word dictionaries
+precomputed. Whereas previously, we relied on matrix indeces to keep our words
+apart, now we output the actual word and therefore, we could just process each
+sequence as it comes.
+
+\subsection{A Note on Hadoop Overhead and Big Data}
+
+As you probably noticed, Hadoop has a lot of overhead and each iteration takes
+a long time to start computing and finish running. In our case, this is a very
+significant part of the time it takes to run an iteration.
+
+Hadoop is heavy machinery: it takes a while to move, but then can be very
+powerful. The advantages are in the scaling: if we had a trillion sequences which
+would take thousands of computing hours to process, then the minute or so that
+it takes to start up would not matter and we would reap the benefits of working
+with hundreds, even thousands, of machines. We can say that Hadoop has high
+latency but can have high throughput as well. Thus, it is not very appropriate
+for small problems, but can scale to huge ones.
+
+Unfortunately, we only had a few hours in which you could work: including
+understanding the task, writing the code, debugging it and running it.
+Therefore, it was unfeasible to ask you to work on a problem with a million
+sequences which could only be tackled with the heavy machinery of Hadoop.
+We could not really work on very large problems. This was only a demo of what
+Big Data really is.
+
+However, the code you wrote at the end of the chapter is now perfectly scalable
+to any size project you want to tackle. The skills you learned can be applied
+to any web-scale problem.
+
