@@ -60,7 +60,10 @@ There are several ways to get help on IPython:
 
 \begin{itemize}
 \item Adding a question mark to the end of a function or variable and pressing Enter brings up associated documentation. Unfortunately, not all packages are well documented. Numpy and matplotlib are pleasant exceptions;
-\item \code{help('print')} gets the online documentation for the \code{print} keyword;
+% It probably does not work because print is a special keyword, unlike Python 3. 
+% Since we are using 2.7 we should have help("__builtin__.print") instead.
+% However, since help("if") gives the correct information, I'm changing this.
+\item \code{help('if')} gets the online documentation for the \code{print} keyword;
 \item \code{help()}, enters the help system.
 \item When at the help system, type \code{q} to exit.
 \end{itemize}
@@ -312,7 +315,7 @@ Handling of exceptions is made with the \textit{try} statement:
 \begin{python}
 while True:
     try:
-        x = int(raw_input("Please enter a number: ")
+        x = int(raw_input("Please enter a number: "))
         break
     except ValueError:
         print "Oops! That was no valid number. Try again..."
