@@ -228,7 +228,7 @@ The output of the \texttt{\%prun} command will show the following information fo
 
 During the lab sessions we will use the previously described IPython iterative command line which allows you to execute a script, command by command. This should limit the need for debugging tools. However, there will be situations in which we will use and extend modules that involve more elaborated code and statements, like classes and nested functions. Although desirable, it should not be necessary for you to fully understand the whole code to carry out the exercises. It will suffice to understand the algorithm as explained in the theoretical part of the class and the local context of the part of the code where we will be working. 
 
-The simplest way to do this is to run the code and stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. For that, you can use the ipdb module. 
+The simplest way to do this is to run the code and stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. For that, you can use the pdb module. 
 
 In the following example, we use this module to inspect the \texttt{greet} function:
 
@@ -239,7 +239,7 @@ def greet(hour):
     elif hour >= 12 and hour < 20:
         print 'Good afternoon!'
     else:
-        import ipdb;ipdb.set_trace()
+        import pdb; pdb.set_trace()
         print 'Good evening!'
 \end{python}
 
@@ -279,7 +279,7 @@ So getting back to our example, we can type n(ext) once to execute the line we s
 \begin{python}
 ipdb> n
 > ./lxmls-toolkit/yourfile.py(8)greet()
-      7                 import ipdb;ipdb.set_trace()
+      7                 import pdb; pdb.set_trace()
 ----> 8                 print 'Good evening!' 
 \end{python}
 
