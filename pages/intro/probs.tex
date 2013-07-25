@@ -265,7 +265,11 @@ p_{mle}=0.6
 \begin{exercise}
 Over the next couple of exercises we will make use of the Galton dataset, a dataset of heights of fathers and sons from the 1877 paper that first discussed the ``regression to the mean'' phenomenon. This dataset has 928 pairs of numbers.
 \begin{itemize}
-\item Use the \texttt{load()} function in the \texttt{galton.py} file to load the dataset. The file is located under the \texttt{lxmls/readers} folder. Type the following in your Python interpreter:
+\item Use the \texttt{load()} function in the \texttt{galton.py} file to load the dataset. 
+The file is located under the \texttt{lxmls/readers} folder\footnote{
+You might need to inform python about the location of the lxmls labs toolkit.
+To do so you need to \texttt{import sys} and use the \texttt{sys.path.append} function to add the path to the toolkit readers.}. 
+Type the following in your Python interpreter:
 \begin{verbatim}
 import galton as galton
 GaltonData = galton.load()
