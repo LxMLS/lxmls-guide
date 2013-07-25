@@ -583,6 +583,7 @@ We provide an implementation of the perceptron algorithm in the class {\tt Perce
 \item Run the following commands to generate a simple dataset similar to the one plotted on Figure \ref{simpleDataSet_bo}:
 
 \begin{python}
+import lxmls.readers.simple_data_set as sds
 sd = sds.SimpleDataSet(nr_examples=100, g1 = [[-1,-1],1], g2 = [[1,1],1], balance=0.5, split=[0.5,0,0.5])
 \end{python}
 
@@ -603,6 +604,7 @@ print "Perceptron Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_tes
 
 \item Plot the decision boundary found:
 \begin{python}
+fig,axis = sd.plot_data()
 fig,axis = sd.add_line(fig,axis,params_perc_sd,"Perceptron","blue")
 \end{python}
 Change the code to save the intermediate weight vectors,
