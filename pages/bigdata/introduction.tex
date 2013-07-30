@@ -300,9 +300,9 @@ Then, given a test sentence $x$, we can compute the following argmax for the two
 %
 \begin{eqnarray}
 \argmax_c {\hat P}(c | x) &= \argmax_c {\hat P}(c) {\hat P}(x | c) \nonumber\\
-&= \argmax_c {\hat P}(c) \prod_j {\hat P}(c | t_j) \nonumber\\
-&= \argmax_c \prod_j {\hat P}(c | t_j) \nonumber\\
-&= \argmax_c \sum_j \log({\hat P}(c | t_j))\label{eq:NBformula}
+&= \argmax_c {\hat P}(c) \prod_j {\hat P}(t_j | c) \nonumber\\
+&= \argmax_c \prod_j {\hat P}(t_j | c) \nonumber\\
+&= \argmax_c \sum_j \log({\hat P}(t_j | c))\label{eq:NBformula}
 \end{eqnarray}
 %
 In the first equality we used Bayes' Theorem. In the second one we used the assumption of conditional independence of features given the class, which is at the core of Na\"{i}ve Bayes. In the third one, we used that ${\hat P}(\text{PT}) = {\hat P}(\text{EN}) = \frac{1}{2}$, thus the prior does not affect the argmax. In the last equation, we used the fact that the argmax is not affected by the application of a logarithm. Logarithms will prevent your program from encountering underflow errors when multiplying many numbers which are very small.
