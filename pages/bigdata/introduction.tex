@@ -54,13 +54,13 @@ You should have received a piece of paper with the following two pieces of infor
 
 Your hostname will be
 something like \texttt{ec2-54-234-117-69.compute-1.amazonaws.com} and you
-should be able to log in with username \texttt{ubuntu} and the password you
+should be able to log in with username \texttt{ec2-user} and the password you
 were given. This is your personal server running on Amazon's infrastructure!
 
 If you are using the command line, you can just type:
 
 \begin{verbatim}
-ssh ubuntu@ec2-54-234-117-69.compute-1.amazonaws.com
+ssh ec2-user@ec2-54-187-1-229.us-west-2.compute.amazonaws.com
 \end{verbatim}
 (accept the RSA key and log in with the password we provided you).
 
@@ -81,28 +81,18 @@ sentence -- don't worry about it for now).
 \section{MapReduce for Word Count}
 
 The initial idea of MapReduce was an implementation by
-Google\footnote{http://research.google.com/archive/mapreduce.html}, but very
-soon Hadoop appeared as an open-source implementation of the same
-paradigm.\footnote{http://hadoop.apache.org/}
+Google\footnote{http://research.google.com/archive/mapreduce.html}, but very soon Hadoop appeared as an open-source implementation of the same paradigm.\footnote{http://hadoop.apache.org/}
 
 The basic idea is to take your original problem, whichever it may be, and tackle it in two steps:
 %
 \begin{enumerate}
-\item \textbf{Map step:} Divide the data into several parts and send each part
-to a different computer. Each computer does some computation using \emph{only}
-that part of the data, and returns some output.\footnote{The name "map" is completely
-unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced
-in day 1.} It comes from the functional programming world, and is actually
-present in Python as a builtin function, \verb+map+.
-\item \textbf{Reduce step:} Collect all the outputs from all the different
-computers and compute the final solution from those outputs. Again, this name
-comes from the functional programming and it is present in Python as the builtin
-\verb+reduce+. However, as we will see the reduce step in MapReduce is a bit
-more inteligent than the tradtional reduce.
+\item \textbf{Map step:} Divide the data into several parts and send each part to a different computer. Each computer does some computation using \emph{only} that part of the data, and returns some output.\footnote{The name "map" is completely unrelated to \emph{maximum a posteriori} (MAP) inference which was introduced in day 1.} It comes from the functional programming world, and is actually present in Python as a builtin function, \verb+map+.
+\item \textbf{Reduce step:} Collect all the outputs from all the different computers and compute the final solution from those outputs. Again, this name comes from the functional programming and it is present in Python as the builtin \verb+reduce+. However, as we will see the reduce step in MapReduce is a bit
+more intelligent than the traditional reduce.
 \end{enumerate}
 
 The classic example of application of MapReduce is the word count problem:
-
+%
 \begin{itemize}
 \item You have a collection of documents, there are many of them.
 \item You want to count how many times each word appears in the whole collection.
@@ -115,7 +105,7 @@ However, this problem is quite easy to parallelize using the MapReduce framework
 \begin{enumerate}
 \item You process each document by itself, counting how many times each word
 appears. This is the \emph{map} step. Notice that each document can be
-processed in parallel by different machines. The result for each file is a
+processed in parallel, by multiple machines. The result for each file is a
 dictionary of a count for each word.
 \item You sum up the counts for each word to get the final count. This is the
 \emph{reduce} step. Notice that you can now parallelize over words.
@@ -123,14 +113,14 @@ dictionary of a count for each word.
 
 \subsection{Keys, Values, and the MRJob package}
 In fact, what we stated above is a bit of an over-simplification. In MapReduce, the map step actually outputs zero or more pairs of the form (\emph{key}, \emph{value}). Let's suppose that you want to run the wordcount example in the following document which contains only two sentences:
-
+%
 \begin{verbatim}
 the center of Lisbon is the best part of the city
 the campus of IST is located near Alameda
 \end{verbatim}
-
+%
 Suppose that you send each sentence to a separate worker. The output of the first worker (which is processing the first sentence) would be:
-
+%
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
@@ -142,9 +132,9 @@ Key & Value \\
 \vdots & \vdots \\
 \end{tabular}
 \end{center}
-
+%
 and the output of the second worker (which is processing the second sentence) would be:
-
+%
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
@@ -209,7 +199,7 @@ wc.run()
 \end{python}
 
 This file already exists as \texttt{wordcount.py} (inside the
-\texttt{wordcount} folder). You will first run it without using Amazon
+\texttt{wordcount} folder). You will first run it on your Amazon server, without using Amazon
 EC2. To do that, {\texttt{ssh}} your machine
 \begin{verbatim}
 ssh <username>@<prefix>.compute.amazonaws.com
@@ -252,22 +242,20 @@ To run the exact same code as before using EMR, type the following into the comm
 python wordcount.py -r emr en_perline001.txt > results2.txt
 \end{verbatim}
 
-Since the two files don't have to have the same order for the words, it's hard to compare them visually. Try these two commands in the terminal, which will check how often you counted the word \texttt{will}:
+Since the two files don't have to have the same order for the words, it's hard to compare them visually. Try these two commands in the terminal, which will check how often you counted the word \texttt{will} or any words containing \texttt{will} as a substring:
 
 \begin{verbatim}
 grep will results.txt
 grep will results2.txt
 \end{verbatim}
 
-You should see that the word "will" appears 2151 times on the English file, with both commands.
+You should see that the word "will" appears 2151 times on the English file, with both commands. Similarly, "unwilling" appears 11 times.
 
 The file we used on the previous exercises is not very big (it contains around 0.1\% of the text from the English Wikipedia), but running on a cluster of machines allows us to
 scale up enough to use larger files as input. For example, let's run the same on 10\% of the Portuguese Wikipedia, using a file which is present on Amazon's S3 storage service:
 
 \begin{verbatim}
-python wordcount.py \
-        -r emr \
-        s3://lxmls-labs/pt_perline10.txt > results_PT.txt
+python wordcount.py -r emr s3://lxmls-labs/pt_perline10.txt > results_PT.txt
 \end{verbatim}
 
 This should take about 3 minutes.
@@ -382,7 +370,7 @@ grep acc en.counts.txt
 
 which should tell you that the trimer \texttt{acc} appeared 3448 times in the English file.
 
-To test your language detector, see if it classifies correctly some sentences which you make up. If you do not know Portuguese, here are a few sentences you can use to test (from the Portuguese Wikipedia):
+To test your language detector, see if it classifies correctly some sentences which you make up. If you do not know Portuguese, here are a few sentences you can use to test:
 
 \begin{itemize}
 \item Esperamos que estejam a gostar desta Escola.
