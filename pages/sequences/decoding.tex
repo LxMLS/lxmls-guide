@@ -137,9 +137,9 @@ The trellis scores are given by the following expressions:
 \mathrm{score}_{\mathrm{trans}}(i, c_k, c_l) &=&
 \log P_{\mathrm{trans}}(Y_{i+1} = c_k | Y_i = c_l).
 \end{eqnarray}
-\item For each state $c_l$ (\textbf{verify equation: remove $i$ from score?}):
+\item For each state $c_l$:
 \begin{eqnarray}
-\mathrm{score}_{\mathrm{final}}(i, c_l) &=&
+\mathrm{score}_{\mathrm{final}}(c_l) &=&
 \log P_{\mathrm{final}}(\text{\tt stop} | Y_N = c_l).
 \end{eqnarray}
 \item For each position $i \in {1,\ldots,N}$ and state $c_k$:
