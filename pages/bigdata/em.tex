@@ -348,13 +348,25 @@ the new output) before your program has a chance to read it!
 
 \subsection{Running it on the cluster}
 
-When you are happy with your code, you can now run it on the cluster:
+When you are happy with your code, you can now run it on the cluster. Keep in
+mind that you need to send all the dependencies of your code to the cluster.
+We already packaged all in the lxmls.tar.gz file, that is:\\ 
 
+\emph{The following is a mistake!}
 \begin{verbatim}
 python emstep.py \
     -r emr \
     --file=word_tag_dict.pkl \
-    sequences200.txt
+    sequences200.txt > next_iteration.pkl 
+\end{verbatim}
+
+\emph{This is right}
+\begin{verbatim}
+python emstep.py \ 
+       --python-archive=lxmls.tar.gz \ 
+       -r emr \ 
+       --file=word_tag_dict.pkl \
+       sequences200.txt > next_iteration.pkl 
 \end{verbatim}
 
 The \verb+-r emr+ flags runs the code on Elastic MapReduce now. Run it multiple
