@@ -1,34 +1,37 @@
-\subsection{Downloading the labs version from GitHub}
+\subsection{Desktops vs. Laptops}
 
-The code at LxMLS is available online at GitHub. For the labs we will be using a special version with some small changes, like missing code that you have to complete. To download the code just go to
+If you are using one of our provided desktops, all installation procedures have been carried out. You merely need to go to the \verb+lxmls-toolkit-student+ folder inside your home directory and start working! You may go directly to section \ref{sec:Python}.
 
-\begin{verbatim}
-https://github.com/gracaninja/lxmls-toolkit
-\end{verbatim}
+If you wish to use your own laptop, you will need to install Python, all required Python libraries, and the LXMLS code base. Please follow the instructions appropriate for your operating system.
 
-\noindent and select the \textit{student} branch in the dropdown menu. This will reload the page to the corresponding branch. Now you just need to click the \textit{download ZIP} to obtain the lab tools in a zip format:
+\subsection{Installing in Windows or Mac}
 
-\begin{verbatim}
-lxmls-toolkit-student.zip
-\end{verbatim}
+While Python is easy to install, some of the Python modules are based in C and thus require a compiler to be installed from scratch. Fortunately, there are some companies which distribute Windows and Mac versions of Python including all C-based libraries which we need, for free. We recommend one of these:
 
-After this you can unzip the file where you want to work and enter this folder. Now we need to instal all the necessary modules. Depending on the platform and your previous configuration, the procedure might be different. 
-
-\subsection{Installing Python and Modules in Windows}
-
-The simplest way to start from scratch is to install some scientific bundle. At LxMLS we recommend either anaconda 
-
+\begin{itemize}
+\item Anaconda 
 \begin{verbatim}
 http://continuum.io/downloads
 \end{verbatim}
-
-\noindent or canopy
-
+%
+\item Canopy
 \begin{verbatim}
 https://store.enthought.com/downloads/
 \end{verbatim}
+%
+\item WinPython (Windows only)
+\begin{verbatim}
+http://sourceforge.net/projects/winpython/files/
+\end{verbatim}
+%
+\item Using the \verb+port+ command (Mac only); please follow the instructions at
+\begin{verbatim}
+http://www.scipy.org/install.html
+\end{verbatim}
+%
+\end{itemize}
 
-Just go to the corresponding websites and follow the instructions for installation.
+Just go to the corresponding websites and follow the instructions for installation. Make sure you install a 2.7.x version, not a 3.x version!
 
 %Any python 2.7.x version will do. You can check the version by  
 %
@@ -76,19 +79,36 @@ Just go to the corresponding websites and follow the instructions for installati
 %\end{verbatim}
 %
 
+\subsection{Installing in Linux}
 
+Installation of Python and its related packages in Linux is best done from your distribution's package manager. Please follow the instructions for your distribution, available at
+\begin{verbatim}
+http://www.scipy.org/install.html
+\end{verbatim}
 
+If you are presented with a choice, please install a Python 2.7.x version, not a 3.x version!
 
+\subsection{Downloading the labs version from GitHub}
 
-\subsection{Installing the Modules in OSX (Mac)}
+The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. To download the \verb+student+ code, go to
 
-\subsection{Installing the Modules in Linux}
+\begin{verbatim}
+https://github.com/gracaninja/lxmls-toolkit
+\end{verbatim}
+
+\noindent and select the \verb+student+ branch in the dropdown menu. This will reload the page to the corresponding branch. Now you just need to click the \verb+download ZIP+ button to obtain the lab tools in a zip format:
+
+\begin{verbatim}
+lxmls-toolkit-student.zip
+\end{verbatim}
+
+After this you can unzip the file where you want to work and enter this folder.
 
 \subsection{Working on the Exercises}
 
-Please note that in order for the exercises to work you need to launch your scripts or use interpreters from inside the  \textit{lxmls-toolkit-student} folder. If you do not understand what I just wrote there, no problem, at the end on the next chapter you should.
+Please note that in order for the exercises to work you need to launch your scripts or use interpreters from inside the  \textit{lxmls-toolkit-student} folder.
 
-One detail more and you are off to go. Unlike the master branch, the student version has no installer. This is done on purpose to simplify the labs. Instead, we provide the solve.py script. This can be used to solve the exercises of each day e.g.
+One detail more and you are off to go. In the student branch we provide the \verb+solve.py+ script. This can be used to solve the exercises of each day, \emph{e.g.}
 
 \begin{verbatim}
 python ./solve.py day1
@@ -100,5 +120,5 @@ python ./solve.py day1
 python ./solve.py --undo day1
 \end{verbatim}
 
-Note that this script just downloads the master or student versions of certain files from the GitHub repository. It needs of an internet connection. Since some exercises require you to have the exercises of the previous days completed, the monitors may ask you to use this function. Remember to save your own version of the code!. 
+Note that this script just downloads the master or student versions of certain files from the GitHub repository. It needs an Internet connection. Since some exercises require you to have the exercises of the previous days completed, the monitors may ask you to use this function. Remember to save your own version of the code, otherwise it will be overwritten!
 
