@@ -1,0 +1,104 @@
+\subsection{Downloading the labs version from GitHub}
+
+The code at LxMLS is available online at GitHub. For the labs we will be using a special version with some small changes, like missing code that you have to complete. To download the code just go to
+
+\begin{verbatim}
+https://github.com/gracaninja/lxmls-toolkit
+\end{verbatim}
+
+\noindent and select the \textit{student} branch in the dropdown menu. This will reload the page to the corresponding branch. Now you just need to click the \textit{download ZIP} to obtain the lab tools in a zip format:
+
+\begin{verbatim}
+lxmls-toolkit-student.zip
+\end{verbatim}
+
+After this you can unzip the file where you want to work and enter this folder. Now we need to instal all the necessary modules. Depending on the platform and your previous configuration, the procedure might be different. 
+
+\subsection{Installing Python and Modules in Windows}
+
+The simplest way to start from scratch is to install some scientific bundle. At LxMLS we recommend either anaconda 
+
+\begin{verbatim}
+http://continuum.io/downloads
+\end{verbatim}
+
+\noindent or canopy
+
+\begin{verbatim}
+https://store.enthought.com/downloads/
+\end{verbatim}
+
+Just go to the corresponding websites and follow the instructions for installation.
+
+%Any python 2.7.x version will do. You can check the version by  
+%
+%If you do not have python, you can install the latest 2.7+ python from the official website at
+%
+%\begin{verbatim}
+%https://www.python.org/downloads/ 
+%\end{verbatim}
+%
+%Do not install python 3.x.x versions, this is a backwards incompatible version that can not use most of the tools of the labs. 
+%
+%Then we will need to instal some specific Python modules and the ipython shell. The easiest way to do this is by installing a python module manager.
+%
+%
+%
+%
+%Now we need the ipython interactive shell. Again we use the command line (be sure to exit python first by using exit() or ctrl+d).
+%
+%\begin{verbatim}
+%>ipython
+%\end{verbatim}
+%
+%if this is recognized then great
+% 
+%
+%If you do not know if you have a module manager installed open a command window
+%
+%\begin{verbatim}
+%press the windows-key + R 
+%write cmd and press enter  
+%try the command pip 
+%try the command easy_install 
+%\end{verbatim}
+%
+
+
+%After hovering the mouse over downloads, you will see various options for installation. You can instal the version 2.7.x, any number for x is ok. Please do not instal version 3 or superior. If you already have a python 2.7 (any version) installed, you dont need to install another one, it will work. If you have older versions of python it might still work. In any case please uninstall any previous python version before installing a new one. This is a frequent source of problems on all systems.
+%
+%Now for the different python modules needed. The most straightforward way to instal the modules is through a python package manager, we recommend pip 
+%
+%[lot to do here ...]
+%
+%\begin{verbatim}
+%pip install -r pip-requirements.txt 
+%\end{verbatim}
+%
+
+
+
+
+
+\subsection{Installing the Modules in OSX (Mac)}
+
+\subsection{Installing the Modules in Linux}
+
+\subsection{Working on the Exercises}
+
+Please note that in order for the exercises to work you need to launch your scripts or use interpreters from inside the  \textit{lxmls-toolkit-student} folder. If you do not understand what I just wrote there, no problem, at the end on the next chapter you should.
+
+One detail more and you are off to go. Unlike the master branch, the student version has no installer. This is done on purpose to simplify the labs. Instead, we provide the solve.py script. This can be used to solve the exercises of each day e.g.
+
+\begin{verbatim}
+python ./solve.py day1
+\end{verbatim}
+
+\noindent You can also undo the solving of an exercise by using
+
+\begin{verbatim}
+python ./solve.py --undo day1
+\end{verbatim}
+
+Note that this script just downloads the master or student versions of certain files from the GitHub repository. It needs of an internet connection. Since some exercises require you to have the exercises of the previous days completed, the monitors may ask you to use this function. Remember to save your own version of the code!. 
+
