@@ -88,6 +88,33 @@ http://www.scipy.org/install.html
 
 If you are presented with a choice, please install a Python 2.7.x version, not a 3.x version!
 
+\subsection{Testing your installation}
+
+To check whether your Python installation is working, start by invoking the Python shell. You can do that by running the command \verb+python+ in your Terminal in Linux or Mac, or the file \verb+python.exe+ from the folder where Python was installed in, for Windows.
+
+In the Python interpreter, the very first line should read like
+\begin{verbatim}
+Python 2.7.3 (default, Feb 27 2014, 19:58:35)
+\end{verbatim}
+%
+In this case, the Python version was 2.7.3. Please make sure that in your case this reads \verb+2.7.x+, where \verb+x+ is some number. Newer versions such as 3.4 have not been tested with our code.
+
+To test whether Numpy is working, type the following two lines in the Python interpreter:
+%
+\begin{verbatim}
+import numpy
+numpy.test()
+\end{verbatim}
+%
+The last two lines should read something like
+%
+\begin{verbatim}
+OK (KNOWNFAIL=3, SKIP=4)
+<nose.result.TextTestResult run=3161 errors=0 failures=0>
+\end{verbatim}
+
+Finally, to check that all the modules we will use work, please run the \verb+all_imports.py+ file found in the \verb+lxmls-toolkit-student+ folder.
+
 \subsection{Downloading the labs version from GitHub}
 
 The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. To download the \verb+student+ code, go to
