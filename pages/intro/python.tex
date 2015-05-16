@@ -73,6 +73,33 @@ Exit IPython by typing \code{exit()} or \code{quit()} (or typing CTRL-D).
 
 \subsection{Python by Example}
 
+\subsubsection{Basic Math Operations}
+
+Python supports all basic arithmetic operations, including exponenation. For example, the following code:
+\begin{python}
+print 3 + 5
+print 3 - 5
+print 3 * 5
+print 3 / 5
+print 3 ** 5
+\end{python}
+
+\noindent will produce the following output:
+\begin{python}
+8
+-2
+15
+0
+243
+\end{python}
+
+Notice that division is always considered as integer division, hence the result being 0 on the example above. To force a floating point division you can force one of the operands to be a floating point number:
+\begin{python}
+print 3 / 5.0
+0.6
+\end{python}
+
+Also, notice that the symbol \texttt{**} is used as exponentation operator, unlike other major languages which use the symbol \texttt{\^}. In fact, the \texttt{\^} symbol has a different meaning in Python (bitwise XOR) so, in the beginning, be sure to double-check your code if it uses exponentiation and it is giving unexpected results.
 
 \subsubsection{Data Structures}
 
