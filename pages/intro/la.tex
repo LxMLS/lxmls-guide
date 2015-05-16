@@ -222,7 +222,7 @@ The {\bf norm} of a vector is informally the measure of the ``length'' of the ve
 \begin{equation*}
 \|x\|_{p}=\left(\sum\limits_{i=1}^{n}|x_{i}|^{p}\right)^{1/p}.
 \end{equation*}
-Note: $\begin{array}{ccc} \ell_{1} \text{ norm}: \|x\|_{1} = \sum\limits_{i=1}^{n} |x_{i}| && \ell_{\infty} \text{ norm}: \|x\|_{\infty} = \text{max}_{i} |x_{i}| \end{array}$.
+Note: $\begin{array}{ccc} \ell_{1} \text{ norm}: \|x\|_{1} = \sum\limits_{i=1}^{n} |x_{i}| && \ell_{\infty} \text{ norm}: \|x\|_{\infty} = \max\limits_{i} |x_{i}| \end{array}$.
 
 \subsection{Linear Independence, Rank, and Orthogonal Matrices}
 A set of vectors $\{x_{1},x_{2},\ldots,x_{n}\} \subset \mathbb{R}^{m}$ is said to be {\bf (linearly) independent} if no vector can be represented as a linear combination of the remaining vectors. Conversely, if one vector belonging to the set can be represented as a linear combination of the remaining vectors, then the vectors are said to be {\bf linearly dependent}. That is, if 
@@ -233,9 +233,9 @@ for some $j \in \{1,\ldots,n\}$ and some scalar values $\alpha_{1}, \ldots, \alp
 
 \begin{itemize}
 \item The {\bf rank} of a matrix is the number of linearly independent columns, which is always equal to the number of linearly independent rows.
-\item For $A \in R^{m\times n}$, rank$(A) \leq$ min$(m,n)$. If rank$(A)=$min$(m,n)$, then $A$ is said
+\item For $A \in R^{m\times n}$, rank$(A) \leq$ min$(m,n)$. If rank$(A)=$ min$(m,n)$, then $A$ is said
 to be  {\bf full rank}.
-\item For $A \in R^{m\times n}$, rank$(A)$=rank$(A^{T})$.
+\item For $A \in R^{m\times n}$, rank$(A)=$ rank$(A^{T})$.
 \item For $A \in R^{m\times n}$,  $B \in R^{n\times p}$, rank$(AB) \leq$ min$($rank$(A)$,rank$(B)$).
 \item For $A,B \in R^{m\times n}$, rank$(A+B) \leq$ rank$(A)$ + rank$(B)$.
 \item Two vectors $x,y \in \mathbb{R}^{n}$ are {\bf orthogonal} if $x^{T}y=0$. A square matrix $U \in \mathbb{R}^{n\times n}$ is orthogonal if all its columns are orthogonal to each other and are normalized ($\|x\|_{2} = 1$), It follows that
