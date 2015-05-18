@@ -449,7 +449,7 @@ the partition function and the posterior marginals.
 	\STATE
 	\STATE \COMMENT{Induction}
 	\FOR[$k$ is length of span]{$k=1$ {\bfseries to} $N$} 
-	\FOR[$s$ is start of span]{$s=1$ {\bfseries to} $N-k$}
+	\FOR[$s$ is start of span]{$s=0$ {\bfseries to} $N-k$}
 	\STATE Set $t := s + k$ \COMMENT{$t$ is end of span}
 	\STATE
 	\STATE \COMMENT{First, create incomplete spans.}
@@ -457,8 +457,8 @@ the partition function and the posterior marginals.
 	\STATE $\mathrm{incomplete}[s,t,\rightarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\rightarrow] + \mathrm{complete}[r+1][t][\leftarrow] + s_{\boldsymbol{\theta}}(s,t))$
 	\STATE
 	\STATE \COMMENT{Then, create complete spans.}
-	\STATE $\mathrm{complete}[s,t,\leftarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\leftarrow] + \mathrm{incomplete}[r][t][\leftarrow]$
-	\STATE $\mathrm{complete}[s,t,\rightarrow] := \max_{s < r \le t} (\mathrm{incomplete}[s][r][\rightarrow] + \mathrm{complete}[r][t][\rightarrow])$
+	\STATE $\mathrm{complete}[s,t,\leftarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\leftarrow] + \mathrm{incomplete}[r][t][\leftarrow]$)
+	\STATE $\mathrm{complete}[s,t,\rightarrow] := \max_{s \le r < t} (\mathrm{incomplete}[s][r+1][\rightarrow] + \mathrm{complete}[r+1][t][\rightarrow])$
 	\ENDFOR
 	\ENDFOR
 	\STATE
