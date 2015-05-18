@@ -457,7 +457,7 @@ the partition function and the posterior marginals.
 	\STATE $\mathrm{incomplete}[s,t,\rightarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\rightarrow] + \mathrm{complete}[r+1][t][\leftarrow] + s_{\boldsymbol{\theta}}(s,t))$
 	\STATE
 	\STATE \COMMENT{Then, create complete spans.}
-	\STATE $\mathrm{complete}[s,t,\leftarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\leftarrow] + \mathrm{incomplete}[r][t][\leftarrow]$)
+	\STATE $\mathrm{complete}[s,t,\leftarrow] := \max_{s \le r < t} (\mathrm{complete}[s][r][\leftarrow] + \mathrm{incomplete}[r][t][\leftarrow])$
 	\STATE $\mathrm{complete}[s,t,\rightarrow] := \max_{s \le r < t} (\mathrm{incomplete}[s][r+1][\rightarrow] + \mathrm{complete}[r+1][t][\rightarrow])$
 	\ENDFOR
 	\ENDFOR
