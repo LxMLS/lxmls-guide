@@ -29,10 +29,12 @@ you full permissions to run it in multiple modes.
 
 \section*{Today's Assignment}
 
-Today we will show you how to solve a simple problem (counting words in
+In today's main assignment we will show you how to solve a simple problem (counting words in
 documents) in a distributed manner. We will then ask you to implement a
 distributed solution for a problem you already know (Na\"{i}ve Bayes
 classification).
+
+As extra work, we also ask that you implement the EM algorithm (which was extra work in Day 2) in a distributed manner. This is a challenging exercise, even without the time limit of these lab sessions!
 
 \iffalse
 \section{Introduction}
@@ -303,7 +305,7 @@ Then, given a test sentence $x$, we can compute the following argmax for the two
 %
 In the first equality we used Bayes' Theorem. In the second one we used the assumption of conditional independence of features given the class, which is at the core of Na\"{i}ve Bayes. In the third one, we used that ${\hat P}(\text{PT}) = {\hat P}(\text{EN}) = \frac{1}{2}$, thus the prior does not affect the argmax. In the last equation, we used the fact that the argmax is not affected by the application of a logarithm. Logarithms will prevent your program from encountering underflow errors when multiplying many numbers which are very small.
 
-\section{Assignment}
+\section{Main Assignment: Distributed Na\"ive Bayes}
 
 Using the Word Count example we've given you as reference, implement the Na\"{i}ve Bayes language detector described above. You should do this in two parts:
 
