@@ -99,7 +99,7 @@ of each count table we should observe the following:
 %  N-1 edges for each sentence, and the last edge is being accounted by
 %  the final transitions. So this leaves us with N-2 edges per sentence,
 %  where N is the number of tokens in that sentence.
-\item \textbf{Observation \ Counts\!:} -- Should sum to the number of tokens: $\sum_{j=1}^J\sum_{k=1}^K C_{\mathrm{emiss}}(w_j,c_k) = MN$.
+\item \textbf{Emission \ Counts\!:} -- Should sum to the number of tokens: $\sum_{j=1}^J\sum_{k=1}^K C_{\mathrm{emiss}}(w_j,c_k) = MN$.
 \end{itemize}
 
 Using the sufficient statistics (counts) the parameter estimates are: 

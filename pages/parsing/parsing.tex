@@ -187,7 +187,7 @@ Once the process is completed, the sentence is recognized by the grammar if the 
 \begin{exercise}\label{exer:cky}
 In this simple exercise, you will see the CKY algorithm in action. There is a Javascript applet that 
 illustrates how CKY works (in its non-probabilistic form). 
-Go to \url{http://www.diotavelli.net/people/void/demos/cky.html}, and 
+Go to \url{http://lxmls.it.pt/2015/cky.html}, and 
 observe carefully the several steps taken by the algorithm. 
 Write down a small grammar in CNF that yields multiple parses for 
 the ambiguous sentence \emph{The man saw the boy in the park with a telescope}, 
@@ -561,7 +561,7 @@ Observe the statistics which are shown. How many features are there in total?
 \item We will now have a close look on the \emph{features} that can be used in the parser. 
 Examine the file:
 \begin{quote}
-{\tt code/parsing/dependency\_features.py}. 
+{\tt lxmls/parsing/dependency\_features.py}. 
 \end{quote}
 The following method takes a sentence and computes a vector of features for each possible arc $\langle h, m \rangle$: 
 \begin{python}
