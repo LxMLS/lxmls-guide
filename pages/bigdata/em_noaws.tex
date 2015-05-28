@@ -485,7 +485,7 @@ The previous code also had \verb+reduce+ use resources that grow with the number
 processes. This may still be too much if you use a thousand of machines. We
 will also avoid this problem.
 
-In order to parallelize \revb+reduce+, we need to start emitting partial results at a
+In order to parallelize \verb+reduce+, we need to start emitting partial results at a
 more fine grained level. Here are the types of emissions we want to consider:
 
 \begin{enumerate}
