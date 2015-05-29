@@ -319,6 +319,8 @@ ipdb> pp hour
 
 From here we could keep advancing with the n(ext) option or set a b(reak) point and type c(ontinue) to jump to a new position. We could also execute any python expression which is valid in the current frame (the function we stopped at). This is particularly useful to find out why code crashes, as we can try different alternatives without the need to restart the code again.
 
+\todo[inline]{Mariana (suggestion): it would be useful to refer that python can be called in pdb mode. This mode stops the program  automatically in a pdb just before exiting from an error.}
+
 \subsection{Exceptions}
 
 Occasionaly, a syntactically correct code statement may produce an error when an attempt is made to execute it. These kind of errors are called \textit{exceptions} in Python. For example, try executing the following:
@@ -348,7 +350,7 @@ while True:
         print "Oops! That was no valid number. Try again..."
 \end{python}
 
-It works by first executing the \textit{try} clause. If no exception occurs, the \textit{except} clause is skipped; if an exception does occur, and if its type matches the the exception named in the \textit{except} keyword, the except clause is executed; otherwise, the exception is raised and execution is oborted (if it is not caught by outer \textit{try} statements).
+It works by first executing the \textit{try} clause. If no exception occurs, the \textit{except} clause is skipped; if an exception does occur, and if its type matches the exception named in the \textit{except} keyword, the except clause is executed; otherwise, the exception is raised and execution is oborted (if it is not caught by outer \textit{try} statements).
 
 
 \subsubsection{Extending basic Functionalities with Modules}
@@ -430,7 +432,7 @@ Numpy\footnote{\url{http://www.numpy.org/}} is a library for scientific computin
 
 \subsubsection{Multidimensional Arrays}
 
-The main object of numpy is the multidimensional array. A multidimensional array is a table with all elements of the same type and can have several dimensions. Numpy provides various functions to access and manipulate multidimensional arrays. In one dimensional arrays, you can index, slice, and iterate as you can with lists. In a two dimensional array M, you can use perform these operations along several dimensions.
+The main object of numpy is the multidimensional array. A multidimensional array is a table with all elements of the same type and can have several dimensions. Numpy provides various functions to access and manipulate multidimensional arrays. In one dimensional arrays, you can index, slice, and iterate as you can with lists. In a two dimensional array M, you can perform these operations along several dimensions.
 
 \begin{itemize}
  \item M[i,j], to access the item in the $i^{th}$ row and $j^{th}$ column; 
@@ -452,7 +454,7 @@ A[0] # This is [1,2,3] as well
 
 A[:,0] # this is [1,2,4]
 
-A[1:,0] # This is [ [2], [4] ]. Why?
+A[1:,0] # This is [ 2, 4 ]. Why?
         # Because it is the same as A[1:n,0] where n is the size of the array.
 \end{python}
 

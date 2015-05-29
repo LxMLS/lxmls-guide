@@ -86,6 +86,9 @@ Over the next couple of exercises we will make use of the Galton dataset, a
 dataset of heights of fathers and sons from the 1877 paper that first discussed
 the ``regression to the mean'' phenomenon.
 
+\todo[inline]{Mariana: the dataset was already introduced before; The next exercise (0.14) is also repeated.}
+
+
 \begin{exercise}
 \begin{itemize}
 \item Use the \texttt{load()} function in the \texttt{galton.py} file to load
@@ -104,18 +107,17 @@ points before displaying them. Does your impression of the data change?
 \end{exercise}
 
 \begin{exercise}
-Consider the linear regression problem (ordinary least squares), with a
-single response variable
+Consider the linear regression problem (ordinary least squares), with a single response variable:
 
 \[
 y = x^T w + \varepsilon
-\]
+\].
 
 The \emph{linear regression problem} is, given a set $\{ y^{(i)} \}_i$ of
 samples of $y$ and the corresponding $\vect{x}^{(i)}$ vectors, estimate
 $\vect{w}$ to minimise the sum of the $\varepsilon$ variables. Traditionally
 this is solved analytically to obtain a closed form solution (although this is
-\textbf{not the way in which it should be computed}, linear algebra packages
+\textbf{not the way in which it should be computed} in this exercise, linear algebra packages
 have an optimised solver, with numpy, use \code{numpy.linalg.lstsq}).
 
 Alternatively, we can define the error function for each possible $\vect{w}$:
@@ -126,8 +128,8 @@ e(\vect{w}) = \sum_i \left( {\vect{x}^{(i)}}^T \vect{w} - y^{(i)} \right)^2.
 
 \begin{enumerate}
 \item Derive the gradient of the error $\pd{e}{w_j}$.
-\item Implement a solver based on this for two dimensional problems (i.e.,
-$\vect{w} \in R^2$).
+\item Implement a solver based on this for two dimensional problem (i.e.,
+$\vect{w} \in R^2$). \todo[inline]{Mariana: in the first formula the problem is actually one dimensional; only the second formula is two dimensional...}
 \item Use this method on the Galton dataset from the previous exercise to
 estimate the relationship between father and son's height. Try two formulas
 \begin{equation}
