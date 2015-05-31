@@ -171,10 +171,13 @@ Use the given function \emph{compute\_scores} on the first training sequence and
 %then you are ready to go).
 
 \begin{python}
->>> initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
->>> print initial_scores
+initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
+print initial_scores
+
 [-0.40546511 -1.09861229]
->>> print transition_scores
+
+print transition_scores
+
 [[[-0.69314718        -inf]
   [-0.69314718 -0.47000363]]
 
@@ -183,9 +186,13 @@ Use the given function \emph{compute\_scores} on the first training sequence and
 
  [[-0.69314718        -inf]
   [-0.69314718 -0.47000363]]]
->>> print final_scores
+
+print final_scores
+
 [       -inf -0.98082925]
->>> print emission_scores
+
+print emission_scores
+
 [[-0.28768207 -1.38629436]
  [-0.28768207 -1.38629436]
  [-1.38629436 -0.98082925]
@@ -233,24 +240,31 @@ This will be used later in our decoding algorithms.
 To observe why this is important, type the 
 following:
 \begin{python}
->>> import numpy as np
->>> a = np.random.rand(10)
->>> np.log(sum(np.exp(a)))
+import numpy as np
+a = np.random.rand(10)
+np.log(sum(np.exp(a)))
 2.8397172643228661
->>> np.log(sum(np.exp(10*a)))
+
+np.log(sum(np.exp(10*a)))
 10.121099917705818
->>> np.log(sum(np.exp(100*a)))
+
+np.log(sum(np.exp(100*a)))
 93.159220940569128
->>> np.log(sum(np.exp(1000*a)))
+
+np.log(sum(np.exp(1000*a)))
 inf
->>> from lxmls.sequences.log_domain import *
->>> logsum(a)
+
+from lxmls.sequences.log_domain import *
+logsum(a)
 2.8397172643228665
->>> logsum(10*a)
+
+logsum(10*a)
 10.121099917705818
->>> logsum(100*a)
+
+logsum(100*a)
 93.159220940569114
->>> logsum(1000*a)
+
+logsum(1000*a)
 925.88496219586864
 \end{python}
 \end{exercise}
@@ -475,11 +489,14 @@ passes give the same log-likelihood.
 %Use the provided function that makes use of Equation \ref{eq::fbsanity} to make
 %sure your implementation is correct: 
 \begin{python}
->>> log_likelihood, forward = hmm.decoder.run_forward(initial_scores, transition_scores, final_scores, emission_scores)
->>> print 'Log-Likelihood =', log_likelihood
+log_likelihood, forward = hmm.decoder.run_forward(initial_scores, transition_scores, final_scores, emission_scores)
+print 'Log-Likelihood =', log_likelihood
+
 Log-Likelihood = -5.06823232601
->>> log_likelihood, backward = hmm.decoder.run_backward(initial_scores, transition_scores, final_scores, emission_scores)
->>> print 'Log-Likelihood =', log_likelihood
+
+log_likelihood, backward = hmm.decoder.run_backward(initial_scores, transition_scores, final_scores, emission_scores)
+print 'Log-Likelihood =', log_likelihood
+
 Log-Likelihood = -5.06823232601
 \end{python}
 \end{exercise}
@@ -578,12 +595,13 @@ the output. Note that the state posteriors are a proper
 probability distribution (the lines of the result sum to 1).
 
 \begin{python}
->>> initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
->>> state_posteriors, _, _ = hmm.compute_posteriors(initial_scores,
-                                                    transition_scores,
-                                                    final_scores,
-                                                    emission_scores)
->>> print state_posteriors
+initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
+state_posteriors, _, _ = hmm.compute_posteriors(initial_scores,
+                                                transition_scores,
+                                                final_scores,
+                                                emission_scores)
+print state_posteriors
+
 [[ 0.95738152  0.04261848]
  [ 0.75281282  0.24718718]
  [ 0.26184794  0.73815206]
@@ -594,19 +612,25 @@ probability distribution (the lines of the result sum to 1).
 \begin{exercise}
 Run the posterior decode on the first test sequence, and evaluate it.
 \begin{python}
->>> y_pred = hmm.posterior_decode(simple.test.seq_list[0])
->>> print "Prediction test 0:", y_pred
+y_pred = hmm.posterior_decode(simple.test.seq_list[0])
+print "Prediction test 0:", y_pred
+
 walk/rainy walk/rainy shop/sunny clean/sunny
->>> print "Truth test 0:", simple.test.seq_list[0]
+
+print "Truth test 0:", simple.test.seq_list[0]
+
 walk/rainy walk/sunny shop/sunny clean/sunny 
 \end{python}
 
 Do the same for the second test sequence:
 \begin{python}
->>> y_pred = hmm.posterior_decode(simple.test.seq_list[1])
->>> print "Prediction test 1:", y_pred
+y_pred = hmm.posterior_decode(simple.test.seq_list[1])
+print "Prediction test 1:", y_pred
+
 clean/rainy walk/rainy tennis/rainy walk/rainy 
->>> print "Truth test 1:", simple.test.seq_list[1]
+
+print "Truth test 1:", simple.test.seq_list[1]
+
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
 
@@ -625,16 +649,23 @@ def train_supervised(self,sequence_list, smoothing):
 
 Try, for example, adding 0.1 to all the counts, and repeating this exercise with that smoothing. What do you observe?
 \begin{python}
->>> hmm.train_supervised(simple.train, smoothing=0.1)
->>> y_pred = hmm.posterior_decode(simple.test.seq_list[0])
->>> print "Prediction test 0 with smoothing:", y_pred
+hmm.train_supervised(simple.train, smoothing=0.1)
+y_pred = hmm.posterior_decode(simple.test.seq_list[0])
+print "Prediction test 0 with smoothing:", y_pred
+
 walk/rainy walk/rainy shop/sunny clean/sunny 
->>> print "Truth test 0:", simple.test.seq_list[0]
+
+print "Truth test 0:", simple.test.seq_list[0]
+
 walk/rainy walk/sunny shop/sunny clean/sunny
->>> y_pred = hmm.posterior_decode(simple.test.seq_list[1])
->>> print "Prediction test 1 with smoothing:", y_pred
+
+y_pred = hmm.posterior_decode(simple.test.seq_list[1])
+print "Prediction test 1 with smoothing:", y_pred
+
 clean/sunny walk/sunny tennis/sunny walk/sunny 
->>> print "Truth test 1:", simple.test.seq_list[1]
+
+print "Truth test 1:", simple.test.seq_list[1]
+
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
 \end{exercise}
@@ -801,17 +832,23 @@ in the module {\tt sequence\_classifier.py}.
 Test your method on both test sequences and compare the results with
 the ones given.
 \begin{python}
->>> hmm.train_supervised(simple.train, smoothing=0.1)
->>> y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])
->>> print "Viterbi decoding Prediction test 0 with smoothing:", y_pred, score
+hmm.train_supervised(simple.train, smoothing=0.1)
+y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])
+print "Viterbi decoding Prediction test 0 with smoothing:", y_pred, score
+
 walk/rainy walk/rainy shop/sunny clean/sunny  -6.02050124698
->>> print "Truth test 0:", simple.test.seq_list[0]
+
+print "Truth test 0:", simple.test.seq_list[0]
+
 walk/rainy walk/sunny shop/sunny clean/sunny 
->>> y_pred, score = hmm.viterbi_decode(simple.test.seq_list[1])
->>> print "Viterbi decoding Prediction test 1 with 
-smoothing:", y_pred, score
+
+y_pred, score = hmm.viterbi_decode(simple.test.seq_list[1])
+print "Viterbi decoding Prediction test 1 with smoothing:", y_pred, score
+
 clean/sunny walk/sunny tennis/sunny walk/sunny  -11.713974074
->>> print "Truth test 1:", simple.test.seq_list[1]
+
+print "Truth test 1:", simple.test.seq_list[1]
+
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
 
