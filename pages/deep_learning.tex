@@ -321,10 +321,10 @@ e^N_k = \frac{\partial \log f_{k(m)}^N}{\partial z^{N}_{k}}
 \end{equation}
 
 \begin{exercise}
-Go to lxmls/deep\_learning/mlp.py:class MLP:def backprop\_grad() and complete the code of the MLP class with the Backpropagation recursion that we just saw. Once you are done. Try different network geometries by increasing the number of layers and layer sizes e.g.
+Go to lxmls/deep\_learning/mlp.py:class NumpyMLP:def grads() and complete the code of the NumpyMLP class with the Backpropagation recursion that we just saw. Once you are done. Try different network geometries by increasing the number of layers and layer sizes e.g.
 \begin{python}
 # Model parameters
-geometry = [I, 20, 2]
+geometry = [train_x.shape[0], 20, 2]
 actvfunc = ['sigmoid', 'softmax'] 
 # Instantiate model
 mlp      = dl.MLP(geometry, actvfunc) 
