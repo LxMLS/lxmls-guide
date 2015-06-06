@@ -267,7 +267,7 @@ We now apply the chain rule a third and last time, in this case to the linear tr
 \label{eq:partialfn4}
 \end{equation}
 
-In this case the sum in the chain rule does not go away. It is easy to understand why by looking at Figure \ref{fig:LayerP2}, the weight $W_{ij}$ contributes only to the variable $\tilde{z}^n_j$ but to all variables of the next linear layer $z^{n+1}_k$ and thus to the possible error. 
+In this case the sum in the chain rule does not go away. It is easy to understand why by looking at Figure \ref{fig:LayerP2}, the weight $W_{ji}$ contributes not only to the variable $\tilde{z}^n_j$, but to all variables of the next linear layer $z^{n+1}_k$, and thus to the possible error. 
 
 By looking at Eqs: \ref{eq:partialfn} and \ref{eq:partialfn4} we can easily spot a recursion. Lets use
 
@@ -303,8 +303,8 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 
 \begin{align}
 \mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \ast \tilde{\mathbf{z}}^n \ast (1-\tilde{\mathbf{z}}^n)\\
-\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\mathbf{x}^m\right)^T \\ 
-\nabla_{\mathbf{w}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\sum_{m=1}^M \mathbf{e}^{n}  
+\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\mathbf{x}^m\right)^T \\ 
+\nabla_{\mathbf{w}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n}  
 \end{align}
 
 \noindent where $\ast$ is the element-wise product and the $1$ is replicated to match the size of $\tilde{\mathbf{z}}^n$ (broadcasting). Note also that 
