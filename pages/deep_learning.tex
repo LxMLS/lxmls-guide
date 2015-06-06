@@ -293,7 +293,7 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k \frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j
 \frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n} = W_{kj}^{n+1} 
 \end{equation}
 
-\noindent and use the derivative of the sigmoid, given in Eq: \ref{eq:partsigmoid}. This leads to the following recursion for the derivative with respect to $W_{ij}$
+\noindent and use the derivative of the sigmoid, given in Eq: \ref{eq:partsigmoid}. This leads to the following recursion for the derivative with respect to $W_{ji}$
 
 \begin{equation}
 e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
