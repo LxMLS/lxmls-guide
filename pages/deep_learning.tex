@@ -303,7 +303,7 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 
 \begin{align}
 \mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \ast \tilde{\mathbf{z}}^n \ast (1-\tilde{\mathbf{z}}^n)\\
-\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\mathbf{x}^m\right)^T \\ 
+\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{z}^n\right)^T \\ 
 \nabla_{\mathbf{w}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n}  
 \end{align}
 
