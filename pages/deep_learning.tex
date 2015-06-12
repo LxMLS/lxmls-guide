@@ -746,7 +746,7 @@ One function that will be useful in the future will be one returning a batch
 of variables
 \begin{python}
 _i             = T.lscalar()
-get_tr_batch_y = theano.function([_i], _train_y[_i:(_i+1)*bsize]) 
+get_tr_batch_y = theano.function([_i], _train_y[_i*bsize:(_i+1)*bsize]) 
 \end{python}
 \end{exercise}
 
@@ -768,7 +768,7 @@ input and target to other variables. In this case a mini-batch of inputs and
 targets given an index. 
 \begin{python}
 _j      = T.lscalar()
-givens  = { _x : _train_x[:, _j:(_j+1)*bsize], _y : _train_y[_j:(_j+1)*bsize] }
+givens  = { _x : _train_x[:, _j*bsize:(_j+1)*bsize], _y : _train_y[_j*bsize:(_j+1)*bsize] }
 \end{python}
 
 With updates and givens, we can now define the batch update function. This will
