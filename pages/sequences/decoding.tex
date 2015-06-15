@@ -417,25 +417,30 @@ Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm.
    \caption{Forward-Backward algorithm \label{alg:fb}}
 \begin{algorithmic}[1]
    \STATE {\bfseries input:} sequence $x_1,\ldots,x_N$, scores $P_{\mathrm{init}}, P_{\mathrm{trans}}, P_{\mathrm{final}}, P_{\mathrm{emiss}}$
+        \item[]
         \STATE  \emph{Forward pass}: Compute the forward probabilities
-        \STATE \emph{Initialization}
+        %\STATE \emph{Initialization}
         \FOR{$c_k \in \statevocab$ }
         \STATE $\mathrm{forward}(1,c_k) = P_{\mathrm{init}}(c_k|\text{\tt start}) \times 
 P_{\mathrm{emiss}}(x_1 | c_k)$
         \ENDFOR 
         \FOR{$i=2$ {\bfseries to} $N$}
-         \FOR{$c_k \in \statevocab$ }
-                 \STATE $\mathrm{forward}(i, c_k) = \left( \displaystyle \sum_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{forward}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)$
+         \FOR{$\hat{c} \in \statevocab$ }
+                 \STATE $\mathrm{forward}(i, \hat{c} ) = \left( \displaystyle \sum_{c_k \in \statevocab} P_{\mathrm{trans}}(\hat{c}| c_k) \times \mathrm{forward}(i-1, c_k) \right) \times P_{\mathrm{emiss}}(x_i | \hat{c})$
          \ENDFOR 
         \ENDFOR 
+       \item[]
        \STATE \emph{Backward pass}: Compute the backward probabilities
-       \STATE \emph{Initialization}
-        \FOR{$c_l \in \statevocab$ }
-        \STATE $\mathrm{backward}(N, c_l) = P_{\mathrm{final}}(\text{\tt stop} | c_l)$
+      % \STATE \emph{Initialization}
+        \FOR{$c_k \in \statevocab$ }
+        \STATE $\mathrm{backward}(N, c_k) = P_{\mathrm{final}}(\text{\tt stop} | c_k)$
         \ENDFOR 
        \FOR{$i=N-1$ {\bfseries to} 1}
-        \STATE $\mathrm{backward}(i, c_l) =  \displaystyle \sum_{c_k \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{backward}(i+1, c_k) \times P_{\mathrm{emiss}}(x_{i+1} | c_k)$
+                 \FOR{$\hat{c} \in \statevocab$ }
+		        \STATE $\mathrm{backward}(i, \hat{c}) =  \displaystyle \sum_{c_k \in \statevocab} P_{\mathrm{trans}}(c_k | \hat{c} ) \times \mathrm{backward}(i+1, c_k) \times P_{\mathrm{emiss}}(x_{i+1} | c_k)$
+       		 \ENDFOR 
         \ENDFOR 
+        \item[]
        \STATE \textbf{output:} The forward and backward probabilities.
 \end{algorithmic}
 \end{algorithm}

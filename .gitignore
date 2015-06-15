@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 guide.aux
 guide.log
 guide.out
 guide.pdf
+=======
+*.pyc
+/LXMLS_Toolkit.egg-info/
+/build/
+/dist/
+>>>>>>> upstream/master
