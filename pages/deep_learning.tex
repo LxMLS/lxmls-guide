@@ -381,9 +381,9 @@ derivatives will be zero when $j\neq j'$ and thus this will result in
 \begin{figure}
 \centering
 \includegraphics[scale=0.4]{figs/deep_learning/LayerP2.pdf}
-\caption{Detail of propagation of error in weight $W_{ij}$ from layer $n$ to
-layer $n+1$. Note that while only $z_j^n$ is affected by $W_{ij}$ all outputs
-of layer $n+1$ are affected by changes in $W_{ij}$.}
+\caption{Detail of propagation of error in weight $W_{ji}$ from layer $n$ to
+layer $n+1$. Note that while only $z_j^n$ is affected by $W_{ji}$ all outputs
+of layer $n+1$ are affected by changes in $W_{ji}$.}
 \label{fig:LayerP2}
 \end{figure}
 
@@ -396,9 +396,9 @@ transformation of layer $n+1$, to obtain
 \end{equation}
 
 In this case the sum in the chain rule does not go away. It is easy to
-understand why by looking at Figure \ref{fig:LayerP2}, the weight $W_{ij}$
+understand why by looking at Figure \ref{fig:LayerP2}, the weight $W_{ji}$
 contributes not only to the variable $\tilde{z}^n_j$ but to all variables of the
-next linear layer $z^{n+1}_k$ and thus to the possible error. 
+next linear layer $z^{n+1}_k$, and thus to the possible error. 
 
 By looking at Eqs: \ref{eq:partialfn} and \ref{eq:partialfn4} we can easily
 spot a recursion. Let's use
@@ -429,7 +429,7 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k \frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j
 
 \noindent and use the derivative of the sigmoid, given in Eq:
 \ref{eq:partsigmoid}. This leads to the following recursion for the derivative
-with respect to $W_{ij}$
+with respect to $W_{ji}$
 
 \begin{equation}
 e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
@@ -439,8 +439,8 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 
 \begin{align}
 \mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \odot \tilde{\mathbf{z}}^n \odot (1-\tilde{\mathbf{z}}^n)\\
-\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\mathbf{x}^m\right)^T \\ 
-\nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\sum_{m=1}^M \mathbf{e}^{n}  
+\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{z}^n\right)^T \\ 
+\nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n}  
 \end{align}
 
 \noindent where $\odot$ is the element-wise product and the $1$ is replicated to
@@ -454,7 +454,7 @@ e^N_k = \frac{\partial \log \circ f_{k(m)}^N}{\partial z^{N}_{k}}
 \noindent so that
 
 \begin{equation}
-\mathbf{e}^N =\frac{1}{M}\Big(\mathbf{y}^m - \hat{\mathbf{y}}^m \Big)  
+\mathbf{e}^N =\Big(\mathbf{y}^m - \hat{\mathbf{y}}^m \Big)  
 \end{equation}
 
 \begin{exercise}
