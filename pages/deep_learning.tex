@@ -98,9 +98,7 @@ p(y_k|\mathbf{x}) = \tilde{z}_k = (f_k \circ \mathbf{g})(\mathbf{x}).
 \centering
 \includegraphics[scale=0.4]{figs/deep_learning/LayerP.pdf}
 \caption{Representation of a log-linear model as a composition of a linear and
-a non-linear transformation. Left: Detail of dependencies of the $k$-th output
-on the input features $\mathbf{x}$. Right: Simplified representation matrix
-notation.}
+a non-linear transformation.}
 \label{fig:LayerP}
 \end{figure}
 
@@ -127,7 +125,8 @@ class given the input as cost
 where $\mathcal{D}$ is the training data-set, $\Theta=\{\mathbf{W},
 \mathbf{b}\}$ are the model parameters and $k(m)$ is the index of the correct
 class in vector $y^m$. 
-Bear in mind, however, that we could pick other cost functions, we will see this once the topic is fully introduced.
+Bear in mind, however, that we could pick other cost functions, we will see
+this once the topic is fully introduced.
 
 For the sake of the introduction to the topic, the cost function is here
 expressed as a composition of a linear and a non-linear function (see
@@ -439,12 +438,12 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 \noindent and the following recursion to directly compute the gradient
 
 \begin{align}
-\mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \ast \tilde{\mathbf{z}}^n \ast (1-\tilde{\mathbf{z}}^n)\\
+\mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \odot \tilde{\mathbf{z}}^n \odot (1-\tilde{\mathbf{z}}^n)\\
 \nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\mathbf{x}^m\right)^T \\ 
 \nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\sum_{m=1}^M \mathbf{e}^{n}  
 \end{align}
 
-\noindent where $\ast$ is the element-wise product and the $1$ is replicated to
+\noindent where $\odot$ is the element-wise product and the $1$ is replicated to
 match the size of $\tilde{\mathbf{z}}^n$. Note also that 
 
 \begin{equation}
@@ -500,23 +499,25 @@ that you should keep in mind.
 
 \footnotetext{Not exactly, since it is possible to run into numerical problems.}
 
-\subsection{A Note on Pre-Trainining}
-
-If you already have some experience with neural networks you might have
-realised that all what we show here is classic MLP theory, which is 30-40 years
-old. Indeed, it could be argued that, at the core, many modern deep learning
-applications are just classical neural networks theory with more data and more
-computing power. One of the novelties that came along the deep learning wave of
-research is pre-training with the Restricted Boltzmann Machine (RBM) paradigm.
-The cost function for a MLP of many layers becomes too complex and, as
-mentioned before, local minima and non-convexity make training of deep MLPs
-problematic. 
-
-The RBM paradigm allows to pre-train a MLP in \textit{unsupervised} fashion
-i.e. with out reference labels $\mathbf{y}^m$, which has been shown to improve
-posterior training. However, current state of the art systems do not always use
-RBM pre-training, resort to simpler types of smart-initializations or use none.
-Fort his reason, we will only see pre-training as an advance topic.  
+% THIS WILL BE COMMENTED UNTIL THE FINAL UPDATE
+%
+%\subsection{A Note on Pre-Trainining}
+%
+%If you already have some experience with neural networks you might have
+%realised that all what we show here is classic MLP theory, which is 30-40 years
+%old. Indeed, it could be argued that, at the core, many modern deep learning
+%applications are just classical neural networks theory with more data and more
+%computing power. One of the novelties that came along the deep learning wave of
+%research is pre-training with the Restricted Boltzmann Machine (RBM) paradigm.
+%The cost function for a MLP of many layers becomes too complex and, as
+%mentioned before, local minima and non-convexity make training of deep MLPs
+%problematic. 
+%
+%The RBM paradigm allows to pre-train a MLP in \textit{unsupervised} fashion
+%i.e. with out reference labels $\mathbf{y}^m$, which has been shown to improve
+%posterior training. However, current state of the art systems do not always use
+%RBM pre-training, resort to simpler types of smart-initializations or use none.
+%Fort his reason, we will only see pre-training as an advance topic.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Deriving gradients and GPU code with Theano}
@@ -725,8 +726,8 @@ the whole training set, or a very large mega-batch of it.
 \begin{exercise}
 Let's first have an understanding of handling train/test data inside the Theano
 computation graph. One important aspect to take into account is that both type
-and shape of the data have to match their coresponding graph variables. This is
-the main source of error when you are starting with Theano. 
+and shape of the data have to match their corresponding graph variables. This is
+the main source of errors when you are starting with Theano. 
 \begin{python}
 # Cast data into the types and shapes used in the Theano graph
 train_x = train_x.astype(theano.config.floatX)
@@ -756,11 +757,11 @@ update. This is combined with the updates argument of theano.function. Updates
 is a list of tuples with each parameter and update rule. This can be compactly
 defined using list comprehensions.
 \begin{python}
-mlp3    = dl.TheanoMLP(geometry, actvfunc)
+mlp_c    = dl.TheanoMLP(geometry, actvfunc)
 _x      = T.matrix('x')
 _y      = T.ivector('y')
-_F      = mlp3._cost(_x, _y)
-updates = [(par, par - lrate*T.grad(_F, par)) for par in mlp3.params]
+_F      = mlp_c._cost(_x, _y)
+updates = [(par, par - lrate*T.grad(_F, par)) for par in mlp_c.params]
 \end{python}
 
 This can be now combined with the givens argument of theano.function. This maps
@@ -768,7 +769,8 @@ input and target to other variables. In this case a mini-batch of inputs and
 targets given an index. 
 \begin{python}
 _j      = T.lscalar()
-givens  = { _x : _train_x[:, _j*bsize:(_j+1)*bsize], _y : _train_y[_j*bsize:(_j+1)*bsize] }
+givens  = { _x : _train_x[:, _j*bsize:(_j+1)*bsize], 
+            _y : _train_y[_j*bsize:(_j+1)*bsize] }
 \end{python}
 
 With updates and givens, we can now define the batch update function. This will
@@ -779,16 +781,44 @@ batch_up = theano.function([_j], _F, updates=updates, givens=givens)
 n_batch  = train_x.shape[1]/bsize  + 1
 \end{python}
 Once we have defined this, we can compare speed and accuracy of the Numpy
-and simple gradient vesrions using
+and simple gradient versions using
 
 \begin{python}
+# Model
+geometry = [I, 20, 2]
+actvfunc = ['sigmoid', 'softmax'] 
+
+# Numpy MLP
+mlp_a     = dl.NumpyMLP(geometry, actvfunc)
+#
 init_t = time.clock()
-sgd.SGD_train(mlp3, n_iter, batch_up=batch_up, n_batch=n_batch)
+sgd.SGD_train(mlp_a, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
+print "\nNumpy version took %2.2f sec" % (time.clock() - init_t)
+acc_train = sgd.class_acc(mlp_a.forward(train_x), train_y)[0]
+acc_test  = sgd.class_acc(mlp_a.forward(test_x), test_y)[0]
+print "Amazon Sentiment Accuracy train: %f test: %f\n" % (acc_train, acc_test)
+
+# Theano grads 
+mlp_b  = dl.TheanoMLP(geometry, actvfunc)
+init_t = time.clock()
+sgd.SGD_train(mlp_b, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
+print "\nCompiled gradient version took %2.2f sec" % (time.clock() - init_t)
+acc_train = sgd.class_acc(mlp_b.forward(train_x), train_y)[0]
+acc_test  = sgd.class_acc(mlp_b.forward(test_x), test_y)[0]
+print "Amazon Sentiment Accuracy train: %f test: %f\n" % (acc_train, acc_test)
+
+# Theano batch update
+init_t = time.clock()
+sgd.SGD_train(mlp_c, n_iter, batch_up=batch_up, n_batch=n_batch)
 print "\nTheano compiled batch update version took %2.2f" % (time.clock() - init_t)
 init_t = time.clock()
 # Scores
-acc_train = sgd.class_acc(mlp3.forward(train_x), train_y)[0]
-acc_test  = sgd.class_acc(mlp3.forward(test_x), test_y)[0]
+acc_train = sgd.class_acc(mlp_c.forward(train_x), train_y)[0]
+acc_test  = sgd.class_acc(mlp_c.forward(test_x), test_y)[0]
 print "Amazon Sentiment Accuracy train: %f test: %f\n"%(acc_train,acc_test)
 \end{python}
+As you may observe, just computing the gradients with Theano may not lead to
+an decrease, but rather an increase in computing speed. To maximally exploit
+the power of Theano, it is necessary to bundle both computations and data 
+together using approaches like the compiled batch update.
 \end{exercise}
