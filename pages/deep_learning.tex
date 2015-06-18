@@ -7,7 +7,7 @@ Graphical Processing Unit (GPU) for optimal speed. Third we will see some more
 complex deep learning concepts and NLP specific issues.
 
 If you are new to the topic you should aim to finish the deep learning 
-principles part (Ex. 7.1 and 7.2) and at least Ex 7.3 and 7.4 of the Theano 
+principles part (Ex. 6.1 and 6.2) and at least Ex 6.3 and 6.4 of the Theano 
 part. If you have some spare time have a look at the more complex deep learning 
 issues. If you already know Backpropagation well and have experience with normal 
 Python, you should aim to complete Theano and some or all the exercises of the 
@@ -458,19 +458,19 @@ e^N_k = \frac{\partial \log \circ f_{k(m)}^N}{\partial z^{N}_{k}}
 \end{equation}
 
 \begin{exercise}
-Go to lxmls/deep\_learning/mlp.py:class MLP:def backprop\_grad() and complete
-the code of the MLP class with the Backpropagation recursion that we just saw.
+Go to lxmls/deep\_learning/mlp.py:class NumpyMLP:def grads() and complete the
+code of the NumpyMLP class with the Backpropagation recursion that we just saw.
 Once you are done. Try different network geometries by increasing the number of
 layers and layer sizes e.g.
 \begin{python}
 # Model parameters
-geometry = [I, 20, 2]
+geometry = [train_x.shape[0], 20, 2]
 actvfunc = ['sigmoid', 'softmax'] 
 # Instantiate model
 mlp      = dl.MLP(geometry, actvfunc) 
 \end{python}
 You can test the different models with the same sentiment analysis problem as
-in Exercise 7.1. 
+in Exercise 6.1. 
 \begin{python}
 # Model parameters
 n_iter = 5
@@ -662,16 +662,16 @@ we will do the same with the cost used for training. We will also derive the
 gradients although this will be trivial once we have the cost compiled.     
 \begin{exercise}
 We first see an example that does not use any of the code in TheanoMLP but
-rather continues from what you wrote in exercise 7.3. In this exercise you
+rather continues from what you wrote in exercise 6.3. In this exercise you
 completed a sigmoid layer with Theano. To get some values for the weights we
-used the first layer of the network you trained in 7.2. now we are going to use
-the second layer as well. This is thus assuming that your network in 7.2 has
+used the first layer of the network you trained in 6.2. now we are going to use
+the second layer as well. This is thus assuming that your network in 6.2 has
 only two layers e.g. the recommended geometry (I, 20, 2). Make sure this is the
 case before starting this exercise.  
 
-For the sake of clarity, lets write here the part of Ex. 7.2 that we had completed
+For the sake of clarity, lets write here the part of Ex. 6.2 that we had completed
 \begin{python}
-# Get the values from our MLP from Ex 7.2
+# Get the values from our MLP from Ex 6.2
 W1, w1  = mlp.weigths[0]     # Weights and bias of fist layer 
 # First layer symbolic variables
 _x  = T.matrix('x')
