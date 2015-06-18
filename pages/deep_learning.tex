@@ -302,17 +302,17 @@ mind the partial derivative of the sigmoid
 We have seen that just using the chain rule we can easily compute gradients for
 compositions of two functions (one non linear and one linear). However, there
 was nothing in the derivation that would stop us from composing more than two
-functions. Let's imagine a general case in which we compose $N$ pairs of
-non-linear and linear functions.
+functions. Let's imagine a general case in which we compose $n=1 \cdots N$
+pairs of linear and non-linear functions.
 
 \begin{equation}
-p(y_k|\mathbf{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}),
+p(y_k|\mathbf{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}),
 \end{equation}
 
 \noindent we will define each composition of a linear function as
 
 \begin{align}
-\mathbf{z}^n & = \mathbf{g}^n(\tilde{\mathbf{z}}^{n-1})\nonumber\\ &= \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{n-1} + \mathbf{b}^n 
+\mathbf{z}^n & = \mathbf{g}^n(\tilde{\mathbf{z}}^{N-1})\nonumber\\ &= \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{N-1} + \mathbf{b}^n 
 \end{align}
 
 \noindent and a non-linear function 
@@ -332,7 +332,7 @@ If we follow the same steps as in the previous section. Our cost function for
 SGD will look like this
 
 \begin{align}
-\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^M \log P(y^m | \mathbf{x}^m)\nonumber\\ & = -\frac{1}{M}\sum_{m=1}^M (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}^m)
+\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^M \log P(y^m | \mathbf{x}^m)\nonumber\\ & = -\frac{1}{M}\sum_{m=1}^M (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}^m)
 \end{align}
 
 If we wanted to compute the gradient for the $n$-th layer, we just need to
@@ -344,7 +344,7 @@ $\mathbf{z}^n$ to split. Since anything before th $n$-th layer does not depend
 on $W_{ji}^n$ this looks like  
 
 \begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \sum_{j'=1}^J \frac{\partial}{\partial z^n_{j'}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j'}}{\partial W_{ji}^n}
+\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \sum_{j'=1}^J \frac{\partial}{\partial z^n_{j'}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j'}}{\partial W_{ji}^n}
 \label{eq:partialfn}
 \end{equation}
 
@@ -364,7 +364,7 @@ only depends on $W_{ji}^n$ if $j'=j$, we have
 \noindent thus simplifying Eq: \ref{eq:partialfn} to
 
 \begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \frac{\partial}{\partial z^n_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j}}{\partial W_{ji}^n}.
+\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \frac{\partial}{\partial z^n_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j}}{\partial W_{ji}^n}.
 \label{eq:partialfn2}
 \end{equation}
 
@@ -373,7 +373,7 @@ transformation $\tilde{\mathbf{z}}^n$. As in the case of $\mathbf{z}^n$, all
 derivatives will be zero when $j\neq j'$ and thus this will result in
 
 \begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \frac{\partial}{\partial \tilde{z}^{n}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1})(\tilde{\mathbf{z}}^{mn})\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}\frac{\partial z^n_{j}}{\partial W_{ji}^n} .
+\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \frac{\partial}{\partial \tilde{z}^{n}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1})(\tilde{\mathbf{z}}^{mn})\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}\frac{\partial z^n_{j}}{\partial W_{ji}^n} .
 \label{eq:partialfn3}
 \end{equation}
 
@@ -391,7 +391,7 @@ We now apply the chain rule a third and last time, in this case to the linear
 transformation of layer $n+1$, to obtain
 
 \begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \sum_{k=1}^K \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})\frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}\frac{\partial z^n_{j}}{\partial W_{ji}^n} .
+\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \sum_{k=1}^K \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})\frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}\frac{\partial z^n_{j}}{\partial W_{ji}^n} .
 \label{eq:partialfn4}
 \end{equation}
 
@@ -404,7 +404,7 @@ By looking at Eqs: \ref{eq:partialfn} and \ref{eq:partialfn4} we can easily
 spot a recursion. Let's use
 
 \begin{equation}
-e^{n+1}_k = \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})
+e^{n+1}_k = \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})
 \end{equation}
 
 \noindent to denote the derivative of the cost function with respect to the
@@ -412,7 +412,7 @@ output of the $n$-th linear transformation. Let's also express the same value
 for the $(n+1)$-th layer as   
 
 \begin{equation}
-e^{n}_j = \frac{\partial}{\partial z^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{n-1} \circ \mathbf{g}^{n-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{mn}) 
+e^{n}_j = \frac{\partial}{\partial z^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{mn}) 
 \end{equation}
 
 \noindent then
@@ -439,7 +439,7 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 
 \begin{align}
 \mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \odot \tilde{\mathbf{z}}^n \odot (1-\tilde{\mathbf{z}}^n)\\
-\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{z}^n\right)^T \\ 
+\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{\mathbf{z}}^n\right)^T \\ 
 \nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n}  
 \end{align}
 
