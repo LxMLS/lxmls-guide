@@ -201,7 +201,7 @@ sum of outer products over the number of training examples $M$
 corresponding to $\mathbf{x}^m$ and 
 
 \begin{equation}
-\hat{\mathbf{y}}^m = \tilde{\mathbf{z}}^m =  (\mathbf{f} \circ \mathbf{g})(\mathbf{x}^m)
+\hat{\mathbf{y}}^m \equiv \tilde{\mathbf{z}}^m =  (\mathbf{f} \circ \mathbf{g})(\mathbf{x}^m)
 \label{eq:forwardPass}
 \end{equation}
 
@@ -312,7 +312,7 @@ p(y_k|\mathbf{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \math
 \noindent we will define each composition of a linear function as
 
 \begin{align}
-\mathbf{z}^n & = \mathbf{g}^n(\tilde{\mathbf{z}}^{N-1})\nonumber\\ &= \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{N-1} + \mathbf{b}^n 
+\mathbf{z}^n & = \mathbf{g}^n(\tilde{\mathbf{z}}^{n-1})\nonumber\\ &= \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{n-1} + \mathbf{b}^n 
 \end{align}
 
 \noindent and a non-linear function 
@@ -439,7 +439,7 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 
 \begin{align}
 \mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \odot \tilde{\mathbf{z}}^n \odot (1-\tilde{\mathbf{z}}^n)\\
-\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{\mathbf{z}}^n\right)^T \\ 
+\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{\mathbf{z}}^{n-1}\right)^T \\ 
 \nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n}  
 \end{align}
 
