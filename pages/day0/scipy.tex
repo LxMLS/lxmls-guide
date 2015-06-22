@@ -86,8 +86,6 @@ Over the next couple of exercises we will make use of the Galton dataset, a
 dataset of heights of fathers and sons from the 1877 paper that first discussed
 the ``regression to the mean'' phenomenon.
 
-\todo[inline]{Mariana: the dataset was already introduced before; The next exercise (0.14) is also repeated.}
-
 
 \begin{exercise}
 \begin{itemize}
@@ -129,7 +127,7 @@ e(\vect{w}) = \sum_i \left( {\vect{x}^{(i)}}^T \vect{w} - y^{(i)} \right)^2.
 \begin{enumerate}
 \item Derive the gradient of the error $\pd{e}{w_j}$.
 \item Implement a solver based on this for two dimensional problem (i.e.,
-$\vect{w} \in R^2$). \todo[inline]{Mariana: in the first formula the problem is actually one dimensional; only the second formula is two dimensional...}
+$\vect{w} \in R^2$).
 \item Use this method on the Galton dataset from the previous exercise to
 estimate the relationship between father and son's height. Try two formulas
 \begin{equation}
