@@ -186,7 +186,7 @@ log-posterior for one weight yields
   \label{eq:partialLogP} 
 \end{align}
 
-By solving Eq.~\ref{eq:partialLogP} for all $k$ and $l$ and using
+By solving Eq.~\ref{eq:partialLogP} for all $k$ and $j$ and using
 Eq.~\ref{eq:CostLogPos} we obtain gradient matrix
 $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) \in \mathbb{R}^{K \times I}$.
 That is the matrix of partial derivatives for all weights can be expressed as a
@@ -283,7 +283,7 @@ One single logistic function corresponds to a particular case of the softmax
 case we saw previously. That is, the softmax models a categorical distribution
 over $K$ possible classes, whereas the logistic models a Bernoulli distribution
 over two classes. We can however use $K$ logistic function outputs providing us
-a distribution of $K$ Bernoulli variables, that is, a distributions over
+a distribution of $K$ Bernoulli variables, that is, a distribution over
 strings of bits. We can easily derive the gradients using a similar cost
 function as the last time, but for now we will limit ourselves to keeping in
 mind the partial derivative of the sigmoid 
@@ -533,7 +533,7 @@ very slow for reasonable sizes of the network. The cost of computing each
 linear layer is proportional to the dimensions of the previous and current
 layer, which in most cases will be rather large. 
 
-For this reason most deep learning applications us Graphics Processing Units
+For this reason most deep learning applications use Graphics Processing Units
 (GPU) in their computations. This specialized hardware is normally used to
 accelerate computer graphics, but also can be used for general computation
 intensive tasks. The news is that we need to deal with specific interfaces and
@@ -582,7 +582,7 @@ compile a function.
 We could actually use the same definition format to define the weights and give
 their particular values as inputs to the compiled function. However, since we
 will be using a more complicated format in later exercises, we will use it here
-as well. The \textit{shared} class allows to define variables that are shares
+as well. The \textit{shared} class allows to define variables that are shared
 across functions. They are also given a concrete value so that we do not need
 to give it for each function call. This format is therefore ideal for the
 weights of our network
@@ -625,7 +625,7 @@ Note the use of $[$ $]$ for the input variables, even if we just specify one
 variable. We can now do a test to compare the Numpy and Theano implementations
 and see that they give the same outputs.
 \begin{python}
-# Check Numpy and Theano mactch
+# Check Numpy and Theano match
 if np.allclose(tilde_z1, layer1(x.astype(theano.config.floatX))):
     print "\nNumpy and Theano Perceptrons are equivalent"
 else:
@@ -718,7 +718,7 @@ To finish this exercise have a look at the TheanoMLP class. As you may realise i
 
 The code above is used in the normal SGD\_train when utilizing Theano. Even if
 you do not have a GPU configured, it should be run faster than our Numpy
-version (NOT RIGHT NOW), particularly for large batch sizes. There is however a
+version, particularly for large batch sizes. There is however a
 way to make it run even faster by implementing not only gradient computation
 but the whole batch update of SGD inside Theano. For this we need also to share
 the whole training set, or a very large mega-batch of it. 
@@ -818,7 +818,7 @@ acc_test  = sgd.class_acc(mlp_c.forward(test_x), test_y)[0]
 print "Amazon Sentiment Accuracy train: %f test: %f\n"%(acc_train,acc_test)
 \end{python}
 As you may observe, just computing the gradients with Theano may not lead to
-an decrease, but rather an increase in computing speed. To maximally exploit
+a decrease, but rather an increase in computing speed. To maximally exploit
 the power of Theano, it is necessary to bundle both computations and data 
 together using approaches like the compiled batch update.
 \end{exercise}
