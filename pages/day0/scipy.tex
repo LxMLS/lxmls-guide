@@ -109,13 +109,13 @@ single response variable
 
 \[
 y = x^T w + \varepsilon
-\]
+\].
 
 The \emph{linear regression problem} is, given a set $\{ y^{(i)} \}_i$ of
 samples of $y$ and the corresponding $\vect{x}^{(i)}$ vectors, estimate
 $\vect{w}$ to minimise the sum of the $\varepsilon$ variables. Traditionally
 this is solved analytically to obtain a closed form solution (although this is
-\textbf{not the way in which it should be computed}, linear algebra packages
+\textbf{not the way in which it should be computed} in this exercise, linear algebra packages
 have an optimised solver, with numpy, use \code{numpy.linalg.lstsq}).
 
 Alternatively, we can define the error function for each possible $\vect{w}$:

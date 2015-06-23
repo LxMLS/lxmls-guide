@@ -37,7 +37,7 @@ where $0\leq \theta \leq 1$.
 \vspace{0.1in}
 \noindent A {\bf convex set} contains the line segment between any two points in the set 
 \begin{equation*}
-x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightarrow \hspace{0.12in} \theta x_{1} + (1-\theta)x_{2} \in C
+x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightarrow \hspace{0.12in} \theta x_{1} + (1-\theta)x_{2} \in C.
 \end{equation*}
 
 \vspace{0.1in}
@@ -50,9 +50,9 @@ f(\theta x + (1-\theta) y) \leq \theta f(x) + (1-\theta) f(y)
 
 \subsection{Derivative and Gradient}
 
-The \textbf{derivative} of a function is a measure of how the function varies with its input variables. Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval. 
+The \textbf{derivative} of a function is a measure of how the function varies with its input variables. Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval: 
 \begin{equation}
-\frac{f(b) - f(a)}{b-a} 
+\frac{f(b) - f(a)}{b-a}.
 \end{equation}
 The derivative can be seen as the limit as the interval goes to zero, and it gives us the slope of the function at that point.
 \begin{equation}
@@ -124,7 +124,7 @@ for i in k:
 
 \end{exercise}
 
-The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Lets assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as a pair $x = {x_1,x_2}$. Then, the gradient measures the slope of the function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
+The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Lets assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as a pair $x = [{x_1,x_2}]$. Then, the gradient measures the slope of the function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
 
 \subsection{\label{gradient_methods} Gradient Based Methods}
 

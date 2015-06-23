@@ -241,7 +241,7 @@ If we get the sequence [1,0,1,1,0] instead, the likelihood values would be:
 \item $\likelihood(1,x) = f(1,1)^5 = 1^3\times 0^2 = 0$
 \end{itemize}
 
-We can see that the likelihood is the highest when the distribution $f$ with parameter $p$ is the best fit for the observed samples. Thus, the best estimate for $p$ according to $x$ would be the value for which $\likelihood(p,x)$ is the highest. 
+We can see that the likelihood is the highest when the distribution $f$ with parameter $p$ is the best fit for the observed samples. Thus, the best estimate for $p$ according to $x$ would be the value for which $\likelihood(p|x)$ is the highest. 
 
 The value of the parameter $\theta$ with the highest likelihood is called {\bf maximum likelihood estimate (MLE)} and is defined as
 \begin{equation*}
@@ -250,12 +250,12 @@ The value of the parameter $\theta$ with the highest likelihood is called {\bf m
 
 Finding this for our example is relatively easy, since we can simply derivate the likelihood function to find the absolute maximum. For the sequence [1,0,1,1,0], the likelihood would be given as
 \begin{equation*}
-\likelihood(p,x) = f(1,p)^3f(0,p)^2 = p^3(1-p)^2
+\likelihood(p|x) = f(1,p)^3f(0,p)^2 = p^3(1-p)^2
 \end{equation*}
 
 And the MLE estimate would be given by:
 \begin{equation*}
-\frac{\delta \likelihood(p,x)}{\delta p}=0
+\frac{\delta \likelihood(p|x)}{\delta p}=0,
 \end{equation*}
 which resolves to
 \begin{equation*}
