@@ -7,14 +7,14 @@ Linear Algebra provides a compact way of representing and operating on sets of l
 
 This is a system of linear equations in 2 variables. In matrix notation we can write the system more compactly as 
 \begin{equation*}
-Ax=b
+\textbf{A}\textbf{x}=\textbf{b}
 \end{equation*}
 with
 \begin{equation*}
-A= \left[ \begin{array}{cc}
+\textbf{A}= \left[ \begin{array}{cc}
 4 & -5 \\
 -2 & 3 \\
-\end{array} \right], \text{	} b= \left[ \begin{array}{c}
+\end{array} \right], \text{	} \textbf{b}= \left[ \begin{array}{c}
 -13 \\
 9 \\
 \end{array}\right]
@@ -26,15 +26,15 @@ We use the following notation:
 
 \begin{itemize}
 
-\item By $A \in \mathbb{R}^{m \times n}$, we denote a {\bf matrix} with $m$ rows and $n$ columns, where the 
+\item By $\textbf{A} \in \mathbb{R}^{m \times n}$, we denote a {\bf matrix} with $m$ rows and $n$ columns, where the 
 entries of A are real numbers.
 
-\item By $x \in \mathbb{R}^{n}$, we denote a {\bf vector} with $n$ entries. A vector can also be thought of as a matrix with $n$ rows and $1$ column, known as a {\bf column vector}. A {\bf row vector} --- a matrix with 1 row and $n$ columns is denoted as $x^{T}$, the transpose of x.
+\item By $\textbf{x} \in \mathbb{R}^{n}$, we denote a {\bf vector} with $n$ entries. A vector can also be thought of as a matrix with $n$ rows and $1$ column, known as a {\bf column vector}. A {\bf row vector} --- a matrix with 1 row and $n$ columns is denoted as $\textbf{x}^{T}$, the transpose of $\textbf{x}$.
 
-\item The $i$th element of a vector x is denoted $x_{i}$
+\item The $i$th element of a vector $\textbf{x}$ is denoted $x_{i}$:
 
 \begin{equation*}
-x = \left[\begin{array}{c}
+\textbf{x} = \left[\begin{array}{c}
 x_{1} \\
 x_{2} \\
 \vdots \\
@@ -88,8 +88,8 @@ There are many more ways to create arrays in numpy and we will get to see them a
 \subsection{Some Matrix Operations and Properties}
 %\gka{May be should divide into subsections }
 \begin{itemize}
-\item Product of two matrices $A \in \mathbb{R}^{m\times n}$ and $B \in \mathbb{R}^{n\times p}$
-is the matrix $C=AB \in \mathbb{R}^{m\times p}$, where 
+\item Product of two matrices $\textbf{A} \in \mathbb{R}^{m\times n}$ and $\textbf{B} \in \mathbb{R}^{n\times p}$
+is the matrix $\textbf{C}=\textbf{AB} \in \mathbb{R}^{m\times p}$, where 
 \begin{equation*}
 C_{ij}=\sum\limits_{k=1}^{n}A_{ik}B_{kj}.
 \end{equation*}
@@ -119,13 +119,13 @@ print d
 \textbf{Important note:} with numpy, you must use \code{dot} to get matrix multiplication, the expression {a * b} denotes element-wise multiplication.
 \end{exercise}
 
-\item Matrix multiplication is associative: $(AB)C= A(BC)$.
-\item Matrix multiplication is distributive: $A(B+C)= AB + AC$.
-\item Matrix multiplication is (generally) not commutative : $AB \neq BA$.
-\item Given two vectors $x,y \in \mathbb{R}^{n}$ the product $x^{T}y$, called {\bf inner product}
+\item Matrix multiplication is associative: $(\textbf{AB})\textbf{C}= \textbf{A}(\textbf{BC})$.
+\item Matrix multiplication is distributive: $\textbf{A}(\textbf{B}+\textbf{C})= \textbf{AB} + \textbf{AC}$.
+\item Matrix multiplication is (generally) not commutative : $\textbf{AB} \neq \textbf{BA}$.
+\item Given two vectors $\textbf{x},\textbf{y} \in \mathbb{R}^{n}$ the product $\textbf{x}^{T}\textbf{y}$, called {\bf inner product}
 or {\bf dot product}, is given by
 \begin{equation*}
-x^{T}y \in \mathbb{R} = \left[\begin{array}{cccc}
+\textbf{x}^{T}\textbf{y} \in \mathbb{R} = \left[\begin{array}{cccc}
 x_{1}&x_{2}&\ldots&x_{n}\end{array}\right] \left[\begin{array}{c}
 y_{1} \\
 y_{2} \\
@@ -140,12 +140,12 @@ b = np.array([1,1])
 np.dot(a,b)
 \end{python}
 
-\item Given vectors $x \in \mathbb{R}^{m}$ and $y \in \mathbb{R}^{n}$, the {\bf outer product} $xy^{T} \in \mathbb{R}^{m\times n}$
-is a matrix whose entries are given by $(xy^{T})_{ij}=x_{i}y_{j}$,
+\item Given vectors $\textbf{x} \in \mathbb{R}^{m}$ and $\textbf{y} \in \mathbb{R}^{n}$, the {\bf outer product} $\textbf{xy}^{T} \in \mathbb{R}^{m\times n}$
+is a matrix whose entries are given by $({xy}^{T})_{ij}=x_{i}y_{j}$,
 
 
 \begin{equation*}
-xy^{T} \in \mathbb{R}^{m\times n} = \left[\begin{array}{c}
+\textbf{xy}^{T} \in \mathbb{R}^{m\times n} = \left[\begin{array}{c}
 x_{1} \\ x_{2} \\ \vdots \\ x_{n}\end{array}\right] \left[\begin{array}{cccc}
 y_{1} &
 y_{2} &
@@ -166,7 +166,7 @@ array([[1, 1],
 \end{python}
 
 
-\item The {\bf identity matrix}, denoted $I\in \mathbb{R}^{n\times n}$, is a square matrix with ones on the diagonal and zeros 
+\item The {\bf identity matrix}, denoted $\textbf{I}\in \mathbb{R}^{n\times n}$, is a square matrix with ones on the diagonal and zeros 
 everywhere else. That is,
 \begin{equation*}
 I_{ij}=\left\{\begin{array}{cc}
@@ -174,7 +174,7 @@ I_{ij}=\left\{\begin{array}{cc}
 0 & i\neq j
 \end{array}\right.
 \end{equation*}
-It has the property that for all $A \in \mathbb{R}^{n \times n}$, $AI = A = IA.$
+It has the property that for all $\textbf{A} \in \mathbb{R}^{n \times n}$, $\textbf{AI} = \textbf{A} = \textbf{IA}.$
 
 \begin{python}
 I = np.eye(2)
@@ -192,10 +192,10 @@ print np.dot(I,x)
 
 
 \item The {\bf transpose} of a matrix results from ``'flipping'' the rows and columns. 
-Given a matrix $A \in \mathbb{R}^{m\times n}$, the transpose $A^{T} \in \mathbb{R}^{n\times m}$
+Given a matrix $\textbf{A} \in \mathbb{R}^{m\times n}$, the transpose $\textbf{A}^{T} \in \mathbb{R}^{n\times m}$
 is the $n \times m$ matrix whose entries are given by $(A^{T})_{ij}= A_{ji}$.
 
-Also, $\begin{array}{ccccc}(A^{T})^{T}= A; &  & (AB)^{T}=B^{T}A^{T}; & & (A+B)^{T}= A^{T}+B^{T} \end{array}$
+Also, $\begin{array}{ccccc}(\textbf{A}^{T})^{T}= \textbf{A}; &  & (\textbf{AB})^{T}=\textbf{B}^{T}\textbf{A}^{T}; & & (\textbf{A}+\textbf{B})^{T}= \textbf{A}^{T}+\textbf{B}^{T} \end{array}$
 
 In numpy, you can access the transpose of a matrix as the \code{T} attribute:
 
@@ -204,43 +204,43 @@ A = np.array([ [1, 2], [3, 4] ])
 print A.T
 \end{python}
 
-\item A square matrix $A \in \mathbb{R}^{n\times n}$ is {\bf symmetric} if  $A=A^{T}$.
+\item A square matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ is {\bf symmetric} if  $\textbf{A}=\textbf{A}^{T}$.
 
-\item The {\bf trace} of a square matrix $A \in \mathbb{R}^{n\times n}$ is the sum of the diagonal
-elements, tr$(A)= \sum\limits_{i=1}^{n} A_{ii}$
+\item The {\bf trace} of a square matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ is the sum of the diagonal
+elements, tr$(\textbf{A})= \sum\limits_{i=1}^{n} A_{ii}$
 
 \end{itemize}
 \subsection{Norms}
 The {\bf norm} of a vector is informally the measure of the ``length'' of the vector. The commonly used Euclidean or $\ell_{2}$ norm is given by
 \begin{equation*}
-\|x\|_{2}=\sqrt{\sum\limits_{i=1}^{n} x_{i}^{2}}.
+\|\textbf{x}\|_{2}=\sqrt{\sum\limits_{i=1}^{n} x_{i}^{2}}.
 \end{equation*}
 
 \begin{itemize}
-\item More generally, the $\ell_{p}$ norm of a vector $x \in \mathbb{R}^{n}$, where $p \geq 1$ is defined as 
+\item More generally, the $\ell_{p}$ norm of a vector $\textbf{x} \in \mathbb{R}^{n}$, where $p \geq 1$ is defined as 
 \end{itemize}
 \begin{equation*}
-\|x\|_{p}=\left(\sum\limits_{i=1}^{n}|x_{i}|^{p}\right)^{1/p}.
+\|\textbf{x}\|_{p}=\left(\sum\limits_{i=1}^{n}|x_{i}|^{p}\right)^{1/p}.
 \end{equation*}
-Note: $\begin{array}{ccc} \ell_{1} \text{ norm}: \|x\|_{1} = \sum\limits_{i=1}^{n} |x_{i}| && \ell_{\infty} \text{ norm}: \|x\|_{\infty} = \max\limits_{i} |x_{i}| \end{array}$.
+Note: $\begin{array}{ccc} \ell_{1} \text{ norm}: \|\textbf{x}\|_{1} = \sum\limits_{i=1}^{n} |x_{i}| && \ell_{\infty} \text{ norm}: \|\textbf{x}\|_{\infty} = \max\limits_{i} |x_{i}| \end{array}$.
 
 \subsection{Linear Independence, Rank, and Orthogonal Matrices}
-A set of vectors $\{x_{1},x_{2},\ldots,x_{n}\} \subset \mathbb{R}^{m}$ is said to be {\bf (linearly) independent} if no vector can be represented as a linear combination of the remaining vectors. Conversely, if one vector belonging to the set can be represented as a linear combination of the remaining vectors, then the vectors are said to be {\bf linearly dependent}. That is, if 
+A set of vectors $\{\textbf{x}_{1},\textbf{x}_{2},\ldots,\textbf{x}_{n}\} \subset \mathbb{R}^{m}$ is said to be {\bf (linearly) independent} if no vector can be represented as a linear combination of the remaining vectors. Conversely, if one vector belonging to the set can be represented as a linear combination of the remaining vectors, then the vectors are said to be {\bf linearly dependent}. That is, if 
 \begin{equation*}
-x_{j}=\sum\limits_{i\neq j}\alpha_{i}x_{i}
+\textbf{x}_{j}=\sum\limits_{i\neq j}\alpha_{i}\textbf{x}_{i}
 \end{equation*}
 for some $j \in \{1,\ldots,n\}$ and some scalar values $\alpha_{1}, \ldots, \alpha_{i-1}, \alpha_{i+1}, \ldots, \alpha_{n} \in \mathbb{R}$. 
 
 \begin{itemize}
 \item The {\bf rank} of a matrix is the number of linearly independent columns, which is always equal to the number of linearly independent rows.
-\item For $A \in R^{m\times n}$, rank$(A) \leq$ min$(m,n)$. If rank$(A)=$ min$(m,n)$, then $A$ is said
+\item For $\textbf{A} \in R^{m\times n}$, rank$(\textbf{A}) \leq$ min$(m,n)$. If rank$(\textbf{A})=$ min$(m,n)$, then $\textbf{A}$ is said
 to be  {\bf full rank}.
-\item For $A \in R^{m\times n}$, rank$(A)=$ rank$(A^{T})$.
-\item For $A \in R^{m\times n}$,  $B \in R^{n\times p}$, rank$(AB) \leq$ min$($rank$(A)$,rank$(B)$).
-\item For $A,B \in R^{m\times n}$, rank$(A+B) \leq$ rank$(A)$ + rank$(B)$.
-\item Two vectors $x,y \in \mathbb{R}^{n}$ are {\bf orthogonal} if $x^{T}y=0$. A square matrix $U \in \mathbb{R}^{n\times n}$ is orthogonal if all its columns are orthogonal to each other and are normalized ($\|x\|_{2} = 1$), It follows that
+\item For $\textbf{A} \in R^{m\times n}$, rank$(\textbf{A})=$ rank$(\textbf{A}^{T})$.
+\item For $\textbf{A} \in R^{m\times n}$,  $\textbf{B} \in R^{n\times p}$, rank$(\textbf{AB}) \leq$ min$($rank$(\textbf{A})$,rank$(\textbf{B})$).
+\item For $\textbf{A},\textbf{B} \in R^{m\times n}$, rank$(\textbf{A}+\textbf{B}) \leq$ rank$(\textbf{A})$ + rank$(\textbf{B})$.
+\item Two vectors $\textbf{x},\textbf{y} \in \mathbb{R}^{n}$ are {\bf orthogonal} if $\textbf{x}^{T}\textbf{y}=0$. A square matrix $\textbf{U} \in \mathbb{R}^{n\times n}$ is orthogonal if all its columns are orthogonal to each other and are normalized ($\|\textbf{x}\|_{2} = 1$), It follows that
 \begin{equation*}
-U^{T}U=I=UU^{T}.
+\textbf{U}^{T}\textbf{U}=\textbf{I}=\textbf{UU}^{T}.
 \end{equation*}
 \end{itemize}
 
