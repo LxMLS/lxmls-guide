@@ -43,10 +43,10 @@ x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightar
 \vspace{0.1in}
 \noindent A function $f: \mathbb{R}^{n}\rightarrow R$ is a {\bf convex function} if the domain of $f$ is a convex set and 
 \begin{equation*}
-f(\theta x + (1-\theta) y) \leq \theta f(x) + (1-\theta) f(y)
+f(\theta \textbf{x} + (1-\theta) \textbf{y}) \leq \theta f(\textbf{x}) + (1-\theta) f(\textbf{y})
 \end{equation*}
 
-\noindent for all $x,y \in \text{domain of } f$, $0 \leq \theta \leq 1$
+\noindent for all $\textbf{x},\textbf{y} \in \mathbb{R}^{n}$, $0 \leq \theta \leq 1$
 
 \subsection{Derivative and Gradient}
 
@@ -124,33 +124,33 @@ for i in k:
 
 \end{exercise}
 
-The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Lets assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as a pair $x = [{x_1,x_2}]$. Then, the gradient measures the slope of the function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
+The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Let us assume we have a function  $f(\textbf{x})$ where $\textbf{x} \in \mathbb{R}^2$, so $\textbf{x}$ can be seen as a pair $\textbf{x} = [{x_1,x_2}]$. Then, the gradient measures the slope of the function in both directions: $\nabla_{\textbf{x}} f(\textbf{x}) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
 
 \subsection{\label{gradient_methods} Gradient Based Methods}
 
-Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods used in this class will make use of the function value $f(x)$ as well as the gradient of the function $\nabla_{x} f(x)$. The simplest method is the {\bf Gradient descent} method, an unconstrained first-order optimization algorithm.
+Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods used in this class will make use of the function value $f(\textbf{x}): \mathbb{R}^{n}\rightarrow R $ as well as the gradient of the function $\nabla_{\textbf{x}} f(\textbf{x})$. The simplest method is the {\bf Gradient descent} method, an unconstrained first-order optimization algorithm.
 
-The intuition of this method is as follows: You start at a given point $x_0$ and compute the gradient at that point $\nabla_{x_0} f(x)$. You then take a step of length $\eta$ on the direction of the negative gradient to find a new point: $x_1$ = $x_0 - \eta \nabla_{x_{0}}
-f(x)$. Then, you compute the gradient at this new point, $\nabla_{x_1} f(x)$, and take a step of length $\eta$ on the direction of the negative gradient to find a new point: $x_2$ = $x_1 - \eta \nabla_{x_{1}} f(x)$. You proceed until you have reached a minimum (local or global). Recall from the previous subsection that you can identify the minimum by testing if the norm of the gradient is zero: $||\nabla f(x)|| = 0$.
+The intuition of this method is as follows: You start at a given point $\textbf{x}_0$ and compute the gradient at that point $\nabla_{\textbf{x}_0} f(\textbf{x})$. You then take a step of length $\eta$ on the direction of the negative gradient to find a new point: $\textbf{x}_1$ = $\textbf{x}_0 - \eta \nabla_{\textbf{x}_{0}}
+f(\textbf{x})$. Then, you compute the gradient at this new point, $\nabla_{\textbf{x}_1} f(\textbf{x})$, and take a step of length $\eta$ on the direction of the negative gradient to find a new point: $\textbf{x}_2$ = $\textbf{x}_1 - \eta \nabla_{\textbf{x}_{1}} f(\textbf{x})$. You proceed until you have reached a minimum (local or global). Recall from the previous subsection that you can identify the minimum by testing if the norm of the gradient is zero: $||\nabla f(\textbf{x})|| = 0$.
 
 There are several practical concerns even with this basic algorithm to ensure both that the algorithm converges (reaches the minimum) and that it does so in a fast way (by fast we mean the number of function and gradient evaluations).
 
 \begin{itemize}
 \item \textbf{Step Size $\eta$} A first question is how to find the step length $\eta$. One condition is that $eta$ should guarantee sufficient decrease in the function value. We will not cover these methods here but the most common ones are \textbf{Backtracking line search} or the \textbf{Wolf Line Search} \citep{Nocedal1999}.
-\item \textbf{Descent Direction}  A second problem is that using the negative gradient as direction can lead to a very slow convergence. Different methods that change the descent direction by multiplying the gradient by a matrix $\beta$ have been proposed that guarantee a faster convergence. Two notable methods are the Conjugate Gradient (CG) and the Limited Memory Quasi Newton methods (LBFGS) \citep{Nocedal1999}.
-\item \textbf{Stopping Criteria} Finally, it will normally not be possible to reach full convergence either because it will be too slow, or because of numerical issues (computers cannot perform exact arithmetic). So normally we need to define a stopping criteria for the algorithm. Three common criteria (that are normally used together) are: a maximum number of iterations; the gradient norm be smaller than a given threshold   $||\nabla f(x)|| \leq \eta_1$, or the normalized difference in the function value be smaller than a given threshold $\frac{|f(x_t) - f(x_{t-1})|}{\max(|f(x_t)|,|f(x_{t-1})|)} \leq \eta_2$
+\item \textbf{Descent Direction}  A second problem is that using the negative gradient as direction can lead to a very slow convergence. Different methods that change the descent direction by multiplying the gradient by a matrix $\textbf{B}$ have been proposed that guarantee a faster convergence. Two notable methods are the Conjugate Gradient (CG) and the Limited Memory Quasi Newton methods (LBFGS) \citep{Nocedal1999}.
+\item \textbf{Stopping Criteria} Finally, it will normally not be possible to reach full convergence either because it will be too slow, or because of numerical issues (computers cannot perform exact arithmetic). So normally we need to define a stopping criteria for the algorithm. Three common criteria (that are normally used together) are: a maximum number of iterations; the gradient norm be smaller than a given threshold   $||\nabla f(\textbf{x})|| \leq \eta_1$, or the normalized difference in the function value be smaller than a given threshold $\frac{|f(\textbf{x}_t) - f(\textbf{x}_{t-1})|}{\max(|f(\textbf{x}_t)|,|f(\textbf{x}_{t-1})|)} \leq \eta_2$
 \end{itemize}
 
-Algorithm \ref{alg:graddescent} shows the general gradient based algorithm. Note that for the simple gradient descent algorithm $\beta$ is the identity matrix and the descent direction is just the negative gradient of the function, $\beta = -\nabla f(x)$. Figure \ref{fig:graddescent} shows an illustration of the gradient descent algorithm.
+Algorithm \ref{alg:graddescent} shows the general gradient based algorithm. Note that for the simple gradient descent algorithm $\textbf{B}$ is the identity matrix and the descent direction is just the negative gradient of the function. %, $\beta = -\nabla f(x)$. Figure \ref{fig:graddescent} shows an illustration of the gradient descent algorithm.
 
 \begin{algorithm}[h]
 \caption{Gradient Descent\label{alg:graddescent}}
 \begin{algorithmic}[1]
-\STATE {\bf given} a starting point $x_{0}, i=0$
+\STATE {\bf given} a starting point $\textbf{x}_{0}, i=0$
 \STATE {\bf repeat}
 \STATE \quad Compute step size $\eta$
-\STATE \quad Compute descent direction $- \beta\nabla f(x_{i})$.
-\STATE \quad $x_{i+1} \leftarrow x_{i} - \eta\beta\nabla f(x_{i})$
+\STATE \quad Compute descent direction $- \textbf{B}\nabla f(x_{i})$.
+\STATE \quad $\textbf{x}_{i+1} \leftarrow \textbf{x}_{i} - \eta\textbf{B}\nabla f(\textbf{x}_{i})$
 \STATE \quad $i \leftarrow i + 1$
 \STATE {\bf until} stopping criterion is satisfied.
 \end{algorithmic}
