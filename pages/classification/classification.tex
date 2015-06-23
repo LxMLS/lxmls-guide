@@ -708,11 +708,13 @@ MIRA is depicted in Alg.~\ref{alg:mira}. For other variants of MIRA, see \citet{
 
 
 \begin{exercise}
-Implement the MIRA algorithm (Hint: use the perceptron algorithm
-  as a starting point and modify it as necessary). Do this by creating a 
-  file {\tt Mira.py} and implement class {\tt Mira}. 
-  Then, 
-  repeat the perceptron exercise now using MIRA, for several values of $\lambda$: 
+%Implement the MIRA algorithm (Hint: use the perceptron algorithm
+%  as a starting point and modify it as necessary). Do this by creating a 
+%  file {\tt Mira.py} and implement class {\tt Mira}. 
+%  Then, 
+%  repeat the perceptron exercise now using MIRA, for several values of $\lambda$: 
+We provide an implementation of the MIRA algorithm. Compare it with the
+perceptron for various values of $\lambda$ 
 \begin{python}
 import lxmls.classifiers.mira as mirac
 
@@ -758,7 +760,7 @@ For example, if we throw a die and want to estimate the probability of its outco
 uniform distribution (each outcome having of probability a $1/6$). 
 Now suppose that we are only told that outcomes $\{1,2,3\}$ occurred $10$ times in total, and 
 $\{4,5,6\}$ occurred $30$ times in total, then the principle of maximum entropy would lead us to 
-estimate $P(1)=P(2)=P(3)=1/12$ and $P(1)=P(2)=P(3)=1/4$ (i.e., outcomes would be uniform 
+estimate $P(1)=P(2)=P(3)=1/12$ and $P(3)=P(4)=P(5)=1/4$ (i.e., outcomes would be uniform 
 within each of the two groups).\footnote{For an introduction of maximum entropy models, along with pointers to the literature, see 
 \url{http://www.cs.cmu.edu/~aberger/maxent.html}.}
 
@@ -853,7 +855,7 @@ construct second order (Hessian) approximations.
 	\FOR{$t=1$ {\bfseries to} $T$}
 	\FOR{$m=1$ {\bfseries to} $M$}
 	\STATE take training pair $(x^m, y^m)$ and compute conditional probabilities using the current model, for each $y' \in \mathcal{Y}$:
-	$$P_{\boldsymbol{w}^t}(y'|x^m) = \frac{\exp(\boldsymbol{w}^t \cdot \boldsymbol{f}(x^m,y'))}{Z(\boldsymbol{w},x)}$$ 
+	$$P_{\boldsymbol{w}^t}(y'|x^m) = \frac{\exp(\boldsymbol{w}^t \cdot \boldsymbol{f}(x^m,y'))}{Z(\boldsymbol{w},x^m)}$$ 
 	\STATE compute the feature vector expectation:  
 	$$E_{\boldsymbol{w}}[\boldsymbol{f}(x^m,Y)] = \sum_{y' \in \mathcal{Y}} P_{\boldsymbol{w}^t}(y'|x^m) \boldsymbol{f}(x^m,y')$$
 	\ENDFOR
@@ -895,7 +897,7 @@ in a development partition or with cross-validation.
 	\STATE choose $m = m(t)$ randomly
 
 	\STATE take training pair $(x^m, y^m)$ and compute conditional probabilities using the current model, for each $y' \in \mathcal{Y}$:
-	$$P_{\boldsymbol{w}^t}(y'|x^m) = \frac{\exp(\boldsymbol{w}^t \cdot \boldsymbol{f}(x^m,y'))}{Z(\boldsymbol{w},x)}$$ 
+	$$P_{\boldsymbol{w}^t}(y'|x^m) = \frac{\exp(\boldsymbol{w}^t \cdot \boldsymbol{f}(x^m,y'))}{Z(\boldsymbol{w},x^m)}$$ 
 	\STATE compute the feature vector expectation:  
 	$$E_{\boldsymbol{w}}[\boldsymbol{f}(x^m,Y)] = \sum_{y' \in \mathcal{Y}} P_{\boldsymbol{w}^t}(y'|x^m) \boldsymbol{f}(x^m,y')$$
 	\STATE update the model: 

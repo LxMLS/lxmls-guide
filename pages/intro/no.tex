@@ -30,14 +30,14 @@ More formally, some concepts to understand about convex functions are:
 
 \noindent A {\bf line segment} between points $x_{1}$ and $x_{2}$: contains all points such that 
 \begin{equation*}
-x=\theta x_{1} + (1-\theta)x_{2},
+x=\theta x_{1} + (1-\theta)x_{2}
 \end{equation*}
 where $0\leq \theta \leq 1$.
 
 \vspace{0.1in}
 \noindent A {\bf convex set} contains the line segment between any two points in the set 
 \begin{equation*}
-x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightarrow \hspace{0.12in} \theta x_{1} + (1-\theta)x_{2} \in C.
+x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightarrow \hspace{0.12in} \theta x_{1} + (1-\theta)x_{2} \in C
 \end{equation*}
 
 \vspace{0.1in}
@@ -46,17 +46,17 @@ x_{1}, x_{2} \in C,\hspace{0.12in} 0 \leq \theta \leq 1 \hspace{0.12in} \Rightar
 f(\theta x + (1-\theta) y) \leq \theta f(x) + (1-\theta) f(y)
 \end{equation*}
 
-\noindent for all $x,y \in \text{domain of } f$, $0 \leq \theta \leq 1$.
+\noindent for all $x,y \in \text{domain of } f$, $0 \leq \theta \leq 1$
 
 \subsection{Derivative and Gradient}
 
-The \textbf{derivative} of a function is a measure of how the function varies with its input variables. Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval:
+The \textbf{derivative} of a function is a measure of how the function varies with its input variables. Given an interval $[a,b]$ one can compute how the function varies within that interval by calculating the average slope of the function in that interval. 
 \begin{equation}
-\frac{f(b) - f(a)}{b-a}.
+\frac{f(b) - f(a)}{b-a} 
 \end{equation}
-The derivative can be seen as the limit as the interval goes to zero, and it gives us the slope of the function at that point:
+The derivative can be seen as the limit as the interval goes to zero, and it gives us the slope of the function at that point.
 \begin{equation}
-\frac {\partial f}{\partial x} = \lim_{h = 0} \frac{f(x+h) - f(x)}{h}.
+\frac {\partial f}{\partial x} = \lim_{h = 0} \frac{f(x+h) - f(x)}{h} 
 \end{equation}
 
 \noindent Table \ref{tb::derivatives} shows derivatives of some functions that we will be using during the school.
@@ -95,7 +95,7 @@ Consider the function $h(x)=\exp(x^{2})$, this can be decomposed as $h(x)=f(g(x)
 \end{example}
 
 \begin{exercise}
-Consider the function $f(x) = x^2$ and its derivative $\frac{\partial f} {\partial x}$. Look at the derivative of that function at points [-2,0,2], draw the tangent to the graph in those points ($\frac{\partial f}{\partial x}\left(-2\right)=-4$, $\frac{\partial f}{\partial x}\left(0\right)=0$, and $\frac{\partial f}{\partial x}\left(2\right)=4$). For example, the tangent equation for $x=-2$ is $y=-4x - b$, where $b=f(-2)$. The following code plots the function and the derivatives on those points using matplotlib (See Figure \ref{fig:tangents}).
+Consider the function $f(x) = x^2$ and its derivative $\frac{\partial f} {\partial x}$. Look at the derivative of that function at points [-2,0,2], draw the tangent to the graph in that point $\frac{\partial f}{\partial x}\left(-2\right)=-4$, $\frac{\partial f}{\partial x}\left(0\right)=0$, and $\frac{\partial f}{\partial x}\left(2\right)=4$. For example, the tangent equation for $x=-2$ is $y=-4x - b$, where $b=f(-2)$. The following code plots the function and the derivatives on those points using matplotlib (See Figure \ref{fig:tangents}).
 
 \begin{python}
 a = np.arange(-5,5,0.01)
@@ -124,9 +124,9 @@ for i in k:
 
 \end{exercise}
 
-The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Lets assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as a pair $x = [{x_1,x_2}]$. Then, the gradient measures the slope of the function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
+The \textbf{gradient} of a function is a generalization of the derivative concept we just saw before for several dimensions. Lets assume we have a function  $f(x)$ where $x \in \mathbb{R}^2$, so $x$ can be seen as a pair $x = {x_1,x_2}$. Then, the gradient measures the slope of the function in both directions: $\nabla_{x} f(x) = [\frac {\partial f}{\partial x_1},\frac {\partial f}{\partial x_2}]$.
 
-\subsection{Gradient Based Methods}
+\subsection{\label{gradient_methods} Gradient Based Methods}
 
 Gradient based methods are probably the most common methods used for finding the minimizing sequence for a given function. The methods used in this class will make use of the function value $f(x)$ as well as the gradient of the function $\nabla_{x} f(x)$. The simplest method is the {\bf Gradient descent} method, an unconstrained first-order optimization algorithm.
 

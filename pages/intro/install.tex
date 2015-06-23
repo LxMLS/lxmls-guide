@@ -1,47 +1,66 @@
 \subsection{Desktops vs. Laptops}
 
-If you are using one of our provided desktops, all installation procedures have been carried out. You merely need to go to the \verb+lxmls-toolkit-student+ folder inside your home directory and start working! You may go directly to section \ref{sec:Python}.
+If you have decided to use one of our provided desktops, all installation
+procedures have been carried out. You merely need to go to the
+\verb+lxmls-toolkit-student+ folder inside your home directory and start
+working! You may go directly to section \ref{sec:SolvingExercises}.  If you
+wish to use your own laptop, you will need to install Python, all
+required Python libraries, and the LXMLS code base. Please follow the
+instructions appropriate for your operating system.
 
-If you wish to use your own laptop, you will need to install Python, all required Python libraries, and the LXMLS code base. Please follow the instructions appropriate for your operating system.
+\subsection{Installing in Windows and Mac}
 
-\subsection{Installing in Windows}
+While Python is easy to install, some of the Python modules are based in C and
+thus require a compiler to be installed from scratch. The following packages
+are needed for the summer school toolkit 
 
-While Python is easy to install, some of the Python modules are based in C and thus require a compiler to be installed from scratch. Fortunately, there are some companies which distribute Windows and Mac versions of Python including all C-based libraries which we need, for free. We recommend that you install Anaconda, a Python distribution which is free to use. You can get it from
 \begin{verbatim}
-http://continuum.io/downloads
+pyyaml
+nltk
+numpy
+scipy
+matplotlib
+mrjob
+theano 
 \end{verbatim}
 
-Make sure you install a 2.7.x version, not a 3.x version!
+Fortunately, there are some companies which distribute Windows and Mac versions
+of Python including all C-based libraries which we need, for free. We recommend
+that you install Anaconda, a Python distribution which is free to use. You can
+get it from 
 
-\subsection{Installing in Mac}
+\begin{verbatim}http://continuum.io/downloads\end{verbatim}
 
-While Python is easy to install, some of the Python modules are based in C and thus require a compiler to be installed from scratch. Fortunately, there are some companies which distribute Windows and Mac versions of Python including all C-based libraries which we need, for free. We recommend one of these:
+\noindent Just go to the corresponding websites and follow the instructions for
+installation. Make sure you install a 2.7.x version, not a 3.x version!.
 
-\begin{itemize}
-\item Anaconda 
-\begin{verbatim}
-http://continuum.io/downloads
-\end{verbatim}
+Anaconda is the safest way if you are starting from scratch and you do not
+feel comfortable with your operating system. If you are already familiar with
+Python and your OS you can install the packages via trustworthy executables 
+in Windows or brew/port package managers in OSX. Another option is to use 
+a Python package manager. For this we recommend pip.  
+
+% OTHER ALTERNATIVES (NOT USED)
 %
-\item Canopy
-\begin{verbatim}
-https://store.enthought.com/downloads/
-\end{verbatim}
-%
-\item WinPython (Windows only)
-\begin{verbatim}
-http://sourceforge.net/projects/winpython/files/
-\end{verbatim}
-%
-\item Using the \verb+port+ command (Mac only); please follow the instructions at
-\begin{verbatim}
-http://www.scipy.org/install.html
-\end{verbatim}
-%
-\end{itemize}
+%\item Canopy
+%\begin{verbatim}
+%https://store.enthought.com/downloads/
+%\end{verbatim}
+%%
+%\item WinPython (Windows only)
+%\begin{verbatim}
+%http://sourceforge.net/projects/winpython/files/
+%\end{verbatim}
+%%
+%\item Using the \verb+port+ command (Mac only); please follow the instructions at
+%\begin{verbatim}
+%http://www.scipy.org/install.html
+%\end{verbatim}
+%%
+%\end{itemize}
 
-Just go to the corresponding websites and follow the instructions for installation. Make sure you install a 2.7.x version, not a 3.x version!
-
+% MANUAL INSTRUCTIONS
+%
 %Any python 2.7.x version will do. You can check the version by  
 %
 %If you do not have python, you can install the latest 2.7+ python from the official website at
@@ -76,7 +95,6 @@ Just go to the corresponding websites and follow the instructions for installati
 %\end{verbatim}
 %
 
-
 %After hovering the mouse over downloads, you will see various options for installation. You can instal the version 2.7.x, any number for x is ok. Please do not instal version 3 or superior. If you already have a python 2.7 (any version) installed, you dont need to install another one, it will work. If you have older versions of python it might still work. In any case please uninstall any previous python version before installing a new one. This is a frequent source of problems on all systems.
 %
 %Now for the different python modules needed. The most straightforward way to instal the modules is through a python package manager, we recommend pip 
@@ -90,23 +108,33 @@ Just go to the corresponding websites and follow the instructions for installati
 
 \subsection{Installing in Linux}
 
-Installation of Python and its related packages in Linux is best done from your distribution's package manager. Please follow the instructions for your distribution, available at
+Installation of Python and its related packages in Linux is best done from your
+distribution's package manager. See, for example, the instruction for some of the
+scientific tools needed 
+
 \begin{verbatim}
 http://www.scipy.org/install.html
 \end{verbatim}
 
-If you are presented with a choice, please install a Python 2.7.x version, not a 3.x version!
+Please remember to install a Python 2.7.x version, not a 3.x version!. If you
+do not manage to install the packages via your OS packet manager you can 
+resort to a python package manager like pip.  
 
 \subsection{Testing your installation}
 
-To check whether your Python installation is working, start by invoking the Python shell. You can do that by running the command \verb+python+ in your Terminal in Linux or Mac, or the file \verb+python.exe+ from the folder where Python was installed in, for Windows.
+To check whether your Python installation is working, start by invoking the
+Python shell. You can do that by running the command \verb+python+ in your
+Terminal in Linux or Mac, or the file \verb+python.exe+ from the folder where
+Python was installed in, for Windows.
 
 In the Python interpreter, the very first line should read like
 \begin{verbatim}
 Python 2.7.3 (default, Feb 27 2014, 19:58:35)
 \end{verbatim}
 %
-In this case, the Python version was 2.7.3. Please make sure that in your case this reads \verb+2.7.x+, where \verb+x+ is some number. Newer versions such as 3.4 have not been tested with our code.
+In this case, the Python version was 2.7.3. Please make sure that in your case
+this reads \verb+2.7.x+, where \verb+x+ is some number. Newer versions such as
+3.4 have not been tested with our code.
 
 To test whether Numpy is working, type the following two lines in the Python interpreter:
 %
@@ -122,40 +150,26 @@ OK (KNOWNFAIL=3, SKIP=4)
 <nose.result.TextTestResult run=3161 errors=0 failures=0>
 \end{verbatim}
 
-Finally, to check that all the modules we will use work, please run the \verb+all_imports.py+ file found in the \verb+lxmls-toolkit-student+ folder.
-
 \subsection{Downloading the labs version from GitHub}
 
-The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. To download the \verb+student+ code, go to
+The code of LxMLS is available online at GitHub. There are two branches of the
+code: the \verb+master+ branch contains fully functional code. The
+\verb+student+ branch contains the same code with some parts deleted, which you
+must complete in the following exercises. To download the \verb+student+ code,
+go to
 
 \begin{verbatim}
 https://github.com/gracaninja/lxmls-toolkit
 \end{verbatim}
 
-\noindent and select the \verb+student+ branch in the dropdown menu. This will reload the page to the corresponding branch. Now you just need to click the \verb+download ZIP+ button to obtain the lab tools in a zip format:
+\noindent and select the \verb+student+ branch in the dropdown menu. This will
+reload the page to the corresponding branch. Now you just need to click the
+\verb+download ZIP+ button to obtain the lab tools in a zip format:
 
 \begin{verbatim}
 lxmls-toolkit-student.zip
 \end{verbatim}
 
 After this you can unzip the file where you want to work and enter this folder.
-
-\subsection{Working on the Exercises}
-
-Please note that in order for the exercises to work you need to launch your scripts or use interpreters from inside the  \textit{lxmls-toolkit-student} folder.
-
-One detail more and you are off to go. In the student branch we provide the \verb+solve.py+ script. This can be used to solve the exercises of each day, \emph{e.g.}
-%
-\begin{verbatim}
-python ./solve.py day1
-\end{verbatim}
-
-\noindent You can also undo the solving of an exercise by using
-
-\begin{verbatim}
-python ./solve.py --undo day1
-\end{verbatim}
-
-Note that this script just downloads and replaces the master or student versions of certain files from the GitHub repository. It needs an Internet connection. Since some exercises require you to have the exercises of the previous days completed, the monitors may ask you to use this function. \textbf{Remember to save your own version of the code, otherwise it will be overwritten!}
-
-
+To check that all the modules we will use work, please run the
+\verb+all_imports.py+ file found in the \verb+lxmls-toolkit-student+ folder.
