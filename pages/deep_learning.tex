@@ -3,7 +3,7 @@ Today's class will be divided in three main parts. First, we will learn the main
 algorithmic principle behind deep learning and code the Backpropagation algorithm 
 in Numpy.  Second, we will learn the basics of the Theano module for Python, 
 which allows to easily implement deep learning techniques that run on a 
-Graphical Processing Unit (GPU) for optimal speed. Third we will see some more 
+Graphical Processing Unit (GPU) for optimal speed. Third, we will see some more 
 complex deep learning concepts and NLP specific issues.
 
 If you are new to the topic you should aim to finish the deep learning 
@@ -19,9 +19,8 @@ Deep learning is the name behind the latest wave of successful neural network
 research, a very old topic dating from the first half of the 20th century. Deep 
 learning techniques have attained formidable impact in the machine learning 
 community, in particular in the fields of image, speech processing and NLP. 
-Some of the changes that led to this renewed success are due to, not only
-improvements and insight on the existing neural network algorithms, but also in
-the increase in the amount of data available and computing power. In
+Some of the changes that led to this renewed success are, not only
+improvements and insight on the existing neural network algorithms, but also the increase in the amount of data available and computing power. In
 particular, the use of Graphical Processing Units (GPUs) has allowed neural
 networks to be applied to very large datasets. Working with GPUs is not trivial
 as it requires dealing with specialized hardware. Luckily, as it is often the
@@ -33,7 +32,7 @@ gradients and solve overflow problems. Furthermore, the code is also ready to
 use with CUDA-compatible GPUs.
 
 There is nothing particularly difficult in the deep learning concept. You have
-already visited all the mathematic principles you need in the first days of the
+already visited all the mathematical principles you need in the first days of the
 labs of this school. At their core, deep learning models are just functions
 mapping vector inputs $\mathbf{x}$ to vector outputs $\mathbf{y}$, just like any
 of the models we saw on previous days. Deep learning models are constructed by
@@ -41,8 +40,8 @@ composing linear and non-linear transformations to build structures that vaguely
 resemble human neural networks, hence the name artificial neural networks. Due
 to their compositional nature, gradient methods and the chain rule are used to
 learn the parameters of these models. See Section \ref{unsupervised} for a
-refresh on the basic concept. We will also refer to the application of gradient
-learning methods in Section \ref{s:me}. 
+refresh on the basic concept. We will also refer to the gradient
+learning methods introduced in Section \ref{s:me}. 
 
 \section{A Look Back at Log-linear Models from Day 1} 
 
@@ -57,7 +56,7 @@ introduce the concept, and progress from there on. Recall the maximum entropy
 classifier in Section \ref{s:me}. This was a log-linear model that, given an
 input vector of features $\boldsymbol{f}(x,y)$, would predict the probability
 of that vector belonging to each of $K$ possible classes $y_k$. For the purpose
-of introducing deep learning, a more general form here given by 
+of introducing deep learning, we will use a more general form given by 
 %
 \begin{align}
 p(y_k|\mathbf{x}) & = \frac{\exp(\mathbf{W}_k \cdot \mathbf{x} + b_k)}{Z(\mathbf{W},\mathbf{b},\mathbf{x})}\nonumber\\ & = \frac{\exp(\mathbf{W}_k \cdot \mathbf{x} + b_k)}{\sum_{k'=1}^K \exp(\mathbf{W}_{k'} \cdot \mathbf{x} + b_{k'})}. 
@@ -79,8 +78,7 @@ transformation
 \label{eq:linear}
 \end{equation}
 
-\noindent where $\mathbf{z} \in \mathbb{R}^{K \times 1}$ and the soft-max non
-linear transformation
+\noindent where $\mathbf{z} \in \mathbb{R}^{K \times 1}$ and the \textit{softmax} non-linear transformation
 
 \begin{equation}
 \tilde{z}_k = f_k(\mathbf{z}) = \frac{\exp(z_k)}{\sum_{k'=1}^K \exp(z_{k'})}.
@@ -106,7 +104,7 @@ a non-linear transformation.}
 
 As we saw on day one, such models can be trained by Stochastic Gradient Descent
 (SGD). All we need is to compute the gradient of the cost $\nabla\mathcal{F}$
-with respect to the parameters we wish to estimate and update our estimates as
+with respect to the parameters of the model and update our estimates as
 e.g.
 
 \begin{equation}
@@ -146,7 +144,7 @@ Thanks to the chain rule, we can express this as
 
 In other words, we have divided the problem of computing the derivative of a
 composition of functions into computing the individual derivatives and then
-applying the chain rule. This is a great simplifications, as individual
+applying the chain rule. This is a great simplification, as individual
 derivatives are immediate and appear repeatedly. To illustrate this, lets see
 the derivatives involved in this calculation: Deriving the softmax in Eq:
 \ref{eq:softmax} with respect to its input gives us 
@@ -300,7 +298,7 @@ mind the partial derivative of the sigmoid
 \subsection{The Backpropagation Recursion}
 
 We have seen that just using the chain rule we can easily compute gradients for
-compositions of two functions (one non linear and one linear). However, there
+compositions of two functions (one non-linear and one linear). However, there
 was nothing in the derivation that would stop us from composing more than two
 functions. Let's imagine a general case in which we compose $n=1 \cdots N$
 pairs of linear and non-linear functions.
@@ -309,7 +307,7 @@ pairs of linear and non-linear functions.
 p(y_k|\mathbf{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}),
 \end{equation}
 
-\noindent we will define each composition of a linear function as
+\noindent We will denote each composition of a linear function
 
 \begin{align}
 \mathbf{z}^n & = \mathbf{g}^n(\tilde{\mathbf{z}}^{n-1})\nonumber\\ &= \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{n-1} + \mathbf{b}^n 
@@ -321,7 +319,7 @@ p(y_k|\mathbf{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \math
 \tilde{\mathbf{z}}^n = \mathbf{f}^n(\mathbf{z}^n),
 \end{equation}
 
-expressed as $(\mathbf{f}^n \circ \mathbf{g}^n)$, a \textit{layer}. All the
+expressed as $(\mathbf{f}^n \circ \mathbf{g}^n)$, as a \textit{layer}. All the
 internal (hidden) layers are going to be sigmoid functions as in Eq:
 \ref{eq:sigmoid} and $\mathbf{f}^N$ will be a softmax, so that the final output
 can be interpreted as a distribution over $K$ classes. The parameters of our
@@ -350,7 +348,7 @@ on $W_{ji}^n$ this looks like
 
 where $\mathbf{z}^{nm}$ is just the output at the $n$-th layer for input
 $\mathbf{x}^{m}$. We have seen already the solution to the right-most factor of
-this equation in Eq: \ref{eq:partialLinear}. We now that, because $z^n_{j'}$
+this equation in Eq: \ref{eq:partialLinear}. Here, because $z^n_{j'}$
 only depends on $W_{ji}^n$ if $j'=j$, we have 
 
 \begin{align}
@@ -493,7 +491,7 @@ that you should keep in mind.
 \begin{itemize}
 \item Thanks to the multi-layer structure and the chain rule, Backpropagation allows models that compose linear and non-linear functions with any depth (in principle\footnotemark). 
 \item The formulas are also valid for other cost functions and output non-linearities. We only need to recompute Eq \ref{eq:finalError} for this mater.  
-\item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq: \ref{eq:partialfn3}. Other cases can also be dealt with with little effort.
+\item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq: \ref{eq:partialfn3}. With little effort it is also possible to deal with other cases.
 \item However, there is an important limitation: Unlike the log-linear models, the optimization problem is \textit{non convex}. This removes some formal guarantees, most importantly we can get trapped in local minima during training.
 \end{itemize}
 
@@ -525,32 +523,32 @@ that you should keep in mind.
 
 \subsection{An Introduction to Theano}
 
-As you may have observed, the speed of SGD training fo MLPs slows down
+As you may have observed, the speed of SGD training for MLPs slows down
 considerably when we increase the number of layers. One reason for this is that
-the code that we use here is not very optimized. It is thought four you to
-learn the basic principles. Even if the code was more optimized, it would be
-very slow for reasonable sizes of the network. The cost of computing each
-linear layer is proportional to the dimensions of the previous and current
-layer, which in most cases will be rather large. 
+the code that we use here is not very optimized. It is thought for you to
+learn the basic principles. Even if the code was more optimized, it would still be
+very slow for reasonable network sizes. The cost of computing each
+linear layer is proportional to the dimensionality of the previous and current
+layers, which in most cases will be rather large. 
 
 For this reason most deep learning applications use Graphics Processing Units
 (GPU) in their computations. This specialized hardware is normally used to
-accelerate computer graphics, but also can be used for general computation
-intensive tasks. The news is that we need to deal with specific interfaces and
-operations in order to use a GPU. Here is where Theano comes in. Theano is a
+accelerate computer graphics, but can also be used for general computation
+intensive tasks. However, we need to deal with specific interfaces and
+operations in order to use a GPU. This is where Theano comes in. Theano is a
 multidimensional symbolic expression python module with focus on neural
-networks. It will provide us with the following nice features
+networks. It will provide us with the following nice features:
 
 \begin{itemize}
 \item Symbolic expressions: Express the operations of the MLP (forward pass, cost) symbolically, as mathematical operations rather than explicit code 
 \item Symbolic Differentiation: As a consequence of the previous feature, we can compute gradients of arbitrary mathematical functions automatically.   
-\item GPU integration: The code will be ready to work on a GPU, provided that you have one and its active within Theano. It will also be faster on normal CPUs since the symbolic operations are compiled to C code. 
-\item Theano is focuses on Deep Learning, with tutorials and an active community   
+\item GPU integration: The code will be ready to work on a GPU, provided that you have one and it is active within Theano. It will also be faster on normal CPUs since the symbolic operations are compiled to C code. 
+\item Theano is focused on Deep Learning, with an active community and several tutorials easily available.  
 \end{itemize}
 
 The only negative aspect is that we will have to learn to deal with Theano and
 in particular working with symbolic representations. We will start right away
-with some exercises
+with some exercises.
 
 \begin{exercise}
 Get in contact with Theano. Learn the difference between a symbolic
@@ -585,7 +583,7 @@ will be using a more complicated format in later exercises, we will use it here
 as well. The \textit{shared} class allows to define variables that are shared
 across functions. They are also given a concrete value so that we do not need
 to give it for each function call. This format is therefore ideal for the
-weights of our network
+weights of our network.
 \begin{python}
 _W1 = theano.shared(value=W1, name='W1', borrow=True) 
 _b1 = theano.shared(value=w1, name='w1', borrow=True, broadcastable=(False, True)) 
@@ -594,7 +592,7 @@ Now lets describe the operations we want to do with the variables. Again only
 symbolically. This is done by replacing our usual operations by Theano symbolic
 ones when necessary e. g. the internal product dot() or the sigmoid. Some
 operations like e.g. $+$ are automatically recognized by Theano (operator
-overloading) 
+overloading). 
 \begin{python}
 _z1            = T.dot(_W1, _x) + _b1
 _tilde_z1      = T.nnet.sigmoid(_z1)
@@ -602,7 +600,7 @@ _tilde_z1      = T.nnet.sigmoid(_z1)
 _z1.name       = 'z1'
 _tilde_z1.name = 'tilde_z1'
 \end{python}
-In order to debug the code it is often useful to print the graph of computations
+When debugging the code it is often useful to print the graph of computations.
 \begin{python}
 # Perceptron computation graph
 theano.printing.debugprint(_tilde_z1)
@@ -616,8 +614,8 @@ sigmoid [@A] 'tilde_z1'
 
 \end{python}
 It is important to keep in mind that, until this point, we do not have a
-function we can use to produce any practical input. in order to obtain this we
-have to compile this function by calling.    
+function we can use to produce any practical input. In order to obtain this we
+have to compile this function by calling    
 \begin{python}
 layer1 = theano.function([_x], _tilde_z)
 \end{python}
@@ -641,7 +639,7 @@ forward pass of a generic MLP in Theano.
 Complete the method \_forward() inside of the lxmls/deep\_learning/mlp.py:class
 TheanoMLP. Note that this is called only once at the initialization of the
 class. To debug your implementation put a breakpoint at the \_\_init\_\_
-function and call. Hint: Note that this is very similar to NumpyMLP.forward().
+function call. Hint: Note that this is very similar to NumpyMLP.forward().
 You just need to keep track of the symbolic variable representing the output of
 the network after each layer is applied and compile the function at the end.
 After you are finished instantiate a Theano class and check that Numpy and
@@ -659,7 +657,7 @@ Bear in mind that you can use previous experience to debug this.
 \subsection{Symbolic Differentiation}
 In the previous section we compiled the forward pass of a MLP. In this section
 we will do the same with the cost used for training. We will also derive the
-gradients although this will be trivial once we have the cost compiled.     
+gradients although this will be trivial once we have the cost function compiled.     
 \begin{exercise}
 We first see an example that does not use any of the code in TheanoMLP but
 rather continues from what you wrote in exercise 6.3. In this exercise you
@@ -742,9 +740,9 @@ This will also push data into the GPU, if used.
 _train_x = theano.shared(train_x, 'train_x', borrow=True)
 _train_y = theano.shared(train_y, 'train_y', borrow=True)
 \end{python}
-Once this is done, we can create and compile functions using this variables.
+Once this is done, we can create and compile functions using these variables.
 One function that will be useful in the future will be one returning a batch
-of variables
+of instances
 \begin{python}
 _i             = T.lscalar()
 get_tr_batch_y = theano.function([_i], _train_y[_i*bsize:(_i+1)*bsize]) 
@@ -753,7 +751,7 @@ get_tr_batch_y = theano.function([_i], _train_y[_i*bsize:(_i+1)*bsize])
 
 \begin{exercise}
 The mini-batch function in the previous exercise is the key to fast batch
-update. This is combined with the updates argument of theano.function. Updates
+update. This is combined with the \emph{updates} argument of theano.function. The input to this argument,
 is a list of tuples with each parameter and update rule. This can be compactly
 defined using list comprehensions.
 \begin{python}
