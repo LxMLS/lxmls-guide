@@ -247,6 +247,7 @@ equals the number of features and the number of outputs the number of classes
 \begin{python}
 # Define MLP (log linear)
 import lxmls.deep_learning.mlp as dl
+import lxmls.deep_learning.sgd as sgd
 # Model parameters
 geometry = [train_x.shape[0], 2]
 actvfunc = ['softmax']
@@ -465,7 +466,7 @@ layers and layer sizes e.g.
 geometry = [train_x.shape[0], 20, 2]
 actvfunc = ['sigmoid', 'softmax'] 
 # Instantiate model
-mlp      = dl.MLP(geometry, actvfunc) 
+mlp      = dl.NumpyMLP(geometry, actvfunc) 
 \end{python}
 You can test the different models with the same sentiment analysis problem as
 in Exercise 6.1. 
@@ -556,9 +557,9 @@ representation and a function. Start by implementing the first layer of our
 previous MLP in Numpy 
 \begin{python}
 # Numpy code
-x        = test_set[0]        # Test set 
-W1, w1   = mlp.weigths[0]     # Weights and bias of fist layer 
-z1       = np.dot(W1, x) + w1 # Linear transformation
+x        = test_x             # Test set 
+W1, b1   = mlp.params[:2]     # Weights and bias of fist layer 
+z1       = np.dot(W1, x) + b1 # Linear transformation
 tilde_z1 = 1/(1+np.exp(-z1))  # Non-linear transformation  
 \end{python}
 Now we will implement this in Theano.  We start by creating the variables over
@@ -586,7 +587,7 @@ to give it for each function call. This format is therefore ideal for the
 weights of our network.
 \begin{python}
 _W1 = theano.shared(value=W1, name='W1', borrow=True) 
-_b1 = theano.shared(value=w1, name='w1', borrow=True, broadcastable=(False, True)) 
+_b1 = theano.shared(value=b1, name='b1', borrow=True, broadcastable=(False, True)) 
 \end{python}
 Now lets describe the operations we want to do with the variables. Again only
 symbolically. This is done by replacing our usual operations by Theano symbolic
@@ -617,7 +618,7 @@ It is important to keep in mind that, until this point, we do not have a
 function we can use to produce any practical input. In order to obtain this we
 have to compile this function by calling    
 \begin{python}
-layer1 = theano.function([_x], _tilde_z)
+layer1 = theano.function([_x], _tilde_z1)
 \end{python}
 Note the use of $[$ $]$ for the input variables, even if we just specify one
 variable. We can now do a test to compare the Numpy and Theano implementations
@@ -670,21 +671,21 @@ case before starting this exercise.
 For the sake of clarity, lets write here the part of Ex. 6.2 that we had completed
 \begin{python}
 # Get the values from our MLP from Ex 6.2
-W1, w1  = mlp.weigths[0]     # Weights and bias of fist layer 
+W1, b1   = mlp.params[:2]     # Weights and bias of fist layer 
 # First layer symbolic variables
 _x  = T.matrix('x')
 _W1 = theano.shared(value=W1, name='W1', borrow=True) 
-_w1 = theano.shared(value=w1, name='w1', borrow=True, broadcastable=(False, True)) 
+_b1 = theano.shared(value=b1, name='b1', borrow=True, broadcastable=(False, True)) 
 # First layer symbolic expressions
-_z1       = T.dot(_W1, _x) + _w1
+_z1       = T.dot(_W1, _x) + _b1
 _tilde_z1 = T.nnet.sigmoid(_z1)
 \end{python}
 Now we just need to complete this with the second layer, using a softmax non-linearity
 \begin{python}
-W2, w2  = mlp.weigths[1]     # Weights and bias of second (and last!) layer 
+W2, b2  = mlp.params[2:]     # Weights and bias of second (and last!) layer 
 # Second layer symbolic variables
 _W2 = theano.shared(value=W2, name='W2', borrow=True) 
-_b2 = theano.shared(value=w2, name='w2', borrow=True, broadcastable=(False, True)) 
+_b2 = theano.shared(value=b2, name='b2', borrow=True, broadcastable=(False, True)) 
 # Second layer symbolic expressions
 _z2       = T.dot(_W2, _tilde_z1) + _b2
 _tilde_z2 = T.nnet.softmax(_z2.T).T
@@ -755,7 +756,7 @@ update. This is combined with the \emph{updates} argument of theano.function. Th
 is a list of tuples with each parameter and update rule. This can be compactly
 defined using list comprehensions.
 \begin{python}
-mlp_c    = dl.TheanoMLP(geometry, actvfunc)
+mlp_c   = dl.TheanoMLP(geometry, actvfunc)
 _x      = T.matrix('x')
 _y      = T.ivector('y')
 _F      = mlp_c._cost(_x, _y)
@@ -782,14 +783,14 @@ Once we have defined this, we can compare speed and accuracy of the Numpy
 and simple gradient versions using
 
 \begin{python}
+import time
 # Model
-geometry = [I, 20, 2]
+geometry = [train_x.shape[0], 20, 2]
 actvfunc = ['sigmoid', 'softmax'] 
 
 # Numpy MLP
 mlp_a     = dl.NumpyMLP(geometry, actvfunc)
-#
-init_t = time.clock()
+init_t    = time.clock()
 sgd.SGD_train(mlp_a, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
 print "\nNumpy version took %2.2f sec" % (time.clock() - init_t)
 acc_train = sgd.class_acc(mlp_a.forward(train_x), train_y)[0]
@@ -809,8 +810,6 @@ print "Amazon Sentiment Accuracy train: %f test: %f\n" % (acc_train, acc_test)
 init_t = time.clock()
 sgd.SGD_train(mlp_c, n_iter, batch_up=batch_up, n_batch=n_batch)
 print "\nTheano compiled batch update version took %2.2f" % (time.clock() - init_t)
-init_t = time.clock()
-# Scores
 acc_train = sgd.class_acc(mlp_c.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp_c.forward(test_x), test_y)[0]
 print "Amazon Sentiment Accuracy train: %f test: %f\n"%(acc_train,acc_test)
