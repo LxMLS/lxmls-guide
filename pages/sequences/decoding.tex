@@ -322,16 +322,33 @@ The FB algorithm relies on the independence of previous states
 assumption, which  
 is illustrated in the trellis view by having arrows only between consecutive states. 
 The FB algorithm defines two auxiliary probabilities, the forward probability and the backward probability. 
+
+\subsection*{Efficient forward probability computation}
+The forward probability represents the probability that in position
+$i$ we are in state $Y_i = c_k$ and that we have observed $x_1,\ldots,x_i$
+up to that position. Therefore, its mathematical expression is:
 \begin{equation}
 \label{eq::forward}
 \mathbf{Forward \ Probability\!:}\;\;\;\;  \mathrm{forward}(i, c_k) = P(Y_i = c_k, X_1=x_1,\ldots, X_i = x_i)
 \end{equation}
-The forward probability represents the probability that in position
-$i$ we are in state $Y_i = c_k$ and that we have observed $x_1,\ldots,x_i$
-up to that position. The forward probability is defined by the
+
+Using the independence assumptions of the HMM we can compute $\mathrm{forward}(i, c_k)$ using all the forward computations \{$\mathrm{forward}(i -1, c)$ for $c \in \statevocab$\}. In order to facilitate the notation of the following argument we will denote by $x_{i:j}$  the assignemnt $X_i = x_i, \dots, X_j = x_j$. Therefore we can write   $\mathrm{forward}(i, y_i) $ as $P( y_i, x_{1:i } ) $ and rewrite the forward expression as follows:
+\begin{equation}
+\label{eq::forward2}
+  P( y_i, x_{1:i } ) =  \sum_{y_{i-1} \in \statevocab} P( y_i ,y_{i-1}, x_{1:i } )  =  \sum_{y_{i-1} \in \statevocab} P( x_i  | y_i,  y_{i-1},  x_{1:i-1 } ) \cdot P(y_i  | y_{i-1},  x_{1:i-1 }) \cdot P(y_{i-1},  x_{1:i-1 })  
+\end{equation}
+
+Using the \textbf{Observation independence} and the \textbf{Independence of previous states} properties of the first order HMM we have $P( x_i  | y_i,  y_{i-1},  x_{1:i-1 } ) = P( x_i  | y_i) $ and $P(y_i  | y_{i-1},  x_{1:i-1 })  = P(y_i  | y_{i-1})  $. Therefore equation (\ref{eq::forward2}) can be written, 
+for $i \in \{2,\dots,N\}$ (where $N$ is the length of the sequence), as 
+\begin{equation}
+\label{eq::forward3}
+ \mathrm{forward}(i, y_i)  = \sum_{y_{i-1} \in \statevocab} P( x_i  | y_i, ) \cdot P(y_i  | y_{i-1}) \cdot \mathrm{forward}(i-1, y_{i-1})   
+\end{equation}
+
+ Using equation (\ref{eq::forward3}) we have proved that  the forward probability can be defined by the
 following recurrence rule: 
 \begin{eqnarray}
-\mathrm{forward}(1, c_k) &=& P_{\mathrm{init}}(c_k|\text{\tt start}) \times 
+\mathrm{forward}(1, c_k)&=& P_{\mathrm{init}}(c_k|\text{\tt start}) \times 
 P_{\mathrm{emiss}}(x_1 | c_k)
  \\
  \mathrm{forward}(i, c_k) &=& \left( \displaystyle \sum_{c_l \in \statevocab} P_{\mathrm{trans}}(c_k | c_l) \times \mathrm{forward}(i-1, c_l) \right) \times P_{\mathrm{emiss}}(x_i | c_k)  \label{forwardRecursion}
@@ -378,16 +395,33 @@ Using the forward trellis one can compute the likelihood simply as:
 P(X=x) = \mathrm{forward}(N+1, \text{\tt stop}).
 \end{equation}
 
-Although the forward probability is enough to calculate the likelihood
-of a given sequence, we will also need the backward probability to
-calculate the state posteriors. 
+Although the forward probability is enough to calculate the likelihood of a given sequence, we will also need the backward probability to calculate the state posteriors. 
+
+% We could include a graph and comment the d-separation property which implies the conditional independence assumptions of the HMM graphically.
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=0.5\textwidth]{figs/sequences/hmm_diagram}
+%\caption[HMM diagram]{\label{fig:hmm_diagram}Diagram showing the conditional independence relations of the HMM. If $Y_i$ is observed then...}
+%\end{figure}
+
+\subsection*{Efficient backward probability computation}
+
 The backward probability is similar to the forward probability, but operates in the inverse direction.
-It 
-represents the probability of observing $x_{i+1},\ldots,x_N$ from position $i+1$ up to $N$, given that at position $i$ we are at state $Y_i = c_l$:
+It represents the probability of observing $x_{i+1},\ldots,x_N$ from position $i+1$ up to $N$, given that at position $i$ we are at state $Y_i = c_l$:
  \begin{equation}
 \label{eq::backward}
 \mathbf{Backward \ Probability\!:}\;\;\;\;  \mathrm{backward}(i, c_l) = P(X_{i+1}=x_{i+1},\ldots, X_N=x_N | Y_i = c_l).
 \end{equation}
+
+Using the independence assumptions of the HMM we can compute $\mathrm{backward}(i, c_k)$ using all the backward computations \{$\mathrm{backward}(i +1, c)$ for $c \in \statevocab$\}. Therefore we can write   $\mathrm{backward}(i, y_i) $ as $P( x_{i+1:N} | y_i ) $ and rewrite the forward expression as follows:
+\begin{equation}
+\label{eq::backward2}
+  P( x_{i+1:N} | y_i ) =  \sum_{y_{i+1} \in \statevocab} P( x_{i+1:N}, y_{i+1} | y_i)  =  \sum_{y_{i+1} \in \statevocab} P( x_{i+2:N} | y_i, y_{i+1}, x_{i+1}) 
+   P( x_{i+1}, |  y_{i+1},  y_{i}) P( y_{i+1} | y_i)
+\end{equation}
+
+Using the previous equation we have proved that the backward probability can be defined by the following recurrence rule:
+
 The backward recurrence is given by:
 \begin{eqnarray}
 \mathrm{backward}(N, c_l) &=& P_{\mathrm{final}}(\text{\tt stop} | c_l) 
@@ -405,8 +439,10 @@ Using the backward trellis one can compute the likelihood simply as:.
 \label{eq:backwardSum}
 P(X=x) = \mathrm{backward}(0, \text{\tt start}).
 \end{equation}
-Moreover, with the forward and backward 
-probabilities, we can compute the likelihood of a given sequence using any position $i$ in the sequence
+
+\subsection*{The forward backward algorithm}
+
+We have seen how we can compute the probability of a sequence $x$ using the the forward and backward probabilities by computing  $\mathrm{forward}(N+1, \text{\tt stop})$ and $ \mathrm{backward}(0, \text{\tt start})$ respectively. Moreover,  the probability of a sequence $x$ can be computed with both forward and backward probabilities at a particular position $i$. The probability of a  given sequence $x$ at any position $i$ in the sequence can be computed
 as follows:
 \begin{eqnarray}
 \label{eq::fbsanity}
