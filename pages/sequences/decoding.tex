@@ -422,7 +422,6 @@ Using the independence assumptions of the HMM we can compute $\mathrm{backward}(
 
 Using the previous equation we have proved that the backward probability can be defined by the following recurrence rule:
 
-The backward recurrence is given by:
 \begin{eqnarray}
 \mathrm{backward}(N, c_l) &=& P_{\mathrm{final}}(\text{\tt stop} | c_l) 
  \\
@@ -443,23 +442,26 @@ P(X=x) = \mathrm{backward}(0, \text{\tt start}).
 \subsection*{The forward backward algorithm}
 
 We have seen how we can compute the probability of a sequence $x$ using the the forward and backward probabilities by computing  $\mathrm{forward}(N+1, \text{\tt stop})$ and $ \mathrm{backward}(0, \text{\tt start})$ respectively. Moreover,  the probability of a sequence $x$ can be computed with both forward and backward probabilities at a particular position $i$. The probability of a  given sequence $x$ at any position $i$ in the sequence can be computed
-as follows:
+as follows \footnote{ The second equality in \ref{eq::fbsanity} can be justified as follows. Since $Y_i=y_i$ is observed then  $X_{i+1}, \dots, X_{N}$ is conditionally independent from any $X_k$ for $k \leq i$ . Therefore  $P(x_1,\dots, x_N, y_i) =  P( x_{i+1},\dots, x_N Ê| yi , x_1, \dots,x_i ) \cdot P( yi , x_1, \dots,x_i ) =  P( x_{i+1},\dots, x_N Ê| yi  ) \cdot P( yi , x_1, \dots,x_i ) = backward(i,y_i) \cdot forward(i,y_i)$.}:
+
+
 \begin{eqnarray}
 \label{eq::fbsanity}
   P(X=x) &=& 
   \sum_{c_k \in \statevocab} P(X_1=x_1,\ldots, X_N=x_N,Y_i=c_k)\nonumber\\
-  &=&
+  & =&
   \sum_{c_k \in \statevocab} 
   \underbrace{P(X_1=x_1,\ldots, X_i=x_i, Y_i=c_k)}_{\mathrm{forward}(i,c_k)} \times 
   \underbrace{P(X_{i+1}=x_{i+1},\ldots, X_N=x_N| Y_i=c_k)}_{\mathrm{backward}(i,c_k)}\nonumber\\
   &=& \sum_{c_k \in \statevocab} \mathrm{forward}(i,c_k) \times \mathrm{backward}(i,c_k).
 \end{eqnarray}
 
+
 This equation will work for any choice of $i$. Although redundant, this fact is useful when implementing an
 HMM as a sanity check that the computations are being performed
 correctly, since one can compute this expression for several $i$; they should all yield the same value. 
 
-Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm. The reader can notice that the $forward$ and $backward$ computations in the algorithm make use of $P_{emiss}$ and $P_{trans}$ but there are a couple of details that should be taken into account:
+Algorithm \ref{alg:fb} shows the pseudo code for the forward backward algorithm. The reader can notice that the $forward$ and $backward$ computations in the algorithm make use of $P_{emiss}$ and $P_{trans}$. There are a couple of details that should be taken into account if the reader wants to understand the algorithm using scores instead of probabilities.
 
 % maybe more details on how to implement the algorithm using "scores" instead of probabilities should be given. 
 \begin{itemize}
@@ -629,7 +631,7 @@ then pick the arg-max at each position:
 %\end{algorithm}
 
 
-
+\newpage
 \begin{exercise}
 %Given the node and edge posterior formulas \ref{eq::nodePosterior},\ref{eq::edgePosterior} and the
 %  forward and backward formulas \ref{eq::forward},\ref{eq::backward}, convince yourself that formulas

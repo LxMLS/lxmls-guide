@@ -69,7 +69,7 @@ def grad_desc(start_x, eps, prec):
     '''
     runs the gradient descent algorithm and returns the list of estimates
 
-    example of use grad_desc(X, 0.01, 0.00001)
+    example of use grad_desc(start_x=3.9, eps=0.01, prec=0.00001)
     '''
     x_new = start_x
     x_old = start_x + prec * 2
