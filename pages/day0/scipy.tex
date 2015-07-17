@@ -82,30 +82,30 @@ def grad_desc(start_x, eps, prec):
 \end{python}
 \end{exercise}
 
-Over the next couple of exercises we will make use of the Galton dataset, a
-dataset of heights of fathers and sons from the 1877 paper that first discussed
-the ``regression to the mean'' phenomenon.
+%Over the next couple of exercises we will make use of the Galton dataset, a
+%dataset of heights of fathers and sons from the 1877 paper that first discussed
+%the ``regression to the mean'' phenomenon.
+%
+%\begin{exercise}
+%\begin{itemize}
+%\item Use the \texttt{load()} function in the \texttt{galton.py} file to load
+%the dataset.
+%\item What are the mean height and standard deviation of all the people in the
+%sample? What is the mean height of the fathers and of the sons?
+%\item Plot a histogram of all the heights (you might want to use the
+%\texttt{plt.hist} function and the \texttt{ravel} method on arrays).
+%\item Plot the height of the father versus the height of the son.
+%\item You should notice that there are several points that are exactly the same
+%(e.g., there are 21 pairs with the values 68.5 and 70.2). Use the \texttt{?}
+%command in ipython to read the documentation for the \texttt{numpy.random.rand}
+%function and add random jitter (i.e., move the point a little bit) to the
+%points before displaying them. Does your impression of the data change?
+%\end{itemize}
+%\end{exercise}
 
 \begin{exercise}
-\begin{itemize}
-\item Use the \texttt{load()} function in the \texttt{galton.py} file to load
-the dataset.
-\item What are the mean height and standard deviation of all the people in the
-sample? What is the mean height of the fathers and of the sons?
-\item Plot a histogram of all the heights (you might want to use the
-\texttt{plt.hist} function and the \texttt{ravel} method on arrays).
-\item Plot the height of the father versus the height of the son.
-\item You should notice that there are several points that are exactly the same
-(e.g., there are 21 pairs with the values 68.5 and 70.2). Use the \texttt{?}
-command in ipython to read the documentation for the \texttt{numpy.random.rand}
-function and add random jitter (i.e., move the point a little bit) to the
-points before displaying them. Does your impression of the data change?
-\end{itemize}
-\end{exercise}
-
-\begin{exercise}
-Consider the linear regression problem (ordinary least squares), with a
-single response variable
+Consider the linear regression problem (ordinary least squares) on the Galton
+dataset, with a single response variable
 
 \[
 y = x^T w + \varepsilon
