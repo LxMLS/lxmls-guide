@@ -262,6 +262,7 @@ and the computation of the gradients (to be completed in the next exercise).
 hat_train_y = mlp.forward(train_x) 
 hat_test_y  = mlp.forward(test_x) 
 # Compute accuracy
+import lxmls.deep_learning.sgd as sgd
 acc_train = sgd.class_acc(hat_train_y, train_y)[0]
 acc_test  = sgd.class_acc(hat_test_y, test_y)[0]
 print "Untrained Log-linear Accuracy train: %f test: %f"%(acc_train,acc_test)
