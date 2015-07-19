@@ -262,6 +262,7 @@ and the computation of the gradients (to be completed in the next exercise).
 hat_train_y = mlp.forward(train_x) 
 hat_test_y  = mlp.forward(test_x) 
 # Compute accuracy
+import lxmls.deep_learning.sgd as sgd
 acc_train = sgd.class_acc(hat_train_y, train_y)[0]
 acc_test  = sgd.class_acc(hat_test_y, test_y)[0]
 print "Untrained Log-linear Accuracy train: %f test: %f"%(acc_train,acc_test)
@@ -815,7 +816,7 @@ acc_test  = sgd.class_acc(mlp_c.forward(test_x), test_y)[0]
 print "Amazon Sentiment Accuracy train: %f test: %f\n"%(acc_train,acc_test)
 \end{python}
 As you may observe, just computing the gradients with Theano may not lead to
-a decrease, but rather an increase in computing speed. To maximally exploit
+a decrease, but rather an increase in computing time. To maximally exploit
 the power of Theano, it is necessary to bundle both computations and data 
 together using approaches like the compiled batch update.
 \end{exercise}
