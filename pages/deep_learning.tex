@@ -743,8 +743,8 @@ _train_x = theano.shared(train_x, 'train_x', borrow=True)
 _train_y = theano.shared(train_y, 'train_y', borrow=True)
 \end{python}
 Once this is done, we can create and compile functions using these variables.
-One function that will be useful in the future will be one returning a batch
-of instances
+One simple but useful function is a function returning a mini-batch of data 
+of size bsize given the mini-batch index 
 \begin{python}
 _i             = T.lscalar()
 get_tr_batch_y = theano.function([_i], _train_y[_i*bsize:(_i+1)*bsize]) 
