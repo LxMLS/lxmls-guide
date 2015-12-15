@@ -1,26 +1,24 @@
 \section{Today's assignment}
-Today's class will be divided in three main parts. First, we will learn the main 
+Today's class will be divided in two main parts. First, we will learn the main 
 algorithmic principle behind deep learning and code the Backpropagation algorithm 
-in Numpy.  Second, we will learn the basics of the Theano module for Python, 
+in Numpy. Second, we will learn the basics of the Theano module for Python, 
 which allows to easily implement deep learning techniques that run on a 
-Graphical Processing Unit (GPU) for optimal speed. Third, we will see some more 
-complex deep learning concepts and NLP specific issues.
+Graphical Processing Unit (GPU) for optimal speed. 
 
 If you are new to the topic you should aim to finish the deep learning 
 principles part (Ex. 6.1 and 6.2) and at least Ex 6.3 and 6.4 of the Theano 
-part. If you have some spare time have a look at the more complex deep learning 
-issues. If you already know Backpropagation well and have experience with normal 
-Python, you should aim to complete Theano and some or all the exercises of the 
-third part. 
+part. If you already know Backpropagation well and have experience with normal 
+Python, you should aim to complete the whole day. 
 
-\section{Introduction To Deep Learning and Theano}
+\section{Introduction to Deep Learning and Theano}
 
 Deep learning is the name behind the latest wave of successful neural network 
 research, a very old topic dating from the first half of the 20th century. Deep 
 learning techniques have attained formidable impact in the machine learning 
-community, in particular in the fields of image, speech processing and NLP. 
+community. 
 Some of the changes that led to this renewed success are, not only
-improvements and insight on the existing neural network algorithms, but also the increase in the amount of data available and computing power. In
+improvements and insight on the existing neural network algorithms, but also
+the increase in the amount of data available and computing power. In
 particular, the use of Graphical Processing Units (GPUs) has allowed neural
 networks to be applied to very large datasets. Working with GPUs is not trivial
 as it requires dealing with specialized hardware. Luckily, as it is often the
@@ -43,112 +41,161 @@ learn the parameters of these models. See Section \ref{unsupervised} for a
 refresh on the basic concept. We will also refer to the gradient
 learning methods introduced in Section \ref{s:me}. 
 
-\section{A Look Back at Log-linear Models from Day 1} 
+\section{Non-Linear functions as computation graphs} 
 
-\subsection{Log-linear models as composition of linear and non-linear functions}
+\subsection{Example: The computation graph of a log-linear model}
 
-The most basic architecture used in deep learning is the Multi-Layer Perceptron
-(MLP) architecture. This is a non-linear model built by alternatively composing
-linear and non-linear transformations. The log-linear models we saw on Day 1
-can be interpreted as a special case of MLPs with just one layer and a soft-max
-non-linearity. For this reason, we will use them as an initial example to
-introduce the concept, and progress from there on. Recall the maximum entropy
-classifier in Section \ref{s:me}. This was a log-linear model that, given an
-input vector of features $\boldsymbol{f}(x,y)$, would predict the probability
-of that vector belonging to each of $K$ possible classes $y_k$. For the purpose
-of introducing deep learning, we will use a more general form given by 
+%The most basic architecture used in deep learning is the feed forward network,
+%also known as Multi-Layer Perceptron (MLP). This is a non-linear model built by
+%alternatively composing linear and non-linear transformations. The log-linear
+%models we saw on Day 1 can be interpreted as a special case of MLPs with just
+%one layer and a soft-max non-linearity. For this reason, we will use them as an
+%initial example to introduce the concept, and progress from there on.
+
+Recall the maximum entropy classifier in Section \ref{s:me}. This was a log-linear
+model that, given an input vector of features $\boldsymbol{f}(x,y)$, would
+predict the probability of that vector belonging to each of $K$ possible
+classes $y_k$. For the purpose of introducing deep learning, we will use a more
+general form given by 
 %
 \begin{align}
-p(y_k|\mathbf{x}) & = \frac{\exp(\mathbf{W}_k \cdot \mathbf{x} + b_k)}{Z(\mathbf{W},\mathbf{b},\mathbf{x})}\nonumber\\ & = \frac{\exp(\mathbf{W}_k \cdot \mathbf{x} + b_k)}{\sum_{k'=1}^K \exp(\mathbf{W}_{k'} \cdot \mathbf{x} + b_{k'})}. 
+p(y_k|\mathbf{x}) & = \frac{1}{Z}\exp(\mathbf{W}_k \cdot \mathbf{x} + b_k)
 \label{eq:loglineargen}
 \end{align}
 %
-There are some differences with respect to  Eq:\ref{eq:loglinear}. We have not
-only weights $\mathbf{W} \in \mathbb{R}^{K \times I}$ but also a bias
-$\mathbf{b} \in \mathbb{R}^{K \times 1}$. Also $\mathbf{x} \in \mathbb{R}^{I
-\times 1}$ is a generic input vector of real valued features of dimension $I$.
-The binary features $\boldsymbol{f}(x,y)$ used in the maximum entropy
-classifier example can be considered a special case of $\mathbf{x}$.    
+where the partition function $Z$ is given by
+%
+\begin{align}
+Z(\mathbf{W},\mathbf{b},\mathbf{x}) = \sum_{k'=0}^{K-1} \exp(\mathbf{W}_{k'} \cdot \mathbf{x} + b_{k'}). 
+\label{eq:loglineargenPartition}
+\end{align}
+%
+There are small differences with respect to  Eq:\ref{eq:loglinear}. The model
+parameters $\Theta=\{\mathbf{W}, \mathbf{b}\}$ include not only weights
+$\mathbf{W} \in \mathbb{R}^{K \times I}$ but also a bias $\mathbf{b} \in
+\mathbb{R}^{K \times 1}$. Also $\mathbf{x} \in \mathbb{R}^{I \times 1}$ is a
+generic input vector of real valued features of dimension $I$.  The binary
+features $\boldsymbol{f}(x,y)$ used in the maximum entropy classifier example
+can be considered a special case of $\mathbf{x}$.    
 
-\noindent Now, lets rewrite this log-linear model as a composition of a linear
-transformation 
+\noindent One useful way of seeing \ref{eq:loglineargen} is as a composition of
+linear and non-linear transformations as the one displayed in \ref{fig:LayerP} 
 
 \begin{equation}
-\mathbf{z} = \mathbf{g}(\mathbf{x}) = \mathbf{W} \cdot \mathbf{x} + \mathbf{b}
+p(y_k|\mathbf{x}) \equiv \tilde{z}_k = (f_k \circ \mathbf{g})(\mathbf{x}),
+\end{equation}
+
+\noindent where $\circ$ indicates function composition. To obtain $\tilde{z}_k$ the
+linear transformation 
+
+\begin{equation}
+\mathbf{z} = \mathbf{g}(\mathbf{x}) = \mathbf{W} \cdot \mathbf{x} + \mathbf{b}.
 \label{eq:linear}
 \end{equation}
 
-\noindent where $\mathbf{z} \in \mathbb{R}^{K \times 1}$ and the \textit{softmax} non-linear transformation
+\noindent yields an intermediate vector variable $\mathbf{z} \in \mathbb{R}^{K \times
+1}$, which is then transformed through the \textit{softmax} non-linear
+transformation 
 
 \begin{equation}
-\tilde{z}_k = f_k(\mathbf{z}) = \frac{\exp(z_k)}{\sum_{k'=1}^K \exp(z_{k'})}.
+\tilde{z}_k = f_k(\mathbf{z}) = \frac{\exp(z_k)}{\sum_{k'=0}^{K-1} \exp(z_{k'})}.
 \label{eq:softmax}
 \end{equation}
 
-\noindent It it easy to see that this leads to the same model as
-Eq:\ref{eq:loglineargen}, since
-
-\begin{equation}
-p(y_k|\mathbf{x}) = \tilde{z}_k = (f_k \circ \mathbf{g})(\mathbf{x}). 
-\end{equation}
+Bear in mind that in the next sections we will use $\mathbf{z}$ and
+$\tilde{\mathbf{z}}$ to denote the output of linear and non-linear
+transformations respectively.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.4]{figs/deep_learning/LayerP.pdf}
-\caption{Representation of a log-linear model as a composition of a linear and
-a non-linear transformation.}
+\caption{Representation of a log-linear model as a computation graph: a
+composition of linear and non-linear transformations.}
 \label{fig:LayerP}
 \end{figure}
 
-\subsection{Deriving SGD for compositions of functions: The Chain Rule}
+\subsection{Stochastic Gradient Descent: a refresher}
 
-As we saw on day one, such models can be trained by Stochastic Gradient Descent
-(SGD). All we need is to compute the gradient of the cost $\nabla\mathcal{F}$
-with respect to the parameters of the model and update our estimates as
-e.g.
+As we saw on day one, to determine the parameters of a log linear model
+$\Theta=\{\mathbf{W}, \mathbf{b}\}$ Stochastic Gradient Descent (SGD) can be
+used. To apply SGD we first need to define an error function that measures how
+good we are doing for given parameter values. To remain close to the maximum
+entropy example, we will use as cost the average minus posterior probability of
+the correct class, also known as the Cross-Entropy (CE) criterion. Bear in
+mind, however, that we could pick other non-linear functions and cost functions
+that do not have
+a probabilistic interpretation. For example, the same principle could be applied to
+a regression problem where the cost $\mathcal{F}$ is the Mean Square Error (MSE).
+
+For a training data-set $\mathcal{D}$ of $M$ examples, the CE cost function is given by
+
+\begin{align}
+\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=0}^{M-1} \log p(y^m_{k(m)} | \mathbf{x}^m).
+\label{eq:CostLogPos}
+\end{align}
+% \nonumber\\&= -\frac{1}{M}\sum_{m=0}^{M-1} (\log \circ f_{k(m)} \circ \mathbf{g})(\mathbf{x}^m^)
+
+\indent Here we use $k(m)$ to denote the index of the correct class for the $m$-th
+example. To learn the parameters of this model, all we need is to compute the gradient
+of the cost $\nabla\mathcal{F}$ with respect to the parameters of the model and
+iteratively update our estimates as 
 
 \begin{equation}
 \mathbf{W} \leftarrow \mathbf{W} - \eta \nabla\mathcal{F}_\mathbf{W}. 
 \end{equation}
 
-where $\eta$ is the learning rate. To remain close to the maximum entropy
-example, we will use the average minus posterior probability of the correct
-class given the input as cost
+\noindent where $\eta$ is the learning rate, and
 
+\begin{equation}
+\mathbf{b} \leftarrow \mathbf{b} - \eta \nabla\mathcal{F}_\mathbf{b}. 
+\end{equation}
+
+
+\subsection{Deriving Gradients in Computation Graphs: The Chain Rule}
+
+Computing $\nabla\mathcal{F}$ is trivial in the case of log-linear models. For
+the sake of the introduction to deep learning, we will however show how it can
+be done exploiting the decomposition of the cost function into a computational
+graph seen in the last section.  
+
+The fundamental mathematical principle behind this approach is the chain rule.
+This states the following relation between the derivatives of two functions
+$\mathbf{f}$, $\mathbf{g}$ and the derivative of their composition $\mathbf{f}
+\circ \mathbf{g}$
+%
 \begin{align}
-\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^M \log P(y^m | \mathbf{x}^m) \nonumber\\&= -\frac{1}{M}\sum_{m=1}^M (\log \circ f_{k(m)} \circ \mathbf{g})(\mathbf{x}^m)
-\label{eq:CostLogPos}
+\frac{\partial (f_{k} \circ \mathbf{g})(\mathbf{x}) }{\partial w} = \sum_{k'=0}^{K-1}\frac{\partial f_{k}(\mathbf{z})}{\partial z_{k'}}\frac{\partial z_{k'}}{\partial w}.
+\label{eq:chainRule}
 \end{align}
-	
-where $\mathcal{D}$ is the training data-set, $\Theta=\{\mathbf{W},
-\mathbf{b}\}$ are the model parameters and $k(m)$ is the index of the correct
-class in vector $y^m$. 
-Bear in mind, however, that we could pick other cost functions, we will see
-this once the topic is fully introduced.
-
-For the sake of the introduction to the topic, the cost function is here
-expressed as a composition of a linear and a non-linear function (see
-right-most equality of Eq \ref{eq:CostLogPos}). This will help us introduce the
-fundamental element to MLPs and deep learning. Since the cost function is a
-composition of two functions  $\mathbf{f}(\mathbf{z})$ and
-$\mathbf{g}(\mathbf{x})$, in order to compute any derivative we can apply the
-\textit{chain rule}. For example, if we want to compute
-$\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ we would need each partial
-derivative of $\log P(y^m | \mathbf{x}^m)$ with respect to weight $W_{kj}$.
-Thanks to the chain rule, we can express this as
-
-\begin{align}
-\frac{\partial \log P(y^m | \mathbf{x}^m) }{\partial W_{kj}} & = \frac{\partial (\log \circ f_{k(m)} \circ \mathbf{g})(\mathbf{x}^m) }{\partial W_{kj}} \nonumber\\& = \sum_{k'=1}^K\frac{\partial \log \circ f_{k(m)}(\mathbf{z}^m)}{\partial z_{k'}}\frac{\partial z_{k'}}{\partial W_{ki}}.
+%
+\noindent where 
+%
+\begin{equation}
+z_{k'} = g_{k'}(\mathbf{x})
+\end{equation}
+%
+In other words, to compute the derivative of a complex function we only need
+to decompose it one or more times and compute the derivatives of its individual
+components. If we look at the gradient
+$\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ for a particular weight
+$W_{ki}$, this is given by
+%
+\begin{equation}
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)_{ki} =-\frac{1}{M}\sum_{m=0}^{M-1} \frac{\partial \log p(y^m_{k(m)} | \mathbf{x}^m) }{\partial W_{ki}}.
 \label{eq:gradlogPycx}
+\end{equation}
+%
+In order to compute the gradient we only need to compute each partial
+derivative of the cost function, but each of these partial derivatives can be
+decomposed using the chain rule in Eq.~\ref{eq:chainRule} as
+%
+\begin{align}
+\frac{\partial \log p(y^m_{k(m)} | \mathbf{x}^m) }{\partial W_{ki}} & = \frac{\partial (\log \circ f_{k(m)} \circ \mathbf{g})(\mathbf{x}^m) }{\partial W_{ki}}\nonumber\\ & = \sum_{k'=0}^{K-1}\frac{\partial \log \circ f_{k(m)}(\mathbf{z}^m)}{\partial z_{k'}}\frac{\partial z_{k'}}{\partial W_{ki}}.
 \end{align}
-
-In other words, we have divided the problem of computing the derivative of a
-composition of functions into computing the individual derivatives and then
-applying the chain rule. This is a great simplification, as individual
-derivatives are immediate and appear repeatedly. To illustrate this, lets see
-the derivatives involved in this calculation: Deriving the softmax in Eq:
-\ref{eq:softmax} with respect to its input gives us 
-
+%
+now we only need to solve two simpler derivatives. We could actually further
+decompose this using the chain rule again but these are easily shown to be
+%
 \begin{align}
 \frac{\partial \log \circ f_{k(m)}(\mathbf{z}^m)}{\partial z_{k}} = 
   \begin{cases}
@@ -157,9 +204,8 @@ the derivatives involved in this calculation: Deriving the softmax in Eq:
   \end{cases}. 
   \label{eq:patialSoftmax}
 \end{align}
-
-\noindent Deriving the linear layer in Eq:\ref{eq:linear} gives us
-
+%
+\noindent and
 \begin{align}
 \frac{\partial z_{k'}}{\partial W_{ki}} = 
   &\begin{cases}
@@ -169,44 +215,17 @@ the derivatives involved in this calculation: Deriving the softmax in Eq:
   \label{eq:partialLinear}
 \end{align}
 
-We can now plug these two equations into Eq: \ref{eq:gradlogPycx} to obtain the
-derivative for $W_{kj}$. Note that the summation over $k'$ disappears due to
-Eq:\ref{eq:partialLinear}. We will see this happening further on as each linear
-output $z_i$ only depends of weights $\mathbf{W}_i$. The derivative of the
-log-posterior for one weight yields 
-
-\begin{align}
-\frac{\partial \log P(y^m | \mathbf{x}^m) }{\partial W_{kj}} = 
-  &\begin{cases}
-     (1 - \tilde{z}_k^m) x_i^m  &  \mbox{ if } k = k(m)\\ 
-       -\tilde{z}_k^m x_i^m             &  \mbox{ otherwise } 
-  \end{cases}. 
-  \label{eq:partialLogP} 
-\end{align}
-
-By solving Eq.~\ref{eq:partialLogP} for all $k$ and $j$ and using
-Eq.~\ref{eq:CostLogPos} we obtain gradient matrix
-$\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) \in \mathbb{R}^{K \times I}$.
-That is the matrix of partial derivatives for all weights can be expressed as a
-sum of outer products over the number of training examples $M$  
+If we plug these two equations into Eq: \ref{eq:gradlogPycx} to obtain each 
+derivative for $W_{ki}$ we get the following closed form for the gradient
 
 \begin{equation}
-\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^M \Big(\mathbf{y}^m - \hat{\mathbf{y}}^m \Big) \cdot \left(\mathbf{x}^m\right)^T  
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=0}^{M-1} \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}^m \Big) \cdot \left(\mathbf{x}^m\right)^T  
 \label{gradWeigths}
 \end{equation}
 
-\noindent where $\mathbf{y}^m$ is the true one-hot representation of the class
-corresponding to $\mathbf{x}^m$ and 
-
-\begin{equation}
-\hat{\mathbf{y}}^m \equiv \tilde{\mathbf{z}}^m =  (\mathbf{f} \circ \mathbf{g})(\mathbf{x}^m)
-\label{eq:forwardPass}
-\end{equation}
-
-\noindent is our predicted class given our current model parameters and
-$\mathbf{x}^m$, also known as the \textit{forward pass} when using MLP. In
-order to compute the gradient for the bias $b_{k}$  we only need one additional
-derivative.
+\noindent where $\mathrm{\mathbf{1}}_{k(m)}$ is a vector of zeros with a one in
+the position of the correct class for each example $k(m)$. In order to compute
+the gradient for the bias $b_{k}$  we only need one additional derivative.
 
 \begin{align}
 \frac{\partial z_{k'}}{\partial b_{k}} = 
@@ -220,9 +239,28 @@ derivative.
 \noindent leading to the gradient
 
 \begin{equation}
-\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^M \Big(\mathbf{y}^m - \hat{\mathbf{y}}^m \Big)   
+\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=0}^{M-1} \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}^m \Big)   
 \label{eq:gradBias}
 \end{equation}
+
+\subsection{Changing the non-linearity}
+
+Before we get into deeper models it also useful to revise the case in which our
+non-linear function $\mathbf{f}$ is one or more logistic functions
+
+\begin{equation}
+\tilde{z}_k = f_k(z_k) = \frac{1}{1+\exp(-z_k)} 
+\label{eq:sigmoid}
+\end{equation}
+
+which has the following derivative
+
+\begin{equation}
+\frac{\partial \tilde{z}_k}{\partial z_k} = \tilde{z}_{k} (1-\tilde{z}_{k}).
+\label{eq:partsigmoid}
+\end{equation}
+
+\noindent This will be helpful in the future.
 
 \begin{exercise}
 Get in contact with the multi-layer perceptron (MLP) class in Numpy and see
@@ -255,8 +293,8 @@ actvfunc = ['softmax']
 mlp      = dl.NumpyMLP(geometry, actvfunc)
 \end{python}
 Put a breakpoint inside of the lxmls/deep\_learning/mlp.py function and debug
-step by step. Identify the \textit{forward pass} in Eq: \ref{eq:forwardPass}
-and the computation of the gradients (to be completed in the next exercise). 
+step by step. Identify the introduced formulas and the computation of the
+gradients (these are to be completed in the next exercise). 
 \begin{python}
 # Play with the untrained MLP forward
 hat_train_y = mlp.forward(train_x) 
@@ -268,32 +306,6 @@ acc_test  = sgd.class_acc(hat_test_y, test_y)[0]
 print "Untrained Log-linear Accuracy train: %f test: %f"%(acc_train,acc_test)
 \end{python}
 \end{exercise}
-
-\subsection{Changing the non-linearity}
-
-Before we get into deeper models it also useful to revise the case in which our
-non-linear function $\mathbf{f}$ is one or more logistic functions
-
-\begin{equation}
-\tilde{z}_k = f(z_k)_k = \frac{1}{1+\exp(-z_k)} 
-\label{eq:sigmoid}
-\end{equation}
-
-One single logistic function corresponds to a particular case of the softmax
-case we saw previously. That is, the softmax models a categorical distribution
-over $K$ possible classes, whereas the logistic models a Bernoulli distribution
-over two classes. We can however use $K$ logistic function outputs providing us
-a distribution of $K$ Bernoulli variables, that is, a distribution over
-strings of bits. We can easily derive the gradients using a similar cost
-function as the last time, but for now we will limit ourselves to keeping in
-mind the partial derivative of the sigmoid 
-
-\begin{equation}
-\frac{\partial \log \circ f_{k}}{\partial z_{k}} = \tilde{z}_{k} (1-\tilde{z}_{k}).
-\label{eq:partsigmoid}
-\end{equation}
-
-\noindent This will be helpful in the future.
 
 \section{Going Deeper than Log-linear by using Composition}
 
@@ -307,22 +319,23 @@ pairs of linear and non-linear functions.
 
 \begin{equation}
 p(y_k|\mathbf{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}),
+\label{eq:FeedForward}
 \end{equation}
 
-\noindent We will denote each composition of a linear function
-
-\begin{align}
-\mathbf{z}^n & = \mathbf{g}^n(\tilde{\mathbf{z}}^{n-1})\nonumber\\ &= \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{n-1} + \mathbf{b}^n 
-\end{align}
-
-\noindent and a non-linear function 
+\noindent We will denote each linear function as
 
 \begin{equation}
-\tilde{\mathbf{z}}^n = \mathbf{f}^n(\mathbf{z}^n),
+\mathbf{z}^n = \mathbf{g}^n(\tilde{\mathbf{z}}^{n-1}) = \mathbf{W}^n \cdot \tilde{\mathbf{z}}^{n-1} + \mathbf{b}^n 
 \end{equation}
 
-expressed as $(\mathbf{f}^n \circ \mathbf{g}^n)$, as a \textit{layer}. All the
-internal (hidden) layers are going to be sigmoid functions as in Eq:
+\noindent and each non-linear function as 
+
+\begin{equation}
+\tilde{\mathbf{z}}^n = \mathbf{f}^n(\mathbf{z}^n).
+\end{equation}
+
+Each pair of non-linear and linear transformation, expressed as $(\mathbf{f}^n \circ \mathbf{g}^n)$, can be considered as a \textit{layer}. All the
+internal (hidden) layers $\mathbf{f}^1 \cdots \mathbf{f}^{N-1}$ are going to use sigmoid functions as in Eq:
 \ref{eq:sigmoid} and $\mathbf{f}^N$ will be a softmax, so that the final output
 can be interpreted as a distribution over $K$ classes. The parameters of our
 model are going to be the weights and bias of each layer
@@ -332,51 +345,61 @@ If we follow the same steps as in the previous section. Our cost function for
 SGD will look like this
 
 \begin{align}
-\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^M \log P(y^m | \mathbf{x}^m)\nonumber\\ & = -\frac{1}{M}\sum_{m=1}^M (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}^m)
+\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=0}^{M-1} \log p(y^m | \mathbf{x}^m)\nonumber\\ & = -\frac{1}{M}\sum_{m=0}^{M-1} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}^m)
 \end{align}
 
 If we wanted to compute the gradient for the $n$-th layer, we just need to
-apply the chain rule as in the previous cases, selecting a variable to split.
+apply the chain rule as in the previous section, selecting an intermediate variable to decompose  
+and repeating the process until we obtain the final derivative. Fortunately we
+do not need to compute this operation each time as it is easy to spot a recursive
+rule that is valid for many backpropagation cases, including feed-forward
+(MLP) as well as recurrent neural networks (RNN) with minor modifications.  
+
+\noindent Let's consider the split at $\mathbf{z}^n$
+
+%\begin{equation}
+%\log p(y^m | \mathbf{x}^m) = (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \cdots \mathbf{f}^{n+1}) \circ (\mathbf{g}^{n+1} \circ \cdots \mathbf{f}^{1} \circ \mathbf{g}^{1})
+%\end{equation}
+%
+%\begin{equation}
+%\log p(y^m | \mathbf{x}^m) = (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \cdots \mathbf{f}^{n}) \circ (\mathbf{g}^{n} \circ \cdots \mathbf{f}^{1} \circ \mathbf{g}^{1})
+%\end{equation}
+
 Let's start by computing the derivate for an arbitrary $n$-th hidden layer. To
 get a similar case as we had for the composition of two transformations, lets
 apply the chain rule at the output of the $n$-th linear transformation
 $\mathbf{z}^n$ to split. Since anything before th $n$-th layer does not depend
 on $W_{ji}^n$ this looks like  
 
-\begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \sum_{j'=1}^J \frac{\partial}{\partial z^n_{j'}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j'}}{\partial W_{ji}^n}
-\label{eq:partialfn}
-\end{equation}
-
-where $\mathbf{z}^{nm}$ is just the output at the $n$-th layer for input
-$\mathbf{x}^{m}$. We have seen already the solution to the right-most factor of
-this equation in Eq: \ref{eq:partialLinear}. Here, because $z^n_{j'}$
-only depends on $W_{ji}^n$ if $j'=j$, we have 
-
 \begin{align}
-\frac{\partial z^n_{j'}}{\partial W_{ji}^n} =  
-  &\begin{cases}
-   \frac{\partial z^n_{j'i}}{\partial W_{j'i}^n}  &  \mbox{ if } j' = j\\ 
-    0    &  \mbox{ otherwise } 
- \end{cases}
+\frac{\partial \log p(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} & = \sum_{j'=1}^J \frac{\partial}{\partial z^n_{j'}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j'}}{\partial W_{ji}^n}\nonumber\\ & = \sum_{j'=1}^J e^{n}_{j'} \frac{\partial z^n_{j'}}{\partial W_{ji}^n}\nonumber\\ & = e^{n}_{j'}\frac{\partial z^n_{j}}{\partial W_{ji}^n}
+\label{eq:partialfn}
 \end{align}
 
-\noindent thus simplifying Eq: \ref{eq:partialfn} to
+where the last equality uses the fact that $z^n_{j'}$ only depends on
+$W_{j'i}^n$ if $j=j'$ and thus the sum over $j'$ disappears. The term $e^{n}_j$
+represents the derivative of the cost with respect to an intermediate output of
+a linear transformation $\mathbf{z}^n$ (for the $m$-th example)
 
 \begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \frac{\partial}{\partial z^n_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{nm})\frac{\partial z^n_{j}}{\partial W_{ji}^n}.
-\label{eq:partialfn2}
+e^{n}_j = \frac{\partial}{\partial z^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{mn}) 
 \end{equation}
 
-We can now apply the chain rule and split by the $n$-th non-linear
-transformation $\tilde{\mathbf{z}}^n$. As in the case of $\mathbf{z}^n$, all
-derivatives will be zero when $j\neq j'$ and thus this will result in
+\noindent If we consider the same derivative one layer upwards in the
+computation graph  
 
 \begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \frac{\partial}{\partial \tilde{z}^{n}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1})(\tilde{\mathbf{z}}^{mn})\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}\frac{\partial z^n_{j}}{\partial W_{ji}^n} .
-\label{eq:partialfn3}
+e^{n+1}_k = \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})
 \end{equation}
 
+\noindent we can apply the chain rule twice to obtain the
+recursion\footnotemark\footnotetext{See the annex at the end of this chapter
+for a detailed derivation}
+
+\begin{equation}
+e^{n}_j = \sum_{k=1}^K e^{n+1}_k \frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n} 
+\label{eq:chainRulRecursion}
+\end{equation}
 
 \begin{figure}
 \centering
@@ -386,40 +409,6 @@ layer $n+1$. Note that while only $z_j^n$ is affected by $W_{ji}$ all outputs
 of layer $n+1$ are affected by changes in $W_{ji}$.}
 \label{fig:LayerP2}
 \end{figure}
-
-We now apply the chain rule a third and last time, in this case to the linear
-transformation of layer $n+1$, to obtain
-
-\begin{equation}
-\frac{\partial \log P(y^m | \mathbf{x}^m)}{\partial W_{ji}^n} = \sum_{k=1}^K \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})\frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}\frac{\partial z^n_{j}}{\partial W_{ji}^n} .
-\label{eq:partialfn4}
-\end{equation}
-
-In this case the sum in the chain rule does not go away. It is easy to
-understand why by looking at Figure \ref{fig:LayerP2}, the weight $W_{ji}$
-contributes not only to the variable $\tilde{z}^n_j$ but to all variables of the
-next linear layer $z^{n+1}_k$, and thus to the possible error. 
-
-By looking at Eqs: \ref{eq:partialfn} and \ref{eq:partialfn4} we can easily
-spot a recursion. Let's use
-
-\begin{equation}
-e^{n+1}_k = \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})
-\end{equation}
-
-\noindent to denote the derivative of the cost function with respect to the
-output of the $n$-th linear transformation. Let's also express the same value
-for the $(n+1)$-th layer as   
-
-\begin{equation}
-e^{n}_j = \frac{\partial}{\partial z^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{mn}) 
-\end{equation}
-
-\noindent then
-
-\begin{equation}
-e^{n}_j = \sum_{k=1}^K e^{n+1}_k \frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n} 
-\end{equation}
 
 \noindent It only rests to compute the derivative
 
@@ -435,27 +424,52 @@ with respect to $W_{ji}$
 e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 \end{equation}
 
-\noindent and the following recursion to directly compute the gradient
+\noindent where $e^{N}_j$ is given in Eq.~\ref{eq:patialSoftmax}. If we express this in matrix form we get the backpropagation rule which we can integrate into the SGD recursion, see Algorithm \ref{algo:backprop}. 
 
-\begin{align}
-\mathbf{e}^{n} & = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \odot \tilde{\mathbf{z}}^n \odot (1-\tilde{\mathbf{z}}^n)\\
-\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta) & = -\frac1M \sum_{m=1}^M \mathbf{e}^{n} \cdot \left(\tilde{\mathbf{z}}^{n-1}\right)^T \\ 
-\nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta) & = - \frac1M \sum_{m=1}^M \mathbf{e}^{n}  
-\end{align}
+\begin{algorithm}[t]
+\label{algo:backprop}
 
-\noindent where $\odot$ is the element-wise product and the $1$ is replicated to
-match the size of $\tilde{\mathbf{z}}^n$. Note also that 
+   \caption{Mini-batch SGD with Back-Propagation \label{alg:maxent_gd}}
 
-\begin{equation}
-e^N_k = \frac{\partial \log \circ f_{k(m)}^N}{\partial z^{N}_{k}}  
-\label{eq:finalError}
-\end{equation}
+\begin{algorithmic}[1]
 
-\noindent so that
+   \STATE {\bfseries input:} Data $\mathcal{D}$, Feed-forward of $N$ layers, with parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$, number of rounds $T$, $B$ mini-batches of size $M$, learning rate $\eta$
 
-\begin{equation}
-\mathbf{e}^N =\Big(\mathbf{y}^m - \hat{\mathbf{y}}^m \Big)  
-\end{equation}
+   \STATE initialize parameters $\Theta$ randomly 
+
+	\FOR{$t=1$ {\bfseries to} $T$}
+	\FOR{$b=1$ {\bfseries to} $B$}
+	\STATE Compute the forward pass for the $M$ examples in batch $b$ :
+    $$p(y_k^m|\mathbf{x}^m) \equiv \tilde{\mathbf{z}}^{mN} = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^1 \circ \mathbf{g}^1)(\mathbf{x}^m),$$
+
+	\STATE keep all intermediate non-linear outputs $\tilde{\mathbf{z}}^{mN} \cdots \tilde{\mathbf{z}}^{m1}$
+
+	\FOR{$n=N$ {\bfseries to} $1$}
+        \IF{n==N} 
+        \STATE {Initialize error with error at last layer 
+        $$\mathbf{e}^N = \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}^{mN} \Big)$$}
+        \ELSE
+	    \STATE propagate the error backward one layer:  
+        $$\mathbf{e}^{n} = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{n+1}\Big) \odot \tilde{\mathbf{z}}^n \odot (\mathbf{\mathrm{1}}-\tilde{\mathbf{z}}^n)$$
+
+        $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\tilde{\mathbf{z}}^n$
+        \ENDIF 
+
+        \STATE Compute the gradients from the errors and the inputs
+
+        $$\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D};\Theta)  = -\frac1M \sum_{m=0}^{M-1} \mathbf{e}^{n} \cdot \left(\tilde{\mathbf{z}}^{n-1}\right)^T$$ 
+        $$\nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D};\Theta)  = - \frac1M \sum_{m=0}^{M-1} \mathbf{e}^{n}$$  
+
+        \STATE Update the parameters 
+            $$\mathbf{W}^n \leftarrow \mathbf{W}^m - \eta \nabla\mathcal{F}_\mathbf{W^n}$$ 
+            $$\mathbf{b}^n \leftarrow \mathbf{b}^n - \eta \nabla\mathcal{F}_\mathbf{b^n}$$  
+
+	\ENDFOR
+
+	\ENDFOR
+	\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
 \begin{exercise}
 Go to lxmls/deep\_learning/mlp.py:class NumpyMLP:def grads() and complete the
@@ -492,8 +506,11 @@ that you should keep in mind.
 
 \begin{itemize}
 \item Thanks to the multi-layer structure and the chain rule, Backpropagation allows models that compose linear and non-linear functions with any depth (in principle\footnotemark). 
-\item The formulas are also valid for other cost functions and output non-linearities. We only need to recompute Eq \ref{eq:finalError} for this mater.  
-\item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq: \ref{eq:partialfn3}. With little effort it is also possible to deal with other cases.
+
+\item The formulas are also valid for other cost functions and output layer non-linearities with minor modifications. It is only necessary to compute the equivalente of Eq.~\ref{eq:patialSoftmax}. 
+
+\item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq: \ref{eq:chainRulRecursion}. With little effort it is also possible to deal with other cases.
+
 \item However, there is an important limitation: Unlike the log-linear models, the optimization problem is \textit{non convex}. This removes some formal guarantees, most importantly we can get trapped in local minima during training.
 \end{itemize}
 
@@ -821,3 +838,63 @@ a decrease, but rather an increase in computing time. To maximally exploit
 the power of Theano, it is necessary to bundle both computations and data 
 together using approaches like the compiled batch update.
 \end{exercise}
+
+\section*{Annex: Backpropagation in Detail}
+
+The objective of this section is to demonstrate that, for the feed-forward
+network defined in Eq.~\ref{eq:FeedForward}, if we define the derivatives of
+the error with respect to to adjacent linear layer outputs
+$\mathbf{z}^{m(n+1)}$ and $\mathbf{z}^{mn}$, given by
+
+\begin{equation}
+e^{n}_j = \frac{\partial}{\partial z^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{mn}) 
+\label{eq:endetail}
+\end{equation}
+
+\noindent and 
+
+\begin{equation}
+e^{n+1}_k = \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})
+\label{eq:enp1detail}
+\end{equation}
+
+\noindent then for a feed-forward network with softmax output non-linearity and one-to-one intermediate non-linearities, the following relation holds. 
+
+\begin{equation}
+e^{n}_j = \sum_{k=1}^K e^{n+1}_k \frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n} 
+\label{eq:DetailchainRulRecursion}
+\end{equation}
+
+\noindent We departure from
+
+\begin{equation}
+e^{n}_j = \frac{\partial}{\partial z^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1} \circ \mathbf{f}^{n})(\mathbf{z}^{mn}) 
+\end{equation}
+
+\noindent We now apply the chain rule at the non-linearity $\tilde{\mathbf{z}}^{mn}$.
+
+\begin{equation}
+e^{n}_j =  \sum_{j'=0}^{J-1}\frac{\partial}{\partial \tilde{z}^{n}_{j'}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1})(\tilde{\mathbf{z}}^{mn})\frac{\partial \tilde{z}^n_{j'}}{\partial z_{j}^n}.
+\end{equation}
+
+Since this entails various one-to-one non-linear transformations, all
+derivatives will be zero when $j\neq j'$, thus yielding 
+
+\begin{equation}
+e^{n}_j =  \frac{\partial}{\partial \tilde{z}^{n}_{j}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1} \circ \mathbf{g}^{n+1})(\tilde{\mathbf{z}}^{mn})\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}.
+\end{equation}
+
+We now apply the chain rule at the linear output $\mathbf{z}^{m(n+1)}$. In this case the sum in the chain rule does not go away. It is easy to
+understand why by looking at Figure \ref{fig:LayerP2}, the weight $W_{kj}$
+contributes not only to the variable $\tilde{z}^n_j$ but to all variables of the
+next linear layer $z^{n+1}_k$, and thus to the possible error. 
+
+\begin{equation}
+e^{n}_j = \sum_{k=1}^K \frac{\partial}{\partial z^{n+1}_{k}} (\log \circ f_{k(m)}^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}^{N-1} \circ \cdots \mathbf{f}^{n+1})(\mathbf{z}^{m(n+1)})\frac{\partial z^{n+1}_k}{\partial \tilde{z}_{j}^n}\frac{\partial \tilde{z}^n_{j}}{\partial z_{j}^n}.
+\label{eq:partialfn4}
+\end{equation}
+
+\noindent By looking at Eqs: \ref{eq:enp1detail} and \ref{eq:enp1detail} we can easily
+spot the recursion in Eq.~\ref{eq:DetailchainRulRecursion}.  
+
+
