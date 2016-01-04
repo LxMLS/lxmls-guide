@@ -490,7 +490,7 @@ given by $\exp(s_{\boldsymbol{\theta}}(h,m))$,
 and compute its 
 $(N+1)$-by-$(N+1)$ Laplacian matrix $\boldsymbol{L}$ whose entries are:
 \begin{equation}
-L_{hm} = \left\{ 
+{l}_{hm} = \left\{ 
 \begin{array}{ll}
 \sum_{h'=0}^N\exp(s_{\boldsymbol{\theta}}(h',m)), & \text{if $h=m$,} \\
 -\exp(s_{\boldsymbol{\theta}}(h,m))), & \text{otherwise.}
@@ -499,10 +499,10 @@ L_{hm} = \left\{
 %Denote by $\boldsymbol{r}=(r_m)_{m=1,\ldots,n}$ the first row of this matrix, transposed, with the first entry removed, i.e., 
 %$r_i \triangleq -\exp(s_{\boldsymbol{\theta}}(0,m)))$.
 %Furthermore,
-Denote by $\hat{L}$ the $(0,0)$-minor of $L$, 
-\emph{i.e.}, the matrix obtained from $L$ 
-by removing the first row and column. Consider its determinant $\det \hat{L}$ and its 
-inverse $\hat{L}^{-1}$. %
+Denote by $\hat{\boldsymbol{L}}$ the $(0,0)$-minor of $\boldsymbol{L}$, 
+\emph{i.e.}, the matrix obtained from $\boldsymbol{L}$ 
+by removing the first row and column. Consider its determinant $\det \hat{\boldsymbol{L}}$ and its 
+inverse $\hat{\boldsymbol{L}}^{-1}$. %
 Then: %
 %% \footnote{The above described is the \emph{multiple root} case, where a valid dependency tree may have multiple words 
 %% attached to the dummy root; there is also a solution for 
@@ -510,16 +510,16 @@ Then: %
 \begin{itemize}
 \item the partition function is given by 
 \begin{equation}
-Z(\mathbf{s_{\boldsymbol{\theta}}}) = \det \hat{L};
+Z(\mathbf{s_{\boldsymbol{\theta}}}) = \det \hat{\boldsymbol{L}};
 \end{equation}
 \item the posterior marginals 
 are given by 
 \begin{equation}
 P_{\boldsymbol{\theta}}(\langle h,m \rangle \in t) = \left\{
 \begin{array}{ll}
-\exp(s_{\boldsymbol{\theta}}(h,m))\cdot([\hat{L}^{-1}]_{mm} - 
-[\hat{L}^{-1}]_{mh}) & \text{if $h \ne 0$}\\
-\exp(s_{\boldsymbol{\theta}}(0,m))\cdot[\hat{L}^{-1}]_{mm} & \text{otherwise.}
+\exp(s_{\boldsymbol{\theta}}(h,m))\cdot([\hat{\boldsymbol{L}}^{-1}]_{mm} - 
+[\hat{\boldsymbol{L}}^{-1}]_{mh}) & \text{if $h \ne 0$}\\
+\exp(s_{\boldsymbol{\theta}}(0,m))\cdot[\hat{\boldsymbol{L}}^{-1}]_{mm} & \text{otherwise.}
 \end{array}
 \right.
 \end{equation}

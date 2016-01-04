@@ -428,7 +428,7 @@ where
 \begin{itemize}
 \item $\boldsymbol{w} \in \mathbb{R}^D$ is a \emph{weight vector};
 \item $\boldsymbol{f}(x,y) \in \mathbb{R}^D$ is a \emph{feature vector};
-\item $\boldsymbol{w} \cdot \boldsymbol{f}(x,y) = \sum_{d=1}^D w_d f_d(x,y)$ is the inner product between $\boldsymbol{w}$ and $\boldsymbol{f}(x,y)$. 
+\item $\boldsymbol{w} \cdot \boldsymbol{f}(x,y) = \boldsymbol{w}^{T}\boldsymbol{f}(x,y) = \sum_{d=1}^D w_d f_d(x,y)$ is the inner product between $\boldsymbol{w}$ and $\boldsymbol{f}(x,y)$. 
 \end{itemize}
 Hence, each feature $f_d(x,y)$ has a weight $w_d$ and, for each class $y \in \mathcal{Y}$, 
 a score is computed by linearly combining all the weighted features. All these scores are compared, 
