@@ -112,9 +112,9 @@ transformations, respectively.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.4]{figs/deep_learning/LayerP.pdf}
+\includegraphics[scale=0.5]{figs/deep_learning/LayerP_mla.pdf}
 \caption{Representation of a log-linear model as a computation graph: a
-composition of linear and non-linear transformations. \mla{TODO: update figure.}}
+composition of linear and non-linear transformations.}
 \label{fig:LayerP}
 \end{figure}
 
@@ -387,19 +387,27 @@ p(y=c_k|{x}) = (f_k^N \circ \mathbf{g}^N \circ \mathbf{f}^{N-1} \circ \mathbf{g}
 \end{equation}
 %
 This feed-forward network is a called \textit{multilayer perceptron} (MLP), where each pair of non-linear and linear transformation, expressed as $(\mathbf{f}^n \circ \mathbf{g}^n)$, is a \textit{layer} with parameters $\Theta^n={\mathbf{W}^n, \mathbf{b}^n}$. We will use in all the internal (hidden) layers $\mathbf{f}^1 \cdots \mathbf{f}^{N-1}$ sigmoid functions as in Eq.\ref{eq:sigmoid} and in the final layer $\mathbf{f}^N$ we will use a softmax, so that the final output
-can be interpreted as a distribution over $K$ classes (see the computation graph of Fig.\ref{fig:LayerP2}). The parameters of our
+can be interpreted as a distribution over $K$ classes (see the computation graph of Fig.\ref{fig:MLP}). The parameters of our
 model are going to be the weights and bias of each layer
 $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.4]{figs/deep_learning/LayerP2.pdf}
-\caption{Detail of propagation of error in weight $w_{ji}$ from layer $n$ to
-layer $n+1$. Note that, while only $z_j^n$ is affected by the value in $w_{ji}$, all outputs
-of layer $n+1$ are affected by the value in $w_{ji}$.
-\mla{TODO: update figure.}}
-\label{fig:LayerP2}
+\includegraphics[scale=0.5]{figs/deep_learning/MLP.pdf}
+\caption{Representation of a MLP with N layers. All internal hidden layers (up to $N-1$) have a sigmoid nonlinear function and the final hidden has a softmax nonlinear transformation.}
+\label{fig:MLP}
 \end{figure}
+
+
+%\begin{figure}
+%\centering
+%\includegraphics[scale=0.4]{figs/deep_learning/LayerP2_mla.pdf}
+%\caption{Detail of propagation of error in weight $w_{ji}$ from layer $n$ to
+%layer $n+1$. Note that, while only $z_j^n$ is affected by the value in $w_{ji}$, all outputs
+%of layer $n+1$ are affected by the value in $w_{ji}$.
+%}
+%\label{fig:LayerP2}
+%\end{figure}
 
 Following the same steps as in the previous section, we will use a cost function be given by %for SGD will look like this
 \begin{align}
@@ -442,7 +450,18 @@ Next section carefully deduce this recursion rules, for the present MLP model.
 %\end{equation}
 
 \subsection{The Back-propagation Recursion}
-Let us start by computing the derivative for an arbitrary $n$-th hidden layer. Similarly to what was done for the single-layer network in the previous section, we will
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{figs/deep_learning/LayerP2_mla.pdf}
+\caption{Detail of propagation of error in weight $w_{ji}$ from layer $n$ to
+layer $n+1$. Note that, while only $z_j^n$ is affected by the value in $w_{ji}$, all outputs
+of layer $n+1$ are affected by the value in $w_{ji}$.
+}
+\label{fig:LayerP2}
+\end{figure}
+
+Let us start by computing the derivative for an arbitrary $n$-th hidden layer (following the scheme of Fig~\ref{fig:LayerP2}). Similarly to what was done for the single-layer network in the previous section, we will
 split the chain rule at the output of the $n$-th linear transformation ($\mathbf{z}^n$), in order to compute the derivatives with respect to the parameters of that linear transformation ($\mathbf{W}^n, \mathbf{b}^n$). Since anything before the $n$-th layer does not depend on $w_{ji}^n$, the chain rule split at $\mathbf{z}^n$ will be given by
 
 \begin{align}
