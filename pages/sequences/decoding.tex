@@ -172,11 +172,11 @@ Use the given function \emph{compute\_scores} on the first training sequence and
 
 \begin{python}
 initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
-print initial_scores
+print(initial_scores)
 
 [-0.40546511 -1.09861229]
 
-print transition_scores
+print(transition_scores)
 
 [[[-0.69314718        -inf]
   [-0.69314718 -0.47000363]]
@@ -187,11 +187,11 @@ print transition_scores
  [[-0.69314718        -inf]
   [-0.69314718 -0.47000363]]]
 
-print final_scores
+print(final_scores)
 
 [       -inf -0.98082925]
 
-print emission_scores
+print(emission_scores)
 
 [[-0.28768207 -1.38629436]
  [-0.28768207 -1.38629436]
@@ -442,7 +442,7 @@ P(X=x) = \mathrm{backward}(0, \text{\tt start}).
 \subsection*{The forward backward algorithm}
 
 We have seen how we can compute the probability of a sequence $x$ using the the forward and backward probabilities by computing  $\mathrm{forward}(N+1, \text{\tt stop})$ and $ \mathrm{backward}(0, \text{\tt start})$ respectively. Moreover,  the probability of a sequence $x$ can be computed with both forward and backward probabilities at a particular position $i$. The probability of a  given sequence $x$ at any position $i$ in the sequence can be computed
-as follows \footnote{ The second equality in \ref{eq::fbsanity} can be justified as follows. Since $Y_i=y_i$ is observed then  $X_{i+1}, \dots, X_{N}$ is conditionally independent from any $X_k$ for $k \leq i$ . Therefore  $P(x_1,\dots, x_N, y_i) =  P( x_{i+1},\dots, x_N Ê| yi , x_1, \dots,x_i ) \cdot P( yi , x_1, \dots,x_i ) =  P( x_{i+1},\dots, x_N Ê| yi  ) \cdot P( yi , x_1, \dots,x_i ) = backward(i,y_i) \cdot forward(i,y_i)$.}:
+as follows \footnote{ The second equality in \ref{eq::fbsanity} can be justified as follows. Since $Y_i=y_i$ is observed then  $X_{i+1}, \dots, X_{N}$ is conditionally independent from any $X_k$ for $k \leq i$ . Therefore  $P(x_1,\dots, x_N, y_i) =  P( x_{i+1},\dots, x_N ÃŠ| yi , x_1, \dots,x_i ) \cdot P( yi , x_1, \dots,x_i ) =  P( x_{i+1},\dots, x_N ÃŠ| yi  ) \cdot P( yi , x_1, \dots,x_i ) = backward(i,y_i) \cdot forward(i,y_i)$.}:
 
 
 \begin{eqnarray}
@@ -537,12 +537,12 @@ passes give the same log-likelihood.
 %sure your implementation is correct: 
 \begin{python}
 log_likelihood, forward = hmm.decoder.run_forward(initial_scores, transition_scores, final_scores, emission_scores)
-print 'Log-Likelihood =', log_likelihood
+print('Log-Likelihood =', log_likelihood)
 
 Log-Likelihood = -5.06823232601
 
 log_likelihood, backward = hmm.decoder.run_backward(initial_scores, transition_scores, final_scores, emission_scores)
-print 'Log-Likelihood =', log_likelihood
+print('Log-Likelihood =', log_likelihood)
 
 Log-Likelihood = -5.06823232601
 \end{python}
@@ -647,7 +647,7 @@ state_posteriors, _, _ = hmm.compute_posteriors(initial_scores,
                                                 transition_scores,
                                                 final_scores,
                                                 emission_scores)
-print state_posteriors
+print(state_posteriors)
 
 [[ 0.95738152  0.04261848]
  [ 0.75281282  0.24718718]
@@ -660,11 +660,11 @@ print state_posteriors
 Run the posterior decode on the first test sequence, and evaluate it.
 \begin{python}
 y_pred = hmm.posterior_decode(simple.test.seq_list[0])
-print "Prediction test 0:", y_pred
+print("Prediction test 0:", y_pred)
 
 walk/rainy walk/rainy shop/sunny clean/sunny
 
-print "Truth test 0:", simple.test.seq_list[0]
+print("Truth test 0:", simple.test.seq_list[0])
 
 walk/rainy walk/sunny shop/sunny clean/sunny 
 \end{python}
@@ -672,11 +672,11 @@ walk/rainy walk/sunny shop/sunny clean/sunny
 Do the same for the second test sequence:
 \begin{python}
 y_pred = hmm.posterior_decode(simple.test.seq_list[1])
-print "Prediction test 1:", y_pred
+print("Prediction test 1:", y_pred)
 
 clean/rainy walk/rainy tennis/rainy walk/rainy 
 
-print "Truth test 1:", simple.test.seq_list[1]
+print("Truth test 1:", simple.test.seq_list[1])
 
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
@@ -698,20 +698,20 @@ Try, for example, adding 0.1 to all the counts, and repeating this exercise with
 \begin{python}
 hmm.train_supervised(simple.train, smoothing=0.1)
 y_pred = hmm.posterior_decode(simple.test.seq_list[0])
-print "Prediction test 0 with smoothing:", y_pred
+print("Prediction test 0 with smoothing:", y_pred)
 
 walk/rainy walk/rainy shop/sunny clean/sunny 
 
-print "Truth test 0:", simple.test.seq_list[0]
+print("Truth test 0:", simple.test.seq_list[0])
 
 walk/rainy walk/sunny shop/sunny clean/sunny
 
 y_pred = hmm.posterior_decode(simple.test.seq_list[1])
-print "Prediction test 1 with smoothing:", y_pred
+print("Prediction test 1 with smoothing:", y_pred)
 
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 
-print "Truth test 1:", simple.test.seq_list[1]
+print("Truth test 1:", simple.test.seq_list[1])
 
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}
@@ -863,7 +863,7 @@ Implement a method
 for performing Viterbi decoding in 
 file {\tt sequence\_classification\_decoder.py}.
 \begin{python}
-        def run_viterbi(self, initial_scores, transition_scores, final_scores, emission_scores):
+def run_viterbi(self, initial_scores, transition_scores, final_scores, emission_scores):
 \end{python}
 Hint: look at the implementation of {\tt run\_forward}. Also check the help for the numpy methods max and argmax.
 
@@ -881,20 +881,20 @@ the ones given.
 \begin{python}
 hmm.train_supervised(simple.train, smoothing=0.1)
 y_pred, score = hmm.viterbi_decode(simple.test.seq_list[0])
-print "Viterbi decoding Prediction test 0 with smoothing:", y_pred, score
+print("Viterbi decoding Prediction test 0 with smoothing:", y_pred, score)
 
 walk/rainy walk/rainy shop/sunny clean/sunny  -6.02050124698
 
-print "Truth test 0:", simple.test.seq_list[0]
+print("Truth test 0:", simple.test.seq_list[0])
 
 walk/rainy walk/sunny shop/sunny clean/sunny 
 
 y_pred, score = hmm.viterbi_decode(simple.test.seq_list[1])
-print "Viterbi decoding Prediction test 1 with smoothing:", y_pred, score
+print("Viterbi decoding Prediction test 1 with smoothing:", y_pred, score)
 
 clean/sunny walk/sunny tennis/sunny walk/sunny  -11.713974074
 
-print "Truth test 1:", simple.test.seq_list[1]
+print("Truth test 1:", simple.test.seq_list[1])
 
 clean/sunny walk/sunny tennis/sunny walk/sunny 
 \end{python}

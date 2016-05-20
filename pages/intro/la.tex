@@ -50,7 +50,7 @@ import numpy as np
 m = 3
 n = 2
 a = np.zeros([m,n])
-print a 
+print(a)
 [[ 0.  0.]
  [ 0.  0.]
  [ 0.  0.]]
@@ -58,16 +58,16 @@ print a
 
 You can check the shape and the data type of your array using the following commands:
 \begin{python}
-print a.shape
+print(a.shape)
 (3, 2)
-print a.dtype.name
+print(a.dtype.name)
 float64
 \end{python}
 This shows you that ``a'' is an 3*2 array of type float64. By default, arrays contain 64~bit\footnotemark\footnotetext{On your computer, particularly if you have an older computer, \code{int} might denote 32~bits integers} floating point numbers. You can specify the particular array type by using the keyword dtype.
 
 \begin{python}
-a = np.zeros([m,n],dtype=int)
-print a.dtype
+a = np.zeros([m,n], dtype=int)
+print(a.dtype)
 int64
 \end{python}
 
@@ -76,7 +76,7 @@ int64
 You can also create arrays from lists of numbers:
 \begin{python}
 a = np.array([[2,3],[3,4]])
-print a
+print(a)
 [[2 3]
  [3 4]]
 \end{python}
@@ -106,14 +106,14 @@ for i in xrange(a_dim1):
    for j in xrange(b_dim2):
        for k in xrange(a_dim2):
           c[i,j] += a[i,k]*b[k,j]
-print c
+print(c)
 \end{python}
 
 This is, however, cumbersome and inefficient. Numpy supports matrix multiplication with the dot function:
 
 \begin{python}
 d = np.dot(a,b)
-print d
+print(d)
 \end{python}
 
 \textbf{Important note:} with numpy, you must use \code{dot} to get matrix multiplication, the expression {a * b} denotes element-wise multiplication.
@@ -180,8 +180,8 @@ It has the property that for all $\textbf{A} \in \mathbb{R}^{n \times n}$, $\tex
 I = np.eye(2)
 x = np.array([2.3, 3.4])
 
-print I
-print np.dot(I,x)
+print(I)
+print(np.dot(I,x))
 
 [[ 1.,  0.],
  [ 0.,  1.]]
@@ -201,7 +201,7 @@ In numpy, you can access the transpose of a matrix as the \code{T} attribute:
 
 \begin{python}
 A = np.array([ [1, 2], [3, 4] ])
-print A.T
+print(A.T)
 \end{python}
 
 \item A square matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ is {\bf symmetric} if  $\textbf{A}=\textbf{A}^{T}$.
