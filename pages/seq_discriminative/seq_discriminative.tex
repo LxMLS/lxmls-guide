@@ -378,6 +378,7 @@ stick with SGD).
 \begin{exercise}\label{exer:crf1}
 In this exercise you will train a CRF
 using different feature sets for \pos\ Tagging. Start with the code below, which uses the ID feature set from table \ref{id-features}.
+%
 \begin{python}
 import lxmls.sequences.crf_online as crfo
 import lxmls.sequences.structured_perceptron as spc
@@ -385,19 +386,24 @@ import lxmls.readers.pos_corpus as pcc
 import lxmls.sequences.id_feature as idfc
 import lxmls.sequences.extended_feature as exfc
 
-print "CRF Exercise"
+print("CRF Exercise")
 
 corpus = pcc.PostagCorpus()
-train_seq = corpus.read_sequence_list_conll("data/train-02-21.conll",max_sent_len=10,max_nr_sent=1000)
-test_seq = corpus.read_sequence_list_conll("data/test-23.conll",max_sent_len=10,max_nr_sent=1000)
-dev_seq = corpus.read_sequence_list_conll("data/dev-22.conll",max_sent_len=10,max_nr_sent=1000)
+train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll", max_sent_len=10, max_nr_sent=1000)
+test_seq = corpus.read_sequence_list_conll("../data/test-23.conll", max_sent_len=10, max_nr_sent=1000)
+dev_seq = corpus.read_sequence_list_conll("../data/dev-22.conll", max_sent_len=10, max_nr_sent=1000)
+
 feature_mapper = idfc.IDFeatures(train_seq)
 feature_mapper.build_features()
 
 crf_online = crfo.CRFOnline(corpus.word_dict, corpus.tag_dict, feature_mapper)
 crf_online.num_epochs = 20
 crf_online.train_supervised(train_seq)
+\end{python}
 
+You will receive feedback when each epoch is finished (note that running the 20 epochs might take a while).
+%
+\begin{lstlisting}[language=bash]
 Epoch: 0 Objective value: -5.779018
 Epoch: 1 Objective value: -3.192724
 Epoch: 2 Objective value: -2.717537
@@ -418,10 +424,8 @@ Epoch: 16 Objective value: -1.399759
 Epoch: 17 Objective value: -1.368518
 Epoch: 18 Objective value: -1.339566
 Epoch: 19 Objective value: -1.312636
-\end{python}
+\end{lstlisting}
 
-You will receive feedback when each epoch is finished, note that
-running the 20 epochs might take a while.
 
 After training is done, evaluate the learned model on the training, development and test sets.
 
@@ -434,7 +438,7 @@ eval_train = crf_online.evaluate_corpus(train_seq, pred_train)
 eval_dev = crf_online.evaluate_corpus(dev_seq, pred_dev)
 eval_test = crf_online.evaluate_corpus(test_seq, pred_test)
 
-print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
 \end{python}
 
 You should get values similar to these:
@@ -463,6 +467,17 @@ crf_online = crfo.CRFOnline(corpus.word_dict, corpus.tag_dict, feature_mapper)
 crf_online.num_epochs = 20
 crf_online.train_supervised(train_seq)
 
+pred_train = crf_online.viterbi_decode_corpus(train_seq)
+pred_dev = crf_online.viterbi_decode_corpus(dev_seq)
+pred_test = crf_online.viterbi_decode_corpus(test_seq)
+eval_train = crf_online.evaluate_corpus(train_seq, pred_train)
+eval_dev = crf_online.evaluate_corpus(dev_seq, pred_dev)
+eval_test = crf_online.evaluate_corpus(test_seq, pred_test)
+
+print("CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
+\end{python}
+
+\begin{lstlisting}[language=bash]
 Epoch: 0 Objective value: -7.141596
 Epoch: 1 Objective value: -1.807511
 Epoch: 2 Objective value: -1.218877
@@ -483,7 +498,9 @@ Epoch: 16 Objective value: -0.428402
 Epoch: 17 Objective value: -0.419990
 Epoch: 18 Objective value: -0.412406
 Epoch: 19 Objective value: -0.405524
+\end{lstlisting}
 
+\begin{python}
 pred_train = crf_online.viterbi_decode_corpus(train_seq)
 pred_dev = crf_online.viterbi_decode_corpus(dev_seq)
 pred_test = crf_online.viterbi_decode_corpus(test_seq)
@@ -492,7 +509,7 @@ eval_train = crf_online.evaluate_corpus(train_seq, pred_train)
 eval_dev = crf_online.evaluate_corpus(dev_seq, pred_dev)
 eval_test = crf_online.evaluate_corpus(test_seq, pred_test)
 
-print "CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
 \end{python}
 
 You should get values close to the following:
@@ -604,15 +621,17 @@ Here is the code for the simple feature set:
 
 
 \begin{python}
+print("Perceptron Exercise")
+
 feature_mapper = idfc.IDFeatures(train_seq)
 feature_mapper.build_features()
-
-print "Perceptron Exercise"
 
 sp = spc.StructuredPerceptron(corpus.word_dict, corpus.tag_dict, feature_mapper)
 sp.num_epochs = 20
 sp.train_supervised(train_seq)
+\end{python}
 
+\begin{lstlisting}[language=bash]
 Epoch: 0 Accuracy: 0.656806
 Epoch: 1 Accuracy: 0.820898
 Epoch: 2 Accuracy: 0.879176
@@ -633,34 +652,37 @@ Epoch: 16 Accuracy: 0.970419
 Epoch: 17 Accuracy: 0.971891
 Epoch: 18 Accuracy: 0.971744
 Epoch: 19 Accuracy: 0.973510
+\end{lstlisting}
 
+\begin{python}
 pred_train = sp.viterbi_decode_corpus(train_seq)
 pred_dev = sp.viterbi_decode_corpus(dev_seq)
 pred_test = sp.viterbi_decode_corpus(test_seq)
-
-
 
 eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
 eval_test = sp.evaluate_corpus(test_seq, pred_test)
 
-print "Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
 \end{python}
 
 
-\begin{python}
+\begin{lstlisting}[language=bash]
 Structured Perceptron - ID Features Accuracy Train: 0.984 Dev: 0.835 Test: 0.840
-\end{python}
+\end{lstlisting}
 
 Here is the code for the extended feature set:
 
 \begin{python}
 feature_mapper = exfc.ExtendedFeatures(train_seq)
 feature_mapper.build_features()
+
 sp = spc.StructuredPerceptron(corpus.word_dict, corpus.tag_dict, feature_mapper)
 sp.num_epochs = 20
 sp.train_supervised(train_seq)
+\end{python}
 
+\begin{lstlisting}[language=bash]
 Epoch: 0 Accuracy: 0.764386
 Epoch: 1 Accuracy: 0.872701
 Epoch: 2 Accuracy: 0.903458
@@ -681,7 +703,9 @@ Epoch: 16 Accuracy: 0.976600
 Epoch: 17 Accuracy: 0.977483
 Epoch: 18 Accuracy: 0.974834
 Epoch: 19 Accuracy: 0.977042
+\end{lstlisting}
 
+\begin{python}
 pred_train = sp.viterbi_decode_corpus(train_seq)
 pred_dev = sp.viterbi_decode_corpus(dev_seq)
 pred_test = sp.viterbi_decode_corpus(test_seq)
@@ -690,13 +714,13 @@ eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
 eval_test = sp.evaluate_corpus(test_seq, pred_test)
 
-print "Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
 \end{python}
 
 And here are the expected results:
-\begin{python}
+\begin{lstlisting}[language=bash]
 Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test: 0.890
-\end{python}
+\end{lstlisting}
 
 \end{exercise}
 
