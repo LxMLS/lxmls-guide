@@ -262,7 +262,7 @@ which has the following derivative
 
 \noindent This will be helpful in the future.
 
-\begin{exercise}
+\begin{exercise}\label{ex:dl1:mlp_numpy}
 Get in contact with the multi-layer perceptron (MLP) class in Numpy and see
 that for a single layer this is simply a log-linear model. Revisit the
 sentiment classification exercise of day one. Reformulate train and test data
@@ -300,10 +300,9 @@ gradients (these are to be completed in the next exercise).
 hat_train_y = mlp.forward(train_x) 
 hat_test_y  = mlp.forward(test_x) 
 # Compute accuracy
-import lxmls.deep_learning.sgd as sgd
 acc_train = sgd.class_acc(hat_train_y, train_y)[0]
 acc_test  = sgd.class_acc(hat_test_y, test_y)[0]
-print "Untrained Log-linear Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Untrained Log-linear Accuracy train: %f test: %f" % (acc_train, acc_test))
 \end{python}
 \end{exercise}
 
@@ -471,11 +470,11 @@ e^{n}_j = \sum_{k=1}^K e^{n+1}_k W_{kj}^{n+1}\tilde{z}^n_{j}(1-\tilde{z}^n_{j})
 \end{algorithmic}
 \end{algorithm}
 
-\begin{exercise}
-Go to lxmls/deep\_learning/mlp.py:class NumpyMLP:def grads() and complete the
+\begin{exercise}\label{ex:dl1:grads}
+Go to \texttt{lxmls/deep\_learning/mlp.py:class NumpyMLP:def grads()} and complete the
 code of the NumpyMLP class with the Backpropagation recursion that we just saw.
-Once you are done. Try different network geometries by increasing the number of
-layers and layer sizes e.g.
+Once you are done, try different network geometries by increasing the number of
+layers and layer sizes, e.g.:
 \begin{python}
 # Model parameters
 geometry = [train_x.shape[0], 20, 2]
@@ -484,19 +483,20 @@ actvfunc = ['sigmoid', 'softmax']
 mlp      = dl.NumpyMLP(geometry, actvfunc) 
 \end{python}
 You can test the different models with the same sentiment analysis problem as
-in Exercise 6.1. 
+in Exercise \ref{ex:dl1:mlp_numpy}.
 \begin{python}
 # Model parameters
 n_iter = 5
 bsize  = 5
 lrate  = 0.01
 # Train
-sgd.SGD_train(mlp, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
+sgd.SGDTrain(mlp, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
 acc_train = sgd.class_acc(mlp.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp.forward(test_x), test_y)[0]
-print "MLP (%s) Amazon Sentiment Accuracy train: %f test: %f" % (geometry, acc_train,acc_test)
+print("MLP %s Model Amazon Sentiment Accuracy train: %f test: %f" % (geometry, acc_train, acc_test))
 \end{python}
 \end{exercise}
+
 
 \subsection{Some final reflections on Backpropagation}
 
@@ -569,26 +569,27 @@ The only negative aspect is that we will have to learn to deal with Theano and
 in particular working with symbolic representations. We will start right away
 with some exercises.
 
-\begin{exercise}
+\begin{exercise}\label{ex:dl1:get_in_contact}
 Get in contact with Theano. Learn the difference between a symbolic
 representation and a function. Start by implementing the first layer of our
-previous MLP in Numpy 
+previous MLP in Numpy
 \begin{python}
 # Numpy code
-x        = test_x             # Test set 
-W1, b1   = mlp.params[:2]     # Weights and bias of fist layer 
-z1       = np.dot(W1, x) + b1 # Linear transformation
-tilde_z1 = 1/(1+np.exp(-z1))  # Non-linear transformation  
+x = test_x  # Test set
+W1, b1 = mlp.params[0:2]  # Weights and bias of fist layer
+z1 = np.dot(W1, x) + b1  # Linear transformation
+tilde_z1 = 1 / (1 + np.exp(-z1))  # Non-linear transformation
 \end{python}
 Now we will implement this in Theano.  We start by creating the variables over
 which we will produce the operations. For example the symbolic input is defined
 as
 \begin{python}
 # Theano code. 
-# NOTE: We use undescore to denote symbolic equivalents to Numpy variables. 
-# This is no Python convention!.
+# NOTE: We use underscore to denote symbolic equivalents to Numpy variables.
+# This is no Python convention!
 import theano
 import theano.tensor as T
+
 _x = T.matrix('x')
 \end{python}
 Note that this variable does not have any particular value, nor a space
@@ -604,8 +605,8 @@ across functions. They are also given a concrete value so that we do not need
 to give it for each function call. This format is therefore ideal for the
 weights of our network.
 \begin{python}
-_W1 = theano.shared(value=W1, name='W1', borrow=True) 
-_b1 = theano.shared(value=b1, name='b1', borrow=True, broadcastable=(False, True)) 
+_W1 = theano.shared(value=W1, name='W1', borrow=True)
+_b1 = theano.shared(value=b1, name='b1', borrow=True, broadcastable=(False, True))
 \end{python}
 Now lets describe the operations we want to do with the variables. Again only
 symbolically. This is done by replacing our usual operations by Theano symbolic
@@ -613,25 +614,27 @@ ones when necessary e. g. the internal product dot() or the sigmoid. Some
 operations like e.g. $+$ are automatically recognized by Theano (operator
 overloading). 
 \begin{python}
-_z1            = T.dot(_W1, _x) + _b1
-_tilde_z1      = T.nnet.sigmoid(_z1)
+_z1 = T.dot(_W1, _x) + _b1
+_tilde_z1 = T.nnet.sigmoid(_z1)
 # Keep in mind that naming variables is useful when debugging
-_z1.name       = 'z1'
+_z1.name = 'z1'
 _tilde_z1.name = 'tilde_z1'
 \end{python}
 When debugging the code it is often useful to print the graph of computations.
 \begin{python}
 # Perceptron computation graph
 theano.printing.debugprint(_tilde_z1)
+\end{python}
 
+\begin{lstlisting}
 sigmoid [@A] 'tilde_z1'
  |Elemwise{add,no_inplace} [@B] 'z1'
    |dot [@C] ''
    | |W1 [@D]
    | |x [@E]
    |b1 [@F]
+\end{lstlisting}
 
-\end{python}
 It is important to keep in mind that, until this point, we do not have a
 function we can use to produce any practical input. In order to obtain this we
 have to compile this function by calling    
@@ -644,9 +647,9 @@ and see that they give the same outputs.
 \begin{python}
 # Check Numpy and Theano match
 if np.allclose(tilde_z1, layer1(x.astype(theano.config.floatX))):
-    print "\nNumpy and Theano Perceptrons are equivalent"
+    print("\nNumpy and Theano Perceptrons are equivalent")
 else:
-    raise ValueError, "Numpy and Theano Perceptrons are different"
+    raise ValueError("Numpy and Theano Perceptrons are different")
 \end{python}
 \end{exercise}
 
@@ -679,16 +682,16 @@ we will do the same with the cost used for training. We will also derive the
 gradients although this will be trivial once we have the cost function compiled.     
 \begin{exercise}
 We first see an example that does not use any of the code in TheanoMLP but
-rather continues from what you wrote in exercise 6.3. In this exercise you
+rather continues from what you wrote in exercise \ref{ex:dl1:get_in_contact}. In this exercise you
 completed a sigmoid layer with Theano. To get some values for the weights we
-used the first layer of the network you trained in 6.2. now we are going to use
-the second layer as well. This is thus assuming that your network in 6.2 has
+used the first layer of the network you trained in \ref{ex:dl1:grads}. now we are going to use
+the second layer as well. This is thus assuming that your network in \ref{ex:dl1:grads} has
 only two layers e.g. the recommended geometry (I, 20, 2). Make sure this is the
 case before starting this exercise.  
 
-For the sake of clarity, lets write here the part of Ex. 6.2 that we had completed
+For the sake of clarity, lets write here the part of Ex. \ref{ex:dl1:grads} that we had completed
 \begin{python}
-# Get the values from our MLP from Ex 6.2
+# Get the values from our MLP from Ex 5.2
 W1, b1   = mlp.params[:2]     # Weights and bias of fist layer 
 # First layer symbolic variables
 _x  = T.matrix('x')
@@ -700,12 +703,14 @@ _tilde_z1 = T.nnet.sigmoid(_z1)
 \end{python}
 Now we just need to complete this with the second layer, using a softmax non-linearity
 \begin{python}
-W2, b2  = mlp.params[2:]     # Weights and bias of second (and last!) layer 
+W2, b2 = mlp.params[2:]  # Weights and bias of second (and last!) layer
+
 # Second layer symbolic variables
-_W2 = theano.shared(value=W2, name='W2', borrow=True) 
-_b2 = theano.shared(value=b2, name='b2', borrow=True, broadcastable=(False, True)) 
+_W2 = theano.shared(value=W2, name='W2', borrow=True)
+_b2 = theano.shared(value=b2, name='b2', borrow=True, broadcastable=(False, True))
+
 # Second layer symbolic expressions
-_z2       = T.dot(_W2, _tilde_z1) + _b2
+_z2 = T.dot(_W2, _tilde_z1) + _b2
 _tilde_z2 = T.nnet.softmax(_z2.T).T
 \end{python}
 With this, we could compile a function to obtain the output of the network
@@ -725,8 +730,8 @@ _F = -T.mean(T.log(_tilde_z2[_y, T.arange(_y.shape[0])]))
 \end{python}
 Now obtaining a function that computes the gradient could not be easier.
 \begin{python}
-_nabla_F = T.grad(_F, _W1) 
-nabla_F  = theano.function([_x, _y], _nabla_F) 
+_nabla_F = T.grad(_F, _W1)
+nabla_F = theano.function([_x, _y], _nabla_F)
 \end{python}
 To finish this exercise have a look at the TheanoMLP class. As you may realise it just implements what is shown above for the generic case of $N$ layers
 \end{exercise}
@@ -763,8 +768,8 @@ Once this is done, we can create and compile functions using these variables.
 One simple but useful function is a function returning a mini-batch of data 
 of size bsize given the mini-batch index.  
 \begin{python}
-_i             = T.lscalar()
-get_tr_batch_y = theano.function([_i], _train_y[_i*bsize:(_i+1)*bsize]) 
+_i = T.lscalar()
+get_tr_batch_y = theano.function([_i], _train_y[_i * bsize:(_i + 1) * bsize])
 \end{python}
 Compile this function and observe its behaviour. It will be necessary for the next exercise.
 \end{exercise}
@@ -810,7 +815,7 @@ actvfunc = ['sigmoid', 'softmax']
 # Numpy MLP
 mlp_a     = dl.NumpyMLP(geometry, actvfunc)
 init_t    = time.clock()
-sgd.SGD_train(mlp_a, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
+sgd.SGDTrain(mlp_a, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
 print "\nNumpy version took %2.2f sec" % (time.clock() - init_t)
 acc_train = sgd.class_acc(mlp_a.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp_a.forward(test_x), test_y)[0]
@@ -819,7 +824,7 @@ print "Amazon Sentiment Accuracy train: %f test: %f\n" % (acc_train, acc_test)
 # Theano grads 
 mlp_b  = dl.TheanoMLP(geometry, actvfunc)
 init_t = time.clock()
-sgd.SGD_train(mlp_b, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
+sgd.SGDTrain(mlp_b, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y))
 print "\nCompiled gradient version took %2.2f sec" % (time.clock() - init_t)
 acc_train = sgd.class_acc(mlp_b.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp_b.forward(test_x), test_y)[0]
@@ -827,7 +832,7 @@ print "Amazon Sentiment Accuracy train: %f test: %f\n" % (acc_train, acc_test)
 
 # Theano batch update
 init_t = time.clock()
-sgd.SGD_train(mlp_c, n_iter, batch_up=batch_up, n_batch=n_batch)
+sgd.SGDTrain(mlp_c, n_iter, batch_up=batch_up, n_batch=n_batch)
 print "\nTheano compiled batch update version took %2.2f" % (time.clock() - init_t)
 acc_train = sgd.class_acc(mlp_c.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp_c.forward(test_x), test_y)[0]

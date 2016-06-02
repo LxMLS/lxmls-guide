@@ -548,9 +548,6 @@ $15$ words; this yielded the files:
 \begin{enumerate}
 \item After importing all the necessary libraries, load the Portuguese dataset: 
 \begin{python}
-import sys
-sys.path.append('.' )
-
 import lxmls.parsing.dependency_parser as depp
 
 dp = depp.DependencyParser()
@@ -688,7 +685,7 @@ dp.test()
 \end{python}
 
 You should get the following results:
-\begin{python}
+\begin{lstlisting}[language=bash]
 Number of sentences: 8044
 Number of tokens: 80504
 Number of words: 12202
@@ -715,7 +712,7 @@ Training accuracy: 0.98127569228
 Epoch 10
 Training accuracy: 0.981320865519
 Test accuracy (509 test instances): 0.886732599366
-\end{python}
+\end{lstlisting}
 
 \end{enumerate}
 \end{exercise}

@@ -212,8 +212,8 @@ EM algorithm. Look at the code for EM algorithm in file
             acc = self.evaluate_EM(dataset)
             print "Initial accuracy: %f"%(acc)
             
-        for t in xrange(1, num_epochs):
-            #E-Step
+        for t in range(1, num_epochs):
+            # E-Step
             total_log_likelihood = 0.0
             self.clear_counts(smoothing)
             for sequence in dataset.seq_list:
@@ -229,13 +229,13 @@ EM algorithm. Look at the code for EM algorithm in file
 
                 self.update_counts(sequence, state_posteriors, transition_posteriors)
                 total_log_likelihood += log_likelihood
-            print "Iter: %i Log Likelihood: %f"%(t, total_log_likelihood)
-            #M-Step
+            print("Iter: %i Log Likelihood: %f" % (t, total_log_likelihood))
+            # M-Step
             self.compute_parameters()
             if evaluate:
-                 ### Evaluate accuracy at this iteration
+                # Evaluate accuracy at this iteration
                 acc = self.evaluate_EM(dataset)
-                print "Iter: %i Accuracy: %f"%(t,acc)
+                print("Iter: %i Accuracy: %f" % (t, acc))
 \end{python}
 
 \end{exercise}
