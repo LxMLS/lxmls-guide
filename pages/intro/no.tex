@@ -98,15 +98,15 @@ Consider the function $h(x)=\exp(x^{2})$, this can be decomposed as $h(x)=f(g(x)
 Consider the function $f(x) = x^2$ and its derivative $\frac{\partial f} {\partial x}$. Look at the derivative of that function at points [-2,0,2], draw the tangent to the graph in that point $\frac{\partial f}{\partial x}\left(-2\right)=-4$, $\frac{\partial f}{\partial x}\left(0\right)=0$, and $\frac{\partial f}{\partial x}\left(2\right)=4$. For example, the tangent equation for $x=-2$ is $y=-4x - b$, where $b=f(-2)$. The following code plots the function and the derivatives on those points using matplotlib (See Figure \ref{fig:tangents}).
 
 \begin{python}
-a = np.arange(-5,5,0.01)
-f_x = np.power(a,2)
-plt.plot(a,f_x)
+a = np.arange(-5, 5, 0.01)
+f_x = np.power(a, 2)
+plt.plot(a, f_x)
 
-plt.xlim(-5,5)
-plt.ylim(-5,15)
+plt.xlim(-5, 5)
+plt.ylim(-5, 15)
 
 k= np.array([-2,0,2])
-plt.plot(k,k**2,"bo")
+plt.plot(k, k ** 2, "bo")
 for i in k:
     plt.plot(a, (2*i)*a - (i**2))
 
@@ -177,15 +177,15 @@ Make a function that computes the function value given $x$.
 
 \begin{python}
 def get_y(x):
-    return (x+2)**2 - 16*np.exp(-((x-2)**2))
+    return (x + 2) ** 2 - 16 * np.exp(-((x - 2) ** 2))
 \end{python}
 
-Draw a plot around $x \in [-8,8]$.
+Draw a plot around $x \in [-8, 8]$.
 
 \begin{python}
-x = np.arange(-8,8,0.001)
-y = map(lambda u: get_y(u),x)
-plt.plot(x,y)
+x = np.arange(-8, 8, 0.001)
+y = map(lambda u: get_y(u), x)
+plt.plot(x, y)
 plt.show()
 \end{python}
 
@@ -193,7 +193,7 @@ Calculate the derivative of the function $f(x)$, implement the function \emph{ge
 
 \begin{python}
 def get_grad(x):
-    return (2*x+4)-16*(-2*x + 4)*np.exp(-((x-2)**2))
+    return (2 * x + 4) - 16 * (-2 * x + 4) * np.exp(-((x - 2) ** 2))
 \end{python}
 
 Use the method \emph{gradient\_descent} to find the minimum of this function. Convince yourself that the code is doing the proper thing. Look at the constants we defined. Note, that we are using a simple approach to pick the step size (always have the value step\_size) which is not necessarily correct.
@@ -214,11 +214,11 @@ def gradient_descent(start_x,func,grad):
         x_new = x_old - step_size * grad(x_new)
         f_x_new = func(x_new)
         f_x_old = func(x_old)
-        res.append([x_new,f_x_new])
+        res.append([x_new, f_x_new])
         if(abs(f_x_new - f_x_old) < prec):
-            print "change in function values too small, leaving"
+            print("change in function values too small, leaving")
             return np.array(res)
-    print "exceeded maximum number of iterations, leaving"
+    print("exceeded maximum number of iterations, leaving")
     return np.array(res)
 \end{python}
 
@@ -226,8 +226,8 @@ Run the gradient descent algorithm starting from $x_0 = -8$ and plot the minimiz
 
 \begin{python}
 x_0 = -8
-res = gradient_descent(x_0,get_y,get_grad)
-plt.plot(res[:,0],res[:,1],'+')
+res = gradient_descent(x_0, get_y, get_grad)
+plt.plot(res[:,0], res[:,1], '+')
 plt.show()
 \end{python}
 
@@ -250,8 +250,8 @@ Now try the same exercise starting from the initial point $x_0 = 8$.
 
 \begin{python}
 x_0 = 8
-res = gradient_descent(x_0,get_y,get_grad)
-plot(res[:,0],res[:,1],'+')
+res = gradient_descent(x_0,get_y, get_grad)
+plot(res[:,0], res[:,1], '+')
 \end{python}
 
 

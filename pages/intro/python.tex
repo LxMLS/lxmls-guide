@@ -25,7 +25,7 @@ There are two main ways in which you can run code in Python:
 \item[From a file]--~~Create a file named \texttt{yourfile.py} and write your program in it, using your favorite text editor:
 
 \begin{python}
-print 'Hello World!'
+print('Hello World!')
 \end{python}
 
 After saving and closing the file, you can run your code by calling: 
@@ -62,7 +62,7 @@ IPython --pylab
 You can then run Python commands in the IPython command line
 
 \begin{python}
- In[]: print "Hello, World!"
+ In[]: print("Hello, World!")
 Out[]: Hello, World!
 \end{python}
 
@@ -109,11 +109,12 @@ Exit IPython by typing \code{exit()} or \code{quit()} (or typing CTRL-D).
 
 Python supports all basic arithmetic operations, including exponentiation. For
 example, the following code: \begin{python}
-print 3 + 5
-print 3 - 5
-print 3 * 5
-print 3 / 5
-print 3 ** 5
+print(3 + 5)
+print(3 - 5)
+print(3 * 5)
+print(3 / 5)
+print(3 // 5)
+print(3 ** 5)
 \end{python}
 
 \noindent will produce the following output:
@@ -121,16 +122,15 @@ print 3 ** 5
 8
 -2
 15
+0.6
 0
 243
 \end{python}
 
-Notice that division is always considered as integer division, hence the result
-being 0 on the example above. To force a floating point division you can force
-one of the operands to be a floating point number: \begin{python}
-print 3 / 5.0
-0.6
-\end{python}
+Notice that division works differently in Python2 and Python3.
+    In Python2 it was always considered as an integer division, hence the result in line 4 above would be 0.
+    One had to force a floating point division by making one of the operands to be a floating point number.
+    In Python3 this behaviour was replaced by the \texttt{//} operator, and the \texttt{/} operator now performs a floating point division.
 
 Also, notice that the symbol \texttt{**} is used as exponentation operator, unlike other major languages which use the symbol \texttt{\^}. In fact, the \texttt{\^} symbol has a different meaning in Python (bitwise XOR) so, in the beginning, be sure to double-check your code if it uses exponentiation and it is giving unexpected results.
 
@@ -139,7 +139,7 @@ Also, notice that the symbol \texttt{**} is used as exponentation operator, unli
 In Python, you can create lists of items with the following syntax:
 
 \begin{python}
-countries = ['Portugal','Spain','United Kingdom']
+countries = ['Portugal', 'Spain', 'United Kingdom']
 \end{python}
 
 A string should be surrounded with apostrophes (') or quotes (``). You can access a list with
@@ -168,13 +168,13 @@ the even numbers from 2 to 8.
 \begin{python}
 i = 2
 while i < 10:
-  print i  
+  print(i)
   i += 2 
 \end{python}
 
 \begin{python}
-for i in range(2,10,2):
-    print i
+for i in range(2, 10, 2):
+    print(i)
 \end{python}
 
 You can copy and run this from the IPython command line. Alternatively you can write this into your \texttt{yourfile.py} file an run it as well. Notice something? It is possible that the code did not act as expected or maybe an error message popped up. This brings us to an important aspect of Python: \textbf{indentation}. Indentation is the number of blank spaces at the leftmost of each command. This is how Python differentiates between blocks of commands inside and outside a statement, e.g. \code{while}, \code{for} or other. All commands within a statement have the same number of blank spaces at their leftmost. For instance, consider the following code: 
@@ -182,7 +182,7 @@ You can copy and run this from the IPython command line. Alternatively you can w
 \begin{python}
 a=1
 while a <= 3:
-    print a
+    print(a)
     a += 1
 \end{python}
 
@@ -201,7 +201,7 @@ Can you then predict the output of the following code?:
 \begin{python}
 a=1
 while a <= 3:
-    print a
+    print(a)
 a += 1
 \end{python}
 
@@ -229,11 +229,11 @@ The \code{if} statement allows to control the flow of your program. The next pro
 \begin{python}
 hour = 16
 if hour < 12:
-    print 'Good morning!'
+    print('Good morning!')
 elif hour >= 12 and hour < 20:
-    print 'Good afternoon!'
+    print('Good afternoon!')
 else:
-    print 'Good evening!'
+    print('Good evening!')
 \end{python}
 
  
@@ -245,11 +245,11 @@ The following is a function in Python.
 \begin{python}
 def greet(hour):
     if hour < 12:
-        print 'Good morning!'
+        print('Good morning!')
     elif hour >= 12 and hour < 20:
-        print 'Good afternoon!'
+        print('Good afternoon!')
     else:
-        print 'Good evening!'
+        print('Good evening!')
 \end{python}
 
 You can write this command into IPython interactive command line directly or
@@ -319,18 +319,18 @@ In the following example, we use this module to inspect the \texttt{greet} funct
 \begin{python}
 def greet(hour):
     if hour < 12:
-        print 'Good morning!'
+        print('Good morning!')
     elif hour >= 12 and hour < 20:
-        print 'Good afternoon!'
+        print('Good afternoon!')
     else:
         import pdb; pdb.set_trace()
-        print 'Good evening!'
+        print('Good evening!')
 \end{python}
 
 Load the new definition of the function into IPython by writing this code in a
 file and running it. Now, if you try \texttt{greet(50)} the code execution
 should stop at the place where you located the break-point (that is, in the
-\texttt{print 'Good evening!'} statement). You can now run new commands or
+\texttt{print('Good evening!')} statement). You can now run new commands or
 inspect variables. For this purpose there are a number of commands you can use.
 The complete list can be found at
 \url{http://docs.python.org/library/pdb.html}, but we provide here a short
@@ -404,7 +404,7 @@ an attempt is made to execute it. These kind of errors are called
 A \textit{ZeroDivisionError} exception was raised, and no output was returned.
 Exceptions can also be forced to occur by the programmer, with customized error
 messages (for a complete list of built-in exceptions, see
-\url{http://docs.python.org/2/library/exceptions.html}).
+\url{http://docs.python.org/3/library/exceptions.html}).
 
 \begin{python}
 raise ValueError("Invalid input value.")
@@ -419,10 +419,10 @@ Handling of exceptions is made with the \textit{try} statement:
 \begin{python}
 while True:
     try:
-        x = int(raw_input("Please enter a number: "))
+        x = int(input("Please enter a number: "))
         break
     except ValueError:
-        print "Oops! That was no valid number. Try again..."
+        print("Oops! That was not a valid number. Try again...")
 \end{python}
 
 It works by first executing the \textit{try} clause. If no exception occurs,
@@ -468,7 +468,7 @@ import matplotlib.pyplot as plt
 
 X = np.linspace(-4, 4, 1000)
 
-plt.plot(X, X**2*np.cos(X**2))
+plt.plot(X, X ** 2 * np.cos(X ** 2))
 plt.savefig("simple.pdf")
 \end{python}
 
@@ -489,23 +489,23 @@ import matplotlib.pyplot as plt
 X = np.linspace(-4, 4, 1000)
 
 # Y[i] = X[i]**2
-Y = X**2
+Y = X ** 2
 
 # Plot using a red line ('r')
 plt.plot(X, Y, 'r')
 
 # arange returns integers ranging from -4 to +4
 # (the upper argument is excluded!)
-Ints = np.arange(-4,5)
+Ints = np.arange(-4, 5)
 
 # We plot these on top of the previous plot
 # using blue circles (o means a little circle)
-plt.plot(Ints, Ints**2, 'bo')
+plt.plot(Ints, Ints ** 2, 'bo')
 
 # You may notice that the plot is tight around the line
 # Set the display limits to see better
-plt.xlim(-4.5,4.5)
-plt.ylim(-1,17)
+plt.xlim(-4.5, 4.5)
+plt.ylim(-1, 17)
 plt.show()
 \end{python}
 \end{exercise}
