@@ -242,11 +242,11 @@ We have thus transformed the problem of computing the derivative into computing 
 %
 From the formula for each element and a single example, we can now obtain the gradient matrix for a batch of $M$ examples by simply averaging and expressing the previous equations in vector form as follows
 \begin{equation}
-\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}_{y^m} - \tilde{\mathbf{z}}^m \Big) \left(\mathbf{x}^m\right)^T.
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}^{y^m} - \tilde{\mathbf{z}}^m \Big) \left(\mathbf{x}^m\right)^T.
 \label{gradWeigths}
 \end{equation}
 %
-Here $\mathrm{\mathbf{1}}_{y^m} \in \mathbb{R}^{K}$ is a vector of zeros with a one in $y^m=k(m)$, which is 
+Here $\mathrm{\mathbf{1}}^{y^m} \in \mathbb{R}^{K}$ is a vector of zeros with a one in $y^m=k(m)$, which is 
 the index of the correct class for the example $m$. 
 
 In order to compute the derivatives of the cost function with respect to the
@@ -255,16 +255,15 @@ bias parameters $b_{k}$ we only need to compute one additional derivative
 \frac{\partial z_{k'}}{\partial b_{k}} = 
   &\begin{cases}
       1  &  \mbox{ if } k = k'\\ 
-      0  &  \mbox{ otherwise },
+      0  &  \mbox{ otherwise }.
   \end{cases} 
   \label{eqn:eqsilonq}
 \end{align}
 %
-which is the input signal at the weight $b_k$ (see Fig.\ref{fig:LayerP}).
 This leads us to the last gradient expression
 
 \begin{equation}
-\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}^m \Big).
+\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}^{y^m} - \tilde{\mathbf{z}}^m \Big).
 \label{eq:gradBias}
 \end{equation}
 
