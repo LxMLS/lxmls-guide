@@ -1,6 +1,6 @@
-guide.aux
-guide.log
-guide.out
+*.aux
+*.log
+*.out
 guide.pdf
 guide.bbl
 guide.blg
