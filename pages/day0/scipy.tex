@@ -108,8 +108,8 @@ Consider the linear regression problem (ordinary least squares) on the Galton
 dataset, with a single response variable
 
 \[
-y = x^T w + \varepsilon
-\].
+y = w^T x + \varepsilon.
+\]
 
 The \emph{linear regression problem} is, given a set $\{ y^{(i)} \}_i$ of
 samples of $y$ and the corresponding $\vect{x}^{(i)}$ vectors, estimate
@@ -121,7 +121,7 @@ have an optimised solver, with numpy, use \code{numpy.linalg.lstsq}).
 Alternatively, we can define the error function for each possible $\vect{w}$:
 
 \[
-e(\vect{w}) = \sum_i \left( {\vect{x}^{(i)}}^T \vect{w} - y^{(i)} \right)^2.
+e(\vect{w}) = \sum_i \left( {\vect{w}}^T \vect{x}^{(i)} - y^{(i)} \right)^2.
 \]
 
 \begin{enumerate}
@@ -131,12 +131,12 @@ $\vect{w} \in R^2$).
 \item Use this method on the Galton dataset from the previous exercise to
 estimate the relationship between father and son's height. Try two formulas
 \begin{equation}
-s = f w_1 + \varepsilon,
+s = w_1 f + \varepsilon,
 \label{}
 \end{equation}
 where $s$ is the son's height, and $f$ is the father heights; and
 \begin{equation}
-s = f w_1 + 1w_0 + \varepsilon
+s =  w_1 f + w_0 1 + \varepsilon
 \label{}
 \end{equation}
 where the input variable is now two dimensional: $(f,1)$. This allows the

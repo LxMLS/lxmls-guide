@@ -7,9 +7,17 @@ Linear Algebra provides a compact way of representing and operating on sets of l
 
 This is a system of linear equations in 2 variables. In matrix notation we can write the system more compactly as 
 \begin{equation*}
-\textbf{A}\textbf{x}=\textbf{b}
+\textbf{A}\textbf{x}=\textbf{b},
 \end{equation*}
 with
+\begin{equation*}
+\textbf{x}= \left[
+\begin{array}{c}
+x_1 \\
+x_2 \\
+\end{array} \right]
+\end{equation*}
+and
 \begin{equation*}
 \textbf{A}= \left[ \begin{array}{cc}
 4 & -5 \\
@@ -17,7 +25,7 @@ with
 \end{array} \right], \text{	} \textbf{b}= \left[ \begin{array}{c}
 -13 \\
 9 \\
-\end{array}\right]
+\end{array}\right].
 \end{equation*}
 
 \subsection{Notation}
@@ -32,7 +40,6 @@ entries of A are real numbers.
 \item By $\textbf{x} \in \mathbb{R}^{n}$, we denote a {\bf vector} with $n$ entries. A vector can also be thought of as a matrix with $n$ rows and $1$ column, known as a {\bf column vector}. A {\bf row vector} --- a matrix with 1 row and $n$ columns is denoted as $\textbf{x}^{T}$, the transpose of $\textbf{x}$.
 
 \item The $i$th element of a vector $\textbf{x}$ is denoted $x_{i}$:
-
 \begin{equation*}
 \textbf{x} = \left[\begin{array}{c}
 x_{1} \\
@@ -41,6 +48,27 @@ x_{2} \\
 x_{n}
 \end{array}\right].
 \end{equation*}
+
+\item The $i$th row of a matrix $\textbf{A} \in \mathbb{R}^{m \times n}$ is denoted $\textbf{a}_i^T$:
+\begin{equation*}
+\textbf{A} = \left[\begin{array}{c}
+\textbf{a}_1^T \\
+\textbf{a}_2^T \\
+\vdots \\
+\textbf{a}_m^T
+\end{array}\right].
+\end{equation*}
+
+\item The element in the $i$th row and $j$th column of a matrix $\textbf{A} \in \mathbb{R}^{m \times n}$ is denoted $a_{i,j}$:
+\begin{equation*}
+\textbf{A}= \left[ \begin{array}{cccc}
+a_{1,1} & a_{1,2} & \hdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \hdots & a_{2,n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m,1} & a_{m,2} & \hdots & a_{m,n} \\
+\end{array} \right].
+\end{equation*}
+
 \end{itemize}
 
 \begin{exercise}
@@ -90,8 +118,11 @@ There are many more ways to create arrays in numpy and we will get to see them a
 \begin{itemize}
 \item Product of two matrices $\textbf{A} \in \mathbb{R}^{m\times n}$ and $\textbf{B} \in \mathbb{R}^{n\times p}$
 is the matrix $\textbf{C}=\textbf{AB} \in \mathbb{R}^{m\times p}$, where 
+%\begin{equation*}
+%C_{ij}=\sum\limits_{k=1}^{n}A_{ik}B_{kj}.
+%\end{equation*}
 \begin{equation*}
-C_{ij}=\sum\limits_{k=1}^{n}A_{ik}B_{kj}.
+c_{ij}=\sum\limits_{k=1}^{n}a_{ik}b_{kj}.
 \end{equation*}
 
 \begin{exercise}
@@ -122,10 +153,11 @@ print d
 \item Matrix multiplication is associative: $(\textbf{AB})\textbf{C}= \textbf{A}(\textbf{BC})$.
 \item Matrix multiplication is distributive: $\textbf{A}(\textbf{B}+\textbf{C})= \textbf{AB} + \textbf{AC}$.
 \item Matrix multiplication is (generally) not commutative : $\textbf{AB} \neq \textbf{BA}$.
-\item Given two vectors $\textbf{x},\textbf{y} \in \mathbb{R}^{n}$ the product $\textbf{x}^{T}\textbf{y}$, called {\bf inner product}
+\item Given two vectors $\textbf{x},\textbf{y} \in \mathbb{R}^{n}$ the product $\textbf{x} \cdot \textbf{y} \in \mathbb{R}$, %= \textbf{x}^{T}\textbf{y} 
+ called {\bf inner product}
 or {\bf dot product}, is given by
 \begin{equation*}
-\textbf{x}^{T}\textbf{y} \in \mathbb{R} = \left[\begin{array}{cccc}
+\textbf{x} \cdot \textbf{y} = \textbf{x}^{T}\textbf{y} = \left[\begin{array}{cccc}
 x_{1}&x_{2}&\ldots&x_{n}\end{array}\right] \left[\begin{array}{c}
 y_{1} \\
 y_{2} \\
@@ -168,12 +200,28 @@ array([[1, 1],
 
 \item The {\bf identity matrix}, denoted $\textbf{I}\in \mathbb{R}^{n\times n}$, is a square matrix with ones on the diagonal and zeros 
 everywhere else. That is,
+%\begin{equation*}
+%\textbf{I} = \left[\begin{array}{cccc}
+%1 & 0 & \ldots & 0 \\
+%0 & 1 & \ldots & 0 \\
+%\vdots & \vdots & \ddots & \vdots \\
+%0 & 0 & \ldots & 1 \\
+%\end{array}\right].
+%\end{equation*}
+%
 \begin{equation*}
-I_{ij}=\left\{\begin{array}{cc}
+i_{ij}=\left\{\begin{array}{cc}
 1 & i=j \\
 0 & i\neq j
 \end{array}\right.
 \end{equation*}
+
+%\begin{equation*}
+%I_{ij}=\left\{\begin{array}{cc}
+%1 & i=j \\
+%0 & i\neq j
+%\end{array}\right.
+%\end{equation*}
 It has the property that for all $\textbf{A} \in \mathbb{R}^{n \times n}$, $\textbf{AI} = \textbf{A} = \textbf{IA}.$
 
 \begin{python}
@@ -193,9 +241,11 @@ print np.dot(I,x)
 
 \item The {\bf transpose} of a matrix results from ``'flipping'' the rows and columns. 
 Given a matrix $\textbf{A} \in \mathbb{R}^{m\times n}$, the transpose $\textbf{A}^{T} \in \mathbb{R}^{n\times m}$
-is the $n \times m$ matrix whose entries are given by $(A^{T})_{ij}= A_{ji}$.
+is the $n \times m$ matrix whose entries are given by 
+%$(A^{T})_{ij}= A_{ji}$.
+$(a^{T})_{ij}= a_{ji}$.
 
-Also, $\begin{array}{ccccc}(\textbf{A}^{T})^{T}= \textbf{A}; &  & (\textbf{AB})^{T}=\textbf{B}^{T}\textbf{A}^{T}; & & (\textbf{A}+\textbf{B})^{T}= \textbf{A}^{T}+\textbf{B}^{T} \end{array}$
+Also, $\begin{array}{ccccc}(\textbf{A}^{T})^{T}= \textbf{A}; &  & (\textbf{AB})^{T}=\textbf{B}^{T}\textbf{A}^{T}; & & (\textbf{A}+\textbf{B})^{T}= \textbf{A}^{T}+\textbf{B}^{T} \end{array}$.
 
 In numpy, you can access the transpose of a matrix as the \code{T} attribute:
 
@@ -204,7 +254,7 @@ A = np.array([ [1, 2], [3, 4] ])
 print A.T
 \end{python}
 
-\item A square matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ is {\bf symmetric} if  $\textbf{A}=\textbf{A}^{T}$.
+\item A square matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ is {\bf symmetric} if $\textbf{a}=\textbf{A}^{T}$. %$\textbf{A}=\textbf{A}^{T}$.
 
 \item The {\bf trace} of a square matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ is the sum of the diagonal
 elements, tr$(\textbf{A})= \sum\limits_{i=1}^{n} A_{ii}$
