@@ -2,13 +2,13 @@
 Today's class will be divided in two main parts. Firstly, we will learn about
 computation graphs and the Backpropagation algorithm. We will also code
 Backpropagation in Numpy for a simple model (a feed forward network). Secondly,
-we will learn the basics of the Theano module for Python. Theano allows to
+we will learn the basics of the Theano module for Python. Theano allows you to
 implement  generic computation graphs, automatically compute gradients with
 respect to their parameters and make use of Graphical Processing Units (GPUs)
 for optimal speed. 
 
 If you are new to the topic, you should aim to understand the concept of computation graph, 
-finish the Backpropagation exercise and attain a basic understanding of theano.
+finish the Backpropagation exercise and attain a basic understanding of Theano.
 If you already know Backpropagation well and have experience with normal
 Python, you should aim to complete the whole day. 
 
@@ -22,17 +22,17 @@ visited all the mathematical principles you need in the first days of the
 labs of this school. At their core, deep learning models are just functions
 mapping vector inputs $\mathbf{x}$ to vector outputs $\mathbf{y}$, constructed by
 composing linear and non-linear functions. This composition can be expressed in
-the form of a \textit{computation graph} where each node applies a function to
+the form of a \textit{computation graph}, where each node applies a function to
 its inputs and passes the result as its output. The parameters of the model are
 the weights given to the different inputs in nodes applying linear
 functions. This resembles vaguely synapse strengths in human neural networks,
 hence the name artificial neural networks. 
 
 Due to their compositional nature, gradient methods and the chain rule can be
-applied learn the parameters of these models regardless of their complexity.
-See Section \label{gradient_methods} for a refresh on the basic concept. We
+applied to learn the parameters of these models, regardless of their complexity.
+See Section \ref{gradient_methods} for a refresh on these basic concepts. We
 will also refer to the gradient learning methods introduced in Section
-\ref{s:me}. Today we will focus on \textit{feed-forward networks}. we will
+\ref{s:me}. Today we will focus on \textit{feed-forward networks}. We will
 extended today's class to \textit{recurrent neural networks} (RNNs).  
 
 Some of the changes that led to the surge of deep learning are not only
@@ -51,10 +51,10 @@ Theano\footnotemark\footnotetext{http://deeplearning.net/software/theano/} or Te
 In these labs we will be working with Theano. Theano allows us to express
 computation graphs symbolically in terms of basic algebraic operations. It also
 automatically computes gradients and produces CUDA-compatible code for GPUs. The
-exercises are designed to gain a low-level understanding of theano. If you are
+exercises are designed to gain a low-level understanding of Theano. If you are
 only looking forward to utilize pre-designed models, the Keras
 toolbox\footnotemark\footnotetext{http://keras.io/} provides high-level
-operations compatible with both theano and TensorFlow. 
+operations compatible with both Theano and TensorFlow. 
 
 \section{Computation Graphs} 
 
@@ -66,31 +66,31 @@ operations compatible with both theano and TensorFlow.
 \caption{Representation of a log-linear model as a computation graph: a
 composition of linear and non-linear transformations. The classification cost
 for the $m$-th training example $\mathcal{D}^m=\{\mathbf{x}, y\}$ is also
-shown. Note $\mathbf{1}^y$ is an indicator vector with a one in position y} 
+shown. Note $\mathbf{1}^y$ is an indicator vector with a one in position $y$.} 
 \label{fig:LogLinear}
 \end{figure}
 
 A computation graph is just a way of expressing a multi-input multi-output
 function with a directed acyclic graph. Each node in the graph applies a
-function over the parent nodes outputs and passes the result to its child-nodes
+function over the outputs of its parent nodes and passes the result to its child-nodes,
 thus attaining very complex functions by \textit{composing} simpler functions.
 To introduce the concept we will work with a very simple example, a categorical
 distribution over $K$ classes parametrized as a log-linear model. This is given
 by
 %
 \begin{align}
-p(y=k|{x}) & = \frac{1}{Z}\exp\left(\sum_{i=1}^{I} W_{ik} x_i + b_k\right),
+p(y=k|{x}) & = \frac{1}{Z(\mathbf{W},\mathbf{b},\mathbf{x})}\exp\left(\sum_{i=1}^{I} W_{ik} x_i + b_k\right),
 \label{eq:loglineargen}
 \end{align}
 %
 \noindent where 
 \begin{align}
-Z(\mathbf{W},\mathbf{b},\mathbf{x}) = \sum_{k'=1}^{K} \exp\left(\sum_{i=1}^{I} W_{ik'} x_i + b_{k'}\right). 
+Z(\mathbf{W},\mathbf{b},\mathbf{x}) = \sum_{k'=1}^{K} \exp\left(\sum_{i=1}^{I} W_{ik'} x_i + b_{k'}\right)
 \label{eq:loglineargenPartition}
 \end{align}
 %
-Is the partition function ensuring that all output values sum to one to yield
-a probability distribution. The model thus receives a feature vector
+is the partition function ensuring that all output values sum to one, so that we can interpret
+these values as probabilities. The model thus receives a feature vector
 $\mathbf{x} \in \mathbb{R}^{I}$ and assigns a probability over $y \in {1 \cdots K}$ possible
 class indices. It is parametrized by weights and bias $\Theta=\{\mathbf{W},
 \mathbf{b}\}$, with $\mathbf{W} \in \mathbb{R}^{K \times J}$ and $\mathbf{b}
@@ -105,7 +105,7 @@ Eq.\ref{eq:loglinear} becomes a special case of Eq.\ref{eq:loglineargen}, in
 which the feature vector $\mathbf{x}$ only take binary values and the bias
 parameters in $\mathbf{b}$ are all set to zero.}. 
 
-Another way of seeing this models is as the composition of the linear transformation 
+Another way of looking at these models is as the composition of the linear transformation 
 %
 \begin{equation}
     z_k = \sum_{i=1}^{I} W_{ik} x_i + b_k,
@@ -123,7 +123,7 @@ p(y=k|{x}) \equiv \tilde{z}_k = \frac{\exp(z_k)}{\sum_{k'=1}^{K} \exp(z_{k'})}.
 \label{eq:softmax}
 \end{equation}
 
-This is shown as a computation graph in Fig,~\ref{fig:LogLinear}. Note that in
+This is shown as a computation graph in Fig.~\ref{fig:LogLinear}. Note that in
 the following sections we will also use $\mathbf{z}$ and $\tilde{\mathbf{z}}$
 to denote the output of linear and non-linear functions respectively.
 
@@ -131,9 +131,9 @@ to denote the output of linear and non-linear functions respectively.
 
 As we saw on day one, the parameters of a log linear model
 $\Theta=\{\mathbf{W}, \mathbf{b}\}$ can be learned with Stochastic Gradient Descent (SGD). To apply SGD we first need to define an error function that measures how
-good we are doing for given parameter values. %.
+good we are doing for any given parameter values. %.
  To remain close to the maximum
-entropy example, we will use as cost the average minus posterior probability of
+entropy example, we will use as cost function the average minus posterior probability of
 the correct class, also known as the Cross-Entropy (CE) criterion. Bear in
 mind, however, that we could pick other non-linear functions and cost functions
 that do not have
@@ -145,7 +145,7 @@ For a training data-set $\mathcal{D} = \{(\mathbf{x}^1,y^1), \ldots,
 
 \begin{align}
 \mathcal{F}(\mathcal{D};\Theta) 
-& = -\frac{1}{M}\sum_{m=1}^{M} \log p(y^m=k(m) | \mathbf{x}^m) \\
+& = -\frac{1}{M}\sum_{m=1}^{M} \log p(y^m=k(m) | \mathbf{x}^m),
 \label{eq:CostLogPos}
 \end{align}
 % \nonumber\\&= -\frac{1}{M}\sum_{m=0}^{M-1} (\log \circ f_{k(m)} \circ \mathbf{g})(\mathbf{x}^m^)
@@ -173,23 +173,23 @@ main step. The reasoning here outlined will also be applicable to these.
 
 \begin{figure}[!h]
 \centering
-\includegraphics[scale=0.6]{figs/deep_learning/loglin_color.pdf}
-\caption{Forward-pass (blue) and Backpropagation (red) calculations to estimate the gradient of weight $W_{K2}$ and bias $b_K$of a log-linear model.}
+\includegraphics[scale=0.6]{figs/deep_learning/LogLin_color.pdf}
+\caption{Forward-pass (blue) and Backpropagation (red) calculations to estimate the gradient of weight $W_{K2}$ and bias $b_K$ of a log-linear model.}
 \label{fig:LogLinColor}
 \end{figure}
 
-The expressions for $\nabla\mathcal{F}$ are well know in the case of log-linear models. However, for
-the sake of the introduction to deep learning, we will show how it can
-be done by exploiting the decomposition of the cost function into the computational
-graph seen in the last section (and represented in Fig. \ref{fig:LogLinear}). To simplify notation, and without loss of generality, we will work with the 
+The expressions for $\nabla\mathcal{F}$ are well known in the case of log-linear models. However, for
+the sake of the introduction to deep learning, we will show how they can
+be derived by exploiting the decomposition of the cost function into the computational
+graph seen in the last section (and represented in Fig.~\ref{fig:LogLinear}). To simplify notation, and without loss of generality, we will work with the 
 classification cost of an individual example 
-
+%
 \begin{align}
 \mathcal{F}(\mathcal{D}^m;\Theta) 
-= -\log p(y^m=k(m) | \mathbf{x}^m) 
+= -\log p(y^m=k(m) | \mathbf{x}^m), 
 \label{eq:CostLogPosExample}
 \end{align}
-
+%
 where $\mathcal{D}^m=\{(\mathbf{x}^m, y^m)\}$. Due to linearity, extending the
 gradients of \ref{eq:CostLogPosExample} to $M$ examples as in
 \ref{eq:CostLogPos} simply implies computing the average of the gradients for
@@ -204,31 +204,30 @@ the individual examples.
 
 Lets start by computing the element $(k,i)$ of the matrix gradient
 $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$, which contains the partial
-derivative with respect to the weight $W_{ki}$. To do this we invoke the \textbf{chain rule} to split the derivative calculation into two terms at variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
+derivative with respect to the weight $W_{ki}$. To do this, we invoke the \textbf{chain rule} to split the derivative calculation into two terms at variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D};\Theta)}{\partial W_{ki}} & = \sum_{k'=1}^{K} { \color{red} \frac{\partial \mathcal{F}(\mathcal{D};\Theta)}{\partial z_{k'}} }{ \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}}
+\frac{\partial \mathcal{F}(\mathcal{D};\Theta)}{\partial W_{ki}} & = \sum_{k'=1}^{K} { \color{red} \frac{\partial \mathcal{F}(\mathcal{D};\Theta)}{\partial z_{k'}} }{ \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}}.
 \label{eq:LogLingCR1}
 \end{align}
 %
-We have thus transformed the problem of computing the derivative into computing two easier derivatives. Since $z_{k'}$ only depends on the weight $W_{ki}$ in a linear way (see the graph in Fig.\ref{fig:LogLinColor}), the second derivative in Eq.\ref{eq:LogLingCR1} is given by
+We have thus transformed the problem of computing the derivative into computing two easier derivatives. Since $z_{k'}$ only depends on the weight $W_{ki}$ in a linear way (see the graph in Fig.~\ref{fig:LogLinColor}), the second derivative in Eq.\ref{eq:LogLingCR1} is given by
 \begin{align}
 \frac{\partial z_{k'}}{\partial W_{ki}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} x_{i'} + b_{k'} \right) = 
   &\begin{cases}
       x_i^m  &  \mbox{ if } k = k'\\ 
-      0    &  \mbox{ otherwise }.
+      0    &  \mbox{ otherwise },
   \end{cases}
   \label{eq:partialLinear}
 \end{align}
-
+%
 \noindent which implies that 
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ki}} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta) }{\partial z_k} x_i
+\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ki}} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta) }{\partial z_k} x_i .
 \label{eq:gradlogPycx}
 \end{align}
 %
-
 \noindent The first term derivative is given by
 %
 \begin{align}
@@ -250,7 +249,7 @@ Here $\mathrm{\mathbf{1}}^{y^m} \in \mathbb{R}^{K}$ is a vector of zeros with a 
 the index of the correct class for the example $m$. 
 
 In order to compute the derivatives of the cost function with respect to the
-bias parameters $b_{k}$ we only need to compute one additional derivative
+bias parameters $b_{k}$, we only need to compute one additional derivative
 \begin{align}
 \frac{\partial z_{k'}}{\partial b_{k}} = 
   &\begin{cases}
@@ -268,13 +267,13 @@ This leads us to the last gradient expression
 \end{equation}
 
 \noindent An important consequence of the previous derivation is the fact that each 
-gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ and $\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta)$ can be computed from two terms . 
-
+gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ and $\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta)$ can be computed from two terms: 
+%
 \begin{enumerate}
 \item The derivative of the cost with respect to the linear transformation applying the weight $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k$, denoted in \textcolor{red}{red}.
 \item The derivative of the forward-pass up to the linear transformation applying the weight $\partial z_k/\partial W_{ik}$, denoted in \textcolor{blue}{blue}. This is always equal to the variable multiplying that weight and one in the case of the bias.
 \end{enumerate}
-
+%
 \noindent This is the key to the Backpropagation algorithm as we will see in the next Section \ref{sec:deep_forward}.
 
 \section{Going Deeper than Log-linear by using Composition}
@@ -282,7 +281,7 @@ gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ an
 
 \subsection{The Multilayer Perceptron or Feed-Forward Network}
 
-We have seen that just using the chain rule we can easily compute gradients for
+We have seen that just by using the chain rule we can easily compute gradients for
 compositions of two functions (one non-linear and one linear). However, there
 was nothing in the derivation that would stop us from composing more than two
 functions. Let us think, for example of the following model
@@ -311,7 +310,7 @@ $$p(y=k|{x}) \equiv \tilde{z}_k^N = \frac{\exp(z_k^N)}{\sum_{k'=1}^{K} \exp(z_{k
 \end{algorithmic}
 \end{algorithm}
 
-\noindent In similar fashion to the log-linear model the MLP/FF can be expressed as a computation graph. This is displayed in Fig~\ref{fig:FF}
+\noindent In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph. This is displayed in Fig.~\ref{fig:FF}
 
 \begin{figure}[!hb]
 \centering
@@ -323,15 +322,15 @@ shown.}
 \label{fig:FF}
 \end{figure}
 
-\noindent Some considerations
-
+\noindent Some considerations:
+%
 \begin{itemize}
-\item MLPs/FFs are characterized by applying in a set of layers subsequently to a single input. This characteristic is also shared by convolutional networks, although the latter also have parameter tying constraints.
+\item MLPs/FFs are characterized by applying functions in a set of layers subsequently to a single input. This characteristic is also shared by convolutional networks, although the latter also have parameter tying constraints.
 \item The non-linearities in the intermediate layers are usually one-to-one transformations. The most typical are the sigmoid, hyperbolic tangent and the rectified linear unit (ReLU). 
-\item The output non-linearity is determined by the output to be estimated. In order to estimate probability distributions the softmax is typically used. For regression problems the last linear layer is used instead.
+\item The output non-linearity is determined by the output to be estimated. In order to estimate probability distributions the softmax is typically used. For regression problems a last linear layer is used instead.
 \end{itemize}
 
-\subsection{Back-propagation: an overview}
+\subsection{Backpropagation: an overview}
 
 For the examples in this chapter we will consider the case in which we are estimating a distribution over classes. The cost function is thus the same
 
@@ -342,25 +341,25 @@ For the examples in this chapter we will consider the case in which we are estim
 To compute the gradient with respect the parameters of the $n$-th layer, we
 just need to apply the chain rule as in the previous section, consecutively.
 Fortunately, we do not need to repeat this procedure for each layer as it is
-easy to spot a recursive rule (the Back-propagation recursion) that is valid
+easy to spot a recursive rule (the Backpropagation recursion) that is valid
 for many neural models, including feed-forward networks (such as MLPs) as well
 as recurrent neural networks (RNNs) with minor modifications. The
-Back-propagation method, which is given in Algorithm \ref{algo:backprop} for a
-the case of an MLP, consist of the following steps:
+Backpropagation method, which is given in Algorithm \ref{algo:backprop} for
+the case of an MLP, consists of the following steps:
 
 \begin{itemize}
 \item The \textcolor{blue}{forward pass} step, where the input signal is injected though the network  in a forward fashion (see Alg.~\ref{algo:mlpforward})
-\item The \textcolor{red}{back-propagation} step, where the derivative of the cost function (also called error) is injected back through the network and back-propagated cording the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
-\item Finally, the gradient with respect to the parameters are computed by multiplying the input signal from the forward pass and the back-propagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
-\item Given the gradients computed in the previous step, the model weights can then be easily update according a specified learning rule (step 19 in Alg.~\ref{algo:backprop} uses a mini-batch SGD adaptation rule).
+\item The \textcolor{red}{backpropagation} step, where the derivative of the cost function (also called error) is injected back through the network and backpropagated according to the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
+\item Finally, the gradients with respect to the parameters are computed by multiplying the input signal from the forward pass and the backpropagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
+\item Given the gradients computed in the previous step, the model weights can then be easily update according to a specified learning rule (step 19 in Alg.~\ref{algo:backprop} uses a mini-batch SGD adaptation rule).
 \end{itemize}
 %Alg.~\ref{algo:backprop} uses a mini-batch SGD updation rule. 
 
-The main step of the method is the back-propagation step, where one has to compute the back-propagation recursion rules for a specific network.
-Next section carefully deduce this recursion rules, for the present MLP model. 
+The main step of the method is the backpropagation step, where one has to compute the backpropagation recursion rules for a specific network.
+The next section presents a careful deduction of these recursion rules, for the present MLP model. 
 
 
-\subsection{Back-propagation: deriving the rule}
+\subsection{Backpropagation: deriving the rule}
 
 \begin{figure}[!h]
 \centering
@@ -369,7 +368,7 @@ Next section carefully deduce this recursion rules, for the present MLP model.
 \label{fig:NN_color}
 \end{figure}
 
-In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously we will thus need to compute the backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$ and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ik}$ for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allows us to compute these values for each node given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at $N-1$
+In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ik}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at $N-1$
 %
 \begin{align}
 \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}} = \sum_{j'=1}^{J} {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j'}^{N-1}}} {\color{blue} \frac{\partial z_{j'}^{N-1}}{\partial W_{ji}}} = {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} {\color{blue} \frac{\partial z_{j}^{N-1}}{\partial W_{ji}}}
@@ -379,38 +378,37 @@ In a generic MLP we would like to compute the values of all parameters $\Theta=\
 where, as in the case of the log-linear model, we have used the fact that only $z_j$ depends on $W_{ji}$. We now advance forward from $z^N_j$ and apply the non-linearity to obtain $\tilde{z}^N_j$. As long as the non-linearity is a one-to-one operation (and this is often the case in neural-networks), we will also get rid of the summation leading to
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}} = \bigg(\sum_{j'=1}^{J} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial \tilde{z}_{j'}^{N-1}} \frac{\partial \tilde{z}_{j'}^{N-1}}{\partial z_{j}^{N-1}}\bigg) \frac{\partial z_{j}^{N-1}}{\partial W_{ji}}= \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial \tilde{z}_{j}^{N-1}}\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}\frac{\partial z_{j}^{N-1}}{\partial W_{ji}}
+\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}} = \bigg(\sum_{j'=1}^{J} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial \tilde{z}_{j'}^{N-1}} \frac{\partial \tilde{z}_{j'}^{N-1}}{\partial z_{j}^{N-1}}\bigg) \frac{\partial z_{j}^{N-1}}{\partial W_{ji}}= \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial \tilde{z}_{j}^{N-1}}\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}\frac{\partial z_{j}^{N-1}}{\partial W_{ji}}.
 \label{eq:BPderivation2}
 \end{align}
 %
-We wont be so lucky in the next application of the chain rule. Looking at Fig.~\ref{fig:NN_color}, it is clear that the derivatives at each node in layer $N-1$ will depend on all values of layer $N$. We thus have
+We will not be so lucky in the next application of the chain rule. Looking at Fig.~\ref{fig:NN_color}, it is clear that the derivatives at each node in layer $N-1$ will depend on all values of layer $N$. We thus have
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}} = \bigg(\sum_{k'=1}^{K} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k'}^{N}} \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{j}^{N-1}}\bigg)\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}\frac{\partial z_{j}^{N-1}}{\partial W_{ji}}
+\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}} = \bigg(\sum_{k'=1}^{K} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k'}^{N}} \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{j}^{N-1}}\bigg)\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}\frac{\partial z_{j}^{N-1}}{\partial W_{ji}}.
 \label{eq:BPderivation3}
 \end{align}
 %
 Now, comparing Eq.~\ref{eq:BPderivation1} with Eq.~\ref{eq:BPderivation3} it is easy to see that, if we denote the derivative of the cost (or error) with respect to the $N$ linear layer of the graph as
 %
 \begin{align}
-e^{N-1} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}^{N-1}} 
+e^{N-1} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}^{N-1}} ,
 \label{eq:BPderivation4}
 \end{align}
 %
 \noindent then we can relate this to the cost derivative with respect to the preceding layer with
 %
 \begin{align}
-e^{N-1} = \bigg(\sum_{k'=1}^{K} e^N \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{k'}^{N-1}}\bigg)\frac{\partial \tilde{z}_{k'}^{N-1}}{\partial z_{k'}^{N-1}} = \bigg(\sum_{k'=1}^{K} e^N_k W^N_{kj}\bigg)\cdot\tilde{z}_{k'}^{N-1}\cdot(1-\tilde{z}_{k'}^{N-1})
+e^{N-1} = \bigg(\sum_{k'=1}^{K} e^N \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{k'}^{N-1}}\bigg)\frac{\partial \tilde{z}_{k'}^{N-1}}{\partial z_{k'}^{N-1}} = \bigg(\sum_{k'=1}^{K} e^N_k W^N_{kj}\bigg)\cdot\tilde{z}_{k'}^{N-1}\cdot(1-\tilde{z}_{k'}^{N-1}),
 \end{align}
 %
 where we have used the fact that for sigmoid non-linearities 
-
-
+%
 \begin{equation}
-\frac{\partial \tilde{z}_{k}}{\partial z_{k}} = \tilde{z}_{k}\cdot (1-\tilde{z}_{k})
+\frac{\partial \tilde{z}_{k}}{\partial z_{k}} = \tilde{z}_{k}\cdot (1-\tilde{z}_{k}).
 \end{equation}
 
-This formula can also be interpreted as traversing the graph in Fig.~\ref{fig:FF} backwards, multiplying at each node the back-propagated error by the derivative of its inputs and summing the errors propagated from different nodes. A more formal expression of the algorithm can be found in Algorithm~\ref{algo:backprop}.
+This formula can also be interpreted as traversing the graph in Fig.~\ref{fig:FF} backwards, multiplying at each node the backpropagated error by the derivative of its inputs and summing the errors propagated from different nodes. A more formal expression of the algorithm can be found in Algorithm~\ref{algo:backprop}.
 
 \begin{algorithm}[th!]
 
@@ -435,7 +433,7 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 	 and keep not only $p(y^m|\mathbf{x}^m) \equiv \tilde{\mathbf{z}}^{m,N}$ and all intermediate non-linear outputs $\tilde{\mathbf{z}}^{m,1} \cdots \tilde{\mathbf{z}}^{m,N}$.
 	\ENDFOR	
 	\vspace{0.3cm}
-    %\STATE \textbf{Back-propagate} $\nabla_{\mathbf{z}^{m,n}}\mathcal{F}(\mathcal{D}_b;\Theta)$ 
+    %\STATE \textbf{Backpropagate} $\nabla_{\mathbf{z}^{m,n}}\mathcal{F}(\mathcal{D}_b;\Theta)$ 
 	\FOR{$n=N$ {\bfseries to} $1$}
         \IF{n==N} 
 		\FOR{$m=1$ {\bfseries to} $M'$}
@@ -444,10 +442,10 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 		\ENDFOR	
         \ELSE
    		\FOR{$m=1$ {\bfseries to} $M'$}
-		\STATE {Back-propagate} the error through the linear layer, for each example $m$:  
+		\STATE {Backpropagate} the error through the linear layer, for each example $m$:  
         $$\mathbf{e}^{m,n} = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{m,n+1}\Big)$$ 
         
-		\STATE {Back-propagate} the error through the non-linearity, for the sigmoid this is:  
+		\STATE {Backpropagate} the error through the non-linearity, for the sigmoid this is:  
         $$\mathbf{e}^{m,n} = \mathbf{e}^{m,n+1} \odot \tilde{\mathbf{z}}^{m,n} \odot (\mathbf{\mathrm{1}}-\tilde{\mathbf{z}}^{m,n}),$$
         where $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\tilde{\mathbf{z}}^n$.
 
@@ -456,7 +454,7 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
         \ENDIF 
 
 		\vspace{0.3cm}
-        \STATE {Compute the gradients} using the back-propagated errors and the inputs from the forward pass
+        \STATE {Compute the gradients} using the backpropagated errors and the inputs from the forward pass
 
         $$\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D_b};\Theta)  = -\frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^{m,n} \cdot \left(\tilde{\mathbf{z}}^{m,n-1}\right)^T,$$ 
         $$\nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D_b};\Theta)  = - \frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^{m,n}.$$  
@@ -513,9 +511,9 @@ that you should keep in mind.
 
 \item The formulas are also valid for other cost functions and output layer non-linearities with minor modifications. It is only necessary to compute the equivalente of Eq.~\ref{eq:patialSoftmax}. 
 
-\item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq: \ref{eq:chainRulRecursion}. With little effort it is also possible to deal with other cases.
+\item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq.~\ref{eq:chainRulRecursion}. With little effort it is also possible to deal with other cases.
 
-\item However, there is an important limitation: Unlike the log-linear models, the optimization problem is \textit{non convex}. This removes some formal guarantees, most importantly we can get trapped in local minima during training.
+\item However, there is an important limitation: unlike the log-linear models, the optimization problem is \textit{non convex}. This removes some formal guarantees, most importantly we can get trapped in local minima during training.
 \end{itemize}
 
 \footnotetext{Not exactly, since it is possible to run into numerical problems.}
