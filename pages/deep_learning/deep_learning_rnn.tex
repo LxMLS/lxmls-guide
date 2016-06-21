@@ -1,203 +1,381 @@
 \section{Today's assignment}
 Today's class will be focused on advanced deep learning concepts, mainly
-Recurrent Neural Networks (RNNs). The most important idea to take out of this day is that RNNs 
-not different from the feed forward networks we saw on the previous day. They
-are also computation graphs trained by backpropagation. 
+Recurrent Neural Networks (RNNs).  In the first day we saw how the chain-rule
+allowed us to compute gradients for arbitrary computation graphs. Today we will
+see that we can still do this for more complex models like Recurrent Neural
+Networks (RNNs). In this models we will input data in different points of the
+graph, which will correspond to different time instants. The key factor to
+consider is that, for a fixed number of time steps, this is still a computation
+graph and all what we saw on the first day applies with no need for extra math.
+
+If you managed to finish the previous day completely you should aim at finishing
+this as well. If you still have pending exercises from the first day e.g. the
+Theano part. It is recommended that you try to solve them first and then
+continue with this day. If you are not interested in Theano, the first exercise is
+also a pure numpy implementation that you can use to learn about RNNs.
+
+\section{Recurrent Neural Networks: Backpropagation Through Time}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.6]{figs/deep_learning/RNN.pdf}
+\caption{The simplest RNN can be seen as replicating a single hidden-layer FF network $T$ times and passing the intermediate hidden variable $\mathbf{h}_t$ across different steps. Note that all nodes operate over vector inputs e.g,. $\mathbf{x}_t \in \mathbb{R}^I$. Circles indicate matrix multiplications.}
+\label{fig:RNN}
+\end{figure}
 
 
-The only difference resides on the fact that in RNNs the nodes in the graph may represent different elements in a sequence. In other words, if we were to
 
-This will lead to some additional difficulties like the need to define the graphs for a variable number 
+The previous day was focused Feed Forward (FF) networks. These networks are ill suited to learn variable
+length patterns since they only accept inputs of a fixed size. In order to
+learn sequences using neural networks we need therefore to define some
+archictecture that is able to receive variable length inputs. Recurent Neural
+ Networks (RNNs) solve this problem by unfolding the computation graph in time.
+In other words, the network is replicated as many times it is necessary to
+cover the sequence to be modeled. in order
+to model the sequence one or more conections across different time instants are
+created. In the simplest model, depicted in Fig.~\ref{fig:RNN}, and detailed in
+Algorithm~\ref{algo:rnnforward}, a RNN is created by replicating a single
+hidden-layer FF network $T$ times and passing the intermediate hidden variable
+across different steps. 
 
+Since RNNs are computation graphs involving the same operations as FF networks
+they can also be trained with back-propagation. However the error is
+ propagated over the length of the entire sequence, this often leads to 
+numerical problems know as \textit{vanishing} and \textit{exploding} gradients.
+A number of solutions are used to mitigate this issue. One simple, yet inelegant,
+method is clipping the gradients. Another solution is to resort to more complex 
+RNN models that are able to better handle long range dependencies and are less
+sensitive to this phenomena. It is important to bear in mind, however, that
+all RNNs still use back-propagation as seen in the previous day, although it is often refered as \textit{Back-propagation through time}. The only
+difference is that, as the complexity of the computation graph grows, it is
+increasingly difficult to derive individual closed form solutions for each model.
+This is the reason to resort to tools like Theano or TensorFlow, allow us
+to define arbitrary computation graphs and derive the gradients automatically.
 
-They are therefore trained with the same algorithms. What is particular from RNNs is that nodes in the graph will represent different time instants. 
+\begin{algorithm}[th!]
+\label{algo:rnnforward}
+   \caption{Forward pass of a Recurrent Neural Network (RNN)}
+\begin{algorithmic}[1]
 
-\section{Recurrent Neural Networks: Backpropagation through Time}
+   \STATE {\bfseries input:} Initial parameters for an RNN Input
+$\Theta=\{\mathbf{W}^x \in \mathbb{R}^{H \times I}, \mathbf{W}^h \in \mathbb{R}^{H \times H}, \mathbf{W}^y \in \mathbb{R}^{K \times H} \}$ input, recurent and ouput transformations respectively.
+
+   \STATE {\bfseries input:} Input data matrix $\mathbf{x} \in \mathbb{R}^{I \times T}$ of size $T$. Initial recurent variable $\mathbf{h}_0$. 
+
+	\FOR{$t=1$ {\bfseries to} $T-1$}
+     \STATE Apply linear transformation combining
+        $$z_{jt}^h = \sum_{i=1}^{I} W_{ji}^x x_{it} + \sum_{j=1}^{J} W_{jj'}^h h_{j't-1}$$
+     \STATE Apply non-linear transformation e.g. sigmoid (hereby denoted $\sigma()$)
+     $$h_{jt} = \sigma(z_{jt}^h)  = \frac{1}{1+\exp(-z_{jt}^h)}$$
+
+	\ENDFOR
+
+\STATE Apply final linear transformation to each of the recurent variables $\mathbf{h}_1 \cdots \mathbf{h}_T$ 
+   $$z_{kt}^y = \sum_{j=1}^{J} W_{kj}^y h_{jt}$$
+\STATE Apply final non-linear transformation e.g. softmax 
+$$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^y)}$$
+
+\end{algorithmic}
+\end{algorithm}
 
 \begin{exercise}
-Convince yourself a RNN is just an MLP with inputs and outputs at various
-layers. 
+Convince yourself a RNN is just an FF unfolded in time. Run the NumpyRNN code. Set break-points and compare with what you learned about back-propagation in the previous day. Start by loading data Part-of-speech data and configure it for the exercises
+\begin{python}
+# Load Part-of-Speech data 
+import lxmls.readers.pos_corpus as pcc
+corpus = pcc.PostagCorpus()
+train_seq = corpus.read_sequence_list_conll("data/train-02-21.conll", max_sent_len=15, max_nr_sent=1000)
+test_seq = corpus.read_sequence_list_conll("data/test-23.conll", max_sent_len=15, max_nr_sent=1000)
+dev_seq = corpus.read_sequence_list_conll("data/dev-22.conll", max_sent_len=15, max_nr_sent=1000) 
+\end{python}
+We will need to redo the indices of
+the data so that they are consecutive and cast all data to numpy arrays
+of int32 for compatibility with GPUs. This function will also add reverse
+indices to recover tag and word from its index word\_dict and tag\_dict  
+\begin{python}
+# Redo indices 
+train_seq, test_seq, dev_seq = pcc.compacify(train_seq, test_seq, dev_seq, theano=True)
+# Get number of words and tags in the corpus
+nr_words = len(train_seq.x_dict)
+nr_tags = len(train_seq.y_dict)
+\end{python}
 
-\textbf{TODO}:
-\textbf{This should be a numpy example of backpropagation in a RNN akin to the MLP case}.
- 
+\noindent Load and configure the NumpyRNN. Remeber to user reload if you wnat to modify 
+the code inside the rnns module
+\begin{python}
+import lxmls.deep_learning.rnn as rnns
+reload(rnns)
+# RNN configuration
+SEED = 1234       # Random seed to initialize weigths
+emb_size = 50     # Size of word embeddings
+hidden_size = 20  # size of hidden layer
+# RNN
+np_rnn = rnns.NumpyRNN(nr_words, emb_size, hidden_size, nr_tags, seed=SEED)
+# Example sentence
+x0 = train_seq[0].x
+y0 = train_seq[0].y
+\end{python}
+Compute forward pass and gradients
+\begin{python}
+# Forward pass
+p_y, y_rnn, h, z1, x = np_rnn.forward(x0, all_outputs=True)
+# Gradients
+numpy_rnn_gradients = np_rnn.grads(x0, y0)
+\end{python}
+
 \end{exercise}
 
 \section{The Scan operation in Theano}
 
+Handling variable length computation graphs in an automatic fashion is not easy. 
+Theano aprovides the scan function for this purpose. The scan function acts
+as a symbolic for loop. Since, unlike for normal python for loops, it is not
+possible to put a breakpoint in the scan loop and debug, the design of graphs
+with scan has to be handled with care. Tooboxes like Keras conviniently abstract
+the user from such constructs. However, for complex designs it necessary to be
+able to use scan or equivalent functions. 
+
 \begin{exercise}
-Scan is your friend, maybe. 
-
-\textbf{TODO}:
-\textbf{Simple examples of scan (both to see and implement)}
-\end{exercise}
-
-\section{RNNs}
-
-\begin{exercise}
-Complete the theano code for a RNN inside lxmls/deep\_learning/rnn.py. Use
-exercise 6.1 for a numpy example and 6.2 to learn how to handle scan. 
-
-Prepare the data
+Understand the basics of scan with this examples. Scan allows you to build
+computation graphs with a variable number of nodes. It acts as a python "for"
+loop but it is symbolic. The following example should help you understand the
+basic scan functionality. It generates a sequence for a given length. Run it
+and modify it. Try to arrive at an error and understand whant happened.
 \begin{python}
-# Load POS and compacify the indices
-import lxmls.readers.pos_corpus as pcc
-corpus    = pcc.PostagCorpus()
-train_seq = corpus.read_sequence_list_conll("data/train-02-21.conll",
-                                            max_sent_len=15, max_nr_sent=1000)
-test_seq  = corpus.read_sequence_list_conll("data/test-23.conll",
-                                            max_sent_len=15, max_nr_sent=1000)
-dev_seq   = corpus.read_sequence_list_conll("data/dev-22.conll",
-                                            max_sent_len=15, max_nr_sent=1000)
-# Redo indices so that they are consecutive. Also cast all data to numpy arrays
-# of int32 for compatibility with GPUs and theano.
-train_seq, test_seq, dev_seq = pcc.compacify(train_seq, test_seq, dev_seq,
-                                             theano=True)
-\end{python}
-
-After you have implemented the forward-pass correctly you should be able to run
-this POS example. First define your model
-\begin{python}
-# CREATE RNN TO PREDICT POS TAGS 
 import numpy as np
 import theano
 import theano.tensor as T
-import lxmls.deep_learning.rnn as rnns
+theano.config.optimizer='None'
 
-# DEFINE MODEL
-# Extract word embeddings for the vocabulary used. Download embeddings if
-# not available.
-import os
-if not os.path.isfile('data/senna_50'):
-    rnns.download_embeddings('senna_50','data/senna_50')
-E = rnns.extract_embeddings('data/senna_50', train_seq.x_dict)
+def square(x): 
+    return x**2 
 
-# CONFIG 
-n_words = E.shape[0]                        # Number of words
-n_emb   = E.shape[1]                        # Size of word embeddings
-n_hidd  = 20                                # Size of the recurrent layer
-n_tags  = len(train_seq.y_dict.keys())      # Number of POS tags
-# SYMBOLIC VARIABLES
-_x      = T.ivector('x')                    # Input words indices
-# Define the RNN
-rnn     = rnns.RNN(E, n_hidd, n_tags)
-# Forward
-_p_y    = rnn._forward(_x)
+# Python
+def np_square_n_steps(nr_steps):
+    out = []
+    for n in np.arange(nr_steps):
+        out.append(square(n))
+    return np.array(out)
+
 
 \end{python}
+\begin{python}
+# Theano
+nr_steps = T.lscalar('nr_steps')
+h, _ = theano.scan(fn=square, sequences=T.arange(nr_steps))
+th_square_n_steps = theano.function([nr_steps], h)
 
-Now define the training configuration
+# Compare both
+print np_square_n_steps(10)
+print th_square_n_steps(10)
+\end{python}
+The following example should help you understand about matrix multiplications
+and passing values from one iteration to the other. It at each step it we
+multiply the output of the previous step by a matrix A. We start with an
+initial vector s0. The matrix and vector are random but normalized to result on
+a Markov chain.  
+\begin{python}
+# Configuration
+nr_states = 3
+nr_steps = 5
+
+# Transition matrix
+A = np.abs(np.random.randn(nr_states, nr_states))
+A = A/A.sum(0, keepdims=True)
+# Initial state
+s0 = np.zeros(nr_states)
+s0[0] = 1
+\end{python}
+
 
 \begin{python}
+# Numpy version
+def np_markov_step(s_tm1): 
+    s_t = np.dot(s_tm1, A.T)
+    return s_t 
 
-# DEFINE TRAINING 
-# CONFIG
-lrate   = 0.5  # Learning rate          
-n_iter  = 20   # Number of iterations
-# SYMBOLIC VARIABLES
-_y      = T.ivector('y')                   # True output tags indices
-# Train cost
-_F      = -T.mean(T.log(_p_y)[T.arange(_y.shape[0]), _y]) 
-# Total prediction error 
-_err    = T.sum(T.neq(T.argmax(_p_y,1), _y))
+def np_markov_chain(nr_steps, A, s0):
+    # Pre-allocate space
+    s = np.zeros((nr_steps+1, nr_states))
+    s[0, :] = s0
+    for t in np.arange(nr_steps):
+        s[t+1, :] = np_markov_step(s[t, :])
+    return  s   
 
-# SGD UPDATE RULE
-updates = [(_par, _par - lrate*T.grad(_F, _par)) for _par in rnn.param] 
-
-# COMPILE ERROR FUNCTION, BATCH UPDATE
-err_sum      = theano.function([_x, _y], _err)
-batch_update = theano.function([_x, _y], _F, updates=updates)
-
+np_markov_chain(nr_steps, A, s0)
 \end{python}
-
-Now you can run training 
-
-\textbf{TODO}: Experience about pre-trained embeddings   
 
 \begin{python}
+# Theano version
+# Store variables as shared variables
+th_A = theano.shared(A, name='A', borrow=True)
+th_s0 = theano.shared(s0, name='s0', borrow=True)
+# Symbolic variable for the number of steps
+th_nr_steps = T.lscalar('nr_steps')
 
-# TRAIN MODEL WITH SGD
-#TODO: Merge this code with lxmls/deep_learning/sgd.py
-# Function computing accuracy for a sequence of sentences
-def accuracy(seq):
-    err = 0
-    N   = 0
-    for n, seq in enumerate(seq):
-        err += err_sum(seq.x, seq.y)
-        N   += seq.y.shape[0]
-    return 100*(1 - err*1./N) 
+def th_markov_step(s_tm1): 
+    s_t = T.dot(s_tm1, th_A.T)
+    # Remember to name variables
+    s_t.name = 's_t'
+    return s_t 
 
-print "\nTraining RNN for POS"
-# EPOCH LOOP
-for i in range(n_iter):
+s, _ = theano.scan(th_markov_step, 
+                   outputs_info=[dict(initial=th_s0)], 
+                   n_steps=th_nr_steps)
+th_markov_chain = theano.function([th_nr_steps], T.concatenate((th_s0[None, :], s), 0))
 
-    # SENTENCE LOOP
-    cost = 0
-    for n, seq in enumerate(train_seq):
-        cost += batch_update(seq.x, seq.y)
-        # INFO
-        perc  = (n+1)*100./len(train_seq) 
-        sys.stdout.write("\r%2.2f %%" % perc)
-        sys.stdout.flush()
-
-    # Accuracy on train and dev set
-    Acc = accuracy(train_seq)
-    print "\rEpoch %d: Train cost %2.2f Acc %2.2f %%" % (i+1, cost, Acc),
-    print " Devel Acc %2.2f %%" % accuracy(dev_seq)
-
-# Final accuracy on the dev set
-print "Test Acc %2.2f %%" % accuracy(test_seq)
-
+th_markov_chain(nr_steps)
 \end{python}
-
 \end{exercise}
 
-\section{More Complex RNN the LSTM}
-
+\section{A RNN in theano for Part-of-Speech Tagging}
 
 \begin{exercise}
-
-Convince yourself that LSTMs and GRUs are just slightly more complex RNNs
-\textbf{TODO}: Use here those nice pics from the blog-post
-
+Complete the theano code for a RNN inside lxmls/deep learning/rnn.py. Use
+exercise 6.1 for a numpy example and 6.2 to learn how to handle scan. Keep in
+mind that you only need to implement the forward pass!. Theano will handle
+backpropagation for us. 
 \begin{python}
-# Define the LSTM
-lstm = rnns.LSTM(E, n_hidd, n_tags)
-# Forward
-_p_y = lstm._forward(_x)
-# Train cost
-_F   = -T.mean(T.log(_p_y)[T.arange(_y.shape[0]), _y]) 
-# Total prediction error 
-_err = T.sum(T.neq(T.argmax(_p_y,1), _y))
+# Instantiate the class
+rnn = rnns.RNN(nr_words, emb_size, hidden_size, nr_tags, seed=SEED)
+# Compile theano function
+x = T.ivector('x')
+th_forward = theano.function([x], rnn._forward(x).T)
+\end{python}
+When working with theano, it is more difficult to localize the source of
+errors. It is therefore extremely important to work step by step and test the
+code frequently. To debug we suggest to implement and compile the forward pass
+first. You can use this code for testing. If it raises no error you are good to
+go.
+\begin{python}
+assert np.allclose(th_forward(x0), np_rnn.forward(x0)), \
+    "Numpy and Theano forward pass differ!"
+\end{python}
+Once you are confident the forward pass is working you can test the gradients
+\begin{python}
+# Compile function returning the list of gradients
+x = T.ivector('x')     # Input words
+y = T.ivector('y')     # gold tags 
+p_y = rnn._forward(x)
+cost = -T.mean(T.log(p_y)[T.arange(y.shape[0]), y])
+grads_fun = theano.function([x, y], [T.grad(cost, par) for par in rnn.param])
+\end{python}
+Finally, its time to test our network in the task of POS tagging. 
 
-# SGD UPDATE RULE
-updates = [(_par, _par - lrate*T.grad(_F, _par)) for _par in lstm.param] 
-
-# COMPILE ERROR FUNCTION, BATCH UPDATE
-err_sum      = theano.function([_x, _y], _err)
-batch_update = theano.function([_x, _y], _F, updates=updates)
-
-print "\nTraining LSTM for POS"
-# EPOCH LOOP
+%For this,
+%lets first compile a function that does predictions
+%\begin{python}
+%rnn_prediction = theano.function([x], T.argmax(p_y, 1))
+%# Lets test the predictions
+%def test_model(sample_seq, rnn_prediction):
+%    words = [train_seq.word_dict[wrd] for wrd in sample_seq.x]
+%    tags = [train_seq.tag_dict[pred] for pred in rnn_prediction(sample_seq.x)]
+%    print ["/".join([word, tag]) for word , tag in zip(words, tags)]
+%\end{python}
+Lets define the optimization parameters and compile a batch update  and prediction functions
+\begin{python}
+# Parameters
+lrate = 0.5   # Learning rate
+n_iter = 5    # Number of iterations
+# Get list of SGD batch update rule for each parameter
+updates = [(par, par - lrate*T.grad(cost, par)) for par in rnn.param]
+# compile
+rnn_prediction = theano.function([x], T.argmax(p_y, 1))
+rnn_batch_update = theano.function([x, y], cost, updates=updates)
+\end{python}
+Finally it is time to run SGD. You can use the following code for this purpose
+\begin{python}
+nr_words = sum([len(seq.x) for seq in train_seq])
 for i in range(n_iter):
+    # Training
     cost = 0
+    errors = 0
     for n, seq in enumerate(train_seq):
-        cost += batch_update(seq.x, seq.y)
-        # INFO
-        perc  = (n+1)*100./len(train_seq) 
-        sys.stdout.write("\r%2.2f %%" % perc)
-        sys.stdout.flush()
+        cost += rnn_batch_update(seq.x, seq.y)
+        errors += sum(rnn_prediction(seq.x) != seq.y)
+    acc_train = 100*(1-errors*1./nr_words) 
+    print "Epoch %d: Train cost %2.2f Acc %2.2f %%" % (i+1, cost, acc_train), 
+    # Evaluation    
+    errors = 0
+    for n, seq in enumerate(dev_seq):
+        errors += sum(rnn_prediction(seq.x) != seq.y)  
+    acc_dev = 100*(1-errors*1./nr_words) 
+    print " Devel Acc %2.2f %%" % acc_dev
+    sys.stdout.flush()
+\end{python}
 
-    # Accuracy on train and dev set
-    Acc = accuracy(train_seq)
-    print "\rEpoch %d: Train cost %2.2f Acc %2.2f %%" % (i+1, cost, Acc),
-    print " Devel Acc %2.2f %%" % accuracy(dev_seq)
 
-# Final accuracy on the dev set
-print "Test Acc %2.2f %%" % accuracy(test_seq)
+\end{exercise}
+
+
+\section{The Importance of Pre-training}
+
+One of the key insights that has played a role in the rise of deep learning in
+NLP tasks is the use of neural word-embedings. These are just numeric 
+representations of words that can be learned from unsupervised data using
+simple FF networks such as e.g. skipg-grams.
+
+Such representations can be plug-in into supervised models such as the RNN that we just
+trained to initialize its initial layer. The of pre-trained embeddings very often leads to
+important improvements in performance.
+
+\begin{exercise}
+Test the effect of using pre-trained embeddings. Run the following code to
+download the embeddings, reset the layer parameters and initialize the
+embedding layer with the pre-trained embeddings. Then run the training code
+from the last execise.
+\begin{python}
+# Embeddings Path
+import lxmls.deep_learning.embeddings as emb
+import os
+reload(emb)
+if not os.path.isfile(EMBEDDINGS):
+    emb.download_embeddings('senna_50', "data/senna_50")
+E = emb.extract_embeddings("data/senna_50", train_seq.x_dict) 
+# Reset model to remove the effect of training
+rnn = rnns.reset_model(rnn, seed=SEED)
+# Set the embedding layer to the pre-trained values
+rnn.param[0].set_value(E.astype(theano.config.floatX)) 
 \end{python}
 \end{exercise}
 
 
+\section{More Complex RNNs the LSTM}
 
+TODO: Link to this http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
+\begin{exercise}
+Convince yourself that LSTMs are just more complex RNNs. Run them, play around
+with the hyper parameters and compare the RNN and LSTM classes.
+\begin{python}
+# Instantiate LSTM
+lstm = rnns.LSTM(nr_words, emb_size, hidden_size, nr_tags)
+# Compile prediction and bacth update functions
+lstm_prediction = theano.function([x], T.argmax(lstm._forward(x), 1))
+lstm_cost = -T.mean(T.log(lstm._forward(x))[T.arange(y.shape[0]), y])
+# Get list of SGD batch update rule for each parameter
+lstm_updates = [(par, par - lrate*T.grad(lstm_cost, par)) for par in lstm.param]
+# compile
+lstm_batch_update = theano.function([x, y], lstm_cost, updates=lstm_updates)
+\end{python}
+
+\begin{python}
+nr_words = sum([len(seq.x) for seq in train_seq])
+for i in range(n_iter):
+    # Training
+    cost = 0
+    errors = 0
+    for n, seq in enumerate(train_seq):
+        cost += lstm_batch_update(seq.x, seq.y)
+        errors += sum(lstm_prediction(seq.x) != seq.y)
+    acc_train = 100*(1-errors*1./nr_words) 
+    print "Epoch %d: Train cost %2.2f Acc %2.2f %%" % (i+1, cost, acc_train), 
+    # Evaluation:
+    errors = 0
+    for n, seq in enumerate(dev_seq):
+        errors += sum(lstm_prediction(seq.x) != seq.y)  
+    acc_dev = 100*(1-errors*1./nr_words) 
+    print " Devel Acc %2.2f %%" % acc_dev
+    sys.stdout.flush()
+\end{python}
+\end{exercise}
