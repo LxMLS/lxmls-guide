@@ -1,6 +1,6 @@
 \section{Today's assignment}
 Today's class will be focused on advanced deep learning concepts, mainly
-Recurrent Neural Networks (RNNs).  In the first day we saw how the chain-rule
+Recurrent Neural Networks (RNNs). In the first day we saw how the chain-rule
 allowed us to compute gradients for arbitrary computation graphs. Today we will
 see that we can still do this for more complex models like Recurrent Neural
 Networks (RNNs). In this models we will input data in different points of the
@@ -12,45 +12,50 @@ If you managed to finish the previous day completely you should aim at finishing
 this as well. If you still have pending exercises from the first day e.g. the
 Theano part. It is recommended that you try to solve them first and then
 continue with this day. If you are not interested in Theano, the first exercise is
-also a pure numpy implementation that you can use to learn about RNNs.
+also a pure Numpy implementation that you can use to learn about RNNs.
 
 \section{Recurrent Neural Networks: Backpropagation Through Time}
 
 \begin{figure}[!h]
 \centering
 \includegraphics[scale=0.6]{figs/deep_learning/RNN.pdf}
-\caption{The simplest RNN can be seen as replicating a single hidden-layer FF network $T$ times and passing the intermediate hidden variable $\mathbf{h}_t$ across different steps. Note that all nodes operate over vector inputs e.g,. $\mathbf{x}_t \in \mathbb{R}^I$. Circles indicate matrix multiplications.}
+\caption{The simplest RNN can be seen as replicating a single hidden-layer FF
+network $T$ times and passing the intermediate hidden variable $\mathbf{h}_t$
+across different steps. Note that all nodes operate over vector inputs e.g,.
+$\mathbf{x}_t \in \mathbb{R}^I$. Circles indicate matrix multiplications.}
 \label{fig:RNN}
 \end{figure}
 
+The previous day was focused Feed Forward (FF) networks. These networks are ill
+suited to learn variable length patterns since they only accept inputs of a
+fixed size. In order to learn sequences using neural networks, we need therefore
+to define some architecture that is able to process variable length inputs.
+Recurrent Neural Networks (RNNs) solve this problem by unfolding the
+computation graph in time. In other words, the network is replicated as many
+times as it is necessary to cover the sequence to be modeled. In order
+to model the sequence one or more connections across different time instants are
+created. This allows the network to have a memory in time and thus capture
+complex patterns in sequences.In the simplest model, depicted in
+Fig.~\ref{fig:RNN}, and detailed in Algorithm~\ref{algo:rnnforward}, a RNN is
+created by replicating a single hidden-layer FF network $T$ times and passing
+the intermediate hidden variable across different steps. 
 
-
-The previous day was focused Feed Forward (FF) networks. These networks are ill suited to learn variable
-length patterns since they only accept inputs of a fixed size. In order to
-learn sequences using neural networks we need therefore to define some
-archictecture that is able to receive variable length inputs. Recurent Neural
- Networks (RNNs) solve this problem by unfolding the computation graph in time.
-In other words, the network is replicated as many times it is necessary to
-cover the sequence to be modeled. in order
-to model the sequence one or more conections across different time instants are
-created. In the simplest model, depicted in Fig.~\ref{fig:RNN}, and detailed in
-Algorithm~\ref{algo:rnnforward}, a RNN is created by replicating a single
-hidden-layer FF network $T$ times and passing the intermediate hidden variable
-across different steps. 
-
-Since RNNs are computation graphs involving the same operations as FF networks
+Since RNNs are computation graphs involving the same operations as FF networks,
 they can also be trained with back-propagation. However the error is
- propagated over the length of the entire sequence, this often leads to 
+ propagated over the length of the entire sequence. This often leads to 
 numerical problems know as \textit{vanishing} and \textit{exploding} gradients.
 A number of solutions are used to mitigate this issue. One simple, yet inelegant,
-method is clipping the gradients. Another solution is to resort to more complex 
+method is clipping the gradients to a fixed threshold. Another solution is to resort to more complex 
 RNN models that are able to better handle long range dependencies and are less
 sensitive to this phenomena. It is important to bear in mind, however, that
-all RNNs still use back-propagation as seen in the previous day, although it is often refered as \textit{Back-propagation through time}. The only
-difference is that, as the complexity of the computation graph grows, it is
-increasingly difficult to derive individual closed form solutions for each model.
-This is the reason to resort to tools like Theano or TensorFlow, allow us
-to define arbitrary computation graphs and derive the gradients automatically.
+all RNNs still use back-propagation as seen in the previous day, although it is
+often referred as \textit{Back-propagation through time}. 
+
+%What we saw with FF and RNN netwoeksThe only
+%difference is that, as the complexity of the computation graph grows, it is
+%increasingly difficult to derive individual closed form solutions for each model.
+%This is the reason to resort to tools like Theano or TensorFlow, allow us
+%to define arbitrary computation graphs and derive the gradients automatically.
 
 \begin{algorithm}[th!]
 \label{algo:rnnforward}
@@ -58,19 +63,19 @@ to define arbitrary computation graphs and derive the gradients automatically.
 \begin{algorithmic}[1]
 
    \STATE {\bfseries input:} Initial parameters for an RNN Input
-$\Theta=\{\mathbf{W}^x \in \mathbb{R}^{H \times I}, \mathbf{W}^h \in \mathbb{R}^{H \times H}, \mathbf{W}^y \in \mathbb{R}^{K \times H} \}$ input, recurent and ouput transformations respectively.
+$\Theta=\{\mathbf{W}^x \in \mathbb{R}^{H \times I}, \mathbf{W}^h \in \mathbb{R}^{H \times H}, \mathbf{W}^y \in \mathbb{R}^{K \times H} \}$ input, recurrent and output transformations respectively.
 
-   \STATE {\bfseries input:} Input data matrix $\mathbf{x} \in \mathbb{R}^{I \times T}$ of size $T$. Initial recurent variable $\mathbf{h}_0$. 
+   \STATE {\bfseries input:} Input data matrix $\mathbf{x} \in \mathbb{R}^{I \times T}$ of size $T$. Initial recurrent variable $\mathbf{h}_0$. 
 
 	\FOR{$t=1$ {\bfseries to} $T-1$}
-     \STATE Apply linear transformation combining
+     \STATE Apply linear transformation combining input and recurrent signals
         $$z_{jt}^h = \sum_{i=1}^{I} W_{ji}^x x_{it} + \sum_{j=1}^{J} W_{jj'}^h h_{j't-1}$$
      \STATE Apply non-linear transformation e.g. sigmoid (hereby denoted $\sigma()$)
      $$h_{jt} = \sigma(z_{jt}^h)  = \frac{1}{1+\exp(-z_{jt}^h)}$$
 
 	\ENDFOR
 
-\STATE Apply final linear transformation to each of the recurent variables $\mathbf{h}_1 \cdots \mathbf{h}_T$ 
+\STATE Apply final linear transformation to each of the recurrent variables $\mathbf{h}_1 \cdots \mathbf{h}_T$ 
    $$z_{kt}^y = \sum_{j=1}^{J} W_{kj}^y h_{jt}$$
 \STATE Apply final non-linear transformation e.g. softmax 
 $$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^y)}$$
@@ -79,7 +84,12 @@ $$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^
 \end{algorithm}
 
 \begin{exercise}
-Convince yourself a RNN is just an FF unfolded in time. Run the NumpyRNN code. Set break-points and compare with what you learned about back-propagation in the previous day. Start by loading data Part-of-speech data and configure it for the exercises
+Convince yourself that a RNN is just an FF unfolded in time. Run the NumpyRNN
+code. Set break-points and compare with what you learned about back-propagation
+in the previous day. 
+
+To work with RNNs we will use the Part-of-speech data-set seen in the sequence
+models day.
 \begin{python}
 # Load Part-of-Speech data 
 import lxmls.readers.pos_corpus as pcc
@@ -100,7 +110,7 @@ nr_words = len(train_seq.x_dict)
 nr_tags = len(train_seq.y_dict)
 \end{python}
 
-\noindent Load and configure the NumpyRNN. Remeber to user reload if you wnat to modify 
+\noindent Load and configure the NumpyRNN. Remember to user reload if you want to modify 
 the code inside the rnns module
 \begin{python}
 import lxmls.deep_learning.rnn as rnns
@@ -127,13 +137,13 @@ numpy_rnn_gradients = np_rnn.grads(x0, y0)
 
 \section{The Scan operation in Theano}
 
-Handling variable length computation graphs in an automatic fashion is not easy. 
-Theano aprovides the scan function for this purpose. The scan function acts
+Handling variable length computation graphs in an automatic fashion is not simple. 
+Theano provides the \textit{scan} function for this purpose. The scan function acts
 as a symbolic for loop. Since, unlike for normal python for loops, it is not
-possible to put a breakpoint in the scan loop and debug, the design of graphs
-with scan has to be handled with care. Tooboxes like Keras conviniently abstract
-the user from such constructs. However, for complex designs it necessary to be
-able to use scan or equivalent functions. 
+possible to put a breakpoint in the scan loop, the design of graphs
+with scan has to be handled with care. Tooboxes like Keras conveniently abstract
+the user from such constructs. However, for complex designs it will be
+necessary to be able to use scan or equivalent functions. 
 
 \begin{exercise}
 Understand the basics of scan with this examples. Scan allows you to build
@@ -170,10 +180,10 @@ print np_square_n_steps(10)
 print th_square_n_steps(10)
 \end{python}
 The following example should help you understand about matrix multiplications
-and passing values from one iteration to the other. It at each step it we
+and passing values from one iteration to the other. At each step, we will
 multiply the output of the previous step by a matrix A. We start with an
 initial vector s0. The matrix and vector are random but normalized to result on
-a Markov chain.  
+a Markov chain (this is irrelevant for the use of scan).  
 \begin{python}
 # Configuration
 nr_states = 3
@@ -238,12 +248,12 @@ backpropagation for us.
 \begin{python}
 # Instantiate the class
 rnn = rnns.RNN(nr_words, emb_size, hidden_size, nr_tags, seed=SEED)
-# Compile theano function
+# Compile the forward pass function
 x = T.ivector('x')
 th_forward = theano.function([x], rnn._forward(x).T)
 \end{python}
 When working with theano, it is more difficult to localize the source of
-errors. It is therefore extremely important to work step by step and test the
+errors. It is therefore important to work step by step and test the
 code frequently. To debug we suggest to implement and compile the forward pass
 first. You can use this code for testing. If it raises no error you are good to
 go.
@@ -260,7 +270,18 @@ p_y = rnn._forward(x)
 cost = -T.mean(T.log(p_y)[T.arange(y.shape[0]), y])
 grads_fun = theano.function([x, y], [T.grad(cost, par) for par in rnn.param])
 \end{python}
-Finally, its time to test our network in the task of POS tagging. 
+
+\begin{python}
+# Compare numpy and theano gradients
+theano_rnn_gradients = grads_fun(x0, y0)
+for n in range(len(theano_rnn_gradients)): 
+    assert np.allclose(numpy_rnn_gradients[n], theano_rnn_gradients[n]), \
+        "Numpy and Theano gradients differ in step n"
+\end{python}
+
+\noindent Finally, its time to test our network in the task of POS tagging. Lets define
+the optimization parameters and compile a batch update  and prediction
+functions
 
 %For this,
 %lets first compile a function that does predictions
@@ -272,7 +293,6 @@ Finally, its time to test our network in the task of POS tagging.
 %    tags = [train_seq.tag_dict[pred] for pred in rnn_prediction(sample_seq.x)]
 %    print ["/".join([word, tag]) for word , tag in zip(words, tags)]
 %\end{python}
-Lets define the optimization parameters and compile a batch update  and prediction functions
 \begin{python}
 # Parameters
 lrate = 0.5   # Learning rate
@@ -283,7 +303,11 @@ updates = [(par, par - lrate*T.grad(cost, par)) for par in rnn.param]
 rnn_prediction = theano.function([x], T.argmax(p_y, 1))
 rnn_batch_update = theano.function([x, y], cost, updates=updates)
 \end{python}
-Finally it is time to run SGD. You can use the following code for this purpose
+
+\clearpage
+
+\noindent To train the newtwork with SGD, you can use the following code for
+this purpose
 \begin{python}
 nr_words = sum([len(seq.x) for seq in train_seq])
 for i in range(n_iter):
@@ -310,18 +334,20 @@ for i in range(n_iter):
 
 \section{The Importance of Pre-training}
 
-One of the key insights that has played a role in the rise of deep learning in
-NLP tasks is the use of neural word-embedings. These are just numeric 
-representations of words that can be learned from unsupervised data using
-simple FF networks such as e.g. skipg-grams.
+% TODO: Maybe make this about Pre-raining and Dropout?
 
-Such representations can be plug-in into supervised models such as the RNN that we just
-trained to initialize its initial layer. The of pre-trained embeddings very often leads to
-important improvements in performance.
+One of the key insights that has played a role in the rise of deep learning in
+NLP tasks is the use of neural word-embeddings. These are just numeric 
+representations of words that can be learned from unsupervised data using
+simple FF networks such as e.g. skip-grams.
+
+Such representations can be plugged into supervised models such as the RNN that we just
+trained to initialize its initial layer. The use of pre-trained embeddings very often leads to
+important improvements in performance. 
 
 \begin{exercise}
 Test the effect of using pre-trained embeddings. Run the following code to
-download the embeddings, reset the layer parameters and initialize the
+download the embeddings. Reset the layer parameters and initialize the
 embedding layer with the pre-trained embeddings. Then run the training code
 from the last execise.
 \begin{python}
@@ -336,13 +362,28 @@ E = emb.extract_embeddings("data/senna_50", train_seq.x_dict)
 rnn = rnns.reset_model(rnn, seed=SEED)
 # Set the embedding layer to the pre-trained values
 rnn.param[0].set_value(E.astype(theano.config.floatX)) 
+
+# Now re-run SGD training
 \end{python}
 \end{exercise}
 
+\section{More Complex RNNs: LSTMs}
 
-\section{More Complex RNNs the LSTM}
+As previously mentioned, the basic RNN that we saw until now suffers from a
+number of drawbacks like exploding or vanishing gradients, and the inability to
+model long term dependencies. These deficiencies are solved by more complex
+RNNs that include more complex internal logics, and are able to selectively
+forget, thus capturing better long term information. The so called Long Short-Term Memory
+(LSTM) and Gated Recurrent Unit (GRU) have replaced simple RNNs in most of modern
+models. However, they only imply more complex architectures. For an excellent 
+visual explanation of the differences between simples RNNs, GRUs and LSTMS please visit http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 
-TODO: Link to this http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.6]{figs/deep_learning/LSTM3-chain.png}
+\caption{Detailed explanation of the LSTM internal logic, see source: http://colah.github.io/posts/2015-08-Understanding-LSTMs/.}
+\label{fig:RNN}
+\end{figure}
 
 \begin{exercise}
 Convince yourself that LSTMs are just more complex RNNs. Run them, play around
