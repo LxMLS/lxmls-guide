@@ -193,7 +193,16 @@ classification cost of an individual example
 where $\mathcal{D}^m=\{(\mathbf{x}^m, y^m)\}$. Due to linearity, extending the
 gradients of \ref{eq:CostLogPosExample} to $M$ examples as in
 \ref{eq:CostLogPos} simply implies computing the average of the gradients for
-the individual examples.
+the individual examples. That is
+
+% DAVID: A formula is worth a lot of words
+
+\begin{align}
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta) = - \frac{1}{M} \sum_{m=1}ˆM \nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)
+\label{eq:GradientCostDecomposition}
+\end{align}
+
+All we need to do to compute $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$  is to have an expression for $\nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)$.
 
 % RAMON: This might need to be clarified
 %Also in a slight abuse of notation we will denote the derivative of the cost
@@ -203,17 +212,17 @@ the individual examples.
 %\end{align}
 
 Lets start by computing the element $(k,i)$ of the matrix gradient
-$\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$, which contains the partial
+$\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta)$, which contains the partial
 derivative with respect to the weight $W_{ki}$. To do this, we invoke the \textbf{chain rule} to split the derivative calculation into two terms at variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D};\Theta)}{\partial W_{ki}} & = \sum_{k'=1}^{K} { \color{red} \frac{\partial \mathcal{F}(\mathcal{D};\Theta)}{\partial z_{k'}} }{ \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}}.
+\frac{\partial \mathcal{F}(\mathcal{Dˆm};\Theta)}{\partial W_{ki}} & = \sum_{k'=1}^{K} { \color{red} \frac{\partial \mathcal{F}(\mathcal{Dˆm};\Theta)}{\partial z_{k'}} }{ \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}}.
 \label{eq:LogLingCR1}
 \end{align}
 %
 We have thus transformed the problem of computing the derivative into computing two easier derivatives. Since $z_{k'}$ only depends on the weight $W_{ki}$ in a linear way (see the graph in Fig.~\ref{fig:LogLinColor}), the second derivative in Eq.\ref{eq:LogLingCR1} is given by
 \begin{align}
-\frac{\partial z_{k'}}{\partial W_{ki}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} x_{i'} + b_{k'} \right) = 
+\frac{\partial z_{k'}}{\partial W_{ki}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} xˆm_{i'} + b_{k'} \right) = 
   &\begin{cases}
       x_i^m  &  \mbox{ if } k = k'\\ 
       0    &  \mbox{ otherwise },
