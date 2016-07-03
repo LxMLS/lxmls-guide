@@ -3,161 +3,135 @@
 If you have decided to use one of our provided desktops, all installation
 procedures have been carried out. You merely need to go to the
 \verb+lxmls-toolkit-student+ folder inside your home directory and start
-working! You may go directly to section \ref{sec:SolvingExercises}.  If you
-wish to use your own laptop, you will need to install Python, all
-required Python libraries, and the LXMLS code base. Please follow the
-instructions appropriate for your operating system.
+working! You may go directly to section \ref{sec:SolvingExercises}. If you
+wish to use your own laptop, you will need to install Python, the 
+required Python libraries, and the LXMLS code base. It is important that you
+do this as soon as possible (preferably before the school starts) to avoid
+unnecessary delays. Please follow the install instructions. 
 
-\subsection{Installing in Windows and Mac}
+\subsection{Downloading the labs version from GitHub}
 
-While Python is easy to install, some of the Python modules are based in C and
-thus require a compiler to be installed from scratch. The following packages
-are needed for the summer school toolkit 
+The code of LxMLS is available online at GitHub. There are two branches of the
+code: the \verb+master+ branch contains fully functional code. The
+\verb+student+ branch contains the same code with some parts deleted, which you
+must complete in the following exercises. To download the \verb+student+ code,
+go to
 
 \begin{verbatim}
-pyyaml
-nltk
+https://github.com/LxMLS/lxmls-toolkit
+\end{verbatim}
+
+\noindent and select the \verb+student+ branch in the dropdown menu. This will
+reload the page to the corresponding branch. Now you just need to click the
+\verb+download ZIP+ button to obtain the lab tools in a zip format:
+
+\begin{verbatim}
+lxmls-toolkit-student.zip
+\end{verbatim}
+
+After this you can unzip the file where you want to work and enter the unzipped
+folder. This will be the place where you will work.
+
+\subsection{Installing The Tools from Scratch}
+
+If you are new to Python the best option right now is the Anaconda suite. You
+can find installers for Windows, Linux and OSX platforms here
+
+\begin{verbatim}
+https://www.continuum.io/downloads
+\end{verbatim}
+
+\textbf{Important}: Be sure to install the version for Python 2.7. This
+installer will already provide most of the packages you need to work with the
+school toolkit. The only package missing will be Theano, you may follow the
+instructions here to install it
+
+\begin{verbatim}
+http://deeplearning.net/software/theano/install.html#anaconda
+\end{verbatim}
+
+\noindent Note that you just need a normal Theano installation. You do not 
+need the bleeding edge version and it is not recommended to install it.
+
+\subsection{Installing for users with some Python experience}
+
+If you are familiar with Python you will probably be used to the pip package
+installer. In this case it might be more easy for you to install the packages
+yourself using pip
+
+\begin{verbatim}
+pip install -r pip-requirements.txt 
+\end{verbatim}
+
+You may need to pre-append sudo to the system call depending on the platform.
+
+\noindent this will install the following packages
+
+\begin{verbatim}
+jupyter
 numpy
 scipy
 matplotlib
-mrjob
+pyyaml
+nltk
 theano 
 \end{verbatim}
 
-Fortunately, there are some companies which distribute Windows and Mac versions
-of Python including all C-based libraries which we need, for free. We recommend
-that you install Anaconda, a Python distribution which is free to use. You can
-get it from 
-
-\begin{verbatim}http://continuum.io/downloads\end{verbatim}
-
-\noindent Just go to the corresponding websites and follow the instructions for
-installation. Make sure you install a 2.7.x version, not a 3.x version!.
-
-Anaconda is the safest way if you are starting from scratch and you do not
-feel comfortable with your operating system. If you are already familiar with
-Python and your OS you can install the packages via trustworthy executables 
-in Windows or brew/port package managers in OSX. Another option is to use 
-a Python package manager. For this we recommend pip.  
+To check that all the modules we will use work, please run the
+\verb+all_imports.py+ file found in the \\ \verb+lxmls-toolkit-student+ folder.
 
 
-% OTHER ALTERNATIVES (NOT USED)
-%
-%\item Canopy
-%\begin{verbatim}
-%https://store.enthought.com/downloads/
-%\end{verbatim}
-%%
-%\item WinPython (Windows only)
-%\begin{verbatim}
-%http://sourceforge.net/projects/winpython/files/
-%\end{verbatim}
-%%
-%\item Using the \verb+port+ command (Mac only); please follow the instructions at
-%\begin{verbatim}
-%http://www.scipy.org/install.html
-%\end{verbatim}
-%%
-%\end{itemize}
+\subsection{Virtual Environments}
 
-% MANUAL INSTRUCTIONS
-%
-%Any python 2.7.x version will do. You can check the version by  
-%
-%If you do not have python, you can install the latest 2.7+ python from the official website at
-%
-%\begin{verbatim}
-%https://www.python.org/downloads/ 
-%\end{verbatim}
-%
-%Do not install python 3.x.x versions, this is a backwards incompatible version that can not use most of the tools of the labs. 
-%
-%Then we will need to instal some specific Python modules and the ipython shell. The easiest way to do this is by installing a python module manager.
-%
-%
-%
-%
-%Now we need the ipython interactive shell. Again we use the command line (be sure to exit python first by using exit() or ctrl+d).
-%
-%\begin{verbatim}
-%>ipython
-%\end{verbatim}
-%
-%if this is recognized then great
-% 
-%
-%If you do not know if you have a module manager installed open a command window
-%
-%\begin{verbatim}
-%press the windows-key + R 
-%write cmd and press enter  
-%try the command pip 
-%try the command easy_install 
-%\end{verbatim}
-%
-
-%After hovering the mouse over downloads, you will see various options for installation. You can instal the version 2.7.x, any number for x is ok. Please do not instal version 3 or superior. If you already have a python 2.7 (any version) installed, you dont need to install another one, it will work. If you have older versions of python it might still work. In any case please uninstall any previous python version before installing a new one. This is a frequent source of problems on all systems.
-%
-%Now for the different python modules needed. The most straightforward way to instal the modules is through a python package manager, we recommend pip 
-%
-%[lot to do here ...]
-%
-%\begin{verbatim}
-%pip install -r pip-requirements.txt 
-%\end{verbatim}
-%
-
-\subsection{Installing in Linux}
-
-Installation of Python and its related packages in Linux is best done from your
-distribution's package manager. See, for example, the instruction for some of the
-scientific tools needed 
+If you are an experienced Python user and you do not want to add many packages
+to your existing installation, you can use virtualenv.
 
 \begin{verbatim}
-http://www.scipy.org/install.html
+sudo pip install virtualenv
+virtualenv venv 
 \end{verbatim}
 
-Please remember to install a Python 2.7.x version, not a 3.x version!. If you
-do not manage to install the packages via your OS packet manager you can 
-resort to a python package manager like pip.  
+\noindent This will create a local installation of Python on your work folder. To
+activate it use 
 
-\subsection{Testing your installation}
-
-To check whether your Python installation is working, start by invoking the
-Python shell. You can do that by running the command \verb+python+ in your
-Terminal in Linux or Mac, or the file \verb+python.exe+ from the folder where
-Python was installed in, for Windows.
-
-In the Python interpreter, the very first line should read like
 \begin{verbatim}
-Python 2.7.3 (default, Feb 27 2014, 19:58:35)
+source venv/bin/activate
 \end{verbatim}
-%
-In this case, the Python version was 2.7.3. Please make sure that in your case
-this reads \verb+2.7.x+, where \verb+x+ is some number. Newer versions such as
-3.4 have not been tested with our code.
 
-To test whether Numpy is working, type the following two lines in the Python interpreter:
-%
+\noindent then you can install packages locally with no need for root privileges and without touching your original installation.
+
 \begin{verbatim}
-import numpy
-numpy.test()
+pip install -r pip-requirements.txt
 \end{verbatim}
-%
-The last two lines should read something like
-%
+
+\noindent To exit the environment use 
+
 \begin{verbatim}
-OK (KNOWNFAIL=3, SKIP=4)
-<nose.result.TextTestResult run=3161 errors=0 failures=0>
+deactivate
 \end{verbatim}
+
+\noindent If you want to make use of the modules already installed in your main Python installation use
+
+\begin{verbatim}
+virtualenv venv --system-site-packages
+\end{verbatim}
+
+instead of the conventional call. Bear in mind that using virtual environments can create some problems. For once, the Python binary will be in another location. You will therefore have to be careful when using e.g. shebangs to specify it. The Jupyter-notebook is also know to give problems unless you also install it with the virtual environment. For these reasons, virtual environments are only recommended for students that feel comfortable with Python. 
+
+\subsection{Deciding on the IDE and interactive shell to use}
+
+An Integrated Development Environments (IDE) includes a text editor and various tools to debug and interpret complex code. \textbf{Important:} As the labs progress you will need an IDE, or at least a good editor and knowledge of pdb/ipdb. This will not be obvious the first days since we will be seeing simpler examples.
+
+As IDE we recommend PyCharm, but feel free to use the software you feel more comfortable with. PyCharm and other well known IDEs like Spyder are provided with the conda installation.
+
+Aside of an IDE, you will need an interactive command line to run commands. This is very useful to explore variables and functions and quickly debug the exercises. For the most complex exercises you will still need an IDE to modify particular segments of the provided code. As interactive command line we recommend the Jupyter notebook. This also comes installed with anaconda and is part of the pip-installed packages. The Jupyter notebook is described in the next section. In case you run into problems or you feel uncomfortable with the Jupyter notebook you can use the simple iPython command line.
 
 \subsection{Jupyter Notebook}
 
-Jupyter is also a good choice when writing Python code. It is an interactive computational environment for data science and scientific computing, where you can combine code execution, rich text, mathematics, plots and rich media. The Jupyter Notebook is a web application that allows you to create and share documents, which contains live code, equations, visualizations and explanatory text. It is very popular in the areas of data cleaning and transformation, numerical simulation, statistical modeling, machine learning and so on. It supports more than 40 programming languages, including all those popular ones used in Data Science such as Python, R, and Scala.
+Jupyter is also a good choice when writing Python code. It is an interactive computational environment for data science and scientific computing, where you can combine code execution, rich text, mathematics, plots and rich media. The Jupyter Notebook is a web application that allows you to create and share documents, which contains live code, equations, visualizations and explanatory text. It is very popular in the areas of data cleaning and transformation, numerical simulation, statistical modeling, machine learning and so on. It supports more than 40 programming languages, including all those popular ones used in Data Science such as Python, R, and Scala. It can also produce many different types of output such as images, videos, LaTex and JavaScript. More over with its interactive widgets, you can manipulate and visualize data in real time.
 
-It can produce many different types of output such as images, videos, LaTex and JavaScript. More over with its interactive widgets, you can manipulate and visualize data in realtime.
-
-We summary the main features and advantages using  Jupyter Notebook as followings:
+\noindent The main features and advantages using the Jupyter Notebook are the
+following:
 
 \begin{itemize}
 
@@ -173,46 +147,8 @@ We summary the main features and advantages using  Jupyter Notebook as following
 
 \end{itemize}
 
-It is also integrated with Anaconda, so we recommend Anaconda for installing Jupyter. After installing, you can launch it in Anaconda by clicking the icon of Jupyter.
-
-But if you are already a Python user, you may want to use pip as an alterntive:
-
-\begin{verbatim}
-pip install jupyter
-\end{verbatim}
-
-And launch it:
-
-\begin{verbatim}
-jupyter notebook
-\end{verbatim}
-
-A more detailed user guide can be found here:
+\noindent A more detailed user guide can be found here:
 
 \begin{verbatim}
 http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/index.html
 \end{verbatim}
-
-\subsection{Downloading the labs version from GitHub}
-
-The code of LxMLS is available online at GitHub. There are two branches of the
-code: the \verb+master+ branch contains fully functional code. The
-\verb+student+ branch contains the same code with some parts deleted, which you
-must complete in the following exercises. To download the \verb+student+ code,
-go to
-
-\begin{verbatim}
-https://github.com/gracaninja/lxmls-toolkit
-\end{verbatim}
-
-\noindent and select the \verb+student+ branch in the dropdown menu. This will
-reload the page to the corresponding branch. Now you just need to click the
-\verb+download ZIP+ button to obtain the lab tools in a zip format:
-
-\begin{verbatim}
-lxmls-toolkit-student.zip
-\end{verbatim}
-
-After this you can unzip the file where you want to work and enter this folder.
-To check that all the modules we will use work, please run the
-\verb+all_imports.py+ file found in the \verb+lxmls-toolkit-student+ folder.
