@@ -1,63 +1,42 @@
 \subsection{Desktops vs. Laptops}
 
-If you have decided to use one of our provided desktops, all installation
-procedures have been carried out. You merely need to go to the
-\verb+lxmls-toolkit-student+ folder inside your home directory and start
-working! You may go directly to section \ref{sec:SolvingExercises}. If you
-wish to use your own laptop, you will need to install Python, the 
-required Python libraries, and the LXMLS code base. It is important that you
-do this as soon as possible (preferably before the school starts) to avoid
-unnecessary delays. Please follow the install instructions. 
+If you have decided to use one of our provided desktops, all installation procedures have been carried out. You merely need to go to the \verb+lxmls-toolkit-student+ folder inside your home directory and start working! You may go directly to section \ref{sec:SolvingExercises}. If you wish to use your own laptop, you will need to install Python, the required Python libraries and download the LXMLS code base. It is important that you do this as soon as possible (before the school starts) to avoid unnecessary delays. Please follow the install instructions. 
 
 \subsection{Downloading the labs version from GitHub}
 
-The code of LxMLS is available online at GitHub. There are two branches of the
-code: the \verb+master+ branch contains fully functional code. The
-\verb+student+ branch contains the same code with some parts deleted, which you
-must complete in the following exercises. To download the \verb+student+ code,
-go to
+The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. To download the \verb+student+ code, go to
 
 \begin{verbatim}
 https://github.com/LxMLS/lxmls-toolkit
 \end{verbatim}
 
-\noindent and select the \verb+student+ branch in the dropdown menu. This will
-reload the page to the corresponding branch. Now you just need to click the
-\verb+download ZIP+ button to obtain the lab tools in a zip format:
+\noindent and select the \verb+student+ branch in the dropdown menu. This will reload the page to the corresponding branch. Now you just need to click the \verb+Clone or download + button to obtain the lab tools in a zip format:
 
 \begin{verbatim}
 lxmls-toolkit-student.zip
 \end{verbatim}
 
-After this you can unzip the file where you want to work and enter the unzipped
-folder. This will be the place where you will work.
+After this you can unzip the file where you want to work and enter the unzipped folder. This will be the place where you will work. \textbf{Important:} Be careful to select the student branch and do not install the lxmls-toolkit (using setup.py).
 
-\subsection{Installing The Tools from Scratch}
+\subsection{Installing Python 2.7 from Scratch}
 
-If you are new to Python the best option right now is the Anaconda suite. You
-can find installers for Windows, Linux and OSX platforms here
+If you are new to Python the best option right now is the Anaconda platform. You can find installers for Windows, Linux and OSX platforms here
 
 \begin{verbatim}
 https://www.continuum.io/downloads
 \end{verbatim}
 
-\textbf{Important}: Be sure to install the version for Python 2.7. This
-installer will already provide most of the packages you need to work with the
-school toolkit. The only package missing will be Theano, you may follow the
-instructions here to install it
+\textbf{Important}: Be sure to install the version for Python 2.7. This installer will already provide most of the packages you need to work with the school toolkit. The only package missing will be Theano, you may follow the instructions here to install it
 
 \begin{verbatim}
 http://deeplearning.net/software/theano/install.html#anaconda
 \end{verbatim}
 
-\noindent Note that you just need a normal Theano installation. You do not 
-need the bleeding edge version and it is not recommended to install it.
+\noindent Note that you just need a normal Theano installation. You do not need the bleeding edge version and it is not recommended to install it.
 
-\subsection{Installing for users with some Python experience}
+\subsection{(Advanced Users) Installing with Pip}
 
-If you are familiar with Python you will probably be used to the pip package
-installer. In this case it might be more easy for you to install the packages
-yourself using pip
+If you are familiar with Python you will probably be used to the pip package installer. In this case it might be more easy for you to install the packages yourself using pip
 
 \begin{verbatim}
 pip install -r pip-requirements.txt 
@@ -80,19 +59,16 @@ theano
 To check that all the modules we will use work, please run the
 \verb+all_imports.py+ file found in the \\ \verb+lxmls-toolkit-student+ folder.
 
+\subsection{(Advanced Users) Virtual Environments}
 
-\subsection{Virtual Environments}
-
-If you are an experienced Python user and you do not want to add many packages
-to your existing installation, you can use virtualenv.
+If you are an experienced Python user and you do not want to add many packages to your existing installation, you can use virtualenv.
 
 \begin{verbatim}
 sudo pip install virtualenv
 virtualenv venv 
 \end{verbatim}
 
-\noindent This will create a local installation of Python on your work folder. To
-activate it use 
+\noindent This will create a local installation of Python on your work folder. To activate it use 
 
 \begin{verbatim}
 source venv/bin/activate
@@ -104,7 +80,7 @@ source venv/bin/activate
 pip install -r pip-requirements.txt
 \end{verbatim}
 
-\noindent To exit the environment use 
+\noindent Each time you want to work on the school code, you will have to activate the environment. To exit the environment use 
 
 \begin{verbatim}
 deactivate
@@ -116,19 +92,29 @@ deactivate
 virtualenv venv --system-site-packages
 \end{verbatim}
 
-instead of the conventional call. Bear in mind that using virtual environments can create some problems. For once, the Python binary will be in another location. You will therefore have to be careful when using e.g. shebangs to specify it. The Jupyter-notebook is also know to give problems unless you also install it with the virtual environment. For these reasons, virtual environments are only recommended for students that feel comfortable with Python. 
+instead of the conventional call. Bear in mind that using virtual environments can create some problems. For once, the Python binary will be in another location. You will therefore have to be careful when using e.g. shebangs to specify it. The Jupyter-notebook is also known to give problems unless you also install it with the virtual environment. For these reasons, virtual environments are only recommended for students that feel comfortable with Python. 
+
+\subsection{(Advanced Users) Forking and cloning the code on GitHub}
+
+It might be the case that you feel very comfortable with scientific Python, know some git/GitHub and want to extend/improve our code base. In that case you can directly clone the project with
+
+\begin{verbatim}
+git clone https://github.com/LxMLS/lxmls-toolkit.git 
+\end{verbatim}
+
+\noindent and work from there. Remember to work on the \textit{student} branch!. If you want to contribute to the code-base, you can make pull requests to the \textit{develop} branch or raise issues.
 
 \subsection{Deciding on the IDE and interactive shell to use}
 
-An Integrated Development Environments (IDE) includes a text editor and various tools to debug and interpret complex code. \textbf{Important:} As the labs progress you will need an IDE, or at least a good editor and knowledge of pdb/ipdb. This will not be obvious the first days since we will be seeing simpler examples.
+An Integrated Development Environment (IDE) includes a text editor and various tools to debug and interpret complex code. \textbf{Important:} As the labs progress you will need an IDE, or at least a good editor and knowledge of pdb/ipdb. This will not be obvious the first days since we will be seeing simpler examples.
 
-As IDE we recommend PyCharm, but feel free to use the software you feel more comfortable with. PyCharm and other well known IDEs like Spyder are provided with the conda installation.
+As IDE we recommend PyCharm, but feel free to use the software you feel more comfortable with. PyCharm and other well known IDEs like Spyder are provided with the Anaconda installation.
 
-Aside of an IDE, you will need an interactive command line to run commands. This is very useful to explore variables and functions and quickly debug the exercises. For the most complex exercises you will still need an IDE to modify particular segments of the provided code. As interactive command line we recommend the Jupyter notebook. This also comes installed with anaconda and is part of the pip-installed packages. The Jupyter notebook is described in the next section. In case you run into problems or you feel uncomfortable with the Jupyter notebook you can use the simple iPython command line.
+Aside of an IDE, you will need an interactive command line to run commands. This is very useful to explore variables and functions and quickly debug the exercises. For the most complex exercises you will still need an IDE to modify particular segments of the provided code. As interactive command line we recommend the Jupyter notebook. This also comes installed with Anaconda and is part of the pip-installed packages. The Jupyter notebook is described in the next section. In case you run into problems or you feel uncomfortable with the Jupyter notebook you can use the simpler iPython command line.
 
 \subsection{Jupyter Notebook}
 
-Jupyter is also a good choice when writing Python code. It is an interactive computational environment for data science and scientific computing, where you can combine code execution, rich text, mathematics, plots and rich media. The Jupyter Notebook is a web application that allows you to create and share documents, which contains live code, equations, visualizations and explanatory text. It is very popular in the areas of data cleaning and transformation, numerical simulation, statistical modeling, machine learning and so on. It supports more than 40 programming languages, including all those popular ones used in Data Science such as Python, R, and Scala. It can also produce many different types of output such as images, videos, LaTex and JavaScript. More over with its interactive widgets, you can manipulate and visualize data in real time.
+Jupyter is good choice when writing Python code. It is an interactive computational environment for data science and scientific computing, where you can combine code execution, rich text, mathematics, plots and rich media. The Jupyter Notebook is a web application that allows you to create and share documents, which contains live code, equations, visualizations and explanatory text. It is very popular in the areas of data cleaning and transformation, numerical simulation, statistical modeling, machine learning and so on. It supports more than 40 programming languages, including all those popular ones used in Data Science such as Python, R, and Scala. It can also produce many different types of output such as images, videos, LaTex and JavaScript. More over with its interactive widgets, you can manipulate and visualize data in real time.
 
 \noindent The main features and advantages using the Jupyter Notebook are the
 following:
@@ -146,6 +132,27 @@ following:
 \item The ability to easily include mathematical notation within markdown cells using LaTeX, and rendered natively by MathJax.
 
 \end{itemize}
+
+\noindent The basic commands you should know are
+\clearpage
+
+\begin{table}[!h]
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Esc              & Enter command mode\\
+Enter            & Enter edit mode\\
+\hline
+up/down          & Change between cells\\
+Ctrl + Enter     & Runs code on selected cell\\
+Shift + Enter    & Runs code on selected cell, jumps to next cell\\
+\hline
+restart button   & Deletes all variables (useful for troubleshooting)\\ 
+\hline
+\end{tabular}
+\end{center}
+\caption{\label{tb::jupyterbasiccommands}Basic Jupyter commands}
+\end{table}
 
 \noindent A more detailed user guide can be found here:
 

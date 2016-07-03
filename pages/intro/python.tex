@@ -1,10 +1,20 @@
 \subsection{Python Basics}
 
-\subsubsection{Developing Environment}
+\subsubsection{Pre-requisites}
 
-At this point you shoudl have installed the needed packages. You need also to
-feel confortable with an IDE to edit code and an interactive command line. 
-See previous sections for the details.
+At this point you should have installed the needed packages. You need also to feel comfortable with an IDE to edit code and an interactive command line. See previous sections for the details. Your work folder will be
+
+\begin{verbatim}
+lxmls-toolkit-student
+\end{verbatim}
+
+\noindent from there, start your interactive command line of choosing e.g.
+
+\begin{verbatim}
+jupyter-notebook
+\end{verbatim}
+
+\noindent and proceed with the following sections
 
 \subsubsection{Running Python code}
 
@@ -22,7 +32,7 @@ print 'Hello World!'
 \end{python}
 
 After saving and closing the file, you can run your code by using the run
-functionallity in your IDE. If you wish to run from a command line instead do
+functionality in your IDE. If you wish to run from a command line instead do
 
 \begin{verbatim}
 python yourfile.py
@@ -32,7 +42,7 @@ This will run the program and display the message ``Hello World!''. After,
 that the control will return to the command line or IDE.
 
 
-\item[In the interactive command line]--~~Start you interactive command line of
+\item[In the interactive command line]--~~Start your interactive command line of
 chosing e.g. Jupyter-notebook. There, you can run Python code
 by simply writing it and pressing enter (ctr+enter in Jupyter).
 
@@ -252,12 +262,7 @@ for each function that was called during the execution of your code:
 
 During the lab sessions, there will be situations in which we will use and extend modules that involve elaborated code and statements, like classes and nested functions. Although desirable, it should not be necessary for you to fully understand the whole code to carry out the exercises. It will suffice to understand the algorithm as explained in the theoretical part of the class and the local context of the part of the code where we will be working. For this to be possible is very important that you learn to use and IDE. 
 
-An alternative to IDEs, that can also be useful for quick debugging in Jupyter, 
-is the pdb module. This will stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. The ipdb is an improved version of pdb that has to be installed
-by separate. It provides additional functionalities like larger context wondows
-variable auto complete and colors. Unfortunately ipdb has some compatibility
-problems with Jupyter. We therefore recommend to use ipdb only in very spartan
-configurations such as vim+ipdb as IDE replacement.
+An alternative to IDEs, that can also be useful for quick debugging in Jupyter, is the pdb module. This will stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. The ipdb is an improved version of pdb that has to be installed by separate. It provides additional functionalities like larger context windows variable auto complete and colors. Unfortunately ipdb has some compatibility problems with Jupyter. We therefore recommend to use ipdb only in spartan configurations such as vim+ipdb as IDE.
 
 \noindent In the following example, we use this module to inspect the \texttt{greet} function:
 
@@ -302,7 +307,7 @@ d(down)          & Goes one level down the stack\\
 \caption{\label{tb::pdbbasiccommands}Basic pdb/ipdb commands, parentheses indicates abbreviation}
 \end{table}
 
-\clearpage
+%\footnotetext{\textit{expression} can not by any of the previous words reserved for commands. Use p expression for those cases.}
 \noindent Getting back to our example, we can type n(ext) once to execute the line we
 stopped at
 
@@ -325,9 +330,6 @@ and type c(ontinue) to jump to a new position. We could also execute any python
 expression which is valid in the current frame (the function we stopped at).
 This is particularly useful to find out why code crashes, as we can try
 different alternatives without the need to restart the code again.
-
-Note that there is a nicer version of the standard debugging module of Python
-named ipdb. It has some additional functionalities and colors. 
 
 \subsection{Exceptions}
 
@@ -384,6 +386,62 @@ np.random.normal?
 \end{python}
 
 The import will make the numpy tools available through the alias \code{np}.  This shorter alias prevents the code from getting too long if we load lots of modules. The first command will display the help for the method \code{numpy.var} using the previously commented symbol \code{?}. Note that in order to display the help you need the full name of the function including the module name or alias. Modules have also submodules that can be accessed the same way, as shown in the second example.
+
+\subsubsection{Organizing your Code with your own modules}
+
+Creating you own modules is extremely simple. you can for example create the
+file in your work directory
+
+\begin{verbatim}
+my_tools.py
+\end{verbatim}
+
+\noindent and store there the following code 
+
+\begin{python}
+def my_print(input):
+    print input
+\end{python}
+
+From Jupyter you can now import and use this tool as
+
+\begin{python}
+import my_tools
+my_tools.my_print("This works!") 
+\end{python}
+
+\textbf{Important}: When you modify a module, you need to either re-start the notebook kernel or notify the notebook to reload the module for the changes to take effect. You can use
+
+\begin{python}
+reload(my_tools)
+\end{python}
+
+\noindent for the latter. Other ways of importing one or all the tools from a module are
+
+\begin{python}
+from my_tools import my_print  # my_print directly accesible in code
+from my_tools import *         # will make all functions  in my_tools accesible
+\end{python}
+
+\noindent However, this makes reloading the module more complicated. You can also store tools ind different folders. For example, if you store the previous
+example in the folder
+
+\begin{verbatim}
+day0_tools
+\end{verbatim}
+
+\noindent and store inside an empty file called  
+
+\begin{verbatim}
+__init__.py
+\end{verbatim}
+
+\noindent then the following import will work
+
+\begin{python}
+import day0_tools.my_tools
+\end{python}
+
 
 \subsection{Matplotlib -- Plotting in Python}
 
