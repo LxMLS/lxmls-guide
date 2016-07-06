@@ -222,7 +222,7 @@ derivative with respect to the weight $W_{ki}$. To do this, we invoke the \textb
 %
 We have thus transformed the problem of computing the derivative into computing two easier derivatives. Since $z_{k'}$ only depends on the weight $W_{ki}$ in a linear way (see the graph in Fig.~\ref{fig:LogLinColor}), the second derivative in Eq.\ref{eq:LogLingCR1} is given by
 \begin{align}
-\frac{\partial z_{k'}}{\partial W_{ki}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} xˆm_{i'} + b_{k'} \right) = 
+\frac{\partial z_{k'}}{\partial W_{ki}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} x^m_{i'} + b_{k'} \right) = 
   &\begin{cases}
       x_i^m  &  \mbox{ if } k = k'\\ 
       0    &  \mbox{ otherwise },
@@ -233,7 +233,7 @@ We have thus transformed the problem of computing the derivative into computing 
 \noindent which implies that 
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ki}} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta) }{\partial z_k} x_i .
+\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ki}} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta) }{\partial z_k} x^m_i .
 \label{eq:gradlogPycx}
 \end{align}
 %
