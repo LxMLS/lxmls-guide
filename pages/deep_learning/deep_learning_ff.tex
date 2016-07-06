@@ -488,6 +488,20 @@ code of the NumpyMLP class with the Backpropagation recursion that we just saw.
 Once you are done. Try different network geometries by increasing the number of
 layers and layer sizes e.g.
 \begin{python}
+# Load data
+import numpy as np
+import lxmls.readers.sentiment_reader as srs
+scr = srs.SentimentCorpus("books")
+train_x = scr.train_X.T
+train_y = scr.train_y[:, 0]
+test_x = scr.test_X.T
+test_y = scr.test_y[:, 0]
+
+# Load mlp and sgd from toolit
+from lxmls import deep_learning 
+from lxmls.deep_learning import mlp
+import lxmls.deep_learning.sgd as sgd
+
 # Model parameters
 geometry = [train_x.shape[0], 20, 2]
 actvfunc = ['sigmoid', 'softmax'] 
@@ -506,6 +520,9 @@ sgd.SGD_train(mlp, n_iter, bsize=bsize, lrate=lrate, train_set=(train_x, train_y
 acc_train = sgd.class_acc(mlp.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp.forward(test_x), test_y)[0]
 print "MLP (%s) Amazon Sentiment Accuracy train: %f test: %f" % (geometry, acc_train,acc_test)
+
+# You should get 
+# MLP ([13989, 20, 2]) Amazon Sentiment Accuracy train: 0.964375 test: 0.780000
 \end{python}
 \end{exercise}
 
