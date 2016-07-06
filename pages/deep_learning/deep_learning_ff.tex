@@ -25,14 +25,14 @@ composing linear and non-linear functions. This composition can be expressed in
 the form of a \textit{computation graph}, where each node applies a function to
 its inputs and passes the result as its output. The parameters of the model are
 the weights given to the different inputs in nodes applying linear
-functions. This resembles vaguely synapse strengths in human neural networks,
+functions. This vaguely resembles synapse strengths in human neural networks,
 hence the name artificial neural networks. 
 
 Due to their compositional nature, gradient methods and the chain rule can be
 applied learn the parameters of these models regardless of their complexity.
 See Section \label{gradient_methods} for a refresh on the basic concept. We
 will also refer to the gradient learning methods introduced in Section
-\ref{s:me}. Today we will focus on \textit{feed-forward networks}. we will
+\ref{s:me}. Today we will focus on \textit{feed-forward networks}. Tomorrow we will
 extended today's class to \textit{recurrent neural networks} (RNNs).  
 
 Some of the changes that led to the surge of deep learning are not only
@@ -191,14 +191,14 @@ classification cost of an individual example
 \end{align}
 %
 where $\mathcal{D}^m=\{(\mathbf{x}^m, y^m)\}$. Due to linearity, extending the
-gradients of \ref{eq:CostLogPosExample} to $M$ examples as in
-\ref{eq:CostLogPos} simply implies computing the average of the gradients for
+gradients of Eq. \ref{eq:CostLogPosExample} to $M$ examples as in
+Eq. \ref{eq:CostLogPos} simply requires computing the average of the gradients for
 the individual examples. That is
 
 % DAVID: A formula is worth a lot of words
 
 \begin{align}
-\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta) = - \frac{1}{M} \sum_{m=1}ˆM \nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta) = - \frac{1}{M} \sum_{m=1}M \nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)
 \label{eq:GradientCostDecomposition}
 \end{align}
 
@@ -211,7 +211,7 @@ All we need to do to compute $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ 
 % \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z}
 %\end{align}
 
-Lets start by computing the element $(k,i)$ of the matrix gradient
+Lets start by computing the element $(k,i)$ of the gradient matrix
 $\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta)$, which contains the partial
 derivative with respect to the weight $W_{ki}$. To do this, we invoke the \textbf{chain rule} to split the derivative calculation into two terms at variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
 %
@@ -296,9 +296,9 @@ was nothing in the derivation that would stop us from composing more than two
 functions. Let us think, for example of the following model
 
 \begin{algorithm}[th!]
-\label{algo:mlpforward}
-   \caption{Forward pass of a Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network\label{alg:mlpforward}}
+   \caption{Forward pass of a Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network}
 \begin{algorithmic}[1]
+\label{algo:mlpforward}
 
    \STATE {\bfseries input:} Initial parameters for an MLP of $N$ layers $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$
    \STATE {\bfseries input:} Input data vector $\mathbf{\tilde{z}}^{0}  \equiv \mathbf{x}$. 
@@ -341,11 +341,15 @@ shown.}
 
 \subsection{Backpropagation: an overview}
 
-For the examples in this chapter we will consider the case in which we are estimating a distribution over classes. The cost function is thus the same
+For the examples in this chapter we will consider the case in which we are estimating a distribution over classes, thus we will use the CE cost function (Eq. \ref{eq:CostLogPos}). 
+% SILVIO: this is the same cost function presented earlier.
 
-\begin{align}
-\mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^{M} \log p(y^m=k(m) | \mathbf{x}^m).
-\end{align}
+% The cost function is thus the same
+% \begin{align}
+% \mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^{M} \log p(y^m=k(m) | \mathbf{x}^m).
+% \end{align}
+
+
 
 To compute the gradient with respect the parameters of the $n$-th layer, we
 just need to apply the chain rule as in the previous section, consecutively.
@@ -360,7 +364,7 @@ the case of an MLP, consists of the following steps:
 \item The \textcolor{blue}{forward pass} step, where the input signal is injected though the network  in a forward fashion (see Alg.~\ref{algo:mlpforward})
 \item The \textcolor{red}{backpropagation} step, where the derivative of the cost function (also called error) is injected back through the network and backpropagated according to the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
 \item Finally, the gradients with respect to the parameters are computed by multiplying the input signal from the forward pass and the backpropagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
-\item Given the gradients computed in the previous step, the model weights can then be easily update according to a specified learning rule (step 19 in Alg.~\ref{algo:backprop} uses a mini-batch SGD adaptation rule).
+\item Given the gradients computed in the previous step, the model weights can then be easily update according to a specified learning rule (step 19 in Alg.~\ref{algo:backprop} uses a mini-batch SGD update rule).
 \end{itemize}
 %Alg.~\ref{algo:backprop} uses a mini-batch SGD updation rule. 
 
@@ -409,6 +413,7 @@ e^{N-1} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}^{N-1}
 %
 \begin{align}
 e^{N-1} = \bigg(\sum_{k'=1}^{K} e^N \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{k'}^{N-1}}\bigg)\frac{\partial \tilde{z}_{k'}^{N-1}}{\partial z_{k'}^{N-1}} = \bigg(\sum_{k'=1}^{K} e^N_k W^N_{kj}\bigg)\cdot\tilde{z}_{k'}^{N-1}\cdot(1-\tilde{z}_{k'}^{N-1}),
+\label{eq:chainRulRecursion}
 \end{align}
 %
 where we have used the fact that for sigmoid non-linearities 
@@ -438,8 +443,8 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 
 	\vspace{0.3cm}
 	\FOR{$m=1$ {\bfseries to} $M'$}
-	\STATE Compute the {forward pass} for each of the $M'$ examples in batch $b$:
-	 and keep not only $p(y^m|\mathbf{x}^m) \equiv \tilde{\mathbf{z}}^{m,N}$ and all intermediate non-linear outputs $\tilde{\mathbf{z}}^{m,1} \cdots \tilde{\mathbf{z}}^{m,N}$.
+	\STATE Compute the {forward pass} for each of the $M'$ examples in batch $b$; 
+	 keep not only $p(y^m|\mathbf{x}^m) \equiv \tilde{\mathbf{z}}^{m,N}$ but also all the intermediate non-linear outputs $\tilde{\mathbf{z}}^{m,1} \cdots \tilde{\mathbf{z}}^{m,N}$.
 	\ENDFOR	
 	\vspace{0.3cm}
     %\STATE \textbf{Backpropagate} $\nabla_{\mathbf{z}^{m,n}}\mathcal{F}(\mathcal{D}_b;\Theta)$ 
@@ -518,7 +523,7 @@ that you should keep in mind.
 \begin{itemize}
 \item Thanks to the multi-layer structure and the chain rule, Backpropagation allows models that compose linear and non-linear functions with any depth (in principle\footnotemark). 
 
-\item The formulas are also valid for other cost functions and output layer non-linearities with minor modifications. It is only necessary to compute the equivalente of Eq.~\ref{eq:patialSoftmax}. 
+\item The formulas are also valid for other cost functions and output layer non-linearities with minor modifications. It is only necessary to compute the equivalent of Eq.~\ref{eq:patialSoftmax}. 
 
 \item The formulas are also valid for hidden non-linearities other than the sigmoid. Element-wise non-linear transformations still allow the simplification in Eq.~\ref{eq:chainRulRecursion}. With little effort it is also possible to deal with other cases.
 
@@ -692,7 +697,7 @@ gradients although this will be trivial once we have the cost function compiled.
 We first see an example that does not use any of the code in TheanoMLP but
 rather continues from what you wrote in exercise 6.3. In this exercise you
 completed a sigmoid layer with Theano. To get some values for the weights we
-used the first layer of the network you trained in 6.2. now we are going to use
+used the first layer of the network you trained in 6.2. Now we are going to use
 the second layer as well. This is thus assuming that your network in 6.2 has
 only two layers e.g. the recommended geometry (I, 20, 2). Make sure this is the
 case before starting this exercise.  
