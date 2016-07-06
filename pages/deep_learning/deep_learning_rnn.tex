@@ -3,7 +3,7 @@ Today's class will be focused on advanced deep learning concepts, mainly
 Recurrent Neural Networks (RNNs). In the first day we saw how the chain-rule
 allowed us to compute gradients for arbitrary computation graphs. Today we will
 see that we can still do this for more complex models like Recurrent Neural
-Networks (RNNs). In this models we will input data in different points of the
+Networks (RNNs). In these models we will input data in different points of the
 graph, which will correspond to different time instants. The key factor to
 consider is that, for a fixed number of time steps, this is still a computation
 graph and all what we saw on the first day applies with no need for extra math.
@@ -35,7 +35,7 @@ computation graph in time. In other words, the network is replicated as many
 times as it is necessary to cover the sequence to be modeled. In order
 to model the sequence one or more connections across different time instants are
 created. This allows the network to have a memory in time and thus capture
-complex patterns in sequences.In the simplest model, depicted in
+complex patterns in sequences. In the simplest model, depicted in
 Fig.~\ref{fig:RNN}, and detailed in Algorithm~\ref{algo:rnnforward}, a RNN is
 created by replicating a single hidden-layer FF network $T$ times and passing
 the intermediate hidden variable across different steps. 
@@ -141,12 +141,12 @@ Handling variable length computation graphs in an automatic fashion is not simpl
 Theano provides the \textit{scan} function for this purpose. The scan function acts
 as a symbolic for loop. Since, unlike for normal python for loops, it is not
 possible to put a breakpoint in the scan loop, the design of graphs
-with scan has to be handled with care. Tooboxes like Keras conveniently abstract
+with scan has to be handled with care. Toolboxes like Keras conveniently abstract
 the user from such constructs. However, for complex designs it will be
 necessary to be able to use scan or equivalent functions. 
 
 \begin{exercise}
-Understand the basics of scan with this examples. Scan allows you to build
+Understand the basics of scan with these examples. Scan allows you to build
 computation graphs with a variable number of nodes. It acts as a python "for"
 loop but it is symbolic. The following example should help you understand the
 basic scan functionality. It generates a sequence for a given length. Run it
@@ -238,12 +238,12 @@ th_markov_chain(nr_steps)
 \end{python}
 \end{exercise}
 
-\section{A RNN in theano for Part-of-Speech Tagging}
+\section{A RNN in Theano for Part-of-Speech Tagging}
 
 \begin{exercise}
 Complete the theano code for a RNN inside lxmls/deep learning/rnn.py. Use
 exercise 6.1 for a numpy example and 6.2 to learn how to handle scan. Keep in
-mind that you only need to implement the forward pass!. Theano will handle
+mind that you only need to implement the forward pass! Theano will handle
 backpropagation for us. 
 \begin{python}
 # Instantiate the class
@@ -280,7 +280,7 @@ for n in range(len(theano_rnn_gradients)):
 \end{python}
 
 \noindent Finally, its time to test our network in the task of POS tagging. Lets define
-the optimization parameters and compile a batch update  and prediction
+the optimization parameters and compile batch update and prediction
 functions
 
 %For this,
