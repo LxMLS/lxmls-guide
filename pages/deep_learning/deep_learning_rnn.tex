@@ -26,7 +26,7 @@ $\mathbf{x}_t \in \mathbb{R}^I$. Circles indicate matrix multiplications.}
 \label{fig:RNN}
 \end{figure}
 
-The previous day was focused Feed Forward (FF) networks. These networks are ill
+The previous day focused on Feed Forward (FF) networks. These networks are ill
 suited to learn variable length patterns since they only accept inputs of a
 fixed size. In order to learn sequences using neural networks, we need therefore
 to define some architecture that is able to process variable length inputs.
@@ -41,15 +41,15 @@ created by replicating a single hidden-layer FF network $T$ times and passing
 the intermediate hidden variable across different steps. 
 
 Since RNNs are computation graphs involving the same operations as FF networks,
-they can also be trained with back-propagation. However the error is
+they can also be trained with backpropagation. However the error is
  propagated over the length of the entire sequence. This often leads to 
 numerical problems know as \textit{vanishing} and \textit{exploding} gradients.
 A number of solutions are used to mitigate this issue. One simple, yet inelegant,
 method is clipping the gradients to a fixed threshold. Another solution is to resort to more complex 
 RNN models that are able to better handle long range dependencies and are less
 sensitive to this phenomena. It is important to bear in mind, however, that
-all RNNs still use back-propagation as seen in the previous day, although it is
-often referred as \textit{Back-propagation through time}. 
+all RNNs still use backpropagation as seen in the previous day, although it is
+often referred as \textit{Backpropagation through time}. 
 
 %What we saw with FF and RNN netwoeksThe only
 %difference is that, as the complexity of the computation graph grows, it is
@@ -85,7 +85,7 @@ $$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^
 
 \begin{exercise}
 Convince yourself that a RNN is just an FF unfolded in time. Run the NumpyRNN
-code. Set break-points and compare with what you learned about back-propagation
+code. Set break-points and compare with what you learned about backpropagation
 in the previous day. 
 
 To work with RNNs we will use the Part-of-speech data-set seen in the sequence
@@ -139,7 +139,7 @@ numpy_rnn_gradients = np_rnn.grads(x0, y0)
 
 Handling variable length computation graphs in an automatic fashion is not simple. 
 Theano provides the \textit{scan} function for this purpose. The scan function acts
-as a symbolic for loop. Since, unlike for normal python for loops, it is not
+as a symbolic ``for'' loop. Since, unlike for normal python ``for'' loops, it is not
 possible to put a breakpoint in the scan loop, the design of graphs
 with scan has to be handled with care. Toolboxes like Keras conveniently abstract
 the user from such constructs. However, for complex designs it will be
@@ -150,7 +150,7 @@ Understand the basics of scan with these examples. Scan allows you to build
 computation graphs with a variable number of nodes. It acts as a python "for"
 loop but it is symbolic. The following example should help you understand the
 basic scan functionality. It generates a sequence for a given length. Run it
-and modify it. Try to arrive at an error and understand whant happened.
+and modify it. Try to arrive at an error and understand what happened.
 \begin{python}
 import numpy as np
 import theano
@@ -241,7 +241,7 @@ th_markov_chain(nr_steps)
 \section{A RNN in Theano for Part-of-Speech Tagging}
 
 \begin{exercise}
-Complete the theano code for a RNN inside lxmls/deep learning/rnn.py. Use
+Complete the theano code for a RNN inside lxmls/deep\_learning/rnn.py. Use
 exercise 6.1 for a numpy example and 6.2 to learn how to handle scan. Keep in
 mind that you only need to implement the forward pass! Theano will handle
 backpropagation for us. 
@@ -279,7 +279,7 @@ for n in range(len(theano_rnn_gradients)):
         "Numpy and Theano gradients differ in step n"
 \end{python}
 
-\noindent Finally, its time to test our network in the task of POS tagging. Lets define
+\noindent Finally, it is time to test our network in the task of POS tagging. Lets define
 the optimization parameters and compile batch update and prediction
 functions
 
@@ -349,7 +349,7 @@ important improvements in performance.
 Test the effect of using pre-trained embeddings. Run the following code to
 download the embeddings. Reset the layer parameters and initialize the
 embedding layer with the pre-trained embeddings. Then run the training code
-from the last execise.
+from the last exercise.
 \begin{python}
 # Embeddings Path
 import lxmls.deep_learning.embeddings as emb
@@ -376,7 +376,7 @@ RNNs that include more complex internal logics, and are able to selectively
 forget, thus capturing better long term information. The so called Long Short-Term Memory
 (LSTM) and Gated Recurrent Unit (GRU) have replaced simple RNNs in most of modern
 models. However, they only imply more complex architectures. For an excellent 
-visual explanation of the differences between simples RNNs, GRUs and LSTMS please visit 
+visual explanation of the differences between simple RNNs, GRUs and LSTMs please visit 
 
 \begin{verbatim}
 http://colah.github.io/posts/2015-08-Understanding-LSTMs/
@@ -386,7 +386,7 @@ http://colah.github.io/posts/2015-08-Understanding-LSTMs/
 \centering
 \includegraphics[scale=0.6]{figs/deep_learning/LSTM3-chain.png}
 \caption{Detailed explanation of the LSTM internal logic, see source: \url{http://colah.github.io/posts/2015-08-Understanding-LSTMs/}.}
-\label{fig:RNN}
+\label{fig:LSTM}
 \end{figure}
 
 \begin{exercise}
