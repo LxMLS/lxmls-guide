@@ -644,7 +644,7 @@ _b1 = theano.shared(value=b1, name='b1', borrow=True, broadcastable=(False, True
 \end{python}
 
 \textbf{Important:} One of the main differences between Numpy and theano data
-is broadcast. In numpy if we sum an array with shape (N, M) to one with shape
+is broadcast. In Numpy if we sum an array with shape (N, M) to one with shape
 (1, M), the second array will be copied N times to form a (N, M) matrix. This
 is known as broadcasting. In Theano this is not automatic. You need to specify
 broadcasting explicitly. This is important for example when using a bias, which
@@ -689,10 +689,8 @@ variable. We can now do a test to compare the Numpy and Theano implementations
 and see that they give the same outputs.
 \begin{python}
 # Check Numpy and Theano match
-if np.allclose(tilde_z1, layer1(x.astype(theano.config.floatX))):
-    print "\nNumpy and Theano Perceptrons are equivalent"
-else:
-    raise ValueError, "Numpy and Theano Perceptrons are different"
+assert np.allclose(tilde_z1, layer1(x.astype(theano.config.floatX))), \
+    "Numpy and Theano Perceptrons are different"
 \end{python}
 \end{exercise}
 
