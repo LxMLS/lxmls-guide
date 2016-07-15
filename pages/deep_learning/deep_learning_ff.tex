@@ -581,11 +581,17 @@ networks. It will provide us with the following nice features:
 \item Theano is focused on Deep Learning, with an active community and several tutorials easily available.  
 \end{itemize}
 
-The only negative aspect is that we will have to learn to deal with Theano and
-in particular working with symbolic representations. We will start right away
-with some exercises.
+\noindent However, this does not come at a free price. There are a number of limitations
+
+\begin{itemize}
+\item Symbolic algebra is more difficult to debug, as we can not easily step in at each operation. 
+\item Working with CPU and GPU code implies that we have to be more careful about the types of the variables.
+\item Theano tends to output long error messages. However, once you get used to it, error messages accurately point the source of the problem. 
+\item Handling recurrent neural networks is much simpler than in Numpy but it still implies working with complicated constructs that are complicated to debug. 
+\end{itemize}
 
 \begin{exercise}
+\label{exerciseTheano1}
 Get in contact with Theano. Learn the difference between a symbolic
 representation and a function. Start by implementing the first layer of our
 previous MLP in Numpy 
@@ -623,6 +629,17 @@ weights of our network.
 _W1 = theano.shared(value=W1, name='W1', borrow=True) 
 _b1 = theano.shared(value=b1, name='b1', borrow=True, broadcastable=(False, True)) 
 \end{python}
+
+\textbf{Important:} One of the main differences between Numpy and theano data
+is broadcast. In numpy if we sum an array with shape (N, M) to one with shape
+(1, M), the second array will be copied N times to form a (N, M) matrix. This
+is known as broadcasting. In Theano this is not automatic. You need to specify
+broadcasting explicitly. This is important for example when using a bias, which
+will be copied to match the number of examples in the batch. In other cases,
+like when using variables for recurrent neural networks, broadcast has to be
+set to False. Broadcast is one of the typical source of errors when you start
+working with Theano. Keep this in mind.
+
 Now lets describe the operations we want to do with the variables. Again only
 symbolically. This is done by replacing our usual operations by Theano symbolic
 ones when necessary e. g. the internal product dot() or the sigmoid. Some
@@ -666,6 +683,18 @@ else:
 \end{python}
 \end{exercise}
 
+One of the main sources of errors in Theano is the type of the arrays used. To
+ensure compatibility with the GPU check every array that you are going to work
+with and be sure it has the propper type To automatically switch between
+float64 (CPU) and float32 (GPU) types Theano provides the floatX type. Keep in
+mind not using these is the number one source of errors when you start with
+Theano.
+%
+\begin{python}
+train_x = train_x.astype(theano.config.floatX)
+train_y = train_y.astype('int32')
+\end{python}
+%
 \subsection{Symbolic Forward Pass}
 In the previous section you have seen how to create symbolic Theano functions
 with shared parameters. You have thus all you need to implement the whole
@@ -685,8 +714,14 @@ mlp_a = dl.NumpyMLP(geometry, actvfunc)
 mlp_b = dl.TheanoMLP(geometry, actvfunc)
 \end{python}
 
-Bear in mind that you can use previous experience to debug this.
-
+To help debugging in Theano is sometimes useful to switch off the optimizer.
+This helps Theano point out which part of the Python code generated the error
+\begin{python}
+theano.config.optimizer='None'
+\end{python}
+In general, the best way to debug Theano is to \textbf{compile often}. Try to
+compile the intermediate variables and perform the algebraic operations in
+Numpy.
 \end{exercise}
 
 \subsection{Symbolic Differentiation}
@@ -695,16 +730,16 @@ we will do the same with the cost used for training. We will also derive the
 gradients although this will be trivial once we have the cost function compiled.     
 \begin{exercise}
 We first see an example that does not use any of the code in TheanoMLP but
-rather continues from what you wrote in exercise 6.3. In this exercise you
+rather continues from what you wrote in Ex. \ref{exerciseTheano1}. In this exercise you
 completed a sigmoid layer with Theano. To get some values for the weights we
-used the first layer of the network you trained in 6.2. Now we are going to use
-the second layer as well. This is thus assuming that your network in 6.2 has
+used the first layer of the network you trained in \ref{exerciseTheano1}. Now we are going to use
+the second layer as well. This is thus assuming that your network in \ref{exerciseTheano1} has
 only two layers e.g. the recommended geometry (I, 20, 2). Make sure this is the
 case before starting this exercise.  
 
-For the sake of clarity, lets write here the part of Ex. 6.2 that we had completed
+\noindent For the sake of clarity, lets write here the part of Ex. \ref{exerciseTheano1} that we had completed
 \begin{python}
-# Get the values from our MLP from Ex 6.2
+# Get the values from our MLP 
 W1, b1   = mlp.params[:2]     # Weights and bias of fist layer 
 # First layer symbolic variables
 _x  = T.matrix('x')
@@ -744,8 +779,10 @@ Now obtaining a function that computes the gradient could not be easier.
 _nabla_F = T.grad(_F, _W1) 
 nabla_F  = theano.function([_x, _y], _nabla_F) 
 \end{python}
-To finish this exercise have a look at the TheanoMLP class. As you may realise it just implements what is shown above for the generic case of $N$ layers
+To finish this exercise have a look at the TheanoMLP class. As you may realise
+it just implements what is shown above for the generic case of $N$ layers. 
 \end{exercise}
+
 
 \subsection{Symbolic mini-batch update}
 
@@ -753,43 +790,11 @@ The code above is used in the normal SGD\_train when utilizing Theano. Even if
 you do not have a GPU configured, it should be run faster than our Numpy
 version, particularly for large batch sizes. There is however a
 way to make it run even faster by implementing not only gradient computation
-but the whole batch update of SGD inside Theano. For this we need also to share
-the whole training set, or a very large mega-batch of it. 
+but the whole batch update of SGD inside Theano.  
 
 \begin{exercise}
-Let us first have an understanding of handling train/test data inside the Theano
-computation graph. One important aspect to take into account is that both type
-and shape of the data have to match their corresponding graph variables. This is
-the main source of errors when you are starting with Theano. 
-\begin{python}
-# Cast data into the types and shapes used in the Theano graph
-train_x = train_x.astype(theano.config.floatX)
-train_y = train_y.astype('int32')
-\end{python}
-Note the Theano type theano.config.floatX. This will automatically switch
-between float32 (GPU) and float64 (CPU).
-
-To use data in a Theano computation graph, we use the theano.shared variable.
-This will also push data into the GPU, if used.
-\begin{python}
-_train_x = theano.shared(train_x, 'train_x', borrow=True)
-_train_y = theano.shared(train_y, 'train_y', borrow=True)
-\end{python}
-Once this is done, we can create and compile functions using these variables.
-One simple but useful function is a function returning a mini-batch of data 
-of size bsize given the mini-batch index.  
-\begin{python}
-_i             = T.lscalar()
-get_tr_batch_y = theano.function([_i], _train_y[_i*bsize:(_i+1)*bsize]) 
-\end{python}
-Compile this function and observe its behaviour. It will be necessary for the next exercise.
-\end{exercise}
-
-\begin{exercise}
-The mini-batch function in the previous exercise is the key to fast batch
-update. This is combined with the \emph{updates} argument of theano.function. The input to this argument,
-is a list of tuples with each parameter and update rule. This can be compactly
-defined using list comprehensions.
+One important aspect to take into account is that to obtain a good speed up,
+the batch update operation must be carried out inside of Theano. 
 \begin{python}
 mlp_c   = dl.TheanoMLP(geometry, actvfunc)
 _x      = T.matrix('x')
@@ -798,24 +803,14 @@ _F      = mlp_c._cost(_x, _y)
 updates = [(par, par - lrate*T.grad(_F, par)) for par in mlp_c.params]
 \end{python}
 
-This can be now combined with the givens argument of theano.function. This maps
-input and target to other variables. In this case a mini-batch of inputs and
-targets given an index. 
+\noindent This will return the cost of each batch and update the MLP parameters
+at the indent same time using updates
 \begin{python}
-_j      = T.lscalar()
-givens  = { _x : _train_x[:, _j*bsize:(_j+1)*bsize], 
-            _y : _train_y[_j*bsize:(_j+1)*bsize] }
+batch_up = theano.function([_x, _y], _F, updates=updates)
+n_batch  = int(np.ceil(float(train_x.shape[1])/bsize))
 \end{python}
-
-With updates and givens, we can now define the batch update function. This will
-return the cost of each batch and update the MLP parameters at the same time
-using updates
-\begin{python}
-batch_up = theano.function([_j], _F, updates=updates, givens=givens)
-n_batch  = train_x.shape[1]/bsize  + 1
-\end{python}
-Once we have defined this, we can compare speed and accuracy of the Numpy
-and simple gradient versions using
+Once we have defined this, we can compare speed and accuracy of the Numpy and
+simple gradient versions using
 
 \begin{python}
 import time
