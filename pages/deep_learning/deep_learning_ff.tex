@@ -349,8 +349,6 @@ For the examples in this chapter we will consider the case in which we are estim
 % \mathcal{F}(\mathcal{D};\Theta) & = -\frac{1}{M}\sum_{m=1}^{M} \log p(y^m=k(m) | \mathbf{x}^m).
 % \end{align}
 
-
-
 To compute the gradient with respect the parameters of the $n$-th layer, we
 just need to apply the chain rule as in the previous section, consecutively.
 Fortunately, we do not need to repeat this procedure for each layer as it is
@@ -488,19 +486,33 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 \clearpage
 
 \begin{exercise}
+Start by loading Amazon sentiment corpus used in day \ref{day:classification}
+
+\begin{python}
+import numpy as np
+import lxmls.readers.sentiment_reader as srs
+scr = srs.SentimentCorpus("books")
+train_x = scr.train_X.T
+train_y = scr.train_y[:, 0]
+test_x = scr.test_X.T
+test_y = scr.test_y[:, 0]
+\end{python}
+
 Go to lxmls/deep\_learning/mlp.py:class NumpyMLP:def grads() and complete the
 code of the NumpyMLP class with the Backpropagation recursion that we just saw.
 Once you are done. Try different network geometries by increasing the number of
 layers and layer sizes e.g.
 \begin{python}
+# Neural network modules
+import lxmls.deep_learning.mlp as dl
+import lxmls.deep_learning.sgd as sgd
 # Model parameters
 geometry = [train_x.shape[0], 20, 2]
 actvfunc = ['sigmoid', 'softmax'] 
 # Instantiate model
 mlp      = dl.NumpyMLP(geometry, actvfunc) 
 \end{python}
-You can test the different models with the same sentiment analysis problem as
-in Exercise 6.1. 
+You can test the different hyperparameters 
 \begin{python}
 # Model parameters
 n_iter = 5
@@ -613,6 +625,7 @@ import theano
 import theano.tensor as T
 _x = T.matrix('x')
 \end{python}
+
 Note that this variable does not have any particular value, nor a space
 reserved in memory for it. It contains just a symbolic definition of what the
 variable can contain. The particular values will be given when we use it to
@@ -721,7 +734,12 @@ theano.config.optimizer='None'
 \end{python}
 In general, the best way to debug Theano is to \textbf{compile often}. Try to
 compile the intermediate variables and perform the algebraic operations in
-Numpy.
+Numpy. Once you are done, the following code should yield no error
+
+\begin{python}
+assert np.allclose(mlp_a.forward(test_x), mlp_b.forward(test_x)), \
+    "ERROR: Numpy and Theano forward passes differ"
+\end{python}
 \end{exercise}
 
 \subsection{Symbolic Differentiation}
@@ -786,20 +804,22 @@ it just implements what is shown above for the generic case of $N$ layers.
 
 \subsection{Symbolic mini-batch update}
 
-The code above is used in the normal SGD\_train when utilizing Theano. Even if
-you do not have a GPU configured, it should be run faster than our Numpy
-version, particularly for large batch sizes. There is however a
-way to make it run even faster by implementing not only gradient computation
-but the whole batch update of SGD inside Theano.  
+One important aspect to take into account is that to obtain a good speed up,
+the batch update operation must be carried out inside of Theano. To do this
+we may use the updates argument of theano.function
 
 \begin{exercise}
-One important aspect to take into account is that to obtain a good speed up,
-the batch update operation must be carried out inside of Theano. 
+Define the updates list. This is a list where each element is a tuple of a 
+parameter and the update rule to be applied that parameter. In this case we 
+are defining the SGD update rule, but take into account that using more complex
+update rules like e.g. momentum or adam implies just replacing the last line
+of the following snippet.
 \begin{python}
 mlp_c   = dl.TheanoMLP(geometry, actvfunc)
 _x      = T.matrix('x')
 _y      = T.ivector('y')
 _F      = mlp_c._cost(_x, _y)
+# SGD update rule
 updates = [(par, par - lrate*T.grad(_F, par)) for par in mlp_c.params]
 \end{python}
 
@@ -838,7 +858,8 @@ print "Amazon Sentiment Accuracy train: %f test: %f\n" % (acc_train, acc_test)
 
 # Theano batch update
 init_t = time.clock()
-sgd.SGD_train(mlp_c, n_iter, batch_up=batch_up, n_batch=n_batch)
+sgd.SGD_train(mlp_c, n_iter, batch_up=batch_up, n_batch=n_batch, bsize=bsize, 
+              train_set=(train_x, train_y))
 print "\nTheano compiled batch update version took %2.2f" % (time.clock() - init_t)
 acc_train = sgd.class_acc(mlp_c.forward(train_x), train_y)[0]
 acc_test  = sgd.class_acc(mlp_c.forward(test_x), test_y)[0]
