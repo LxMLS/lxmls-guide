@@ -240,7 +240,7 @@ We have thus transformed the problem of computing the derivative into computing 
 \noindent The first term derivative is given by
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}} = \frac{\partial }{\partial z_{k}}\left(z_k - \log\left(\sum_{k'=1}^{K} \exp(z_{k'}) \right) \right) = 
+\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}} = \frac{\partial }{\partial z_{k}}\left(z_{k(m)} - \log\left(\sum_{k'=1}^{K} \exp(z_{k'}) \right) \right) = 
   \begin{cases}
       1 - \tilde{z}_k  &  \mbox{ if } k = k(m)\\ 
       -\tilde{z}_k    &  \mbox{ otherwise }.
@@ -410,14 +410,14 @@ e^{N-1} = \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}^{N-1}
 \noindent then we can relate this to the cost derivative with respect to the preceding layer with
 %
 \begin{align}
-e^{N-1} = \bigg(\sum_{k'=1}^{K} e^N \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{k'}^{N-1}}\bigg)\frac{\partial \tilde{z}_{k'}^{N-1}}{\partial z_{k'}^{N-1}} = \bigg(\sum_{k'=1}^{K} e^N_k W^N_{kj}\bigg)\cdot\tilde{z}_{k'}^{N-1}\cdot(1-\tilde{z}_{k'}^{N-1}),
+e^{N-1} = \bigg(\sum_{k'=1}^{K} e^N \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{j}^{N-1}}\bigg)\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}} = \bigg(\sum_{k'=1}^{K} e^N_{k'} W^N_{k'j}\bigg)\cdot\tilde{z}_{j}^{N-1}\cdot(1-\tilde{z}_{j}^{N-1}),
 \label{eq:chainRulRecursion}
 \end{align}
 %
 where we have used the fact that for sigmoid non-linearities 
 %
 \begin{equation}
-\frac{\partial \tilde{z}_{k}}{\partial z_{k}} = \tilde{z}_{k}\cdot (1-\tilde{z}_{k}).
+\frac{\partial \tilde{z}_{j}}{\partial z_{j}} = \tilde{z}_{j}\cdot (1-\tilde{z}_{j}).
 \end{equation}
 
 This formula can also be interpreted as traversing the graph in Fig.~\ref{fig:FF} backwards, multiplying at each node the backpropagated error by the derivative of its inputs and summing the errors propagated from different nodes. A more formal expression of the algorithm can be found in Algorithm~\ref{algo:backprop}.
