@@ -455,10 +455,10 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
         \ELSE
    		\FOR{$m=1$ {\bfseries to} $M'$}
 		\STATE {Backpropagate} the error through the linear layer, for each example $m$:  
-        $$\mathbf{e}^{m,n} = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{m,n+1}\Big)$$ 
+        $$\mathbf{e}^{m} = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{m,n+1}\Big)$$ 
         
 		\STATE {Backpropagate} the error through the non-linearity, for the sigmoid this is:  
-        $$\mathbf{e}^{m,n} = \mathbf{e}^{m,n+1} \odot \tilde{\mathbf{z}}^{m,n} \odot (\mathbf{\mathrm{1}}-\tilde{\mathbf{z}}^{m,n}),$$
+        $$\mathbf{e}^{m,n} = \mathbf{e}^{m} \odot \tilde{\mathbf{z}}^{m,n} \odot (\mathbf{\mathrm{1}}-\tilde{\mathbf{z}}^{m,n}),$$
         where $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\tilde{\mathbf{z}}^n$.
 
 
