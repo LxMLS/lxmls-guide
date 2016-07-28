@@ -69,7 +69,7 @@ $\Theta=\{\mathbf{W}^x \in \mathbb{R}^{H \times I}, \mathbf{W}^h \in \mathbb{R}^
 
 	\FOR{$t=1$ {\bfseries to} $T-1$}
      \STATE Apply linear transformation combining input and recurrent signals
-        $$z_{jt}^h = \sum_{i=1}^{I} W_{ji}^x x_{it} + \sum_{j=1}^{J} W_{jj'}^h h_{j't-1}$$
+        $$z_{jt}^h = \sum_{i=1}^{I} W_{ji}^x x_{it} + \sum_{j'=1}^{J} W_{jj'}^h h_{j't-1}$$
      \STATE Apply non-linear transformation e.g. sigmoid (hereby denoted $\sigma()$)
      $$h_{jt} = \sigma(z_{jt}^h)  = \frac{1}{1+\exp(-z_{jt}^h)}$$
 
@@ -110,7 +110,7 @@ nr_words = len(train_seq.x_dict)
 nr_tags = len(train_seq.y_dict)
 \end{python}
 
-\noindent Load and configure the NumpyRNN. Remember to user reload if you want to modify 
+\noindent Load and configure the NumpyRNN. Remember to use reload if you want to modify 
 the code inside the rnns module
 \begin{python}
 import lxmls.deep_learning.rnn as rnns
@@ -355,7 +355,7 @@ from the last exercise.
 import lxmls.deep_learning.embeddings as emb
 import os
 reload(emb)
-if not os.path.isfile(EMBEDDINGS):
+if not os.path.isfile("data/senna_50"):
     emb.download_embeddings('senna_50', "data/senna_50")
 E = emb.extract_embeddings("data/senna_50", train_seq.x_dict) 
 # Reset model to remove the effect of training

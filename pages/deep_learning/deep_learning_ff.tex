@@ -79,13 +79,13 @@ distribution over $K$ classes parametrized as a log-linear model. This is given
 by
 %
 \begin{align}
-p(y=k|{x}) & = \frac{1}{Z(\mathbf{W},\mathbf{b},\mathbf{x})}\exp\left(\sum_{i=1}^{I} W_{ik} x_i + b_k\right),
+p(y=k|{x}) & = \frac{1}{Z(\mathbf{W},\mathbf{b},\mathbf{x})}\exp\left(\sum_{i=1}^{I} W_{ki} x_i + b_k\right),
 \label{eq:loglineargen}
 \end{align}
 %
 \noindent where 
 \begin{align}
-Z(\mathbf{W},\mathbf{b},\mathbf{x}) = \sum_{k'=1}^{K} \exp\left(\sum_{i=1}^{I} W_{ik'} x_i + b_{k'}\right)
+Z(\mathbf{W},\mathbf{b},\mathbf{x}) = \sum_{k'=1}^{K} \exp\left(\sum_{i=1}^{I} W_{k'i} x_i + b_{k'}\right)
 \label{eq:loglineargenPartition}
 \end{align}
 %
@@ -93,7 +93,7 @@ is the partition function ensuring that all output values sum to one, so that we
 these values as probabilities. The model thus receives a feature vector
 $\mathbf{x} \in \mathbb{R}^{I}$ and assigns a probability over $y \in {1 \cdots K}$ possible
 class indices. It is parametrized by weights and bias $\Theta=\{\mathbf{W},
-\mathbf{b}\}$, with $\mathbf{W} \in \mathbb{R}^{K \times J}$ and $\mathbf{b}
+\mathbf{b}\}$, with $\mathbf{W} \in \mathbb{R}^{K \times I}$ and $\mathbf{b}
 \in \mathbb{R}^{K}$. This is a well known classifier bearing resemblance to the
 models seen in the second day of the school, in
 particular the maxent model\footnotemark\footnotetext{There are some
@@ -108,7 +108,7 @@ parameters in $\mathbf{b}$ are all set to zero.}.
 Another way of looking at these models is as the composition of the linear transformation 
 %
 \begin{equation}
-    z_k = \sum_{i=1}^{I} W_{ik} x_i + b_k,
+    z_k = \sum_{i=1}^{I} W_{ki} x_i + b_k,
 \label{eq:linear}
 \end{equation}
 %\begin{equation}
@@ -198,11 +198,11 @@ the individual examples. That is
 % DAVID: A formula is worth a lot of words
 
 \begin{align}
-\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta) = - \frac{1}{M} \sum_{m=1}^M \nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{Dˆm};\Theta) = \frac{1}{M} \sum_{m=1}^M \nabla_\mathbf{W}\mathcal{F}(\mathcal{D}^m;\Theta)
 \label{eq:GradientCostDecomposition}
 \end{align}
 
-All we need to do to compute $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$  is to have an expression for $\nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)$.
+\noindent All we need to do to compute $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$  is to have an expression for $\nabla_\mathbf{W} \log p(y^m=k(m) | \mathbf{x}^m)$.
 
 % RAMON: This might need to be clarified
 %Also in a slight abuse of notation we will denote the derivative of the cost
@@ -240,10 +240,10 @@ We have thus transformed the problem of computing the derivative into computing 
 \noindent The first term derivative is given by
 %
 \begin{align}
-\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}} = \frac{\partial }{\partial z_{k}}\left(z_{k(m)} - \log\left(\sum_{k'=1}^{K} \exp(z_{k'}) \right) \right) = 
+\frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}} = - \frac{\partial }{\partial z_{k}}\left(z_{k(m)} - \log\left(\sum_{k'=1}^{K} \exp(z_{k'}) \right) \right) = 
   \begin{cases}
-      1 - \tilde{z}_k  &  \mbox{ if } k = k(m)\\ 
-      -\tilde{z}_k    &  \mbox{ otherwise }.
+      -(1 - \tilde{z}_k)  &  \mbox{ if } k = k(m)\\ 
+      -(-\tilde{z}_k)     &  \mbox{ otherwise }.
   \end{cases}
   \label{eq:patialSoftmax}
 \end{align}
@@ -280,7 +280,7 @@ gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ an
 %
 \begin{enumerate}
 \item The derivative of the cost with respect to the linear transformation applying the weight $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k$, denoted in \textcolor{red}{red}.
-\item The derivative of the forward-pass up to the linear transformation applying the weight $\partial z_k/\partial W_{ik}$, denoted in \textcolor{blue}{blue}. This is always equal to the variable multiplying that weight and one in the case of the bias.
+\item The derivative of the forward-pass up to the linear transformation applying the weight $\partial z_k/\partial W_{ki}$, denoted in \textcolor{blue}{blue}. This is always equal to the variable multiplying that weight and one in the case of the bias.
 \end{enumerate}
 %
 \noindent This is the key to the Backpropagation algorithm as we will see in the next Section \ref{sec:deep_forward}.
@@ -379,7 +379,7 @@ The next section presents a careful deduction of these recursion rules, for the 
 \label{fig:NN_color}
 \end{figure}
 
-In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ik}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at $N-1$
+In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ki}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at $N-1$
 %
 \begin{align}
 \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}} = \sum_{j'=1}^{J} {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j'}^{N-1}}} {\color{blue} \frac{\partial z_{j'}^{N-1}}{\partial W_{ji}}} = {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} {\color{blue} \frac{\partial z_{j}^{N-1}}{\partial W_{ji}}}
@@ -773,6 +773,7 @@ _W2 = theano.shared(value=W2, name='W2', borrow=True)
 _b2 = theano.shared(value=b2, name='b2', borrow=True, broadcastable=(False, True)) 
 # Second layer symbolic expressions
 _z2       = T.dot(_W2, _tilde_z1) + _b2
+# NOTE: Theano softmax does not support T.nnet.softmax(_z2, axis=1)  this is a workaround
 _tilde_z2 = T.nnet.softmax(_z2.T).T
 \end{python}
 With this, we could compile a function to obtain the output of the network
