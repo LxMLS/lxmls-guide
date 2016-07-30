@@ -84,6 +84,7 @@ $$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^
 \end{algorithm}
 
 \begin{exercise}
+\label{exercise:Ex1}
 Convince yourself that a RNN is just an FF unfolded in time. Run the NumpyRNN
 code. Set break-points and compare with what you learned about backpropagation
 in the previous day. 
@@ -146,6 +147,7 @@ the user from such constructs. However, for complex designs it will be
 necessary to be able to use scan or equivalent functions. 
 
 \begin{exercise}
+\label{exercise:Ex2}
 Understand the basics of scan with these examples. Scan allows you to build
 computation graphs with a variable number of nodes. It acts as a python "for"
 loop but it is symbolic. The following example should help you understand the
@@ -242,9 +244,9 @@ th_markov_chain(nr_steps)
 
 \begin{exercise}
 Complete the theano code for a RNN inside lxmls/deep\_learning/rnn.py. Use
-exercise 6.1 for a numpy example and 6.2 to learn how to handle scan. Keep in
-mind that you only need to implement the forward pass! Theano will handle
-backpropagation for us. 
+exercise \ref{exercise:Ex1} for a numpy example and \ref{exercise:Ex2} to learn
+how to handle scan. Keep in mind that you only need to implement the forward
+pass! Theano will handle backpropagation for us. 
 \begin{python}
 # Instantiate the class
 rnn = rnns.RNN(nr_words, emb_size, hidden_size, nr_tags, seed=SEED)

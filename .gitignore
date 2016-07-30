@@ -1,5 +1,6 @@
-guide.aux
-guide.log
+.ipynb_checkpoints/
+*.aux
+*.log
 guide.out
 guide.pdf
 guide.bbl
