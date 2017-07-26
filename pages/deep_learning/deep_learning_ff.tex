@@ -494,6 +494,10 @@ import lxmls.readers.sentiment_reader as srs
 scr = srs.SentimentCorpus("books")
 train_x = scr.train_X.T
 train_y = scr.train_y[:, 0]
+
+train_x = train_x.astype(theano.config.floatX)
+train_y = train_y.astype('int32')
+
 test_x = scr.test_X.T
 test_y = scr.test_y[:, 0]
 \end{python}
