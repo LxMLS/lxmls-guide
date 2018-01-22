@@ -1,9 +1,21 @@
-Today's class will introduce neural network models, also commonly known as deep learning models. For this, we will need the concept of \textit{computation graph}, a general way of describing complex functions as composition of simpler functions. We will also learn about \textit{Backpropagation}, a generic solution for gradient-descent based optimization in computation graphs.
+Today's class will introduce neural network models, also commonly known as deep
+learning models. For this, we will need the concept of \textit{computation
+graph}, a general way of describing complex functions as composition of simpler
+functions. We will also learn about \textit{Backpropagation}, a generic
+solution for gradient-descent based optimization in computation graphs.
 
 
 \section{Today's assignment}
 
-Your objective today should be to understand fuly the concept of Backpropagation. For this, we will code Backpropagation in Numpy on a simple feed forward network. Then we will learn about the Pytorch module which allows to easily create dynamic computation graphs and computes backpropagation automaticaly for us. If you are new to the topic, you should aim to understand the concept of computation graph, finish the Backpropagation exercise and attain a basic understanding of Pytorch. If you already know Backpropagation well and have experience with normal Python, you should aim to complete the whole day.
+Your objective today should be to understand fully the concept of
+Backpropagation. For this, we will code Backpropagation in Numpy on a simple
+feed forward network. Then we will learn about the Pytorch module which allows
+to easily create dynamic computation graphs and computes Backpropagation
+automatically for us. If you are new to the topic, you should aim to understand
+the concept of computation graph, finish the Backpropagation exercise and
+attain a basic understanding of Pytorch. If you already know Backpropagation
+well and have experience with normal Python, you should aim to complete the
+whole day.
 
 \section{Introduction to Deep Learning and Pytorch}
 
@@ -20,10 +32,14 @@ its inputs and passes the result as its output. The parameters of the model are
 the weights given to the different inputs of nodes. This architecture vaguely
 resembles synapse strengths in human neural networks, hence the name artificial neural networks.
 
-Since neural networks are just compositions of simple functions, we can apply the chain rule to derive gradients and learn the parameters of neural networks regardless of their complexity.
+Since neural networks are just compositions of simple functions, we can apply
+the chain rule to derive gradients and learn the parameters of neural networks
+regardless of their complexity.
 See Section \label{gradient_methods} for a refresh on the basic concept. We
 will also refer to the gradient learning methods introduced in Section
-\ref{s:me}. Today we will focus on \textit{feed-forward networks}. The topic of \textit{recurrent neural networks} (RNNs) will be visited in a posterior chapter.
+\ref{s:me}. Today we will focus on \textit{feed-forward networks}. The topic of
+\textit{recurrent neural networks} (RNNs) will be visited in a posterior
+chapter.
 
 Some of the changes that led to the surge of deep learning are not only
 improvements on the existing neural network algorithms, but also
@@ -36,11 +52,15 @@ case, we are one Python import away from solving this problem.
 For the particular case of deep learning, there is a growing number of python
 toolboxes available that allow you to design custom computational graphs for
 GPUs some of the best known are
-Pytorch\footnotemark\footnotetext{http://deeplearning.net/software/theano/}, TensorFlow\footnotemark\footnotetext{https://www.tensorflow.org/} and Pytorch\footnotemark\footnotetext{http://pytorch.org/}.
+Pytorch\footnotemark\footnotetext{http://pytorch.org/}, TensorFlow\footnotemark\footnotetext{https://www.tensorflow.org/} and Pytorch\footnotemark\footnotetext{http://pytorch.org/}.
 
 In these labs we will be working with Pytorch. Pytorch allows us to create
-computation graphs of arbitray complexity and automatically compute the
-gradients of the cost with respect to any parameter. It will also produce CUDA-compatible code for use with GPUs. One salient property of Pytorch, shared with other toolkits such as Dynet or Chainer, is that its computation graphs are \textit{dynamic}. This will be a key factor simplifying design once we start dealing with more complex models.
+computation graphs of arbitrary complexity and automatically compute the
+gradients of the cost with respect to any parameter. It will also produce
+CUDA-compatible code for use with GPUs. One salient property of Pytorch, shared
+with other toolkits such as Dynet or Chainer, is that its computation graphs
+are \textit{dynamic}. This will be a key factor simplifying design once we
+start dealing with more complex models.
 
 \section{Computation Graphs}
 
@@ -52,25 +72,40 @@ gradients of the cost with respect to any parameter. It will also produce CUDA-c
 \caption{Representation of a log-linear model as a computation graph: a
 composition of linear and non-linear transformations. The classification cost
 for the $m$-th training example $\mathcal{D}^m=\{\mathbf{x}, y\}$ is also
-shown. Note $\mathbf{1}^y$ is an indicator vector of size $K$ with a one in position $y$ and zeros elsewhere.}
+shown. Note $\mathbf{1}^y$ is an indicator vector of size $K$ with a one in
+position $y$ and zeros elsewhere.}
 \label{fig:LogLinear}
 \end{figure}
 
-A computation graph is just a way of expressing compositions of functions with a directed acyclic graph. Fig.~\ref{fig:LogLinear} depicts a log-linear model. Each circle or box corresponds to a node generating one or more outputs by aplying some operation over one or more inputs of the preceeding nodes. Circles here denote linear transformations, that is weighted sums of the node input plus a bias. The $k_{th}$ node output can be thus descrived as
+A computation graph is just a way of expressing compositions of functions with
+a directed acyclic graph. Fig.~\ref{fig:LogLinear} depicts a log-linear model.
+Each circle or box corresponds to a node generating one or more outputs by
+applying some operation over one or more inputs of the preceding nodes. Circles
+here denote linear transformations, that is weighted sums of the node input
+plus a bias. The $k_{th}$ node output can be thus described as
 %
 \begin{equation}
     z_k = \sum_{i=1}^{I} W_{ki} x_i + b_k,
 \label{eq:linear}
 \end{equation}
 %
-where $W_{ki}$ and $b_k$ are weights and bias respectively. Squared boxes represent non-linear transformations. Applying a \textit{softmax} function is a way of transforming a $K$ dimensions real-valued vector into a vector of the same dimension where the sum of all components is one. This allows us to consider the output of this node as a probability distribution. The softmax in Fig.~\ref{fig:LogLinear} can be expressed as
+where $W_{ki}$ and $b_k$ are weights and bias respectively. Squared boxes
+represent non-linear transformations. Applying a \textit{softmax} function is a
+way of transforming a $K$ dimensions real-valued vector into a vector of the
+same dimension where the sum of all components is one. This allows us to
+consider the output of this node as a probability distribution. The softmax in
+Fig.~\ref{fig:LogLinear} can be expressed as
 %
 \begin{equation}
 p(y=k|{x}) \equiv \tilde{z}_k = \frac{\exp(z_k)}{\sum_{k'=1}^{K} \exp(z_{k'})}.
 \label{eq:softmax}
 \end{equation}
 %
-Note that in the following sections we will also use $\mathbf{z}$ and $\tilde{\mathbf{z}}$ to denote the output of linear and non-linear functions respectively. By composing Eq.~\ref{eq:linear} and Eq.~\ref{eq:softmax} we obtain a log-linear model similar to the one we saw on Chapter~\ref{day:classification}\footnotemark\footnotetext{There are some
+Note that in the following sections we will also use $\mathbf{z}$ and
+$\tilde{\mathbf{z}}$ to denote the output of linear and non-linear functions
+respectively. By composing Eq.~\ref{eq:linear} and Eq.~\ref{eq:softmax} we
+obtain a log-linear model similar to the one we saw on
+Chapter~\ref{day:classification}\footnotemark\footnotetext{There are some
 differences with respect to Eq.\ref{eq:loglinear}, like the use of a bias
 $\mathbf{b}$. Also, if we consider the binary joint feature mapping
 $\boldsymbol{f}(x,y) = \boldsymbol{g}(x) \otimes \boldsymbol{e}_y\nonumber$ of
@@ -99,31 +134,29 @@ class indices. It is parametrized by weights and bias $\Theta=\{\mathbf{W},
 \subsection{Stochastic Gradient Descent: a refresher}
 
 As we saw on day one, the parameters of a log linear model
-$\Theta=\{\mathbf{W}, \mathbf{b}\}$ can be learned with Stochastic Gradient Descent (SGD). To apply SGD we first need to define an error function that measures how
-good we are doing for any given parameter values. %.
- To remain close to the maximum
-entropy example, we will use as cost function the average minus posterior probability of
-the correct class, also known as the Cross-Entropy (CE) criterion. Bear in
-mind, however, that we could pick other non-linear functions and cost functions
-that do not have
-a probabilistic interpretation. For example, the same principle could be applied to
-a regression problem where the cost is the Mean Square Error (MSE).
-
-For a training data-set $\mathcal{D} = \{(\mathbf{x}^1,y^1), \ldots,
-(\mathbf{x}^M,y^M)\}$ of $M$ examples, the CE cost function is given by
-
+$\Theta=\{\mathbf{W}, \mathbf{b}\}$ can be learned with Stochastic Gradient
+Descent (SGD). To apply SGD we first need to define an error function that
+measures how good we are doing for any given parameter values. To remain close
+to the maximum entropy example, we will use as cost function the average minus
+posterior probability of the correct class, also known as the Cross-Entropy
+(CE) criterion. Bear in mind, however, that we could pick other non-linear
+functions and cost functions that do not have a probabilistic interpretation.
+For example, the same principle could be applied to a regression problem where
+the cost is the Mean Square Error (MSE).  For a training data-set $\mathcal{D}
+= \{(\mathbf{x}^1,y^1), \ldots, (\mathbf{x}^M,y^M)\}$ of $M$ examples, the CE
+cost function is given by
+%
 \begin{align}
 \mathcal{F}(\mathcal{D};\Theta)
 & = -\frac{1}{M}\sum_{m=1}^{M} \log p(y^m=k(m) | \mathbf{x}^m),
 \label{eq:CostLogPos}
 \end{align}
-% \nonumber\\&= -\frac{1}{M}\sum_{m=0}^{M-1} (\log \circ f_{k(m)} \circ \mathbf{g})(\mathbf{x}^m^)
 %
 where $k(m)$ is the correct class index for the $m$-th example.
 To learn the parameters of this model with SGD, all we need to do is compute the gradient
 of the cost $\nabla\mathcal{F}$ with respect to the parameters of the model and
 iteratively update our  parameter estimates as
-
+%
 \begin{equation}
 \mathbf{W} \leftarrow \mathbf{W} - \eta \nabla_\mathbf{W}\mathcal{F}
 \end{equation}
@@ -131,7 +164,7 @@ and
 \begin{equation}
 \mathbf{b} \leftarrow \mathbf{b} - \eta \nabla_\mathbf{b}\mathcal{F},
 \end{equation}
-
+%
 \noindent where $\eta$ is the learning rate. Note that in practice we will use
 a mini-batch of examples as opposed to the whole train set. Very often, more
 elaborated learning rules as e.g. momentum or Adagrad are used. Bear in mind
@@ -147,11 +180,13 @@ main step. The reasoning here outlined will also be applicable to these.
 \label{fig:LogLinColor}
 \end{figure}
 
-The expressions for $\nabla\mathcal{F}$ are well known in the case of log-linear models. However, for
-the sake of the introduction to deep learning, we will show how they can
-be derived by exploiting the decomposition of the cost function into the computational
-graph seen in the last section (and represented in Fig.~\ref{fig:LogLinear}). To simplify notation, and without loss of generality, we will work with the
-classification cost of an individual example
+The expressions for $\nabla\mathcal{F}$ are well known in the case of
+log-linear models. However, for the sake of the introduction to deep learning,
+we will show how they can be derived by exploiting the decomposition of the
+cost function into the computational graph seen in the last section (and
+represented in Fig.~\ref{fig:LogLinear}). To simplify notation, and without
+loss of generality, we will work with the classification cost of an individual
+example
 %
 \begin{align}
 \mathcal{F}(\mathcal{D}^m;\Theta) = -\log p(y^m=k(m) | \mathbf{x}^m),
@@ -162,14 +197,20 @@ where $\mathcal{D}^m=\{(\mathbf{x}^m, y^m)\}$.
 
 Lets start by computing the element $(k,i)$ of the gradient matrix
 $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D^m};\Theta)$, which contains the partial
-derivative with respect to the weight $W_{ki}$. To do this, we invoke the \textbf{chain rule} to split the derivative calculation into two terms at variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
+derivative with respect to the weight $W_{ki}$. To do this, we invoke the
+\textbf{chain rule} to split the derivative calculation into two terms at
+variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
 %
 \begin{align}
 \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ki}} & = \sum_{k'=1}^{K} { \color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k'}} }{ \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}}.
 \label{eq:LogLingCR1}
 \end{align}
 %
-We have thus transformed the problem of computing the derivative into computing two easier derivatives. We start by the right-most term. The relation between $z_{k'}$ and $W_{ki}$ is given in ref.~\ref{eq:linear}. Since $z_{k'}$ only depends on the weight $W_{ki}$ in a linear way, the second derivative in Eq.\ref{eq:LogLingCR1} is given by
+We have thus transformed the problem of computing the derivative into computing
+two easier derivatives. We start by the right-most term. The relation between
+$z_{k'}$ and $W_{ki}$ is given in ref.~\ref{eq:linear}. Since $z_{k'}$ only
+depends on the weight $W_{ki}$ in a linear way, the second derivative in
+Eq.\ref{eq:LogLingCR1} is given by
 \begin{align}
 { \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} x^m_{i'} + b_{k'} \right) =
   &\begin{cases}
@@ -230,7 +271,7 @@ This leads us to the last gradient expression
 \end{equation}
 
 \noindent An important consequence of the previous derivation is the fact that each
-gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ and $\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta)$ can be computed from two terms displayed with coresponding colours in Fig.~\ref{fig:LogLinColor}:
+gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ and $\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta)$ can be computed from two terms displayed with corresponding colours in Fig.~\ref{fig:LogLinColor}:
 %
 \begin{enumerate}
         \item The derivative of the cost with respect to the $k_{th}$ output of the linear transformation $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k$, denoted in \textcolor{red}{red}. This is, in effect, the error that we propagate \textit{backwards} from the cost layer.
@@ -241,7 +282,7 @@ gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ an
 
 \begin{exercise}
 \label{exercise:exerciseNumpy1}
-To ease-up the upcoming implementation exercise, examine and comment the following implemetation of a log-linear model and its gradient update rule.
+To ease-up the upcoming implementation exercise, examine and comment the following implementation of a log-linear model and its gradient update rule.
 Start by loading Amazon sentiment corpus used in day \ref{day:classification}
 \begin{python}
 import lxmls.readers.sentiment_reader as srs
@@ -420,13 +461,13 @@ the case of an MLP, consists of the following steps:
 
 \begin{itemize}
 \item The \textcolor{blue}{forward pass} step, where the input signal is injected though the network  in a forward fashion (see Alg.~\ref{algo:mlpforward})
-\item The \textcolor{red}{backpropagation} step, where the derivative of the cost function (also called error) is injected back through the network and backpropagated according to the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
-\item Finally, the gradients with respect to the parameters are computed by multiplying the input signal from the forward pass and the backpropagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
+\item The \textcolor{red}{Backpropagation} step, where the derivative of the cost function (also called error) is injected back through the network and Backpropagated according to the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
+\item Finally, the gradients with respect to the parameters are computed by multiplying the input signal from the forward pass and the Backpropagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
 \item Given the gradients computed in the previous step, the model weights can then be easily update according to a specified learning rule (step 19 in Alg.~\ref{algo:backprop} uses a mini-batch SGD update rule).
 \end{itemize}
 %Alg.~\ref{algo:backprop} uses a mini-batch SGD updation rule.
 
-The main step of the method is the backpropagation step, where one has to compute the backpropagation recursion rules for a specific network.
+The main step of the method is the Backpropagation step, where one has to compute the Backpropagation recursion rules for a specific network.
 The next section presents a careful deduction of these recursion rules, for the present MLP model.
 
 \subsection{Backpropagation: deriving the rule for a feed forward network}
@@ -438,7 +479,7 @@ The next section presents a careful deduction of these recursion rules, for the 
 \label{fig:NN_color}
 \end{figure}
 
-In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ki}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at with respect to the output of the linear layer at $N-1$
+In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the Backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ki}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at with respect to the output of the linear layer at $N-1$
 %
 \begin{align}
         \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}^{N-1}} = \sum_{j'=1}^{J} {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j'}^{N-1}}} {\color{blue} \frac{\partial z_{j'}^{N-1}}{\partial W_{ji}^{N-1}}} = {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} {\color{blue} \frac{\partial z_{j}^{N-1}}{\partial W_{ji}^{N-1}}}
@@ -479,7 +520,7 @@ If we call the derivative of the error with respect to the $N_{th}$ linear layer
 \label{eq:BPderivation6}
 \end{align}
 %
-These formulas are valid for any FF network with hidden layers using one-to-one non-linearities. For the network descripbed in Algorithm~\ref{algo:mlpforward} we have
+These formulas are valid for any FF network with hidden layers using one-to-one non-linearities. For the network described in Algorithm~\ref{algo:mlpforward} we have
 %
 \begin{align}
         \mathbf{e}^{N} =  \mathrm{\mathbf{1}}^{y} - \tilde{\mathbf{z}}^N,
@@ -492,7 +533,7 @@ These formulas are valid for any FF network with hidden layers using one-to-one 
 A more detailed version can be seen in Algorithm~\ref{algo:backprop}
 \subsection{Backpropagation as a general rule}
 %
-Once we get confortable with the derivation of backpropagation for the FF, it is simple to see that expanding to generic computations graphs is trivial. If we wanted to change the signoid non-linearity by a Rectified Linear Unit (ReLU) we would only need to change forward and backpropagation derivative of the hidden non-linearities as
+Once we get confortable with the derivation of Backpropagation for the FF, it is simple to see that expanding to generic computations graphs is trivial. If we wanted to change the signoid non-linearity by a Rectified Linear Unit (ReLU) we would only need to change forward and Backpropagation derivative of the hidden non-linearities as
 \begin{align}
  \tilde{z}_j =
   &\begin{cases}
@@ -505,14 +546,14 @@ Once we get confortable with the derivation of backpropagation for the FF, it is
   \label{eqn:relu}
 \end{align}
 %
-More importantly, backpropagation can be allways defined as a direct acyclic graph with the \textit{reverse} direction of the forward-pass, where at each node we apply the transpose of the jacobian of each linear or non linear transformation. Coming back to Eq.~\ref{eq:BPderivation7} we have the vector formula
+More importantly, Backpropagation can be always defined as a direct acyclic graph with the \textit{reverse} direction of the forward-pass, where at each node we apply the transpose of the Jacobian of each linear or non linear transformation. Coming back to Eq.~\ref{eq:BPderivation7} we have the vector formula
 %
 \begin{align}
         \mathbf{e}^{N-1} = \left(\mathbf{\mathrm{J}}_{\tilde{z}}^{N-1}\right)^T \left(\mathbf{\mathrm{J}}_{W}^N\right)^T \mathbf{e}^N.
 \label{eq:BPderivation5}
 \end{align}
 %
-In other words, regardless of the topology of the network and as long as we can compute the forward-pass and the jacobian of each individual node, we will be able to compute backpropagation.
+In other words, regardless of the topology of the network and as long as we can compute the forward-pass and the Jacobian of each individual node, we will be able to compute Backpropagation.
 \begin{algorithm}[th!]
 
    \caption{Mini-batch SGD with Back-Propagation}
@@ -552,7 +593,6 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
         $$\mathbf{e}^{m,n} = \mathbf{e}^{m} \odot \tilde{\mathbf{z}}^{m,n} \odot (\mathbf{\mathrm{1}}-\tilde{\mathbf{z}}^{m,n}),$$
         where $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\tilde{\mathbf{z}}^n$.
 
-
 		\ENDFOR	
         \ENDIF
 
@@ -577,7 +617,7 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 \clearpage
 
 \begin{exercise}
-Instantiate the feed-forward model class and optimization parameters. This models follows the architecrure described in Algorithm~\ref{algo:mlpforward}.
+Instantiate the feed-forward model class and optimization parameters. This models follows the architecture described in Algorithm~\ref{algo:mlpforward}.
 \begin{python}
 # Model
 geometry = [corpus.nr_features, 20, 2]
@@ -596,7 +636,7 @@ model = NumpyMLP(
     learning_rate=learning_rate
 )
 \end{python}
-Open the code for this model. This is located in lxmls/deep\_learning/numpy\_models/mlp.py . Implement the method grads() in the class NumpyMLP code of the NumpyMLP class using Backpropagation recursion that we just saw.\\
+Open the code for this model. This is located in lxmls/deep\_learning/numpy\_models/mlp.py . Implement the method backpropagation() in the class NumpyMLP code of the NumpyMLP class using Backpropagation recursion that we just saw.\\
 
 As a first step focus on getting the gradients of each layer, one at a time.
 For this load a function that allows you get and set the parameters of the
@@ -628,7 +668,7 @@ start checking if the values match
 gradients = model.backpropagation(batch['input'], batch['output'])
 current_gradient = get_parameter(gradients)
 \end{python}
-Now you can plot the values of the loss arround a given parameters value versus the gradient. If you have implemented this correctly the gradient should be tangent to the loss at the current weight value, see Figure~\ref{fig:lossandgradient}. Once you have completed the exercise, you should be able to plot also the gradients of the other layers. Take into account that the gradients for the first layer will only be non zero for the indices of words present in the batch. You can locate this using .
+Now you can plot the values of the loss around a given parameters value versus the gradient. If you have implemented this correctly the gradient should be tangent to the loss at the current weight value, see Figure~\ref{fig:lossandgradient}. Once you have completed the exercise, you should be able to plot also the gradients of the other layers. Take into account that the gradients for the first layer will only be non zero for the indices of words present in the batch. You can locate this using.
 \begin{python}
 batch['input'][0].nonzero()
 \end{python}
@@ -655,7 +695,7 @@ h = plt.plot(
 \label{fig:lossandgradient}
 \end{figure}
 
-After you have ensured that your backpropagation algorithm is correct, you can train a model with the data we have.
+\noindent After you have ensured that your Backpropagation algorithm is correct, you can train a model with the data we have.
 
 \begin{python}
 # Get batch iterators for train and test
@@ -687,7 +727,7 @@ that you should keep in mind.
 \begin{itemize}
 \item Backpropagation allows us in principle to compute the gradients for any differentiable computation graph.
 
-\item We only need to know the forward-pass and Jacobian of each individual node in the network to implement backpropagation.
+\item We only need to know the forward-pass and Jacobian of each individual node in the network to implement Backpropagation.
 
 \item Learning guarantees are however weaker than for expectation maximization or convex optimization algorithms.
 
@@ -711,14 +751,14 @@ layers, which in most cases will be rather large.
 For this reason most deep learning applications use Graphics Processing Units
 (GPU) in their computations. This specialized hardware is normally used to
 accelerate computer graphics, but can also be used for some computation
-intensive tasks like matrix multiplications. However, we need to deal with specific interfaces and
-operations in order to use a GPU. This is where Pytorch comes in. Pytorch is a
-computation graph toolkit with following nice features
+intensive tasks like matrix multiplications. However, we need to deal with
+specific interfaces and operations in order to use a GPU. This is where Pytorch
+comes in. Pytorch is a computation graph toolkit with following nice features
 
 \begin{itemize}
 \item Automatic differentiation. We only need to express the computation graph of the forward pass. Pytorch will compute the gradients for us. 
 \item GPU integration: The code will be ready to work on a GPU.
-\item An active community focused on the applicatio of Pytorch to Deep Learning.
+\item An active community focused on the application of Pytorch to Deep Learning.
 \item Dynamic computation graphs. This allows us to change the computation graph within each update. 
 \end{itemize}
 
@@ -746,7 +786,7 @@ In the case of Pytorch we will have to consider following aspects
 
 \begin{exercise}
 \label{exercisePytorch1}
-In order to learn the differences between a numpy and a Pytorch implemetation, explore the reimplementation of Ex.~\ref{exercise:exerciseNumpy1} in Pytorch. Compare the content of each of the functions, in particular the forward() and update methods(). The comments indicated as IMPORTANT will highlight common sources of errors.
+In order to learn the differences between a numpy and a Pytorch implementation, explore the reimplementation of Ex.~\ref{exercise:exerciseNumpy1} in Pytorch. Compare the content of each of the functions, in particular the forward() and update methods(). The comments indicated as IMPORTANT will highlight common sources of errors.
 \begin{python}
 import torch
 from torch.autograd import Variable
@@ -821,7 +861,7 @@ model = PytorchLogLinear(
 \end{exercise}
 
 \begin{exercise}
-As the final exercise today implement the log\_forward() method in lxmls/deep\_learning/pytorch\_models/mlp.py. Use the previous exercise as reference. After you have completed this you can rund both systems for comparison. 
+As the final exercise today implement the log\_forward() method in lxmls/deep\_learning/pytorch\_models/mlp.py. Use the previous exercise as reference. After you have completed this you can run both systems for comparison. 
 \begin{python}
 # Model
 geometry = [corpus.nr_features, 20, 2]
