@@ -15,9 +15,11 @@ continue with this day.
 
 \section{Recurrent Neural Networks: Backpropagation Through Time}
 
+\subsection{Feed Forward Networks Unfolded in Time}
+
 \begin{figure}[!h]
 \centering
-\includegraphics[scale=0.6]{figs/deep_learning/RNN.pdf}
+\includegraphics[scale=0.6]{figs/deep_learning/RNN2.pdf}
 \caption{The simplest RNN can be seen as replicating a single hidden-layer FF
 network $T$ times and passing the intermediate hidden variable $\mathbf{h}_t$
 across different steps. Note that all nodes operate over vector inputs e.g,.
@@ -25,7 +27,7 @@ $\mathbf{x}_t \in \mathbb{R}^I$. Circles indicate matrix multiplications.}
 \label{fig:RNN}
 \end{figure}
 
-The previous day focused on Feed Forward (FF) networks. These networks are ill
+We have seen already Feed Forward (FF) networks. These networks are ill
 suited to learn variable length patterns since they only accept inputs of a
 fixed size. In order to learn sequences using neural networks, we need therefore
 to define some architecture that is able to process variable length inputs.
@@ -37,18 +39,38 @@ created. This allows the network to have a memory in time and thus capture
 complex patterns in sequences. In the simplest model, depicted in
 Fig.~\ref{fig:RNN}, and detailed in Algorithm~\ref{algo:rnnforward}, a RNN is
 created by replicating a single hidden-layer FF network $T$ times and passing
-the intermediate hidden variable across different steps. 
+the intermediate hidden variable across different steps. The strength of the
+connection is determined by the weight matrix $\mathbf{W}_h$
 
-Since RNNs are computation graphs involving the same operations as FF networks,
-they can also be trained with backpropagation. However the error is
- propagated over the length of the entire sequence. This often leads to 
-numerical problems know as \textit{vanishing} and \textit{exploding} gradients.
-A number of solutions are used to mitigate this issue. One simple, yet inelegant,
-method is clipping the gradients to a fixed threshold. Another solution is to resort to more complex 
-RNN models that are able to better handle long range dependencies and are less
-sensitive to this phenomena. It is important to bear in mind, however, that
-all RNNs still use backpropagation as seen in the previous day, although it is
-often referred as \textit{Backpropagation through time}. 
+\subsection{Backpropagating through Unfolded Networks}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.6]{figs/deep_learning/RNN2_backprop.pdf}
+        \caption{Forward-pass (blue) and backpropagated error (red) to the input layer of an RNN. Note that a copy of the error is sent to each output of each sum node $(+)$}
+\label{fig:RNN}
+\end{figure}
+
+It is important to note that there is no formal changes needed to apply
+backpropagation to RNNs. It concerns applying the chain rule just as it
+happened with FFs. It is however useful to consider the following properties of
+derivatives, which are not relevant when dealing with FFs
+
+\begin{itemize}
+\item When two variables are summed up in the forward-pass, the error is backpropagated to each of the summand sub-graphs
+\item When unfolding in $T$ steps the same parameters will be copied $T$ times. All updates for each copy are summed up to compute the total gradient. 
+\end{itemize}
+
+Despite the lack of formal changes, the fact that we backpropagate an error
+over the length of the entire sequence often leads to numerical problems. The
+problem of \textit{vanishing} and \textit{exploding} gradients are a well know
+limitation. A number of solutions are used to mitigate this issue. One simple,
+yet inelegant, method is clipping the gradients to a fixed threshold. Another
+solution is to resort to more complex RNN models that are able to better handle
+long range dependencies and are less sensitive to this phenomena. It is
+important to bear in mind, however, that all RNNs still use backpropagation as
+seen in the previous day, although it is often referred as
+\textit{Backpropagation through time}. 
 
 \begin{algorithm}[th!]
 \label{algo:rnnforward}
@@ -76,11 +98,12 @@ $$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^
 \end{algorithmic}
 \end{algorithm}
 
+
 \begin{exercise}
 \label{exercise:rnnnumpy}
 Convince yourself that a RNN is just an FF unfolded in time. Complete the 
 backpropagation() method in NumpyRNN class in lxmls.deep\_learning\_numpy\_models.rnn.py
-and compare it with lxmls.deep\_learning\_numpy\_models.mlp.py.\\
+and compare it with\\ lxmls.deep\_learning\_numpy\_models.mlp.py.\\
 
 \noindent To work with RNNs we will use the Part-of-speech data-set seen in the
 sequence models day.
