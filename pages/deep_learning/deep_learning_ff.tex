@@ -1,6 +1,6 @@
-Today's class will introduce neural network models, also commonly known as deep
-learning models. For this, we will need the concept of \textit{computation
-graph}, a general way of describing complex functions as composition of simpler
+Today's class will introduce modern neural network models, commonly known as
+deep learning models. We will learn the concept of \textit{computation graph},
+a general way of describing complex functions as composition of simpler
 functions. We will also learn about \textit{Backpropagation}, a generic
 solution for gradient-descent based optimization in computation graphs.
 
@@ -9,7 +9,7 @@ solution for gradient-descent based optimization in computation graphs.
 
 Your objective today should be to understand fully the concept of
 Backpropagation. For this, we will code Backpropagation in Numpy on a simple
-feed forward network. Then we will learn about the Pytorch module which allows
+feed forward network. Then we will learn about the Pytorch module, which allows
 to easily create dynamic computation graphs and computes Backpropagation
 automatically for us. If you are new to the topic, you should aim to understand
 the concept of computation graph, finish the Backpropagation exercise and
@@ -23,14 +23,15 @@ Deep learning is the name behind the latest wave of neural network research.
 This is a very old topic, dating from the first half of the 20th century, that
 has attained formidable impact in the machine learning community recently.
 There is nothing particularly difficult in deep learning. You have already
-visited all the mathematical principles you need in the first days of the
-labs of this school. At their core, deep learning models are just functions
-mapping vector inputs $\mathbf{x}$ to vector outputs $\mathbf{y}$, constructed by
+visited all the mathematical principles you need in the first days of the labs
+of this school. At their core, deep learning models are just functions mapping
+vector inputs $\mathbf{x}$ to vector outputs $\mathbf{y}$, constructed by
 composing linear and non-linear functions. This composition can be expressed in
 the form of a \textit{computation graph}, where each node applies a function to
 its inputs and passes the result as its output. The parameters of the model are
 the weights given to the different inputs of nodes. This architecture vaguely
-resembles synapse strengths in human neural networks, hence the name artificial neural networks.
+resembles synapse strengths in human neural networks, hence the name artificial
+neural networks.
 
 Since neural networks are just compositions of simple functions, we can apply
 the chain rule to derive gradients and learn the parameters of neural networks
@@ -49,10 +50,12 @@ networks to be applied to very large datasets. Working with GPUs is not trivial
 as it requires dealing with specialized hardware. Luckily, as it is often the
 case, we are one Python import away from solving this problem.
 
-For the particular case of deep learning, there is a growing number of python
-toolboxes available that allow you to design custom computational graphs for
-GPUs some of the best known are
-Pytorch\footnotemark\footnotetext{http://pytorch.org/}, TensorFlow\footnotemark\footnotetext{https://www.tensorflow.org/} and Pytorch\footnotemark\footnotetext{http://pytorch.org/}.
+For the particular case of deep learning, there is a growing number of
+toolboxes with python bindings that allow you to design custom computational
+graphs for GPUs some of the best known are
+Theano\footnotemark\footnotetext{http://deeplearning.net/software/theano/},
+TensorFlow\footnotemark\footnotetext{https://www.tensorflow.org/} and
+Pytorch\footnotemark\footnotetext{http://pytorch.org/}.
 
 In these labs we will be working with Pytorch. Pytorch allows us to create
 computation graphs of arbitrary complexity and automatically compute the
@@ -169,7 +172,7 @@ and
 a mini-batch of examples as opposed to the whole train set. Very often, more
 elaborated learning rules as e.g. momentum or Adagrad are used. Bear in mind
 that, in general, these still require the computation of the gradients as the
-main step. The reasoning here outlined will also be applicable to these.
+main step. The reasoning here outlined will also be applicable to those.
 
 \subsection{Deriving Gradients in Computation Graphs using the Chain Rule}
 
@@ -208,19 +211,19 @@ variable $z_{k'}$ (Eq.\ref{eq:linear}) with $k'=1\cdots K$
 %
 We have thus transformed the problem of computing the derivative into computing
 two easier derivatives. We start by the right-most term. The relation between
-$z_{k'}$ and $W_{ki}$ is given in ref.~\ref{eq:linear}. Since $z_{k'}$ only
+$z_{k'}$ and $W_{ki}$ is given in Eq.~\ref{eq:linear}. Since $z_{k'}$ only
 depends on the weight $W_{ki}$ in a linear way, the second derivative in
 Eq.\ref{eq:LogLingCR1} is given by
 \begin{align}
 { \color{blue} \frac{\partial z_{k'}}{\partial W_{ki}}} = \frac{\partial }{\partial W_{ki}}\left(\sum_{i'=1}^{I} W_{k'i'} x^m_{i'} + b_{k'} \right) =
   &\begin{cases}
       x_i^m  &  \mbox{ if } k = k'\\
-      0    &  \mbox{ otherwise },
+      0    &  \mbox{ otherwise }.
   \end{cases}
   \label{eq:partialLinear}
 \end{align}
 %
-\noindent For the left-most term the relation between $\mathcal{F}(\mathcal{D}^m;\Theta)$ and $z_k$ is given by Eq.~\ref{eq:softmax} together with \ref{eq:CostLogPosExample}
+\noindent For the left-most term, the relation between $\mathcal{F}(\mathcal{D}^m;\Theta)$ and $z_k$ is given by Eq.~\ref{eq:softmax} together with \ref{eq:CostLogPosExample}
 %
 \begin{align}
 { \color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}} }= - \frac{\partial }{\partial z_{k}}\left(z_{k(m)} - \log\left(\sum_{k'=1}^{K} \exp(z_{k'}) \right) \right) =
@@ -271,7 +274,7 @@ This leads us to the last gradient expression
 \end{equation}
 
 \noindent An important consequence of the previous derivation is the fact that each
-gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ and $\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta)$ can be computed from two terms displayed with corresponding colours in Fig.~\ref{fig:LogLinColor}:
+gradient of the parameters $\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta)$ and $\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta)$ can be computed from two terms, displayed with corresponding colours in Fig.~\ref{fig:LogLinColor}:
 %
 \begin{enumerate}
         \item The derivative of the cost with respect to the $k_{th}$ output of the linear transformation $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k$, denoted in \textcolor{red}{red}. This is, in effect, the error that we propagate \textit{backwards} from the cost layer.
@@ -354,6 +357,10 @@ model = NumpyLogLinear(
     learning_rate=0.05
 )
 
+# Define number of epochs and batch size
+num_epochs = 10
+batch_size = 30
+
 # Instantiate data iterators
 train_batches = data.batches('train', batch_size=batch_size)
 test_set = data.batches('test', batch_size=None)[0]
@@ -366,10 +373,6 @@ print("Initial accuracy %2.2f %%" % accuracy)
 \end{python}
 Train the model with simple batch stochastic gradient descent. Be sure to understand each of the steps involved, including the code running inside of the model class. We will be wokring on a more complex version of the model in the upcoming exercise.
 \begin{python}
-# Define number of epochs and batch size
-num_epochs = 10
-batch_size = 30
-
 # Epoch loop
 for epoch in range(num_epochs):
 
@@ -636,11 +639,13 @@ model = NumpyMLP(
     learning_rate=learning_rate
 )
 \end{python}
-Open the code for this model. This is located in lxmls/deep\_learning/numpy\_models/mlp.py . Implement the method backpropagation() in the class NumpyMLP code of the NumpyMLP class using Backpropagation recursion that we just saw.\\
+Open the code for this model. This is located in lxmls/deep learning/numpy
+models/mlp.py. Implement the method `back-propagation()` in the class
+`NumpyMLP` using Backpropagation recursion that we just saw.
 
 As a first step focus on getting the gradients of each layer, one at a time.
-For this load a function that allows you get and set the parameters of the
-model easily. Also load a batch of data for testing.
+Use the code below to plot the loss values for the study weight and perturbed
+versions. 
 \begin{python}
 from lxmls.deep_learning.mlp import get_mlp_parameter_handlers, get_mlp_loss_range
 
@@ -648,7 +653,7 @@ from lxmls.deep_learning.mlp import get_mlp_parameter_handlers, get_mlp_loss_ran
 get_parameter, set_parameter = get_mlp_parameter_handlers(
     layer_index=1,
     is_bias=False,
-    row=0,
+    row=0, 
     column=0
 )
 
