@@ -149,10 +149,11 @@ current_weight = get_parameter(model.parameters)
 # Get range of values of the weight and loss around current parameters values
 weight_range, loss_range = get_rnn_loss_range(model, get_parameter, set_parameter, batch)
 \end{python}
-the conmpute the desired gradient from your implementation
+then conmpute the desired gradient from your implementation
 \begin{python}
 # Get the gradient value for that weight
-current_gradient = get_parameter(model.backpropagation(batch['input'], batch['output']))
+gradients = model.backpropagation(batch['input'], batch['output'])
+current_gradient = get_parameter(gradients)
 \end{python}
 and finally call matlplotlib to plot the loss variation versus the gradient
 \begin{python}
