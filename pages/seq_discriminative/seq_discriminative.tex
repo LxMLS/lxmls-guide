@@ -385,7 +385,7 @@ import lxmls.readers.pos_corpus as pcc
 import lxmls.sequences.id_feature as idfc
 import lxmls.sequences.extended_feature as exfc
 
-print "CRF Exercise"
+print("CRF Exercise")
 
 corpus = pcc.PostagCorpus()
 train_seq = corpus.read_sequence_list_conll("data/train-02-21.conll",max_sent_len=10,max_nr_sent=1000)
@@ -434,7 +434,7 @@ eval_train = crf_online.evaluate_corpus(train_seq, pred_train)
 eval_dev = crf_online.evaluate_corpus(dev_seq, pred_dev)
 eval_test = crf_online.evaluate_corpus(test_seq, pred_test)
 
-print "CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("CRF - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test))
 \end{python}
 
 You should get values similar to these:
@@ -492,7 +492,7 @@ eval_train = crf_online.evaluate_corpus(train_seq, pred_train)
 eval_dev = crf_online.evaluate_corpus(dev_seq, pred_dev)
 eval_test = crf_online.evaluate_corpus(test_seq, pred_test)
 
-print "CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("CRF - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test))
 \end{python}
 
 You should get values close to the following:
@@ -607,7 +607,7 @@ Here is the code for the simple feature set:
 feature_mapper = idfc.IDFeatures(train_seq)
 feature_mapper.build_features()
 
-print "Perceptron Exercise"
+print("Perceptron Exercise")
 
 sp = spc.StructuredPerceptron(corpus.word_dict, corpus.tag_dict, feature_mapper)
 sp.num_epochs = 20
@@ -644,7 +644,7 @@ eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
 eval_test = sp.evaluate_corpus(test_seq, pred_test)
 
-print "Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test))
 \end{python}
 
 
@@ -690,7 +690,7 @@ eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
 eval_test = sp.evaluate_corpus(test_seq, pred_test)
 
-print "Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+print("Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test))
 \end{python}
 
 And here are the expected results:
@@ -715,7 +715,7 @@ Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test:
 %import sequences.extended_feature as exfc
 %
 %
-%print "Perceptron Exercise"
+%print("Perceptron Exercise")
 %corpus = pcc.PostagCorpus()
 %train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=10,max_nr_sent=1000)
 %test_seq = corpus.read_sequence_list_conll("../data/test-23.conll",max_sent_len=10,max_nr_sent=1000)
@@ -740,7 +740,7 @@ Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test:
 %eval_dev = sp.evaluate_corpus(dev_seq.seq_list,pred_dev)
 %eval_test = sp.evaluate_corpus(test_seq.seq_list,pred_test)
 %
-%print "Structured Percetron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+%print("Structured Percetron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test))
 %\end{python}
 %
 %You should get values similar to these:
@@ -777,7 +777,7 @@ Structured Perceptron - Extended Features Accuracy Train: 0.984 Dev: 0.888 Test:
 %eval_dev = sp.evaluate_corpus(dev_seq.seq_list,pred_dev)
 %eval_test = sp.evaluate_corpus(test_seq.seq_list,pred_test)
 %
-%print "Structured Percetron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test)
+%print("Structured Percetron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f"%(eval_train,eval_dev,eval_test))
 %
 %\end{python}
 %
