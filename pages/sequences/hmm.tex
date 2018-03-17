@@ -110,32 +110,32 @@ at the training and test set.
 \begin{python}
 import lxmls.readers.simple_sequence as ssr
 simple = ssr.SimpleSequence()
-print simple.train
+print(simple.train)
 
 [walk/rainy walk/sunny shop/sunny clean/sunny , walk/rainy walk/rainy shop/rainy clean/sunny , walk/sunny shop/sunny shop/sunny clean/sunny ]
 
-print simple.test
+print(simple.test)
 
 [walk/rainy walk/sunny shop/sunny clean/sunny , clean/sunny walk/sunny tennis/sunny walk/sunny ]
 \end{python}
 Get in touch with the classes used to store the sequences, you will need this for the next exercise. Note that each label is internally stored as a number. This number can be used as index of an array to store information regarding that label.
 \begin{python}
 for sequence in simple.train.seq_list:
-    print sequence
+    print(sequence)
 
 walk/rainy walk/sunny shop/sunny clean/sunny
 walk/rainy walk/rainy shop/rainy clean/sunny
 walk/sunny shop/sunny shop/sunny clean/sunny
 
 for sequence in simple.train.seq_list:
-    print sequence.x
+    print(sequence.x)
 
 [0, 0, 1, 2]
 [0, 0, 1, 2]
 [0, 1, 1, 2]
 
 for sequence in simple.train.seq_list:
-    print sequence.y
+    print(sequence.y)
 
 [0, 1, 1, 1]
 [0, 0, 0, 1]
