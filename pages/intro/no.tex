@@ -208,7 +208,7 @@ def gradient_descent(start_x,func,grad):
     max_iter = 100
     x_new = start_x
     res = []
-    for i in xrange(max_iter):
+    for i in range(max_iter):
         x_old = x_new
         #Use beta egual to -1 for gradient descent 
         x_new = x_old - step_size * grad(x_new)
@@ -216,9 +216,9 @@ def gradient_descent(start_x,func,grad):
         f_x_old = func(x_old)
         res.append([x_new,f_x_new])
         if(abs(f_x_new - f_x_old) < prec):
-            print "change in function values too small, leaving"
+            print("change in function values too small, leaving")
             return np.array(res)
-    print "exceeded maximum number of iterations, leaving"
+    print("exceeded maximum number of iterations, leaving")
     return np.array(res)
 \end{python}
 
