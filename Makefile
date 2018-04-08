@@ -16,11 +16,3 @@ clean:
 
 clean-pdfs:
 	-rm -f *.pdf
-
-bak: clean
-	-rm -f tex/*.tex~ *~ *.bak
-	tar zcvf ../phd-thesis-`date '+%Y-%m-%d'`.tgz \
-	    *.sty *.tex *.bst *.pl *.txt *.cfg \
-		Makefile tex/*.tex tex/*.* bib/*.bib imgs/*.pdf imgs/*.png \
-		cd/*.* stuff/*.* 
-

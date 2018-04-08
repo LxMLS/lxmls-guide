@@ -51,7 +51,7 @@ The \textbf{goal of (supervised) machine learning} is to use the training datase
 that maps from $\mathcal{X}$ to $\mathcal{Y}$: this way, given a new instance 
 $x \in \mathcal{X}$ (test example), the machine makes a prediction ${\hat y}$ by evaluating $h$ on $x$, i.e., ${\hat y} = h(x)$. 
 
-%Ana: a imagem seguinte n‹o estava a ser referida em lado nenhum
+%Ana: a imagem seguinte nï¿½o estava a ser referida em lado nenhum
 %\out{
 %\begin{figure}
 %\begin{center}
@@ -224,15 +224,15 @@ P(\mathcal{D}) &=& \prod_{m=1}^M P(x^m,y^m) \nonumber\\
 %gnb = gnbc.GaussianNaiveBayes()
 %params_nb_sd = gnb.train(sd.train_X, sd.train_y)
 %
-%print "Estimated Means"
-%print gnb.means
-%print "Estimated Priors"
-%print gnb.prior
+%print("Estimated Means")
+%print(gnb.means)
+%print("Estimated Priors")
+%print(gnb.prior)
 %y_pred_train = gnb.test(sd.train_X,params_nb_sd)
 %acc_train = gnb.evaluate(sd.train_y, y_pred_train)
 %y_pred_test = gnb.test(sd.test_X,params_nb_sd)
 %acc_test = gnb.evaluate(sd.test_y, y_pred_test)
-%print "Gaussian Naive Bayes Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
+%print("Gaussian Naive Bayes Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test))
 %\end{python}
 %
 %To visualize the surface boundary estimated by na\"ive Bayes, type: 
@@ -317,7 +317,7 @@ y_pred_train = mnb.test(scr.train_X,params_nb_sc)
 acc_train = mnb.evaluate(scr.train_y, y_pred_train)
 y_pred_test = mnb.test(scr.test_X,params_nb_sc)
 acc_test = mnb.evaluate(scr.test_y, y_pred_test)
-print "Multinomial Naive Bayes Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test)  
+print("Multinomial Naive Bayes Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test))
 \end{python}
 
 
@@ -506,9 +506,9 @@ described in the following section).
 \footnote{Actually, we are showing a more robust variant of the perceptron, 
 which averages the weight vector as a post-processing step.}  
 
-%% \todo{\small O preceptron algorithm consiste no metodo de gradiente quando a função de custo ´e o erro quadratico, certo? 
+%% \todo{\small O preceptron algorithm consiste no metodo de gradiente quando a funï¿½ï¿½o de custo ï¿½e o erro quadratico, certo? 
 %% Assim, pode ter varios passos (neste caso fixou-se o valor do passo em 1), 
-%% e também tem uma versão bach.}
+%% e tambï¿½m tem uma versï¿½o bach.}
 
 \begin{algorithm}[t]
 
@@ -598,7 +598,7 @@ y_pred_train = perc.test(sd.train_X,params_perc_sd)
 acc_train = perc.evaluate(sd.train_y, y_pred_train)
 y_pred_test = perc.test(sd.test_X,params_perc_sd)
 acc_test = perc.evaluate(sd.test_y, y_pred_test)
-print "Perceptron Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Perceptron Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test))
 \end{python}
 
 \item Plot the decision boundary found:
@@ -723,7 +723,7 @@ y_pred_train = mira.test(sd.train_X,params_mira_sd)
 acc_train = mira.evaluate(sd.train_y, y_pred_train)
 y_pred_test = mira.test(sd.test_X,params_mira_sd)
 acc_test = mira.evaluate(sd.test_y, y_pred_test)
-print "Mira Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Mira Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test))
 fig,axis = sd.add_line(fig,axis,params_mira_sd,"Mira","green")
 
 params_mira_sc = mira.train(scr.train_X,scr.train_y)
@@ -731,7 +731,7 @@ y_pred_train = mira.test(scr.train_X,params_mira_sc)
 acc_train = mira.evaluate(scr.train_y, y_pred_train)
 y_pred_test = mira.test(scr.test_X,params_mira_sc)
 acc_test = mira.evaluate(scr.test_y, y_pred_test)
-print "Mira Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Mira Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test))
 \end{python}
   
 Compare the
@@ -929,7 +929,7 @@ y_pred_train = me_lbfgs.test(sd.train_X,params_meb_sd)
 acc_train = me_lbfgs.evaluate(sd.train_y, y_pred_train)
 y_pred_test = me_lbfgs.test(sd.test_X,params_meb_sd)
 acc_test = me_lbfgs.evaluate(sd.test_y, y_pred_test)
-print "Max-Ent batch Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Max-Ent batch Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test))
 
 fig,axis = sd.add_line(fig,axis,params_meb_sd,"Max-Ent-Batch","orange")
 \end{python}
@@ -942,7 +942,7 @@ y_pred_train = me_lbfgs.test(scr.train_X,params_meb_sc)
 acc_train = me_lbfgs.evaluate(scr.train_y, y_pred_train)
 y_pred_test = me_lbfgs.test(scr.test_X,params_meb_sc)
 acc_test = me_lbfgs.evaluate(scr.test_y, y_pred_test)
-print "Max-Ent Batch Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Max-Ent Batch Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test))
 \end{python}
 
 \item Now, fix $\lambda = 1.0$ and train with SGD (you might try to adjust the initial step). 
@@ -957,7 +957,7 @@ y_pred_train = me_sgd.test(scr.train_X,params_meo_sc)
 acc_train = me_sgd.evaluate(scr.train_y, y_pred_train)
 y_pred_test = me_sgd.test(scr.test_X,params_meo_sc)
 acc_test = me_sgd.evaluate(scr.test_y, y_pred_test)
-print "Max-Ent Online Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("Max-Ent Online Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test))
 \end{python}
 \end{enumerate}
 \end{exercise}
@@ -1081,7 +1081,7 @@ y_pred_train = svm.test(sd.train_X,params_svm_sd)
 acc_train = svm.evaluate(sd.train_y, y_pred_train)
 y_pred_test = svm.test(sd.test_X,params_svm_sd)
 acc_test = svm.evaluate(sd.test_y, y_pred_test)
-print "SVM Online Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("SVM Online Simple Dataset Accuracy train: %f test: %f"%(acc_train,acc_test))
 
 fig,axis = sd.add_line(fig,axis,params_svm_sd,"SVM","orange")
 
@@ -1090,7 +1090,7 @@ y_pred_train = svm.test(scr.train_X,params_svm_sc)
 acc_train = svm.evaluate(scr.train_y, y_pred_train)
 y_pred_test = svm.test(scr.test_X,params_svm_sc)
 acc_test = svm.evaluate(scr.test_y, y_pred_test)
-print "SVM Online Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test)
+print("SVM Online Amazon Sentiment Accuracy train: %f test: %f"%(acc_train,acc_test))
 \end{python}
   
 Compare the

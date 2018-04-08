@@ -28,7 +28,7 @@ main ways in which you can run code in Python:
 program in it, using your IDE of choosing e.g. PyCharm:
 
 \begin{python}
-print 'Hello World!'
+print('Hello World!')
 \end{python}
 
 After saving and closing the file, you can run your code by using the run
@@ -47,7 +47,7 @@ chosing e.g. Jupyter-notebook. There, you can run Python code
 by simply writing it and pressing enter (ctr+enter in Jupyter).
 
 \begin{python}
- In[]: print "Hello, World!"
+ In[]: print("Hello, World!")
 Out[]: Hello, World!
 \end{python}
 
@@ -84,14 +84,14 @@ well documented. Numpy and matplotlib are pleasant exceptions;
 
 Python supports all basic arithmetic operations, including exponentiation. For
 example, the following code: \begin{python}
-print 3 + 5
-print 3 - 5
-print 3 * 5
-print 3 / 5
-print 3 ** 5
+print(3 + 5)
+print(3 - 5)
+print(3 * 5)
+print(3 / 5)
+print(3 ** 5)
 \end{python}
 
-\noindent will produce the following output:
+\noindent will produce the following output in python 2:
 \begin{python}
 8
 -2
@@ -100,12 +100,14 @@ print 3 ** 5
 243
 \end{python}
 
-Notice that division is always considered as integer division, hence the result
-being 0 on the example above. To force a floating point division you can force
+Notice that in Python 2 division is always considered as integer division, hence the result
+being 0 on the example above. To force a floating point division in python 2 you can force
 one of the operands to be a floating point number: \begin{python}
-print 3 / 5.0
+print(3 / 5.0)
 0.6
 \end{python}
+
+For python 3, the division is considered float point, so the operation (3 / 5) or (3 / 5.0) is always 0.6. 
 
 Also, notice that the symbol \texttt{**} is used as exponentation operator, unlike other major languages which use the symbol \texttt{\^}. In fact, the \texttt{\^} symbol has a different meaning in Python (bitwise XOR) so, in the beginning, be sure to double-check your code if it uses exponentiation and it is giving unexpected results.
 
@@ -143,13 +145,13 @@ the even numbers from 2 to 8.
 \begin{python}
 i = 2
 while i < 10:
-  print i  
+  print(i)
   i += 2 
 \end{python}
 
 \begin{python}
 for i in range(2,10,2):
-    print i
+    print(i)
 \end{python}
 
 You can copy and run this Jupyter. Alternatively you can write this into your
@@ -165,7 +167,7 @@ consider the following code:
 \begin{python}
 a=1
 while a <= 3:
-    print a
+    print(a)
     a += 1
 \end{python}
 
@@ -184,7 +186,7 @@ Can you then predict the output of the following code?:
 \begin{python}
 a=1
 while a <= 3:
-    print a
+    print(a)
 a += 1
 \end{python}
 
@@ -199,11 +201,11 @@ The \code{if} statement allows to control the flow of your program. The next pro
 \begin{python}
 hour = 16
 if hour < 12:
-    print 'Good morning!'
+    print('Good morning!')
 elif hour >= 12 and hour < 20:
-    print 'Good afternoon!'
+    print('Good afternoon!')
 else:
-    print 'Good evening!'
+    print('Good evening!')
 \end{python}
 
 \subsubsection{Functions}
@@ -214,11 +216,11 @@ The following is a function in Python.
 \begin{python}
 def greet(hour):
     if hour < 12:
-        print 'Good morning!'
+        print('Good morning!')
     elif hour >= 12 and hour < 20:
-        print 'Good afternoon!'
+        print('Good afternoon!')
     else:
-        print 'Good evening!'
+        print('Good evening!')
 \end{python}
 
 You can write this command into Jupyter directly or write them into a file and run the file in Jupyter. Once you do this the function will be available for you to use. Call the function \code{greet} with different hours of the day (for example, type \texttt{greet(16)}) and see that the program will greet you accordingly.
@@ -269,15 +271,15 @@ An alternative to IDEs, that can also be useful for quick debugging in Jupyter, 
 \begin{python}
 def greet(hour):
     if hour < 12:
-        print 'Good morning!'
+        print('Good morning!')
     elif hour >= 12 and hour < 20:
-        print 'Good afternoon!'
+        print('Good afternoon!')
     else:
         import pdb; pdb.set_trace()
-        print 'Good evening!'
+        print('Good evening!')
 \end{python}
 
-Load the new definition of the function by writing this code in a file or a Jupyter cell and running it. Now, if you try \texttt{greet(50)} the code execution should stop at the place where you located the break-point (that is, in the \texttt{print 'Good evening!'} statement). You can now run new commands or inspect variables. For this purpose there are a number of commands you can use\footnotemark\footnotetext{The complete list can be found at \url{http://docs.python.org/library/pdb.html}}, but we provide here a short table with the most useful: 
+Load the new definition of the function by writing this code in a file or a Jupyter cell and running it. Now, if you try \texttt{greet(50)} the code execution should stop at the place where you located the break-point (that is, in the \texttt{print('Good evening!')} statement). You can now run new commands or inspect variables. For this purpose there are a number of commands you can use\footnotemark\footnotetext{The complete list can be found at \url{http://docs.python.org/library/pdb.html}}, but we provide here a short table with the most useful: 
 
 \begin{table}[!h]
 \begin{center}
@@ -315,7 +317,7 @@ stopped at
 pdb> n
 > ./lxmls-toolkit/yourfile.py(8)greet()
       7                 import pdb; pdb.set_trace()
-----> 8                 print 'Good evening!' 
+----> 8                 print('Good evening!') 
 \end{python}
 
 \noindent Now we can inspect the variable \texttt{hour} using the p(retty)p(rint) option
@@ -359,10 +361,10 @@ the hour is less than 0 or more than 24.  \end{exercise}
 \begin{python}
 while True:
     try:
-        x = int(raw_input("Please enter a number: "))
+        x = int(input("Please enter a number: "))
         break
     except ValueError:
-        print "Oops! That was no valid number. Try again..."
+        print("Oops! That was no valid number. Try again...")
 \end{python}
 
 It works by first executing the \textit{try} clause. If no exception occurs, the \textit{except} clause is skipped; if an exception does occur, and if its type matches the exception named in the \textit{except} keyword, the except clause is executed; otherwise, the exception is raised and execution is aborted (if it is not caught by outer \textit{try} statements).
@@ -400,7 +402,7 @@ my_tools.py
 
 \begin{python}
 def my_print(input):
-    print input
+    print(input)
 \end{python}
 
 From Jupyter you can now import and use this tool as
@@ -550,11 +552,11 @@ import numpy as np
 A = np.arange(100)
 
 # These two lines do exactly the same thing
-print np.mean(A)
-print A.mean()
+print(np.mean(A))
+print(A.mean())
 
 C = np.cos(A)
-print C.ptp()
+print(C.ptp())
 \end{python}
 
 \begin{exercise}
