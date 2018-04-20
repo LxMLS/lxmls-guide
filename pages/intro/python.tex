@@ -8,13 +8,13 @@ At this point you should have installed the needed packages. You need also to fe
 lxmls-toolkit-student
 \end{verbatim}
 
-\noindent from there, start your interactive command line of choosing e.g.
+\noindent from there, start your interactive command line of choosing, e.g.,
 
 \begin{verbatim}
 jupyter-notebook
 \end{verbatim}
 
-\noindent and proceed with the following sections
+\noindent and proceed with the following sections.
 
 \subsubsection{Running Python code}
 
@@ -25,7 +25,7 @@ main ways in which you can run code in Python:
 
 \begin{description}
 \item[From a file]--~~Create a file named \texttt{yourfile.py} and write your 
-program in it, using your IDE of choosing e.g. PyCharm:
+program in it, using the IDE of your choice, e.g., PyCharm:
 
 \begin{python}
 print('Hello World!')
@@ -38,12 +38,12 @@ functionality in your IDE. If you wish to run from a command line instead do
 python yourfile.py
 \end{verbatim}
 
-This will run the program and display the message ``Hello World!''. After, 
-that the control will return to the command line or IDE.
+This will run the program and display the message ``Hello World!''. After 
+that, the control will return to the command line or IDE.
 
 
-\item[In the interactive command line]--~~Start your interactive command line of
-chosing e.g. Jupyter-notebook. There, you can run Python code
+\item[In the interactive command line]--~~Start your preferred interactive command line, e.g., 
+Jupyter-notebook. There, you can run Python code
 by simply writing it and pressing enter (ctr+enter in Jupyter).
 
 \begin{python}
@@ -51,7 +51,7 @@ by simply writing it and pressing enter (ctr+enter in Jupyter).
 Out[]: Hello, World!
 \end{python}
 
-but you can also run Python code written into a file.
+However, you can also run Python code written into a file.
 
 \begin{python}
  In[]: run ./yourfile.py
@@ -60,7 +60,7 @@ Out[]: Hello, World!
 \end{description}
 
 Keep in mind that you can easily switch between these two modes. You can
-quickly test commands in the command line directly and e.g. inspect variables.
+quickly test commands directly in the command line and, e.g., inspect variables.
 Larger sections of code can be stored and run from files.
 
 \subsubsection{Help and Documentation}
@@ -91,7 +91,7 @@ print(3 / 5)
 print(3 ** 5)
 \end{python}
 
-\noindent will produce the following output in python 2:
+\noindent will produce the following output in Python 2:
 \begin{python}
 8
 -2
@@ -101,13 +101,13 @@ print(3 ** 5)
 \end{python}
 
 Notice that in Python 2 division is always considered as integer division, hence the result
-being 0 on the example above. To force a floating point division in python 2 you can force
+being 0 on the example above. To force a floating point division in Python 2 you can force
 one of the operands to be a floating point number: \begin{python}
 print(3 / 5.0)
 0.6
 \end{python}
 
-For python 3, the division is considered float point, so the operation (3 / 5) or (3 / 5.0) is always 0.6. 
+For Python 3, the division is considered float point, so the operation (3 / 5) or (3 / 5.0) is always 0.6. 
 
 Also, notice that the symbol \texttt{**} is used as exponentation operator, unlike other major languages which use the symbol \texttt{\^}. In fact, the \texttt{\^} symbol has a different meaning in Python (bitwise XOR) so, in the beginning, be sure to double-check your code if it uses exponentiation and it is giving unexpected results.
 
@@ -119,13 +119,12 @@ In Python, you can create lists of items with the following syntax:
 countries = ['Portugal','Spain','United Kingdom']
 \end{python}
 
-\noindent A string should be surrounded with apostrophes (') or quotes (``). You can access a list with
-the following:
+\noindent A string should be surrounded by either apostrophes (') or quotes (``). You can access a list with the following:
 
 \begin{itemize}
  \item \code{len(L)}, which returns the number of items in L;
  \item \code{L[i]}, which returns the item at index $i$ (the first item has index 0);
- \item \code{L[i:j]}, which returns a new list, containing all the items between indexes $i$ and $j-1$, inclusive. 
+ \item \code{L[i:j]}, which returns a new list, containing all the items between indexes $i$ and $j-1$, inclusively. 
 \end{itemize}
 
 \begin{exercise}
@@ -135,7 +134,7 @@ the following:
 \subsubsection{Loops and Indentation}
 
 A loop allows a section of code to be repeated a certain number of times, until
-a stop condition is reached. For instance, when the list you are iterating has
+a stop condition is reached. For instance, when the list you are iterating over has
 reached its end or when a variable has reached a certain value (in this case,
 you should not forget to update the value of that variable inside the code of
 the loop). In Python you have \code{while} and \code{for} loop statements. The
@@ -155,12 +154,12 @@ for i in range(2,10,2):
 \end{python}
 
 You can copy and run this Jupyter. Alternatively you can write this into your
-\texttt{yourfile.py} file an run it as well. Notice something? It is possible
+\texttt{yourfile.py} file and run it as well. Do you notice something? It is possible
 that the code did not act as expected or maybe an error message popped up. This
 brings us to an important aspect of Python: \textbf{indentation}. Indentation
 is the number of blank spaces at the leftmost of each command. This is how
-Python differentiates between blocks of commands inside and outside a
-statement, e.g. \code{while}, \code{for} or other. All commands within a
+Python differentiates between blocks of commands inside and outside of a
+statement, e.g., \code{while} or \code{for}. All commands within a
 statement have the same number of blank spaces at their leftmost. For instance,
 consider the following code: 
 
@@ -192,7 +191,7 @@ a += 1
 
 \end{exercise}
 
-\noindent Bear in mind that indentation is often the main source of errors when starting to work with Python. Try to get used to it as quickly as possible. It is also recommendable that you use a text editor that can display all characters e.g. blank space, tabs, since these characters can be visually similar but are considered different by Python. One of the most common mistakes by newcomers to Python is to have their files indented with spaces on some lines and with tabs on other lines. Visually it might appear that all lines have proper indentation, but you will get an \texttt{IndentationError} message if you try it. The recommended\footnote{The PEP8 document (\texttt{www.python.org/dev/peps/pep-0008}) is the official coding style guide for the Python language.} way is to use 4 spaces for each indentation level.
+\noindent Bear in mind that indentation is often the main source of errors when starting to work with Python. Try to get used to it as quickly as possible. It is also recommendable to use a text editor that can display all characters e.g. blank space, tabs, since these characters can be visually similar but are considered different by Python. One of the most common mistakes by newcomers to Python is to have their files indented with spaces on some lines and with tabs on other lines. Visually it might appear that all lines have proper indentation, but you will get an \texttt{IndentationError} message if you try it. The recommended\footnote{The PEP8 document (\texttt{www.python.org/dev/peps/pep-0008}) is the official coding style guide for the Python language.} way is to use 4 spaces for each indentation level.
 
 \subsubsection{Control Flow}
 
@@ -223,7 +222,7 @@ def greet(hour):
         print('Good evening!')
 \end{python}
 
-You can write this command into Jupyter directly or write them into a file and run the file in Jupyter. Once you do this the function will be available for you to use. Call the function \code{greet} with different hours of the day (for example, type \texttt{greet(16)}) and see that the program will greet you accordingly.
+You can write this command into Jupyter directly or write it into a file which you then run in Jupyter. Once you do this the function will be available for you to use. Call the function \code{greet} with different hours of the day (for example, type \texttt{greet(16)}) and see that the program will greet you accordingly.
 
 \begin{exercise}
 Note that the previous code allows the hour to be less than 0 or more than 24.  Change the code in order to indicate that the hour given as input is invalid.  Your output should be something like:
@@ -262,9 +261,9 @@ for each function that was called during the execution of your code:
 
 \subsubsection{Debugging in Python}
 
-During the lab sessions, there will be situations in which we will use and extend modules that involve elaborated code and statements, like classes and nested functions. Although desirable, it should not be necessary for you to fully understand the whole code to carry out the exercises. It will suffice to understand the algorithm as explained in the theoretical part of the class and the local context of the part of the code where we will be working. For this to be possible is very important that you learn to use and IDE. 
+During the lab sessions, there will be situations in which we will use and extend modules that involve elaborated code and statements, like classes and nested functions. Although desirable, it should not be necessary for you to fully understand the whole code to carry out the exercises. It will suffice to understand the algorithm as explained in the theoretical part of the class and the local context of the part of the code where we will be working. For this to be possible is very important that you learn to use an IDE. 
 
-An alternative to IDEs, that can also be useful for quick debugging in Jupyter, is the pdb module. This will stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. The ipdb is an improved version of pdb that has to be installed by separate. It provides additional functionalities like larger context windows variable auto complete and colors. Unfortunately ipdb has some compatibility problems with Jupyter. We therefore recommend to use ipdb only in spartan configurations such as vim+ipdb as IDE.
+An alternative to IDEs, that can also be useful for quick debugging in Jupyter, is the pdb module. This will stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. The ipdb is an improved version of pdb that has to be installed separately. It provides additional functionalities like larger context windows, variable auto complete and colors. Unfortunately ipdb has some compatibility problems with Jupyter. We therefore recommend to use ipdb only in spartan configurations such as vim+ipdb as IDE.
 
 \noindent In the following example, we use this module to inspect the \texttt{greet} function:
 
@@ -279,7 +278,7 @@ def greet(hour):
         print('Good evening!')
 \end{python}
 
-Load the new definition of the function by writing this code in a file or a Jupyter cell and running it. Now, if you try \texttt{greet(50)} the code execution should stop at the place where you located the break-point (that is, in the \texttt{print('Good evening!')} statement). You can now run new commands or inspect variables. For this purpose there are a number of commands you can use\footnotemark\footnotetext{The complete list can be found at \url{http://docs.python.org/library/pdb.html}}, but we provide here a short table with the most useful: 
+Load the new definition of the function by writing this code in a file or a Jupyter cell and running it. Now, if you try \texttt{greet(50)} the code execution should stop at the place where you located the break-point (that is, in the \texttt{print('Good evening!')} statement). You can now run new commands or inspect variables. For this purpose there are a number of commands you can use\footnotemark\footnotetext{The complete list can be found at \url{http://docs.python.org/library/pdb.html}}, but we provide here a short table with the most useful ones: 
 
 \begin{table}[!h]
 \begin{center}
@@ -345,7 +344,7 @@ an attempt is made to execute it. These kind of errors are called
 
 A \textit{ZeroDivisionError} exception was raised, and no output was returned.
 Exceptions can also be forced to occur by the programmer, with customized error
-messages \footnotemark\footnotetext{for a complete list of built-in exceptions, see
+messages \footnotemark\footnotetext{For a complete list of built-in exceptions, see
 \url{http://docs.python.org/2/library/exceptions.html}}.
 
 \begin{python}
@@ -373,14 +372,14 @@ It works by first executing the \textit{try} clause. If no exception occurs, the
 \subsubsection{Extending basic Functionalities with Modules}
 
 In Python you can load new functionalities into the language by using the
-\code{import}, \code{from} and \code{as} keywords. For example we can load the
+\code{import}, \code{from} and \code{as} keywords. For example, we can load the
 numpy module as
 
 \begin{python}
 import numpy as np
 \end{python}
 
-\noindent then we can run the following on the Jupyter command line
+\noindent Then we can run the following on the Jupyter command line:
 
 \begin{python}
 np.var?
@@ -422,7 +421,7 @@ reload(my_tools)
 
 \begin{python}
 from my_tools import my_print  # my_print directly accesible in code
-from my_tools import *         # will make all functions  in my_tools accesible
+from my_tools import *         # will make all functions in my_tools accessible
 \end{python}
 
 \noindent However, this makes reloading the module more complicated. You can also store tools ind different folders. For example, if you store the previous
@@ -502,7 +501,7 @@ Numpy\footnote{\url{http://www.numpy.org/}} is a library for scientific computin
 
 \subsubsection{Multidimensional Arrays}
 
-The main object of numpy is the multidimensional array. A multidimensional array is a table with all elements of the same type and can have several dimensions. Numpy provides various functions to access and manipulate multidimensional arrays. In one dimensional arrays, you can index, slice, and iterate as you can with lists. In a two dimensional array M, you can use perform these operations along several dimensions.
+The main object of numpy is the multidimensional array. A multidimensional array is a table with all elements of the same type and can have several dimensions. Numpy provides various functions to access and manipulate multidimensional arrays. In one dimensional arrays, you can index, slice, and iterate as you can with lists. In a two dimensional array M, you can perform these operations along several dimensions.
 
 \begin{itemize}
  \item M[i,j], to access the item in the $i^{th}$ row and $j^{th}$ column; 
