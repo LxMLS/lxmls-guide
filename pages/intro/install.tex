@@ -4,7 +4,7 @@ If you have decided to use one of our provided desktops, all installation proced
 
 \subsection{Downloading the labs version from GitHub}
 
-The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. To download the \verb+student+ code, go to
+The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. \textbf{important}: The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. To download the \verb+student+ code, go to
 
 \begin{verbatim}
 https://github.com/LxMLS/lxmls-toolkit
@@ -16,41 +16,43 @@ https://github.com/LxMLS/lxmls-toolkit
 lxmls-toolkit-student.zip
 \end{verbatim}
 
-After this you can unzip the file where you want to work and enter the unzipped folder. This will be the place where you will work. \textbf{Important:} Be careful to select the student branch and do not install the lxmls-toolkit (using setup.py).
+After this you can unzip the file where you want to work and enter the unzipped folder. This will be the place where you will work. 
 
-\subsection{Installing Python 2.7 from Scratch}
+\subsection{Installing with Anaconda}
 
 If you are new to Python the best option right now is the Anaconda platform. You can find installers for Windows, Linux and OSX platforms here
 
 \begin{verbatim}
-https://www.continuum.io/downloads
+https://www.anaconda.com/download/
 \end{verbatim}
 
-\textbf{Important}: Be sure to install the version for Python 2.7. This installer will already provide most of the packages you need to work with the school toolkit. The only package missing will be Pytorch, you may follow the instructions here to install it
+\noindent The only package missing will be Pytorch, you may follow the instructions here to install it
 
 \begin{verbatim}
 http://pytorch.org/
 \end{verbatim}
 
-\subsection{(Advanced Users) Installing with Pip}
+\noindent The guide supports both Python2 and Python3. If you are new to Python it is best if you start with Python3. Finally install the LXMLS toolkit symbolically. This will allow you to modify the code and see the changes talke place inmediately.
 
-If you are familiar with Python you will probably be used to the pip package installer. In this case it might be more easy for you to install the packages yourself using pip
+\begin{verbatim}
+python setup.py develop
+\end{verbatim}
+
+\subsection{Installing with Pip}
+
+If you are familiar with Python you will probably be used to the pip package installer. In this case it might be more easy for you to install the packages yourself using pip and a virtual environment. This will avoid conflicting with existing python installations. To install and create a virual environment do
+
+\begin{verbatim}
+cd lxmls-toolkit-student
+sudo pip install virtualenv
+virtualenv venv 
+source venv/bin/activate
+\end{verbatim}
+
+\noindent Use \textit{pip3} for Python3. Then install the requirements as
 
 \begin{verbatim}
 pip install -r requirements.txt 
-\end{verbatim}
-
-You may need to pre-append sudo to the system call depending on the platform.
-
-\noindent this will install the following packages
-
-\begin{verbatim}
-jupyter
-numpy
-scipy
-matplotlib
-pyyaml
-nltk
 \end{verbatim}
 
 \noindent To install Pytorch visit 
@@ -59,42 +61,11 @@ nltk
 http://pytorch.org/
 \end{verbatim}
 
-\noindent To get the proper pip install link.
-
-\subsection{(Advanced Users) Virtual Environments}
-
-If you are an experienced Python user and you do not want to add many packages to your existing installation, you can use virtualenv.
+Finally install the LXMLS toolkit symbolically. This will allow you to modify the code and see the changes talke place inmediately.
 
 \begin{verbatim}
-sudo pip install virtualenv
-virtualenv venv 
+python setup.py develop
 \end{verbatim}
-
-\noindent This will create a local installation of Python on your work folder. To activate it use 
-
-\begin{verbatim}
-source venv/bin/activate
-\end{verbatim}
-
-\noindent then you can install packages locally with no need for root privileges and without touching your original installation.
-
-\begin{verbatim}
-pip install -r requirements.txt
-\end{verbatim}
-
-\noindent Each time you want to work on the school code, you will have to activate the environment. To exit the environment use 
-
-\begin{verbatim}
-deactivate
-\end{verbatim}
-
-\noindent If you want to make use of the modules already installed in your main Python installation use
-
-\begin{verbatim}
-virtualenv venv --system-site-packages
-\end{verbatim}
-
-instead of the conventional call. Bear in mind that using virtual environments can create some problems. For once, the Python binary will be in another location. You will therefore have to be careful when using e.g. shebangs to specify it. The Jupyter-notebook is also known to give problems unless you also install it with the virtual environment. For these reasons, virtual environments are only recommended for students that feel comfortable with Python. 
 
 \subsection{(Advanced Users) Forking and cloning the code on GitHub}
 
@@ -102,9 +73,10 @@ It might be the case that you feel very comfortable with scientific Python, know
 
 \begin{verbatim}
 git clone https://github.com/LxMLS/lxmls-toolkit.git 
+git checkout student
 \end{verbatim}
 
-\noindent and work from there. Remember to work on the \textit{student} branch! If you want to contribute to the code-base, you can make pull requests to the \textit{develop} branch or raise issues.
+\noindent and install following the instructions above. Remember to work on the \textit{student} branch! If you want to contribute to the code-base, you can make pull requests to the \textit{develop} branch or raise issues.
 
 \subsection{Deciding on the IDE and interactive shell to use}
 
