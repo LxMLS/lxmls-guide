@@ -423,7 +423,8 @@ my_tools.my_print("This works!")
 \textbf{Important}: When you modify a module, you need to either re-start the notebook kernel or notify the notebook to reload the module for the changes to take effect. You can use
 
 \begin{python}
-reload(my_tools)
+reload(my_tools) # works with python2
+import importlib; importlib.reload(my_tools) # works with python3
 \end{python}
 
 \noindent for the latter. Other ways of importing one or all the tools from a module are
