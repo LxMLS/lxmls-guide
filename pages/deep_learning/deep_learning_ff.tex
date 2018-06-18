@@ -402,7 +402,7 @@ for epoch in range(num_epochs):
 We have seen that just by using the chain rule we can easily compute gradients for
 compositions of two functions (one non-linear and one linear). However, there
 was nothing in the derivation that would stop us from composing more than two
-functions. Let us think, for example of the following model
+functions. The algorithm in \ref{algo:mlpforward} describes the Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network. In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph and is displayed in Fig.~\ref{fig:FF}.
 
 \begin{algorithm}[th!]
    \caption{Forward pass of a Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network}
@@ -427,8 +427,6 @@ $$p(y=k|{x}) \equiv \tilde{z}_k^N = \frac{\exp(z_k^N)}{\sum_{k'=1}^{K} \exp(z_{k
 
 \end{algorithmic}
 \end{algorithm}
-
-\noindent In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph. This is displayed in Fig.~\ref{fig:FF}
 
 \begin{figure}[!hb]
 \centering
