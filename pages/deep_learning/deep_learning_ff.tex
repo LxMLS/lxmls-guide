@@ -402,7 +402,16 @@ for epoch in range(num_epochs):
 We have seen that just by using the chain rule we can easily compute gradients for
 compositions of two functions (one non-linear and one linear). However, there
 was nothing in the derivation that would stop us from composing more than two
-functions. The algorithm in \ref{algo:mlpforward} describes the Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network. In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph and is displayed in Fig.~\ref{fig:FF}.
+functions. The algorithm in \ref{algo:mlpforward} describes the Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network. In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph and is displayed in Fig.~\ref{fig:FF}. Take into account the following:
+
+%
+\begin{itemize}
+\item MLPs/FFs are characterized by applying functions in a set of layers subsequently to a single input. This characteristic is also shared by convolutional networks, although the latter also have parameter tying constraints.
+\item The non-linearities in the intermediate layers are usually one-to-one transformations. The most typical are the sigmoid, hyperbolic tangent and the rectified linear unit (ReLU).
+\item The output non-linearity is determined by the output to be estimated. In order to estimate probability distributions the softmax is typically used. For regression problems a last linear layer is used instead.
+\end{itemize}
+
+
 
 \begin{algorithm}[th!]
    \caption{Forward pass of a Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network}
@@ -436,14 +445,6 @@ for the $m$-th training example $\mathcal{D}^m=\{\mathbf{x}, y\}$ is also
 shown.}
 \label{fig:FF}
 \end{figure}
-
-\noindent Some considerations:
-%
-\begin{itemize}
-\item MLPs/FFs are characterized by applying functions in a set of layers subsequently to a single input. This characteristic is also shared by convolutional networks, although the latter also have parameter tying constraints.
-\item The non-linearities in the intermediate layers are usually one-to-one transformations. The most typical are the sigmoid, hyperbolic tangent and the rectified linear unit (ReLU).
-\item The output non-linearity is determined by the output to be estimated. In order to estimate probability distributions the softmax is typically used. For regression problems a last linear layer is used instead.
-\end{itemize}
 
 \subsection{Backpropagation: an overview}
 
