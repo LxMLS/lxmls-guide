@@ -184,7 +184,7 @@ Draw a plot around $x \in [-8,8]$.
 
 \begin{python}
 x = np.arange(-8,8,0.001)
-y = map(lambda u: get_y(u),x)
+y = [get_y(u) for u in x]
 plt.plot(x,y)
 plt.show()
 \end{python}
