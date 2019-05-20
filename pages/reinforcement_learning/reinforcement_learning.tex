@@ -1,0 +1,144 @@
+Today's class will introduce reinforcement learning. We will learn the concept Markov Decision Process,
+xxx description. We will also learn about Policiy Gradient Algorithms, descrive yyy.
+
+\section{Today's assignment}
+
+Your objective today should be to understand fully the concept of Reinforcement
+Learning and the REINFORCE algorith. We will apply it to the RNN example of
+previous days.
+
+\section{Introduction to Reinforcement Learning}
+
+\section{Markov Decision Process}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.6]{figs/reinforcement_learning/mdp.png}
+\caption{Example figure}
+\label{fig:MarkovDecisionProcess}
+\end{figure}
+
+A Markov Decision Process is xxx. In more formal terms it can be described as a tuple ...
+
+
+\section{Agent/System and Policies}
+
+\subsection{Dynamic Programming and Linear Programming solutions}
+
+\begin{exercise}
+\label{exercise:PolicyEvaluation}
+Implement policy evaluation by dynamic programming and linear programming. Check that you obtain the same value.
+
+\begin{python}
+import numpy as np
+
+policy=np.array([[0.3, 0.2, 0.5], [0.5, 0.4, 0.1], [0.8, 0.1, 0.1]])
+rewards=np.array([10., 2., 3.])
+
+state_value_function=np.array([0 for i in range(3)])
+
+for i in range(20):
+    print(state_value_function)
+
+    # TODO: Implement the Policy Evaluation Update with a Learning Rate of 0.1
+    # state_value_function=
+print(state_value_function)
+
+# TODO: Implement the linear programming solution
+\end{python}
+\end{exercise}
+
+\subsection{Monte Carlo and Q-Learning Solutions}
+\begin{exercise}
+Implement Monte Carlo policy evaluation. See how similar results can be
+obtained by using sampling
+\begin{python}
+import random
+from collections import defaultdict
+reward_counter=np.array([0., 0., 0.])
+visit_counter=np.array([0., 0., 0.])
+
+def gt(rewardlist, gamma=0.1):
+    '''
+    Function to calculate the total discounted reward
+    >>> gt([10, 2, 3], gamma=0.1)
+    10.23
+    '''
+    #TODO: Implement the total discounted reward
+    return 0
+
+for i in range(400):
+    start_state=random.randint(0, 2)
+    next_state=start_state
+    rewardlist=[]
+    occurence=defaultdict(list) 
+    for i in range(250):
+        rewardlist.append(rewards[next_state]) 
+        occurence[next_state].append(len(rewardlist)-1) 
+        action=np.random.choice(np.arange(0, 3), p=policy[next_state]) 
+        next_state=action
+
+    for state in occurence: 
+        for value in occurence[state]: 
+            rew=gt(rewardlist[value:]) 
+            reward_counter[state]+=rew 
+            visit_counter[state]+=1 
+            #break #if break: return following only the first visit
+
+print(reward_counter/visit_counter)
+\end{python}
+
+Implement Q-Learning policiy optimization in a simple exercise. This samples a state-action pair randomly, so that all the state-action pairs can be seen.
+\begin{python}
+q_table=np.zeros((3, 3)) 
+for i in range(1001): 
+    state=random.randint(0, 2) 
+    action=random.randint(0, 2) 
+    next_state=action
+    reward=rewards[next_state] 
+    next_q=max(q_table[next_state]) 
+    q_table[state, action]= #TODO: Implement the Q-Table update
+    if i%100==0:
+        print(q_table)
+\end{python}
+\end{exercise}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Score Function Gradient Estimator}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{exercise}
+Complete the implementation of the score function gradient estimator in Pytorch. Open the code in lxmls/reinforcement\_learning/reinforcement\_learning.py. To test the solution use
+\begin{python}
+from lxmls.reinforcement_learning import train
+train()
+\end{python}
+\end{exercise}
+
+\begin{exercise}
+Value iteration
+\begin{python}
+import numpy as np
+
+rewards=np.array([10., 2., 3.])
+
+state_value_function=np.array([0 for i in range(3)])
+
+for i in range(1000):
+    s_v_f=state_value_function.copy()
+    for s in range(3):
+        state_value_function[s]=#TODO: Implement the state value function update
+print(state_value_function)
+\end{python}
+\end{exercise}
+
+
+\begin{exercise}
+Implement policy gradient for the cartpole task by coding the forward pass in reinforcement\_learning/policy\_gradient.py. Check by calling the train() function.
+\end{exercise}
+
+\begin{exercise}
+Implement actor crtitic for the cartpole task by coding the critic forward pass in reinforcement\_learning/policy\_gradient.py.Check by calling the train() function.
+\end{exercise}
+
+
