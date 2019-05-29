@@ -332,38 +332,74 @@ for episode in range(EPISODES):
 \end{exercise}
 
 
-%\begin{exercise}
-%Complete the implementation of the score function gradient estimator in Pytorch. Open the %code in lxmls/reinforcement\_learning/reinforcement\_learning.py. To test the solution use
-%\begin{python}
-%from lxmls.reinforcement_learning import train
-%train()
-%\end{python}
-%\end{exercise}
 
-%\begin{exercise}
-%Value iteration
-%\begin{python}
-%import numpy as np
+\begin{exercise}
+As a last exercise, apply what you have learned to the RNN model seen in previous days. Implement REINFORCE to replace the maximum likelihood loss used on the RNN day. For this you can modify the PolicyRNN class in lxmls/deep\_learning/pytorch\_models/rnn.py 
+\begin{python}
+# Load Part-of-Speech data 
+from lxmls.readers.pos_corpus import PostagCorpusData
+data = PostagCorpusData()
 
-%rewards=np.array([10., 2., 3.])
+# Get batch iterators for train and test
+batch_size = 1
+train_batches = data.batches('train', batch_size=batch_size)
+dev_set = data.batches('dev', batch_size=batch_size)
+test_set = data.batches('test', batch_size=batch_size)
+\end{python}
+\begin{python}
+reinforce = True
 
-%state_value_function=np.array([0 for i in range(3)])
+# Load version of the RNN 
+from lxmls.deep_learning.pytorch_models.rnn import PolicyRNN
+model = PolicyRNN(
+    input_size=data.input_size,
+    embedding_size=50,
+    hidden_size=100,
+    output_size=data.output_size,
+    learning_rate=0.05,
+    gamma=0.8,
+    RL=reinforce,
+    maxL=data.maxL
+)
+\end{python}
 
-%for i in range(1000):
-%    s_v_f=state_value_function.copy()
-%    for s in range(3):
-%        state_value_function[s]=#TODO: Implement the state value function update
-%print(state_value_function)
-%\end{python}
-%\end{exercise}
+After finishing the implementation, the following code shoul run
+\begin{python}
+import numpy as np
+import time
 
+# Run training
+num_epochs = 15
 
-%\begin{exercise}
-%Implement policy gradient for the cartpole task by coding the forward pass %in reinforcement\_learning/policy\_gradient.py. Check by calling the %train() function.
-%\end{exercise}
+batch_size = 1
+# Get batch iterators for train and test
+train_batches = data.sample('train', batch_size=batch_size)
+dev_set = data.sample('dev', batch_size=batch_size)
+test_set = data.sample('test', batch_size=batch_size)
 
-%\begin{exercise}
-%Implement actor crtitic for the cartpole task by coding the critic forward %pass in reinforcement\_learning/policy\_gradient.py.Check by calling the %train() function.
-%\end{exercise}
+# Epoch loop
+start = time.time()
+for epoch in range(num_epochs):
+    # Batch loop
+    for batch in train_batches:
+        model.update(input=batch['input'], output=batch['output'])
+    # Evaluation dev
+    is_hit = []
+    for batch in dev_set:
+        loss = model.predict_loss(batch['input'], batch['output'])
+        is_hit.extend(loss)
+    accuracy = 100 * np.mean(is_hit)
+    # Inform user
+    print("Epoch %d: dev accuracy %2.2f %%" % (epoch + 1, accuracy))
 
+print("Training took %2.2f seconds per epoch" % ((time.time() - start) / num_epochs))
+# Evaluation test
+is_hit = []
+for batch in test_set:
+    is_hit.extend(model.predict_loss(batch['input'],batch['output']))
+accuracy = 100 * np.mean(is_hit)
 
+# Inform user
+print("Test accuracy %2.2f %%" % accuracy)
+\end{python}
+\end{exercise}
