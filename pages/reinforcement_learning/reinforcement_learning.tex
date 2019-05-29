@@ -1,29 +1,65 @@
-Today's class will introduce reinforcement learning. We will learn the concept Markov Decision Process,
-xxx description. We will also learn about Policiy Gradient Algorithms, descrive yyy.
+Today's class will introduce reinforcement learning. The previous classes mainly focused on machine learning in a full supervision scenario, i.e., the learning signal consisted of gold standard structures, and the learning goal  was to optimize the system parameters so as to maximize the likelihood of the gold standard outputs. Reinforcment Learning (RL) assumes an \emph{interactive learning} scenario where a system learns by trial and error, using the consequences of its own actions to learn to maximize the expected reward from the environment. The learning scenario can also be seen as learning under \emph{weak supervision} in the sense that no gold standard examples are available, only rewards for system predictions.
 
 \section{Today's assignment}
 
-Your objective today should be to understand fully the concept of Reinforcement
-Learning and the REINFORCE algorith. We will apply it to the RNN example of
-previous days.
+Your objective today should be to understand fully the concept of RL, including the standard formaliztion of the environment as a Markov Decision Process (MPD), and of the system as a stochastic policy. You will learn about algorithms that evaluate the expected reward for a given policy (policy evaluation/prediction) and algorithms that find the optimal policy parameters (policy optimization/control). 
 
-\section{Introduction to Reinforcement Learning}
+\section{Markov Decision Processes}
 
-\section{Markov Decision Process}
+An RL system and interacts with an environment in the following way:
+  \begin{itemize}
+  \item At each of a sequence of time steps $t = 0,1,2,\ldots$,
+  \item the agent receives a state representation $S_t$,
+  \item on which basis it selects an action $A_t$,
+  \item and as a consequence, it receives a reward $R_{t+1}$,
+  \item and finds itself in a new state $S_{t+1}$.
+\end{itemize}
+
+The Goal of RL is then to maximize the total amount of reward a system receives in such interactions in the long run. 
+
+The standard formalization of the environment is as a \textbf{Markov Decision Process (MDP)}, defined as a tuple $\left< \mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}
+  \right>$ where
+  \begin{itemize}
+  \item $\mathcal{S}$ is a set of states,
+  \item $\mathcal{A}$ is a finite set of actions,
+  \item $\mathcal{P}$ is a state transition probability matrix s.t. $\mathcal{P}_{ss'}^{a} = P[S_{t+1} = s' | S_t = s, A_t = a]$, 
+  \item $\mathcal{R}$ is a reward function  s.t. $\mathcal{R}_s^a = \mathbb{E}[R_{t+1}| S_t = s, A_t = a]$. 
+  \end{itemize}
+
+\section{Policies and Rewards}
+
+The system is formalized as a \textbf{stochastic policy}, which is defined as a distribution over actions given states s.t. $\pi(a|s) = P[A_t = a| S_t = s]$.
+
+Two central tasks in RL consist of policy evaluation (a.k.a. prediction), i.e., evaluation of the expected reward for a given policy; and policy optimization (a.k.a. learning/control), i.e., finding the optimal policy under the expected reward criterion. The reward criterion is formalized using the concepts of \emph{return} and \emph{value functions}: The \textbf{total discounted return} from time-step $t$ for discount $\gamma \in [0,1]$ is
+    \[ G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots = \sum_{k=0}^{\infty}\gamma^k R_{t+k+1}.\]    
+    The \textbf{action-value function} $q_{\pi}(s,a)$ on an MDP is the expected return starting from state $s$, taking action $a$, and following policy $\pi$ s.t.
+    \[ q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a].\]
+    The \textbf{state-value function} $v_{\pi}(s)$ on an MDP is the expected return starting from state $s$ and following policy $\pi$ s.t.
+    \[ v_{\pi}(s) = \mathbb{E}_{\pi}[G_t | S_t = s] = \mathbb{E}_{a \sim \pi}[q_{\pi}(s,a)] .\]
+  
+
+\section{Dynamic Programming Solutions}
+
+Consider the following (simplified) MDP in Figure \ref{fig:MDP}: It consists of three states (1,2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards are 10.0, 2.0, and 3.0 for a transition into state 1, 2, and 3, respectively. 
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[scale=0.6]{figs/reinforcement_learning/mdp.png}
-\caption{Example figure}
-\label{fig:MarkovDecisionProcess}
+\caption{Markov Reward Process}
+\label{fig:MDP}
 \end{figure}
 
-A Markov Decision Process is xxx. In more formal terms it can be described as a tuple ...
+Given full information about states and rewards, want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation} which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
+\begin{align*}
+    v_{\pi}(s) & = \mathbb{E}_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) | S_t = s]\\
+    & = \sum_{a \in \mathcal{A}} \pi(a|s) \left( \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a v_{\pi}(s') \right).
+\end{align*}
 
-
-\section{Agent/System and Policies}
-
-\subsection{Dynamic Programming and Linear Programming solutions}
+A straightforward solution is to solve the linear equation directly:
+\begin{align*}
+    \boldsymbol{v}_{\pi} & = (\boldsymbol{I} -  \gamma \boldsymbol{\mathcal{P}}^{\pi})^{-1} \boldsymbol{\mathcal{R}}^{\pi}.
+    \end{align*}
+Because of the complexity of matrix inversion, this solution is applicable only to small MDPs. For larger MDPs, we can use iterative policy evaluation on the Bellman Expectation Equation.
 
 \begin{exercise}
 \label{exercise:PolicyEvaluation}
@@ -39,20 +75,54 @@ state_value_function=np.array([0 for i in range(3)])
 
 for i in range(20):
     print(state_value_function)
-
-    # TODO: Implement the Policy Evaluation Update with a Learning Rate of 0.1
-    # state_value_function=
+    state_value_function=# TODO: Implement the Policy Evaluation Update with a Learning Rate of 0.1
 print(state_value_function)
 
-# TODO: Implement the linear programming solution
+solution=# TODO: Implement the linear programming solution
+print(solution)
 \end{python}
 \end{exercise}
 
-\subsection{Monte Carlo and Q-Learning Solutions}
+\section{Monte Carlo and Q-Learning Solutions}
+
+\begin{algorithm}[t!]
+\label{algo:q-learning}
+   \caption{Q-Learning}
+\begin{algorithmic}[1]
+\FOR{sampled episodes}
+\STATE Initialize $S_t$
+\FOR{steps $t$} 
+\STATE Sample $A_t$, observe $R_{t+1}$, $S_{t+1}$.
+\STATE $Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha (R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a') - Q(S_t,A_t))$
+\STATE $S_t \leftarrow S_{t+1}$.
+\ENDFOR
+	\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimiziation problems, a disadvantage of these techniques is the fact that we need to know a full MDP model and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for Monte Carlo Policy Evaluation looks as follows: 
+\begin{itemize}
+  \item Sample episodes $S_0, A_0, R_1, \ldots, R_T \sim \pi$.
+    \item For each sampled episode:
+  \begin{itemize}
+  \item Increment state counter $N(s) \leftarrow N(s) + 1$.
+  \item Increment total return $S(s) \leftarrow S(s) + G_t$.
+    \end{itemize}
+  \item Estimate mean return $V(s) = S(s)/N(s)$.
+  \end{itemize}
+
+A more sophisticated technique is the so-called Q-Learning algorithm. In contrast to the simple Monte Carlo Policy Evaluation algorithm given above, it updates not towards the actual return $G_t$, but towards an estimate $(R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a')$ (the so-called Temporal Difference (TD) target). It thus combines Dynamic Programming (in form of the Bellman Optimality Equation) and Monte Carlo (by sampling episodes).
+
+
 \begin{exercise}
 Implement Monte Carlo policy evaluation. See how similar results can be
 obtained by using sampling
 \begin{python}
+import numpy as np
+
+policy=np.array([[0.3, 0.2, 0.5], [0.5, 0.4, 0.1], [0.8, 0.1, 0.1]])
+rewards=np.array([10., 2., 3.])
+
 import random
 from collections import defaultdict
 reward_counter=np.array([0., 0., 0.])
@@ -96,49 +166,204 @@ for i in range(1001):
     action=random.randint(0, 2) 
     next_state=action
     reward=rewards[next_state] 
-    next_q=max(q_table[next_state]) 
+    next_q=max(q_table[next_state])  $\mathbb{E}_{\pi_{\theta}}[R(y) \sum_{t=0}^{T-1}\nabla_{\theta} \log \pi_{\theta}(A_t|S_t)].$
     q_table[state, action]= #TODO: Implement the Q-Table update
     if i%100==0:
         print(q_table)
 \end{python}
 \end{exercise}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The Score Function Gradient Estimator}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Policy Gradient Techniques}
+
+The Dynamic Programming and Monte Carlo techniques discussed above can be summarized under the header of \emph{value-based} techniques since they focus on value functions. They are thus inherently indirect. Direct solutions to policy optimization that use gradient-based techniques to optimize parametric (stochastic) policies are called \emph{policy gradient} techniques. Given an action-value function $q_{\pi_\theta}(S_t,A_t)$, the objective is to maximize the expected value  \[\mathbb{E}_{\pi_{\theta}}[q_{\pi_\theta}(S_t,A_t)].\]
+The gradient of this objective is  
+\[\mathbb{E}_{\pi_{\theta}}[q_{\pi_\theta}(S_t,A_t) \nabla_{\theta} \log \pi_{\theta}(A_t|S_t)].\]
+The well-known REINFORCE algorithm optimizes this objective by using stochastic gradient ascent updates and by replacing $q_{\pi_\theta}(S_t,A_t)$ by the actual return $G_t$.
+
+\begin{algorithm}[t!]
+\label{algo:reinforce}
+   \caption{REINFORCE}
+\begin{algorithmic}[1]
+\FOR{sampled episodes $y=S_0, A_0, R_1, \ldots, R_T \sim \pi_\theta$}
+\FOR{time steps $t$} 
+\STATE Obtain reward $G_t$%$q_{\pi_\theta}(S_t,A_t)$
+\STATE Update $\theta \leftarrow \theta + \alpha (
+G_t
+%q_{\pi_\theta}(S_t,A_t) 
+\nabla_{\theta} \log \pi_{\theta}(A_t|S_t))$
+\ENDFOR
+	\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
 \begin{exercise}
-Complete the implementation of the score function gradient estimator in Pytorch. Open the code in lxmls/reinforcement\_learning/reinforcement\_learning.py. To test the solution use
+Complete the implementation of the REINFORCE score function gradient estimator.
 \begin{python}
-from lxmls.reinforcement_learning import train
-train()
-\end{python}
-\end{exercise}
+import torch
 
-\begin{exercise}
-Value iteration
-\begin{python}
 import numpy as np
+import random
+import matplotlib.pyplot as plt
+%matplotlib inline
+class Model(torch.nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.t_policy=torch.autograd.Variable(torch.FloatTensor([[1/3 for x in range(3)] for y in range(3)]), requires_grad=True)
+    def forward(self):
+        policy = torch.nn.functional.log_softmax(self.t_policy, dim=-1)
+        
+        return policy
 
-rewards=np.array([10., 2., 3.])
+def gt(rewardlist, gamma=0.1):
+    sum=0
+    for i, value in enumerate(rewardlist):
+        sum+=(gamma**i)*value
+    return sum
 
-state_value_function=np.array([0 for i in range(3)])
+valuelist=[] 
+rewards=np.array([10., 2., 3.])/10
+model = Model()
+optim = torch.optim.SGD([model.t_policy], lr=0.0001)
+for i in range(10001): 
+    poli=torch.nn.functional.softmax(model.t_policy,dim=-1).data.numpy()
+    state_action_list=[] 
+    start_state=random.randint(0, 2)
+    next_state=start_state
+    rewardlist=[] 
 
-for i in range(1000):
-    s_v_f=state_value_function.copy()
-    for s in range(3):
-        state_value_function[s]=#TODO: Implement the state value function update
-print(state_value_function)
+    for k in range(40):
+        rewardlist.append(rewards[next_state])
+        action=np.random.choice(np.arange(0, 3), p=poli[next_state])
+        state_action_list.append((next_state, action)) 
+        next_state=action 
+
+
+    rew=gt(rewardlist[:], 0.99)
+    grad_list = []
+    for j, (state, action) in enumerate(state_action_list):
+    #TODO: Implement the gradient calculation and update
+    value=(gt(rewardlist, 1))
+    valuelist.append(value)
+
+
+    if i%100==0:
+        print(poli)
+        print(rewardlist)
+        plt.plot(valuelist)
+        plt.show()
+\end{python}
+\end{exercise}
+
+A last exercise is to apply REINFORCE to the cart pole task: A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The system is controlled by applying a force of +1 or -1 to the cart. The pendulum starts upright, and the goal is to prevent it from falling over. A reward of +1 is provided for every timestep that the pole remains upright. The episode ends when the pole is more than 15 degrees from vertical, or the cart moves more than 2.4 units from the center. See \url{ https://gym.openai.com/envs/CartPole-v1/}.
+
+\begin{exercise}
+Complete the implementation of REINFORCE for the cartpole task.
+\begin{python}
+import torch
+import math
+import matplotlib.pyplot as plt
+from torch.autograd import Variable
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import gym
+import random
+
+env = gym.make('CartPole-v0')
+env.seed(1)
+
+print("env.action_space", env.action_space)
+print("env.observation_space", env.observation_space)
+print("env.observation_space.high", env.observation_space.high)
+print("env.observation_space.low", env.observation_space.low)
+
+
+RENDER_ENV = False
+EPISODES = 5000
+rewards = []
+RENDER_REWARD_MIN = 50
+
+class PolicyGradient(nn.Module):
+    def __init__(self):
+        super(PolicyGradient, self).__init__()
+        self.linear = nn.Linear(4, 8)
+        self.linear2 = nn.Linear(8, 2)
+    def forward(self, state):
+        #TODO: Implement the forward pass
+    
+criterion = torch.nn.NLLLoss()
+policy = PolicyGradient()
+optimizer = torch.optim.RMSprop(policy.parameters(), lr=0.002)
+env.reset()
+decay=1
+
+resultlist=[]
+for episode in range(EPISODES):
+    observations = []
+    observation = env.reset()
+    while True:
+        action = int(np.random.choice(range(2), p=np.exp(policy(observation).data.numpy()[0])))
+        observation_, reward, finished, info = env.step(action)
+        observations.append((observation, action, reward, observation_))
+        observation=observation_
+        if finished:
+            rewardlist = [x[2] for x in observations]
+            cumulative=0
+            savelist=[]
+            for rew in rewardlist[::-1]:
+                cumulative=cumulative*decay + rew/200
+                savelist.append(cumulative)
+            savelist=savelist[::-1]
+            resultlist.append(savelist[0])
+            if episode%50==0:
+                plt.plot(resultlist)
+                plt.show()
+            savelist=np.array(savelist)
+            for (observation, action, reward, next_observation), cum_reward in zip(observations, savelist):
+                action = torch.autograd.Variable(torch.LongTensor([action]))
+                result = policy(observation)
+                loss = criterion(result, action)
+                (loss * cum_reward).backward()
+                optimizer.step()
+                optimizer.zero_grad()
+            break
 \end{python}
 \end{exercise}
 
 
-\begin{exercise}
-Implement policy gradient for the cartpole task by coding the forward pass in reinforcement\_learning/policy\_gradient.py. Check by calling the train() function.
-\end{exercise}
+%\begin{exercise}
+%Complete the implementation of the score function gradient estimator in Pytorch. Open the %code in lxmls/reinforcement\_learning/reinforcement\_learning.py. To test the solution use
+%\begin{python}
+%from lxmls.reinforcement_learning import train
+%train()
+%\end{python}
+%\end{exercise}
 
-\begin{exercise}
-Implement actor crtitic for the cartpole task by coding the critic forward pass in reinforcement\_learning/policy\_gradient.py.Check by calling the train() function.
-\end{exercise}
+%\begin{exercise}
+%Value iteration
+%\begin{python}
+%import numpy as np
+
+%rewards=np.array([10., 2., 3.])
+
+%state_value_function=np.array([0 for i in range(3)])
+
+%for i in range(1000):
+%    s_v_f=state_value_function.copy()
+%    for s in range(3):
+%        state_value_function[s]=#TODO: Implement the state value function update
+%print(state_value_function)
+%\end{python}
+%\end{exercise}
+
+
+%\begin{exercise}
+%Implement policy gradient for the cartpole task by coding the forward pass %in reinforcement\_learning/policy\_gradient.py. Check by calling the %train() function.
+%\end{exercise}
+
+%\begin{exercise}
+%Implement actor crtitic for the cartpole task by coding the critic forward %pass in reinforcement\_learning/policy\_gradient.py.Check by calling the %train() function.
+%\end{exercise}
 
 
