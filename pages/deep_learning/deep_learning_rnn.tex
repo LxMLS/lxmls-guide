@@ -216,10 +216,10 @@ print("Test accuracy %2.2f %%" % accuracy)
 \clearpage
 \section{Implementing your own RNN in Pytorch}
 
-One of the big advantages toolkits like Pytorch or Dynet is that creating computation graphs that dynamically change size is very simple. In many other tookits it is directly not possible to use a Python for loop with a variable length to define a computation graph. Again, as in other toolkits we will only need to create the forward pass of the RNN and the gradients will be computed automatically for us.
+One of the big advantages of toolkits like Pytorch or Dynet is that creating computation graphs that dynamically change size is very simple. In many other tookits it is directly not possible to use a Python for loop with a variable length to define a computation graph. Again, as in other toolkits we will only need to create the forward pass of the RNN and the gradients will be computed automatically for us.
 
 \begin{exercise}
-As we did with the feed-forward network, we will no implement a
+As we did with the feed-forward network, we will now implement a
 Recurrent Neural Network (RNN) in Pytorch. For this complete the
 log\_forward() method in lxmls/deep\_learning/pytorch\_models/rnn.py.
 
