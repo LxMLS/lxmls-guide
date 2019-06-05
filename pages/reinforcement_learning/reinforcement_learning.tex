@@ -1,24 +1,50 @@
-Today's class will introduce reinforcement learning. The previous classes mainly focused on machine learning in a full supervision scenario, i.e., the learning signal consisted of gold standard structures, and the learning goal  was to optimize the system parameters so as to maximize the likelihood of the gold standard outputs. Reinforcment Learning (RL) assumes an \emph{interactive learning} scenario where a system learns by trial and error, using the consequences of its own actions to learn to maximize the expected reward from the environment. The learning scenario can also be seen as learning under \emph{weak supervision} in the sense that no gold standard examples are available, only rewards for system predictions.
+Today's class will introduce reinforcement learning. The previous classes
+mainly focused on machine learning in a full supervision scenario, i.e., the
+learning signal consisted of gold standard structures, and the learning goal
+was to optimize the system parameters so as to maximize the likelihood of the
+gold standard outputs. Reinforcment Learning (RL) assumes an \emph{interactive
+learning} scenario where a system learns by trial and error, using the
+consequences of its own actions to learn to maximize the expected reward from
+the environment. The learning scenario can also be seen as learning under
+\emph{weak supervision} in the sense that no gold standard examples are
+available, only rewards for system predictions.
 
 \section{Today's assignment}
 
-Your objective today should be to understand fully the concept of RL, including the standard formaliztion of the environment as a Markov Decision Process (MPD), and of the system as a stochastic policy. You will learn about algorithms that evaluate the expected reward for a given policy (policy evaluation/prediction) and algorithms that find the optimal policy parameters (policy optimization/control). 
+Your objective today should be to understand fully the concept of RL, including
+the standard formalization of the environment as a Markov Decision Process
+(MPD), and of the system as a stochastic policy. You will learn about
+algorithms that evaluate the expected reward for a given policy (policy
+evaluation/prediction) and algorithms that find the optimal policy parameters
+(policy optimization/control). 
 
 \section{Markov Decision Processes}
 
-An RL system and interacts with an environment in the following way:
-  \begin{itemize}
-  \item At each of a sequence of time steps $t = 0,1,2,\ldots$,
-  \item the agent receives a state representation $S_t$,
-  \item on which basis it selects an action $A_t$,
-  \item and as a consequence, it receives a reward $R_{t+1}$,
-  \item and finds itself in a new state $S_{t+1}$.
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.5,trim={0 5cm 0 1cm},clip]{figs/reinforcement_learning/mdp.png}
+\caption{Markov Decision Process (MDP) with three states $\mathcal{S}=\{s_1,s_2,s_3\}$ and three possible actions $\mathcal{A}=\{a_1,a_2,a_3\}$, moving to state $s_1$, moving to state $s_2$ and moving to state $s_3$.}
+\label{fig:MDP}
+\end{figure}
+
+In order to define RL rigorously lets define an agent, for example a robot,
+that is surrounded by an environment, for example a room full of objects. The
+agent interacts with the environment in the following way: At each of a
+sequence of time steps $t = 0,1,2,\ldots$,
+
+\begin{itemize}
+  \item the agent receives a \textbf{state} representation $S_t$,
+  \item on which basis it selects an \textbf{action} $A_t$,
+  \item and as a consequence, it receives a \textbf{reward} $R_{t+1}$,
+  \item after which it finds itself in a new state $S_{t+1}$.
 \end{itemize}
 
-The Goal of RL is then to maximize the total amount of reward a system receives in such interactions in the long run. 
+The Goal of RL is then to teach the agent to maximize the total amount of
+reward it receives in such interactions in the long run. The standard
+formalization of the environment given by a \textbf{Markov Decision Process
+(MDP)}, defined as a tuple $\left< \mathcal{S}, \mathcal{A}, \mathcal{P},
+\mathcal{R} \right>$ where
 
-The standard formalization of the environment is as a \textbf{Markov Decision Process (MDP)}, defined as a tuple $\left< \mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}
-  \right>$ where
   \begin{itemize}
   \item $\mathcal{S}$ is a set of states,
   \item $\mathcal{A}$ is a finite set of actions,
@@ -26,28 +52,41 @@ The standard formalization of the environment is as a \textbf{Markov Decision Pr
   \item $\mathcal{R}$ is a reward function  s.t. $\mathcal{R}_s^a = \mathbb{E}[R_{t+1}| S_t = s, A_t = a]$. 
   \end{itemize}
 
+% RAMON: Can we explain why the reward is given by an expectation at this point?
+
 \section{Policies and Rewards}
 
-The system is formalized as a \textbf{stochastic policy}, which is defined as a distribution over actions given states s.t. $\pi(a|s) = P[A_t = a| S_t = s]$.
+The system is formalized as a \textbf{stochastic policy}, which is defined as a
+distribution over actions given states s.t. $\pi(a|s) = P[A_t = a| S_t = s]$.
+The two central tasks in RL consist of policy evaluation (a.k.a. prediction),
+i.e., evaluation of the expected reward for a given policy; and policy
+optimization (a.k.a. learning/control), i.e., finding the optimal policy under
+the expected reward criterion. The reward criterion is formalized using the
+concepts of \emph{return} and \emph{value functions}: 
 
-Two central tasks in RL consist of policy evaluation (a.k.a. prediction), i.e., evaluation of the expected reward for a given policy; and policy optimization (a.k.a. learning/control), i.e., finding the optimal policy under the expected reward criterion. The reward criterion is formalized using the concepts of \emph{return} and \emph{value functions}: The \textbf{total discounted return} from time-step $t$ for discount $\gamma \in [0,1]$ is
-    \[ G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots = \sum_{k=0}^{\infty}\gamma^k R_{t+k+1}.\]    
-    The \textbf{action-value function} $q_{\pi}(s,a)$ on an MDP is the expected return starting from state $s$, taking action $a$, and following policy $\pi$ s.t.
-    \[ q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a].\]
-    The \textbf{state-value function} $v_{\pi}(s)$ on an MDP is the expected return starting from state $s$ and following policy $\pi$ s.t.
-    \[ v_{\pi}(s) = \mathbb{E}_{\pi}[G_t | S_t = s] = \mathbb{E}_{a \sim \pi}[q_{\pi}(s,a)] .\]
-  
+\noindent The \textbf{total discounted return} from time-step $t$ for discount $\gamma \in [0,1]$ is
 
+\begin{equation}
+    G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots = \sum_{k=0}^{\infty}\gamma^k R_{t+k+1}.
+\end{equation}
+
+The \textbf{action-value function} $q_{\pi}(s,a)$ on an MDP is the expected return starting from state $s$, taking action $a$, and following policy $\pi$ s.t.
+
+\begin{equation}
+   q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a].
+\end{equation}
+
+The \textbf{state-value function} $v_{\pi}(s)$ of an MDP is the expected return starting from state $s$ and following policy $\pi$ s.t.
+
+\begin{equation}
+    v_{\pi}(s) = \mathbb{E}_{\pi}[G_t | S_t = s] = \mathbb{E}_{a \sim \pi}[q_{\pi}(s,a)] .
+\end{equation}
+
+% RAMON: Adding less mathematical, more intuitive explanations about the concepts above would help IMO    
+    
 \section{Dynamic Programming Solutions}
 
 Consider the following (simplified) MDP in Figure \ref{fig:MDP}: It consists of three states (1,2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards are 10.0, 2.0, and 3.0 for a transition into state 1, 2, and 3, respectively. 
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[scale=0.6]{figs/reinforcement_learning/mdp.png}
-\caption{Markov Reward Process}
-\label{fig:MDP}
-\end{figure}
 
 Given full information about states and rewards, want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation} which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
 \begin{align*}
@@ -55,10 +94,10 @@ Given full information about states and rewards, want to evaluate a given policy
     & = \sum_{a \in \mathcal{A}} \pi(a|s) \left( \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a v_{\pi}(s') \right).
 \end{align*}
 
-A straightforward solution is to solve the linear equation directly:
+\noindent A straightforward solution is to solve the linear equation directly:
 \begin{align*}
     \boldsymbol{v}_{\pi} & = (\boldsymbol{I} -  \gamma \boldsymbol{\mathcal{P}}^{\pi})^{-1} \boldsymbol{\mathcal{R}}^{\pi}.
-    \end{align*}
+\end{align*}
 Because of the complexity of matrix inversion, this solution is applicable only to small MDPs. For larger MDPs, we can use iterative policy evaluation on the Bellman Expectation Equation.
 
 \begin{exercise}
@@ -85,6 +124,19 @@ print(solution)
 
 \section{Monte Carlo and Q-Learning Solutions}
 
+While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimiziation problems, a disadvantage of these techniques is the fact that we need to know a full MDP model and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for Monte Carlo Policy Evaluation looks as follows: 
+\begin{itemize}
+  \item Sample episodes $S_0, A_0, R_1, \ldots, R_T \sim \pi$.
+    \item For each sampled episode:
+  \begin{itemize}
+  \item Increment state counter $N(s) \leftarrow N(s) + 1$.
+  \item Increment total return $S(s) \leftarrow S(s) + G_t$.
+    \end{itemize}
+  \item Estimate mean return $V(s) = S(s)/N(s)$.
+  \end{itemize}
+
+A more sophisticated technique is the so-called Q-Learning algorithm. In contrast to the simple Monte Carlo Policy Evaluation algorithm given above, it updates not towards the actual return $G_t$, but towards an estimate $(R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a')$ (the so-called Temporal Difference (TD) target). It thus combines Dynamic Programming (in form of the Bellman Optimality Equation) and Monte Carlo (by sampling episodes).
+
 \begin{algorithm}[t!]
 \label{algo:q-learning}
    \caption{Q-Learning}
@@ -99,20 +151,6 @@ print(solution)
 	\ENDFOR
 \end{algorithmic}
 \end{algorithm}
-
-While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimiziation problems, a disadvantage of these techniques is the fact that we need to know a full MDP model and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for Monte Carlo Policy Evaluation looks as follows: 
-\begin{itemize}
-  \item Sample episodes $S_0, A_0, R_1, \ldots, R_T \sim \pi$.
-    \item For each sampled episode:
-  \begin{itemize}
-  \item Increment state counter $N(s) \leftarrow N(s) + 1$.
-  \item Increment total return $S(s) \leftarrow S(s) + G_t$.
-    \end{itemize}
-  \item Estimate mean return $V(s) = S(s)/N(s)$.
-  \end{itemize}
-
-A more sophisticated technique is the so-called Q-Learning algorithm. In contrast to the simple Monte Carlo Policy Evaluation algorithm given above, it updates not towards the actual return $G_t$, but towards an estimate $(R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a')$ (the so-called Temporal Difference (TD) target). It thus combines Dynamic Programming (in form of the Bellman Optimality Equation) and Monte Carlo (by sampling episodes).
-
 
 \begin{exercise}
 Implement Monte Carlo policy evaluation. See how similar results can be
@@ -196,6 +234,8 @@ G_t
 	\ENDFOR
 \end{algorithmic}
 \end{algorithm}
+
+
 
 \begin{exercise}
 Complete the implementation of the REINFORCE score function gradient estimator.
