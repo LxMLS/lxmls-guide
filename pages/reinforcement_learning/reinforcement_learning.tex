@@ -86,7 +86,13 @@ The \textbf{state-value function} $v_{\pi}(s)$ of an MDP is the expected return 
     
 \section{Dynamic Programming Solutions}
 
-Consider the following (simplified) MDP in Figure \ref{fig:MDP}: It consists of three states (1,2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards are 10.0, 2.0, and 3.0 for a transition into state 1, 2, and 3, respectively. 
+Consider the following (simplified) MDP in Figure \ref{fig:MDP}: It consists of three states (1,2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards $\mathcal{R}_s^a$ are 1.5, -1.8333\dots and 19.8333\dots for a transition into state 1, 2, and 3, respectively. So, in our example $\mathcal{R}_s^a$ depends only on action (i.e. destination state) but it doesn't depend on source state.
+
+Such reward values are chosen to get nice expected values of the next reward given policy $\pi$:
+\begin{align*}
+    {\mathcal{R}}^{\pi}(s) & = \sum_{a \in \mathcal{A}} \pi(a|s) \mathcal{R}_s^a
+\end{align*}
+For the policy we will use below expected values of the next reward ${\mathcal{R}}^{\pi}(s)$ are 10.0, 2.0, and 3.0 for state 1, 2, and 3, respectively.
 
 Given full information about states and rewards, want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation} which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
 \begin{align*}
@@ -108,7 +114,11 @@ Implement policy evaluation by dynamic programming and linear programming. Check
 import numpy as np
 
 policy=np.array([[0.3, 0.2, 0.5], [0.5, 0.4, 0.1], [0.8, 0.1, 0.1]])
-rewards=np.array([10., 2., 3.])
+# 'raw_rewards' variable contains rewards obtained after transition to each state
+# In our example it doesn't depend on source state
+raw_rewards = np.array([1.5, -1.833333333, 19.833333333])
+# 'rewards' variable contains expected values of the next reward for each state
+rewards = np.matmul(policy, raw_rewards)
 
 state_value_function=np.array([0 for i in range(3)])
 
