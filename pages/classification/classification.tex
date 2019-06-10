@@ -525,12 +525,12 @@ which averages the weight vector as a post-processing step.}
          \STATE $\mathcal{D}_s =$ shuffle$(\mathcal{D})$
         \FOR{$i=1$ {\bfseries to} $M$} 
 	\STATE $m = \mathcal{D}_s(i)$
-        \STATE $t = t+1$
 	\STATE take training pair $(x^m, y^m)$ and predict using the current model: 
 	$$\hat{y}  \leftarrow \argmax_{y'\in\mathcal{Y}} \boldsymbol{w}^t \cdot \boldsymbol{f}(x^m,y')$$
 	\STATE update the model: 
 	$\boldsymbol{w}^{t+1} \leftarrow \boldsymbol{w}^{t} +
         \boldsymbol{f}(x^m,y^m) - \boldsymbol{f}(x^m,\hat{y})$
+    \STATE $t = t+1$
         \ENDFOR
 	\ENDFOR
    \STATE \textbf{output:} the averaged model $\hat{\boldsymbol{w}} \leftarrow \frac{1}{t}\sum_{i=1}^{t} \boldsymbol{w}^i$
