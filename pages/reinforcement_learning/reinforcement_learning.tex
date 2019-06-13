@@ -2,30 +2,20 @@ Today's class will introduce reinforcement learning. The previous classes
 mainly focused on machine learning in a full supervision scenario, i.e., the
 learning signal consisted of gold standard structures, and the learning goal
 was to optimize the system parameters so as to maximize the likelihood of the
-gold standard outputs. Reinforcment Learning (RL) assumes an \emph{interactive
-learning} scenario where a system learns by trial and error, using the
-consequences of its own actions to learn to maximize the expected reward from
-the environment. The learning scenario can also be seen as learning under
-\emph{weak supervision} in the sense that no gold standard examples are
-available, only rewards for system predictions.
+gold standard outputs.
+    Reinforcement Learning (RL) assumes an \emph{interactive learning} scenario where a system learns by trial and error, using the consequences of its own actions to learn to maximize the expected reward from the environment.
+    The learning scenario can also be seen as learning under \emph{weak supervision} in the sense that no gold standard examples are available, only rewards for system predictions.
 
 \section{Today's assignment}
 
 Your objective today should be to understand fully the concept of RL, including
 the standard formalization of the environment as a Markov Decision Process
-(MPD), and of the system as a stochastic policy. You will learn about
+(MDP), and of the system as a stochastic policy. You will learn about
 algorithms that evaluate the expected reward for a given policy (policy
 evaluation/prediction) and algorithms that find the optimal policy parameters
 (policy optimization/control). 
 
 \section{Markov Decision Processes}
-
-\begin{figure}[!ht]
-\centering
-\includegraphics[scale=0.5,trim={0 5cm 0 1cm},clip]{figs/reinforcement_learning/mdp.png}
-\caption{Markov Decision Process (MDP) with three states $\mathcal{S}=\{s_1,s_2,s_3\}$ and three possible actions $\mathcal{A}=\{a_1,a_2,a_3\}$, moving to state $s_1$, moving to state $s_2$ and moving to state $s_3$.}
-\label{fig:MDP}
-\end{figure}
 
 In order to define RL rigorously lets define an agent, for example a robot,
 that is surrounded by an environment, for example a room full of objects. The
@@ -41,7 +31,7 @@ sequence of time steps $t = 0,1,2,\ldots$,
 
 The Goal of RL is then to teach the agent to maximize the total amount of
 reward it receives in such interactions in the long run. The standard
-formalization of the environment given by a \textbf{Markov Decision Process
+formalization of the environment is given by a \textbf{Markov Decision Process
 (MDP)}, defined as a tuple $\left< \mathcal{S}, \mathcal{A}, \mathcal{P},
 \mathcal{R} \right>$ where
 
@@ -86,15 +76,16 @@ The \textbf{state-value function} $v_{\pi}(s)$ of an MDP is the expected return 
     
 \section{Dynamic Programming Solutions}
 
-Consider the following (simplified) MDP in Figure \ref{fig:MDP}: It consists of three states (1,2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards $\mathcal{R}_s^a$ are 1.5, -1.8333\dots and 19.8333\dots for a transition into state 1, 2, and 3, respectively. So, in our example $\mathcal{R}_s^a$ depends only on action (i.e. destination state) but it doesn't depend on source state.
+\begin{figure}[!ht]
+\centering
+\includegraphics[scale=0.5,trim={0 5cm 0 1cm},clip]{figs/reinforcement_learning/mdp.png}
+\caption{Markov Decision Process (MDP) with three states $\mathcal{S}=\{s_1,s_2,s_3\}$ and three possible actions $\mathcal{A}=\{a_1,a_2,a_3\}$, moving to state $s_1$, moving to state $s_2$ and moving to state $s_3$.}
+\label{fig:MDP}
+\end{figure}
 
-Such reward values are chosen to get nice expected values of the next reward given policy $\pi$:
-\begin{align*}
-    {\mathcal{R}}^{\pi}(s) & = \sum_{a \in \mathcal{A}} \pi(a|s) \mathcal{R}_s^a
-\end{align*}
-For the policy we will use below expected values of the next reward ${\mathcal{R}}^{\pi}(s)$ are 10.0, 2.0, and 3.0 for state 1, 2, and 3, respectively.
+Consider the (simplified) MDP represented in Figure \ref{fig:MDP}: it consists of three states (1, 2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards are 10.0, 2.0, and 3.0 for a transition into state 1, 2, and 3, respectively. 
 
-Given full information about states and rewards, want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation} which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
+Given full information about states and rewards, we want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation}, which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
 \begin{align*}
     v_{\pi}(s) & = \mathbb{E}_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) | S_t = s]\\
     & = \sum_{a \in \mathcal{A}} \pi(a|s) \left( \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a v_{\pi}(s') \right).
@@ -134,7 +125,7 @@ print(solution)
 
 \section{Monte Carlo and Q-Learning Solutions}
 
-While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimiziation problems, a disadvantage of these techniques is the fact that we need to know a full MDP model and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for Monte Carlo Policy Evaluation looks as follows: 
+While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimization problems, a disadvantage of these techniques is the fact that we need to know a full MDP model and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for Monte Carlo Policy Evaluation looks as follows: 
 \begin{itemize}
   \item Sample episodes $S_0, A_0, R_1, \ldots, R_T \sim \pi$.
     \item For each sampled episode:
@@ -147,7 +138,7 @@ While Dynamic Programming techniques allow to iteratively compute policy evaluat
 
 A more sophisticated technique is the so-called Q-Learning algorithm. In contrast to the simple Monte Carlo Policy Evaluation algorithm given above, it updates not towards the actual return $G_t$, but towards an estimate $(R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a')$ (the so-called Temporal Difference (TD) target). It thus combines Dynamic Programming (in form of the Bellman Optimality Equation) and Monte Carlo (by sampling episodes).
 
-\begin{algorithm}[t!]
+\begin{algorithm}[h!]
 \label{algo:q-learning}
    \caption{Q-Learning}
 \begin{algorithmic}[1]
@@ -155,7 +146,7 @@ A more sophisticated technique is the so-called Q-Learning algorithm. In contras
 \STATE Initialize $S_t$
 \FOR{steps $t$} 
 \STATE Sample $A_t$, observe $R_{t+1}$, $S_{t+1}$.
-\STATE $Q(S_t,A_t) \leftarrow Q(S_t,A_t) + \alpha (R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a') - Q(S_t,A_t))$
+\STATE $Q(S_t,A_t) \leftarrow (1 - \alpha) Q(S_t,A_t) + \alpha (R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a'))$
 \STATE $S_t \leftarrow S_{t+1}$.
 \ENDFOR
 	\ENDFOR
@@ -214,7 +205,7 @@ for i in range(1001):
     action=random.randint(0, 2) 
     next_state=action
     reward=rewards[next_state] 
-    next_q=max(q_table[next_state])  $\mathbb{E}_{\pi_{\theta}}[R(y) \sum_{t=0}^{T-1}\nabla_{\theta} \log \pi_{\theta}(A_t|S_t)].$
+    next_q=max(q_table[next_state])
     q_table[state, action]= #TODO: Implement the Q-Table update
     if i%100==0:
         print(q_table)
