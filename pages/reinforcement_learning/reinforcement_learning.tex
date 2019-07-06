@@ -203,6 +203,8 @@ for i in range(400):
 print(reward_counter/visit_counter)
 \end{python}
 
+\clearpage
+
 Implement Q-Learning policiy optimization in a simple exercise. This samples a state-action pair randomly, so that all the state-action pairs can be seen.
 \begin{python}
 q_table=np.zeros((3, 3)) 
@@ -226,7 +228,7 @@ The gradient of this objective is
 \[\mathbb{E}_{\pi_{\theta}}[q_{\pi_\theta}(S_t,A_t) \nabla_{\theta} \log \pi_{\theta}(A_t|S_t)].\]
 The well-known REINFORCE algorithm optimizes this objective by using stochastic gradient ascent updates and by replacing $q_{\pi_\theta}(S_t,A_t)$ by the actual return $G_t$.
 
-\begin{algorithm}[t!]
+\begin{algorithm}[h!]
 \label{algo:reinforce}
    \caption{REINFORCE}
 \begin{algorithmic}[1]
@@ -247,7 +249,7 @@ G_t
 \begin{exercise}
 Implement the score function gradient estimator in lxmls/reinforcement\_learning/score\_function\_estimator.py. Check it is correct by calling the train() function.
 \begin{python}
-\% matplotlib inline
+% matplotlib inline
 from lxmls.reinforcement_learning.score_function_estimator import train
 train()
 \end{python}
