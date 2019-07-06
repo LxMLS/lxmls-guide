@@ -225,9 +225,13 @@ def gradient_descent(start_x,func,grad):
 Run the gradient descent algorithm starting from $x_0 = -8$ and plot the minimizing sequence.
 
 \begin{python}
+x = np.arange(-8, 8, 0.001)
+y = get_y(x)
+plt.plot(x, y)
+
 x_0 = -8
-res = gradient_descent(x_0,get_y,get_grad)
-plt.plot(res[:,0],res[:,1],'+')
+res = gradient_descent(x_0, get_y, get_grad)
+plt.plot(res[:,0], res[:,1], 'r+')
 plt.show()
 \end{python}
 
@@ -249,9 +253,14 @@ Figure \ref{fig:gradex1} shows the resulting minimizing sequence. Note that the 
 Now try the same exercise starting from the initial point $x_0 = 8$.
 
 \begin{python}
+x = np.arange(-8, 8, 0.001)
+y = get_y(x)
+plt.plot(x, y)
+
 x_0 = 8
-res = gradient_descent(x_0,get_y,get_grad)
-plot(res[:,0],res[:,1],'+')
+res = gradient_descent(x_0, get_y, get_grad)
+plt.plot(res[:,0], res[:,1], 'r+')
+plt.show()
 \end{python}
 
 
