@@ -282,49 +282,6 @@ Figure \ref{fig:gradex2} shows the resulting minimizing sequence. Note that now 
 During this school we will rely on the numerical optimization methods provided by Scipy (scientific computing library in python), which are very efficient implementations.
 
 
-% \begin{exercise}
-% Consider the linear regression problem (ordinary least squares), with a
-% single response variable
-
-% \[
-% y = x^T w + \varepsilon
-% \]
-
-% The \emph{linear regression problem} is, given a set $\{ y^{(i)} \}_i$ of
-% samples of $y$ and the corresponding $\vect{x}^{(i)}$ vectors, estimate
-% $\vect{w}$ to minimise the sum of the $\varepsilon$ variables. Traditionally
-% this is solved analytically to obtain a closed form solution (although this is
-% \textbf{not the way in which it should be computed}, linear algebra packages
-% have an optimised solver, with numpy, use \code{numpy.linalg.lstsq}).
-
-% Alternatively, we can define the error function for each possible $\vect{w}$:
-
-% \[
-% e(\vect{w}) = \sum_i \left( {\vect{x}^{(i)}}^T \vect{w} - y^{(i)} \right)^2.
-% \]
-
-% \begin{enumerate}
-% \item Derive the gradient of the error $\pd{e}{w_j}$.
-% \item Implement a solver based on this for two dimensional problems (i.e.,
-% $\vect{w} \in R^2$).
-% \item Use this method on the Galton dataset from the previous exercise to
-% estimate the relationship between father and son's height. Try two formulas
-% \begin{equation}
-% s = f w_1 + \varepsilon,
-% \label{}
-% \end{equation}
-% where $s$ is the son's height, and $f$ is the father heights; and
-% \begin{equation}
-% s = f w_1 + 1w_0 + \varepsilon
-% \label{}
-% \end{equation}
-% where the input variable is now two dimensional: $(f,1)$. This allows the
-% intercept to be non-zero.
-% \item Plot the regression line you obtain with the points from the previous
-% exercise.
-% \item Use the \texttt{np.linalg.lstsq} function and compare to your solution.
-% \end{enumerate}
-% \end{exercise}
 
 
 
