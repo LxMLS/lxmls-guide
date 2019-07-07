@@ -46,41 +46,41 @@
 %loops.
 %\end{exercise}
 
-\begin{exercise}
-\begin{enumerate}
-\item Consider the function $f(x) = (x+2)^2 - 16 \exp\left( -(x-2)^2 \right)$.
-Draw a plot around the $x \in [-8,8]$ region.
-\item What is $\pd{f}{x}$?
-\item Use gradient descent to find a local minimum starting from $x_0 = -4$ and
-$x_0 = +4$, with $\eta = .01$. Plot all of the intermediate estimates that you
-obtain in the same plot.
-\end{enumerate}
-\begin{python}
-import numpy as np
-import matplotlib.pyplot as plt
-X = np.linspace(-8, 8, 1000)
-Y = (X+2)**2 - 16*np.exp(-((X-2)**2))
-
-# derivative of the function f
-def get_Y_dev(x):
-    return (2*x+4)-16*(-2*x + 4)*np.exp(-((x-2)**2))
-
-def grad_desc(start_x, eps, prec):
-    '''
-    runs the gradient descent algorithm and returns the list of estimates
-
-    example of use grad_desc(start_x=3.9, eps=0.01, prec=0.00001)
-    '''
-    x_new = start_x
-    x_old = start_x + prec * 2
-    res = [x_new]
-    while abs(x_old-x_new) > prec:
-        x_old = x_new
-        x_new = x_old - eps * get_Y_dev(x_new)
-        res.append(x_new)
-    return np.array(res)
-\end{python}
-\end{exercise}
+%\begin{exercise}
+%\begin{enumerate}
+%\item Consider the function $f(x) = (x+2)^2 - 16 \exp\left( -(x-2)^2 \right)$.
+%Draw a plot around the $x \in [-8,8]$ region.
+%\item What is $\pd{f}{x}$?
+%\item Use gradient descent to find a local minimum starting from $x_0 = -4$ and
+%$x_0 = +4$, with $\eta = .01$. Plot all of the intermediate estimates that you
+%obtain in the same plot.
+%\end{enumerate}
+%\begin{python}
+%import numpy as np
+%import matplotlib.pyplot as plt
+%X = np.linspace(-8, 8, 1000)
+%Y = (X+2)**2 - 16*np.exp(-((X-2)**2))
+%
+%# derivative of the function f
+%def get_Y_dev(x):
+%    return (2*x+4)-16*(-2*x + 4)*np.exp(-((x-2)**2))
+%
+%def grad_desc(start_x, eps, prec):
+%    '''
+%    runs the gradient descent algorithm and returns the list of estimates
+%
+%    example of use grad_desc(start_x=3.9, eps=0.01, prec=0.00001)
+%    '''
+%    x_new = start_x
+%    x_old = start_x + prec * 2
+%    res = [x_new]
+%    while abs(x_old-x_new) > prec:
+%        x_old = x_new
+%        x_new = x_old - eps * get_Y_dev(x_new)
+%        res.append(x_new)
+%    return np.array(res)
+%\end{python}
+%\end{exercise}
 
 %Over the next couple of exercises we will make use of the Galton dataset, a
 %dataset of heights of fathers and sons from the 1877 paper that first discussed
