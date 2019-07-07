@@ -205,7 +205,7 @@ def gradient_descent_scalar(start_x, func, grad, step_size=0.1, prec=0.0001):
     res = []
     for i in range(max_iter):
         x_old = x_new
-        #Use negative step size for gradient descent
+        # Use negative step size for gradient descent
         x_new = x_old - step_size * grad(x_new)
         f_x_new = func(x_new)
         f_x_old = func(x_old)
