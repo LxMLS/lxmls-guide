@@ -502,7 +502,7 @@ CRF - Extended Features Accuracy Train: 0.984 Dev: 0.899 Test: 0.894
 
 
 Compare the errors obtained with the two different feature
-sets. Do some error analysis: what errors were correct by using
+sets. Do some error analysis: what errors were corrected by using
 more features? Can you think of other features to use to solve the
 errors found?
 \end{exercise}
@@ -510,7 +510,7 @@ errors found?
 The main lesson to learn from this exercise is that, usually, if you are not satisfied by the accuracy of your algorithm, you can perform some error analysis and find out which errors your algorithm is making. You can then add more features which attempt to improve those specific errors (this is known as \emph{feature engineering}). This can lead to two problems:
 \begin{itemize}
 \item More features will make training and decoding more expensive. For example, if you add features that depend on the current word and the previous word, the number of new features is the square of the number of different words, which is quite large. For example, the Penn Treebank has around 40000 different words, so you are adding a lot of new features, even though not all pairs of words will ever occur. Features that depend on three words (previous, current, and next) are even more numerous.
-\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfit problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
+\item If features are very specific, such as the (previous word, current word, next word) one just mentioned, they might occur very rarely in the training set, which leads to overfitting problems. Some of these problems (not all) can be mitigated with techniques such as smoothing, which you already learned about.
 \end{itemize}
 
 
