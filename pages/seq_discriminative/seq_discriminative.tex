@@ -356,7 +356,7 @@ stick with SGD).
 	\STATE take training pair $(x^m, y^m)$ and compute the probability 
 	$P_{\W}(Y=y^m|X=x^m)$ using the current model ${\W}$ and Eq.~\ref{eq:disc_formula}.
 	\STATE for every $i$, $y_i'$, and $y_{i+1}'$, 
-	compute marginal probabilities $P(Y_i=y_i' | X=x)$ and  $P(Y_i=y_i', Y_{i+1}=y_{i+1}'| X=x^m)$ 
+	compute marginal probabilities $P(Y_i=y_i' | X=x^m)$ and  $P(Y_i=y_i', Y_{i+1}=y_{i+1}'| X=x^m)$ 
 	using the current model $\W$, for each node and edge, 
         through the forward-backward algorithm.
 	\STATE compute the feature vector expectation:  
