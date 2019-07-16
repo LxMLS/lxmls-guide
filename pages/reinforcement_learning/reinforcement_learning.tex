@@ -89,7 +89,7 @@ Such reward values are chosen to get nice expected values of the next reward giv
 \begin{align*}
     {\mathcal{R}}^{\pi}(s) & = \sum_{a \in \mathcal{A}} \pi(a|s) \mathcal{R}_s^a
 \end{align*}
-For the policy we will use below expected values of the next reward ${\mathcal{R}}^{\pi}(s)$ are 10.0, 2.0, and 3.0 for state 1, 2, and 3, respectively.
+For the policy we will use below expected values of the next reward ${\mathcal{R}}^{\pi}(s)$ which are 10.0, 2.0, and 3.0 for state 1, 2, and 3, respectively.
 
 Given full information about states and rewards, we want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation}, which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
 \begin{align*}
@@ -296,7 +296,7 @@ model = PolicyRNN(
 )
 \end{python}
 
-After finishing the implementation, the following code shoul run
+After finishing the implementation, the following code should run
 \begin{python}
 import numpy as np
 import time
