@@ -48,7 +48,7 @@ connection is determined by the weight matrix $\mathbf{W}_h$
 \centering
 \includegraphics[scale=0.6]{figs/deep_learning/RNN2_backprop.pdf}
         \caption{Forward-pass (blue) and backpropagated error (red) to the input layer of an RNN. Note that a copy of the error is sent to each output of each sum node $(+)$}
-\label{fig:RNN}
+\label{fig:RNNbackprop}
 \end{figure}
 
 It is important to note that there is no formal changes needed to apply
@@ -73,28 +73,90 @@ seen in the previous day, although it is often referred as
 \textit{Backpropagation through time}. 
 
 \begin{algorithm}[th!]
-\label{algo:rnnforward}
-   \caption{Forward pass of a Recurrent Neural Network (RNN)}
+   \caption{Forward pass of a Recurrent Neural Network (RNN) with embeddings}
 \begin{algorithmic}[1]
+\label{algo:rnnforward}
 
    \STATE {\bfseries input:} Initial parameters for an RNN Input
-$\Theta=\{\mathbf{W}^x \in \mathbb{R}^{H \times I}, \mathbf{W}^h \in \mathbb{R}^{H \times H}, \mathbf{W}^y \in \mathbb{R}^{K \times H} \}$ input, recurrent and output transformations respectively.
+$\Theta=\{\mathbf{W}^e \in \mathbb{R}^{E \times I}, \mathbf{W}^x \in \mathbb{R}^{J \times E}, \mathbf{W}^h \in \mathbb{R}^{J \times J}, \mathbf{W}^y \in \mathbb{R}^{K \times J} \}$ embedding, input, recurrent and output linear transformations respectively.
 
-   \STATE {\bfseries input:} Input data matrix $\mathbf{x} \in \mathbb{R}^{I \times T}$ of size $T$. Initial recurrent variable $\mathbf{h}_0$. 
+   \STATE {\bfseries input:} Input data matrix $\mathbf{x} \in \mathbb{R}^{I \times M'}$, representing sentence of $M'$ time steps. Initial recurrent variable $\mathbf{h}_0$. 
 
-	\FOR{$t=1$ {\bfseries to} $T-1$}
-     \STATE Apply linear transformation combining input and recurrent signals
-        $$z_{jt}^h = \sum_{i=1}^{I} W_{ji}^x x_{it} + \sum_{j'=1}^{J} W_{jj'}^h h_{j't-1}$$
+	\FOR{$m=1$ {\bfseries to} $M'$}
+        \STATE Apply embedding layer
+        $$z_{dm}^e = \sum_{i=1}^{I} W^e_{di} x_{im}$$
+     \STATE Apply linear transformation combining embedding and recurrent signals
+        $$z_{jm}^h = \sum_{d=1}^{E} W_{jd}^x z_{dm}^e + \sum_{j'=1}^{J} W_{jj'}^h h_{j'm-1}$$
      \STATE Apply non-linear transformation e.g. sigmoid (hereby denoted $\sigma()$)
-     $$h_{jt} = \sigma(z_{jt}^h)  = \frac{1}{1+\exp(-z_{jt}^h)}$$
+        $$h_{jm} = \sigma(z_{jm}^h)  = \frac{1}{1+\exp(-z_{jm}^h)}$$
 
 	\ENDFOR
 
-\STATE Apply final linear transformation to each of the recurrent variables $\mathbf{h}_1 \cdots \mathbf{h}_T$ 
-   $$z_{kt}^y = \sum_{j=1}^{J} W_{kj}^y h_{jt}$$
+        \STATE Apply final linear transformation to each of the recurrent variables $\mathbf{h}_1 \cdots \mathbf{h}_{M'}$ 
+$$z_{km}^y = \sum_{j=1}^{J} W_{kj}^y h_{jm}$$
 \STATE Apply final non-linear transformation e.g. softmax 
-$$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^y)}$$
+   $$p(y_m=k|\mathbf{x}_{1:m+1}) = \tilde{z}_{km}^y  = \frac{\exp(z_{km}^y)}{\sum_{k'=1}^{K} \exp(z_{k'm}^y)}$$
+\end{algorithmic}
+\end{algorithm}
 
+
+\begin{algorithm}
+\caption{Backpropagation for a Recurrent Neural Network (RNN) with embeddings}
+\begin{algorithmic}[1]
+\label{algo:rnnbackprop}
+
+   \STATE {\bfseries input:}
+        Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into $B$ sequences (batch size 1) of size $M'$. RNN with parameters $\Theta=\{\mathbf{W}^e \in \mathbb{R}^{E \times I}, \mathbf{W}^x \in \mathbb{R}^{J \times E}, \mathbf{W}^h \in \mathbb{R}^{J \times J}, \mathbf{W}^y \in \mathbb{R}^{K \times J} \}$ embedding, input, recurrent and output linear transformations respectively. Number of rounds $T$, learning rate $\eta$
+
+   \STATE initialize parameters $\Theta$ randomly
+
+	\FOR{$t=1$ {\bfseries to} $T$}
+	\FOR{$b=1$ {\bfseries to} $B$}
+
+	\vspace{0.3cm}
+	\FOR{$m=1$ {\bfseries to} $M'$}
+        \STATE Compute the {forward pass} for sentence $b$ ($M'$ time steps);
+        keep not only $\tilde{z}_{km}^y$ but also, the RNN layer activations $h_{jm}$ and the embedding layer activations $z^e_{dm}$.
+	\ENDFOR	
+	\vspace{0.3cm}
+
+    % Intial Error
+	\FOR{$m=1$ {\bfseries to} $M'$}
+    \STATE {Initialize the error at last layer for a CE cost and backpropagate it through the output linear layer:
+        $$\mathbf{e}^m_{y} = (\mathbf{W}^y)^T \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}_{m}^y \Big).$$}
+	\ENDFOR	
+
+    \STATE Initialize recurrent layer error $\mathbf{e}_r$ to a vector of zeros of size $J$
+   	\FOR{$m=M'$ {\bfseries to} $1$}
+	\STATE Add the recurrent layer backpropagated error and backpropagate through the sigmoid non-linearity:
+        $$\mathbf{e}^m_{h} = \Big(\mathbf{e}_{r} + \mathbf{e}^m_y\Big) \odot \mathbf{h}_m \odot (\mathbf{\mathrm{1}}-\mathbf{h}_m)$$
+
+	\STATE where $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\mathbf{h}^n$.
+
+	\STATE {Backpropagate} the error through the recurrent linear layer
+    $$\mathbf{e}_r = (\mathbf{W}^h)^T \mathbf{e}_h^m$$
+
+	\STATE {Backpropagate} the error through the input linear layer
+    $$\mathbf{e}_e^m = (\mathbf{W}^x)^T \mathbf{e}_h^m$$
+
+	\ENDFOR	
+
+	\vspace{0.3cm}
+    \STATE {Compute the gradients} using the backpropagated errors and the inputs from the forward pass. For example for the recurrent layer
+
+        $$\nabla_{\mathbf{W}^h}\mathcal{F}(\mathcal{D_b};\Theta)  = -\frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^m_h \cdot \left(\mathbf{h}_{m-1}\right)^T,$$
+
+    For the input layer
+
+        $$\nabla_{\mathbf{W}^x}\mathcal{F}(\mathcal{D_b};\Theta)  = -\frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^m_h \cdot \left(\mathbf{z}^e_{m}\right)^T,$$
+
+    Take into account that for the embedding layer e.g.
+
+	\vspace{0.3cm}
+    \STATE Update the parameters, for example for the input layer
+        $$\mathbf{W}^x \leftarrow \mathbf{W}^x - \eta \nabla_\mathbf{W^x}\mathcal{F},$$
+	\ENDFOR
+	\ENDFOR
 \end{algorithmic}
 \end{algorithm}
 
@@ -102,8 +164,8 @@ $$p(y_t=k|\mathbf{x}_{t:}) = \frac{\exp(z_{kt}^y)}{\sum_{k'=1}^{K} \exp(z_{k't}^
 \begin{exercise}
 \label{exercise:rnnnumpy}
 Convince yourself that a RNN is just an FF unfolded in time. Complete the 
-backpropagation() method in NumpyRNN class in lxmls.deep\_learning\_numpy\_models.rnn.py
-and compare it with\\ lxmls.deep\_learning\_numpy\_models.mlp.py.\\
+backpropagation() method in NumpyRNN class in lxmls/deep\_learning/numpy\_models/rnn.py
+and compare it with\\ lxmls/deep\_learning/numpy/models/mlp.py.\\
 
 \noindent To work with RNNs we will use the Part-of-speech data-set seen in the
 sequence models day.
