@@ -41,37 +41,39 @@ formalization of the environment is given by a \textbf{Markov Decision Process
   \item $\mathcal{P}$ is a state transition probability matrix s.t. $\mathcal{P}_{ss'}^{a} = P[S_{t+1} = s' | S_t = s, A_t = a]$, 
   \item $\mathcal{R}$ is a reward function  s.t. $\mathcal{R}_s^a = \mathbb{E}[R_{t+1}| S_t = s, A_t = a]$. 
   \end{itemize}
-
+The reward function may depend on the current action $A_t$, and/or current state $S_t$, and can be considered to be simply the immediate reward or its expectation depending on whether we have a deterministic or stochastic environment that outputs different rewards from the same state-action pair, respectively. 
 % RAMON: Can we explain why the reward is given by an expectation at this point?
 
 \section{Policies and Rewards}
 
 The system is formalized as a \textbf{stochastic policy}, which is defined as a
-distribution over actions given states s.t. $\pi(a|s) = P[A_t = a| S_t = s]$.
+distribution over actions given states, such that the output of the policy provides a probability over all possible actions $\pi(a|s) = P[A_t = a| S_t = s]$.
 The two central tasks in RL consist of policy evaluation (a.k.a. prediction),
-i.e., evaluation of the expected reward for a given policy; and policy
-optimization (a.k.a. learning/control), i.e., finding the optimal policy under
-the expected reward criterion. The reward criterion is formalized using the
+ where we are interested in evaluating the expected reward for a given policy; and policy
+optimization (a.k.a. learning/control), where we wish to find the policy that maximizes the expected reward, also known as the optimal policy. The expected reward can be formalized using the
 concepts of \emph{return} and \emph{value functions}: 
 
-\noindent The \textbf{total discounted return} from time-step $t$ for discount $\gamma \in [0,1]$ is
+
+\noindent The \textbf{total discounted return} from a given time-step $t$ and considering a discount factor $\gamma \in [0,1]$ is
 
 \begin{equation}
     G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots = \sum_{k=0}^{\infty}\gamma^k R_{t+k+1}.
 \end{equation}
+The discount factor allows us to give more importance to long term rewards, when it approaches 1 or short-term rewards when it approaches 0. 
 
-The \textbf{action-value function} $q_{\pi}(s,a)$ on an MDP is the expected return starting from state $s$, taking action $a$, and following policy $\pi$ s.t.
 
+The \textbf{action-value function} $q_{\pi}(s,a)$ on an MDP is defined as the expected return starting from state $s$, taking action $a$, and following policy $\pi$ such that
 \begin{equation}
    q_{\pi}(s,a) = \mathbb{E}_{\pi}[G_t | S_t = s, A_t = a].
 \end{equation}
+Intuitively, it can be though as the expected amount of discounted reward collected if we follow the policy $\pi$ and provided we are in state $S_t=s$ and we just took action $A_t=a$. This expectation can be empirically described as all possible paths or trajectories taken by the agent starting from $s,a$ weighted by their respective probabilities if we follow policy $\pi$.
+
 
 The \textbf{state-value function} $v_{\pi}(s)$ of an MDP is the expected return starting from state $s$ and following policy $\pi$ s.t.
-
 \begin{equation}
     v_{\pi}(s) = \mathbb{E}_{\pi}[G_t | S_t = s] = \mathbb{E}_{a \sim \pi}[q_{\pi}(s,a)] .
 \end{equation}
-
+The state-value function is considered to be the expected return if we start from state $S_t=s$, which corresponds to the expected return also in terms of all possible paths and all possible immediate actions. This quantity serves as a measure of ``quality'' or ``value'' of each state. For example, in a grid world environment states (locations) close to the goal (where reward=1) will have higher value than states further apart (reward=0), since with higher probability we will gather more reward the closest we get to the high rewarding states, the goal in this example.
 % RAMON: Adding less mathematical, more intuitive explanations about the concepts above would help IMO    
     
 \section{Dynamic Programming Solutions}
@@ -83,25 +85,30 @@ The \textbf{state-value function} $v_{\pi}(s)$ of an MDP is the expected return 
 \label{fig:MDP}
 \end{figure}
 
-Consider the (simplified) MDP represented in Figure \ref{fig:MDP}: it consists of three states (1, 2, and 3) that are connected by three actions (move to state 1, 2, or 3) that determine state transitions (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions). The rewards $\mathcal{R}_s^a$ are 1.5, -1.8333\dots and 19.8333\dots for a transition into state 1, 2, and 3, respectively. So, in our example $\mathcal{R}_s^a$ depends only on action (i.e. destination state) but it doesn't depend on source state.
+Consider the (simplified) MDP represented in Figure \ref{fig:MDP}: it consists of three states $(s_1, s_2,\text{ and }s_3)$ that are connected by three actions (move to state $s_1, s_2,\text{ or }s_3$). 
+For the MDP represented above we define the state transition probability matrix $\mathcal{P}^a_{ss'}=p(S_{t+1}=s'\mid S_{t}=s, A_t=a)$. In this MDP (our MDP is thus actually a Markov Reward Process (MRP) with deterministic state transitions), we assume that when we choose to move to state $s_i$, $i=\{1,2,3\}$ we always end up in that state, meaning that $\mathcal{P}^a_{ss'}=p(S_{t+1}=s'\mid S_{t}=s, A_t=a)=1$. In this case, $\mathcal{P}^{\pi}=\mathcal{P}^a_{ss'}\pi(a\mid s) = \pi(a\mid s)$. 
+The rewards $\mathcal{R}_s^a$ are $[1.5, -1.8333 \text{ and } 19.8333]$ for a transition into state 1, 2, and 3, respectively. So, in our example $\mathcal{R}_s^a$ depends only on action (i.e. destination state) but it doesn't depend on source state.
 
-Such reward values are chosen to get nice expected values of the next reward given policy $\pi$:
+We define as well the reward function over the policy $\pi$ as the expected reward considering all possible actions:
 \begin{align*}
     {\mathcal{R}}^{\pi}(s) & = \sum_{a \in \mathcal{A}} \pi(a|s) \mathcal{R}_s^a
 \end{align*}
-For the policy we will use below expected values of the next reward ${\mathcal{R}}^{\pi}(s)$ which are 10.0, 2.0, and 3.0 for state 1, 2, and 3, respectively.
+We will use below expected values of the expected reward ${\mathcal{R}}^{\pi}(s)=[ 10.0, 2.0, \text{ and } 3.0 ] $ for state 1, 2, and 3, respectively.
 
-Given full information about states and rewards, we want to evaluate a given policy. A central tool is the \textbf{Bellman Expectation Equation}, which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state s.t.
+\subsection{Policy Evaluation}
+In the following exercises we will look at different ways of evaluating a given policy, meaning how to compute its value. 
+ A central tool for this task is the \textbf{Bellman Expectation Equation}, which tells us how to decompose the state-value function into immediate reward plus discounted value of successor state:
 \begin{align*}
     v_{\pi}(s) & = \mathbb{E}_{\pi}[R_{t+1} + \gamma v_{\pi}(S_{t+1}) | S_t = s]\\
     & = \sum_{a \in \mathcal{A}} \pi(a|s) \left( \mathcal{R}_s^a + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}_{ss'}^a v_{\pi}(s') \right).
 \end{align*}
 
-\noindent A straightforward solution is to solve the linear equation directly:
+There are different ways of solving this problem. A straightforward solution is to solve the linear equation directly using linear programming:
 \begin{align*}
     \boldsymbol{v}_{\pi} & = (\boldsymbol{I} -  \gamma \boldsymbol{\mathcal{P}}^{\pi})^{-1} \boldsymbol{\mathcal{R}}^{\pi}.
 \end{align*}
-Because of the complexity of matrix inversion, this solution is applicable only to small MDPs. For larger MDPs, we can use iterative policy evaluation on the Bellman Expectation Equation.
+However, this process involves the full knowledge of the transition function and requires a matrix inversion operation, which augments any errors coming from an approximate estimate of the transition probabilities.
+Additionally, because of the complexity of matrix inversion, this solution is applicable only to small MDPs. For larger MDPs, we can use the \textbf{iterative policy evaluation} algorithm using the Bellman Expectation Equation.
 
 \begin{exercise}
 \label{exercise:PolicyEvaluation}
@@ -131,7 +138,7 @@ print(solution)
 
 \section{Monte Carlo and Q-Learning Solutions}
 
-While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimization problems, a disadvantage of these techniques is the fact that we need to know a full MDP model and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for Monte Carlo Policy Evaluation looks as follows: 
+While Dynamic Programming techniques allow to iteratively compute policy evaluation and optimization problems, a disadvantage of these techniques is the fact that we need to know a full MDP model (transition probabilities) and touch all transitions and rewards in learning. Monte Carlo techniques circumvent this problem by learning from episodes that are sampled under a given policy. An algorithm for \textbf{Monte Carlo Policy Evaluation} looks as follows: 
 \begin{itemize}
   \item Sample episodes $S_0, A_0, R_1, \ldots, R_T \sim \pi$.
     \item For each sampled episode:
@@ -142,7 +149,7 @@ While Dynamic Programming techniques allow to iteratively compute policy evaluat
   \item Estimate mean return $V(s) = S(s)/N(s)$.
   \end{itemize}
 
-A more sophisticated technique is the so-called Q-Learning algorithm. In contrast to the simple Monte Carlo Policy Evaluation algorithm given above, it updates not towards the actual return $G_t$, but towards an estimate $(R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a')$ (the so-called Temporal Difference (TD) target). It thus combines Dynamic Programming (in form of the Bellman Optimality Equation) and Monte Carlo (by sampling episodes).
+A more sophisticated technique is the so-called \textbf{Q-Learning} algorithm. In contrast to the simple Monte Carlo Policy Evaluation algorithm given above, it updates not towards the actual return $G_t$, but towards an estimate $(R_{t+1} + \gamma \max_{a'} Q(S_{t+1},a')$ (the so-called Temporal Difference (TD) target). This replacement is also known as bootstrapping, where instead of computing the full return, we replace it with the estimate of the immediate reward and the value of the consecutive state. It thus combines Dynamic Programming (in form of the Bellman Optimality Equation) and Monte Carlo (by sampling episodes).
 
 \begin{algorithm}[h!]
 \label{algo:q-learning}
@@ -202,10 +209,9 @@ for i in range(400):
 
 print(reward_counter/visit_counter)
 \end{python}
-
-\clearpage
-
-Implement Q-Learning policiy optimization in a simple exercise. This samples a state-action pair randomly, so that all the state-action pairs can be seen.
+\end{exercise}
+\begin{exercise}
+Implement Q-Learning policy optimization in a simple exercise. This samples a state-action pair randomly, so that all the state-action pairs can be seen.
 \begin{python}
 q_table=np.zeros((3, 3)) 
 for i in range(1001): 
@@ -223,9 +229,11 @@ for i in range(1001):
 
 \section{Policy Gradient Techniques}
 
-The Dynamic Programming and Monte Carlo techniques discussed above can be summarized under the header of \emph{value-based} techniques since they focus on value functions. They are thus inherently indirect. Direct solutions to policy optimization that use gradient-based techniques to optimize parametric (stochastic) policies are called \emph{policy gradient} techniques. Given an action-value function $q_{\pi_\theta}(S_t,A_t)$, the objective is to maximize the expected value  \[\mathbb{E}_{\pi_{\theta}}[q_{\pi_\theta}(S_t,A_t)].\]
-The gradient of this objective is  
+The Dynamic Programming and Monte Carlo techniques discussed above can be summarized under the header of \emph{value-based} techniques since they focus on how to obtain the optimal policy by first computing the value functions. They are thus inherently indirect, which brings forth different problems, such as they are very sensitive to errors in the estimation of the value function.
+ Direct solutions to policy optimization exist and avoid this caveat. Some approaches resort to gradient-based techniques to optimize parametric (stochastic) policies, and are called \emph{policy gradient} techniques. Given an action-value function $q_{\pi_\theta}(S_t,A_t)$, the objective is to maximize the expected value  \[\max_{\theta} \mathbb{E}_{\pi_{\theta}}[q_{\pi_\theta}(S_t,A_t)].\]
+The gradient of this objective takes a very useful form:
 \[\mathbb{E}_{\pi_{\theta}}[q_{\pi_\theta}(S_t,A_t) \nabla_{\theta} \log \pi_{\theta}(A_t|S_t)].\]
+It can be though of as the expectation of the gradient of the score function weighted by its value.
 The well-known REINFORCE algorithm optimizes this objective by using stochastic gradient ascent updates and by replacing $q_{\pi_\theta}(S_t,A_t)$ by the actual return $G_t$.
 
 \begin{algorithm}[h!]
@@ -255,7 +263,7 @@ train()
 \end{python}
 \end{exercise}
 
-A last exercise is to apply REINFORCE to the cart pole task: A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The system is controlled by applying a force of +1 or -1 to the cart. The pendulum starts upright, and the goal is to prevent it from falling over. A reward of +1 is provided for every timestep that the pole remains upright. The episode ends when the pole is more than 15 degrees from vertical, or the cart moves more than 2.4 units from the center. See \url{ https://gym.openai.com/envs/CartPole-v1/}.
+Now you can apply REINFORCE to a simulated agent task, the cart pole task: A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The system is controlled by applying a force of +1 or -1 to the cart, which results in the cart moving forward or backwards respectively. The pole starts upright, and the goal is to prevent it from falling over. A reward of +1 is provided for every timestep that the pole remains upright. The episode ends when the pole is more than 15 degrees from vertical, or the cart moves more than 2.4 units from the center. See \url{ https://gym.openai.com/envs/CartPole-v1/}.
 
 \begin{exercise}
 Implement policy gradient for the cartpole task by coding the forward pass of Model() in lxmls/reinforcement\_learning/policy\_gradient.py. Check it is correct by calling the train() function.
