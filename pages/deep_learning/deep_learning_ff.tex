@@ -115,7 +115,7 @@ $\boldsymbol{f}(x,y) = \boldsymbol{g}(x) \otimes \boldsymbol{e}_y\nonumber$ of
 Eq.\ref{eq:jointfeatsimple}, the maximum entropy classifier in
 Eq.\ref{eq:loglinear} becomes a special case of Eq.\ref{eq:loglineargen}, in
 which the feature vector $\mathbf{x}$ only takes binary values and the bias
-parameters in $\mathbf{b}$ are all set to zero.}. This is give by
+parameters in $\mathbf{b}$ are all set to zero.}. This is given by
 %
 \begin{align}
 p(y=k|{x}) & = \frac{1}{Z(\mathbf{W},\mathbf{b},\mathbf{x})}\exp\left(\sum_{i=1}^{I} W_{ki} x_i + b_k\right),
@@ -313,7 +313,7 @@ class NumpyLogLinear(Model):
     def log_forward(self, input=None):
         """Forward pass of the computation graph"""
 
-        #
+        # Linear transformation
         z = np.dot(input, self.weight.T) + self.bias
 
         # Softmax implemented in log domain
@@ -328,23 +328,23 @@ class NumpyLogLinear(Model):
     def update(self, input=None, output=None):
         """Stochastic Gradient Descent update"""
 
-        #
+        # Probabilities of each class
         class_probabilities = np.exp(self.log_forward(input))
         batch_size, num_classes = class_probabilities.shape
 
-        #
+        # Error derivative at softmax layer
         I = index2onehot(output, num_classes)
         error = (class_probabilities - I) / batch_size
 
-        #
+        # Weight gradient
         gradient_weight = np.zeros(self.weight.shape)
         for l in range(batch_size):
             gradient_weight += np.outer(error[l, :], input[l, :])
 
-        #
+        # Bias gradient
         gradient_bias = np.sum(error, axis=0, keepdims=True)
 
-        #
+        # SGD update
         self.weight = self.weight - self.learning_rate * gradient_weight
         self.bias = self.bias - self.learning_rate * gradient_bias
 \end{python}
@@ -402,7 +402,16 @@ for epoch in range(num_epochs):
 We have seen that just by using the chain rule we can easily compute gradients for
 compositions of two functions (one non-linear and one linear). However, there
 was nothing in the derivation that would stop us from composing more than two
-functions. Let us think, for example of the following model
+functions. The algorithm in \ref{algo:mlpforward} describes the Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network. In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph and is displayed in Fig.~\ref{fig:FF}. Take into account the following:
+
+%
+\begin{itemize}
+\item MLPs/FFs are characterized by applying functions in a set of layers subsequently to a single input. This characteristic is also shared by convolutional networks, although the latter also have parameter tying constraints.
+\item The non-linearities in the intermediate layers are usually one-to-one transformations. The most typical are the sigmoid, hyperbolic tangent and the rectified linear unit (ReLU).
+\item The output non-linearity is determined by the output to be estimated. In order to estimate probability distributions the softmax is typically used. For regression problems a last linear layer is used instead.
+\end{itemize}
+
+
 
 \begin{algorithm}[th!]
    \caption{Forward pass of a Multi-Layer Perceptron (MLP) or Feed-Forward (FF) network}
@@ -428,8 +437,6 @@ $$p(y=k|{x}) \equiv \tilde{z}_k^N = \frac{\exp(z_k^N)}{\sum_{k'=1}^{K} \exp(z_{k
 \end{algorithmic}
 \end{algorithm}
 
-\noindent In a similar fashion to the log-linear model, the MLP/FF can be expressed as a computation graph. This is displayed in Fig.~\ref{fig:FF}
-
 \begin{figure}[!hb]
 \centering
 \includegraphics[scale=0.6]{figs/deep_learning/NN2.pdf}
@@ -438,14 +445,6 @@ for the $m$-th training example $\mathcal{D}^m=\{\mathbf{x}, y\}$ is also
 shown.}
 \label{fig:FF}
 \end{figure}
-
-\noindent Some considerations:
-%
-\begin{itemize}
-\item MLPs/FFs are characterized by applying functions in a set of layers subsequently to a single input. This characteristic is also shared by convolutional networks, although the latter also have parameter tying constraints.
-\item The non-linearities in the intermediate layers are usually one-to-one transformations. The most typical are the sigmoid, hyperbolic tangent and the rectified linear unit (ReLU).
-\item The output non-linearity is determined by the output to be estimated. In order to estimate probability distributions the softmax is typically used. For regression problems a last linear layer is used instead.
-\end{itemize}
 
 \subsection{Backpropagation: an overview}
 
@@ -464,8 +463,8 @@ the case of an MLP, consists of the following steps:
 
 \begin{itemize}
 \item The \textcolor{blue}{forward pass} step, where the input signal is injected though the network  in a forward fashion (see Alg.~\ref{algo:mlpforward})
-\item The \textcolor{red}{Backpropagation} step, where the derivative of the cost function (also called error) is injected back through the network and Backpropagated according to the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
-\item Finally, the gradients with respect to the parameters are computed by multiplying the input signal from the forward pass and the Backpropagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
+\item The \textcolor{red}{Backpropagation} step, where the derivative of the cost function (also called error) is injected back through the network and backpropagated according to the derivative rules (see steps 8-17 in Alg.~\ref{algo:backprop})
+\item Finally, the gradients with respect to the parameters are computed by multiplying the input signal from the forward pass and the backpropagated error signal, at the corresponding places in the network (step 18 in Alg.~\ref{algo:backprop})
 \item Given the gradients computed in the previous step, the model weights can then be easily update according to a specified learning rule (step 19 in Alg.~\ref{algo:backprop} uses a mini-batch SGD update rule).
 \end{itemize}
 %Alg.~\ref{algo:backprop} uses a mini-batch SGD updation rule.
@@ -482,7 +481,7 @@ The next section presents a careful deduction of these recursion rules, for the 
 \label{fig:NN_color}
 \end{figure}
 
-In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the Backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ki}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at with respect to the output of the linear layer at $N-1$
+In a generic MLP we would like to compute the values of all parameters $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$. As explained previously, we will thus need to compute the backpropagated error at each node $\partial \mathcal{F}(\mathcal{D}^m;\Theta)/\partial z_k^n$, and the corresponding derivative for the forward-pass $\partial z_k^n/\partial W_{ki}$, for $n = 1 \cdots N$. Fortunately, it is easy to spot a recursion that will allow us to compute these values for each node, given all its child nodes. To spot it, we can start trying to compute the gradients one layer before the output layer (see Fig.~\ref{fig:NN_color}), i.e. layer $N-1$. We start by splitting at with respect to the output of the linear layer at $N-1$
 %
 \begin{align}
         \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}^{N-1}} = \sum_{j'=1}^{J} {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j'}^{N-1}}} {\color{blue} \frac{\partial z_{j'}^{N-1}}{\partial W_{ji}^{N-1}}} = {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} {\color{blue} \frac{\partial z_{j}^{N-1}}{\partial W_{ji}^{N-1}}}
@@ -496,7 +495,7 @@ where, as in the case of the log-linear model, we have used the fact that the ou
 \label{eq:BPderivation2}
 \end{align}
 %
-To spot a recursion we only need to apply the chain rule a third time. The next variable to split by is the linear output of layer $N$, $z_j^{N}$. By looking at Fig.~\ref{fig:NN_color}, it is clear that the derivatives at each node in layer $N-1$ will depend on all values of layer $N$. For the linear layer the summation wont go away yielding
+To spot a recursion we only need to apply the chain rule a third time. The next variable to split by is the linear output of layer $N$, $z_j^{N}$. By looking at Fig.~\ref{fig:NN_color}, it is clear that the derivatives at each node in layer $N-1$ will depend on all values of layer $N$. For the linear layer the summation won't go away yielding
 %
 \begin{align}
         {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} = {\color{red} \bigg(\sum_{k'=1}^{K} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k'}^{N}} \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{j}^{N-1}}\bigg)\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}}
@@ -536,7 +535,7 @@ These formulas are valid for any FF network with hidden layers using one-to-one 
 A more detailed version can be seen in Algorithm~\ref{algo:backprop}
 \subsection{Backpropagation as a general rule}
 %
-Once we get confortable with the derivation of Backpropagation for the FF, it is simple to see that expanding to generic computations graphs is trivial. If we wanted to change the signoid non-linearity by a Rectified Linear Unit (ReLU) we would only need to change forward and Backpropagation derivative of the hidden non-linearities as
+Once we get comfortable with the derivation of Backpropagation for the FF, it is simple to see that expanding to generic computations graphs is trivial. If we wanted to change the sigmoid non-linearity by a Rectified Linear Unit (ReLU) we would only need to change forward and Backpropagation derivative of the hidden non-linearities as
 \begin{align}
  \tilde{z}_j =
   &\begin{cases}
@@ -639,8 +638,7 @@ model = NumpyMLP(
     learning_rate=learning_rate
 )
 \end{python}
-Open the code for this model. This is located in lxmls/deep learning/numpy
-models/mlp.py. Implement the method `back-propagation()` in the class
+Open the code for this model. This is located in `lxmls/deep\_learning/numpy\_models/mlp.py`. Implement the method `backpropagation()` in the class
 `NumpyMLP` using Backpropagation recursion that we just saw.
 
 As a first step focus on getting the gradients of each layer, one at a time.
@@ -772,12 +770,12 @@ has very good dynamic graph functionality and cpu performance, Tensor Flow is
 backed by Google and has a large community, Amazon's MXNet of Microsoft's CNTK
 are also competing to play a central role. It is hard to say at this point
 which toolkit will be the best option in the future. At this point we chose Pytorch 
-because strikes a balance between a strong community, ease of use and
+because it strikes a balance between a strong community, ease of use and
 dynamic computation graphs. Also take into account that transiting from a
 toolkit to another is not very complicated, as the primitives are relatively
 similar across them.
 
-In general, and compared to numpy, computation graph toolkits less easy to use.
+In general, and compared to numpy, computation graph toolkits are less easy to use.
 In the case of Pytorch we will have to consider following aspects 
 
 \begin{itemize}

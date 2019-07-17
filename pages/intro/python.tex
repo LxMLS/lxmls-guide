@@ -100,7 +100,16 @@ print(3 ** 5)
 243
 \end{python}
 
-Notice that in Python 2 division is always considered as integer division, hence the result
+\noindent and the following output in Python 3:
+\begin{python}
+8
+-2
+15
+0.6
+243
+\end{python}
+
+\textbf{Important}: Notice that in Python 2 division is always considered as integer division, hence the result
 being 0 on the example above. To force a floating point division in Python 2 you can force
 one of the operands to be a floating point number: \begin{python}
 print(3 / 5.0)
@@ -153,8 +162,8 @@ for i in range(2,10,2):
     print(i)
 \end{python}
 
-You can copy and run this Jupyter. Alternatively you can write this into your
-\texttt{yourfile.py} file and run it as well. Do you notice something? It is possible
+You can copy and run this in Jupyter. Alternatively you can write this into your
+\texttt{yourfile.py} file and run it. Do you notice something? It is possible
 that the code did not act as expected or maybe an error message popped up. This
 brings us to an important aspect of Python: \textbf{indentation}. Indentation
 is the number of blank spaces at the leftmost of each command. This is how
@@ -345,7 +354,7 @@ an attempt is made to execute it. These kind of errors are called
 A \textit{ZeroDivisionError} exception was raised, and no output was returned.
 Exceptions can also be forced to occur by the programmer, with customized error
 messages \footnotemark\footnotetext{For a complete list of built-in exceptions, see
-\url{http://docs.python.org/2/library/exceptions.html}}.
+\url{http://docs.python.org/3/library/exceptions.html}}.
 
 \begin{python}
 raise ValueError("Invalid input value.")
@@ -411,11 +420,7 @@ import my_tools
 my_tools.my_print("This works!") 
 \end{python}
 
-\textbf{Important}: When you modify a module, you need to either re-start the notebook kernel or notify the notebook to reload the module for the changes to take effect. You can use
-
-\begin{python}
-reload(my_tools)
-\end{python}
+\textbf{Important}: When you modify a module, you need to reload the notebook page for the changes to take effect. Autoreload is set by default in the schools notebooks.
 
 \noindent for the latter. Other ways of importing one or all the tools from a module are
 

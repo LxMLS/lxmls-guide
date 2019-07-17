@@ -59,7 +59,7 @@ To see how CFGs can model the syntax of natural languages, consider the followin
 along with a grammar (in CNF) with the following production rules: 
 \begin{verbatim}
     S --> NP VP
-    NP --> Det N
+    NP --> Det Nbar
     NP --> She
     VP --> V NP
     V --> enjoys
@@ -156,9 +156,9 @@ is the subject of the next section.
 	\FOR[$j$ is start of span]{$j=1$ {\bfseries to} $N-i+1$}
 	\FOR{{\bfseries each} non-terminal $Z \in \mathcal{N}$}
 	\STATE Set partial probability: 
-	$$\delta(j,j+i-1,Z) = \max_{\substack{X,Y\\j<k<j+i}}  \delta(j,k-1,X) \times \delta(k,j+i-2,Y) \times \theta_{Z \rightarrow X Y}$$
+	$$\delta(j,j+i-1,Z) = \max_{\substack{X,Y\\j<k<j+i}}  \delta(j,k-1,X) \times \delta(k,j+i-1,Y) \times \theta_{Z \rightarrow X Y}$$
 	\STATE Store backpointer: 
-	$$\psi(j,j+i-1,Z) = \argmax_{\substack{X,Y\\j<k<j+i}}  \delta(j,k-1,X) \times \delta(k,j+i-2,Y) \times \theta_{Z \rightarrow X Y}$$
+	$$\psi(j,j+i-1,Z) = \argmax_{\substack{X,Y\\j<k<j+i}}  \delta(j,k-1,X) \times \delta(k,j+i-1,Y) \times \theta_{Z \rightarrow X Y}$$
 	\ENDFOR
 	\ENDFOR
 	\ENDFOR
