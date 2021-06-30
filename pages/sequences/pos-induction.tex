@@ -67,7 +67,7 @@ Iter: 19 Accuracy: 0.385409
 confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test, 
                                              len(corpus.tag_dict), hmm.get_num_states())
 cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, 
-                            xrange(hmm.get_num_states()), 'Confusion matrix')
+                            range(hmm.get_num_states()), 'Confusion matrix')
 \end{python}
 Note: your results may not be the same as in this example since we are using a random start, but the trend should be the same, 
 with log-likelihood increasing at every iteration. 

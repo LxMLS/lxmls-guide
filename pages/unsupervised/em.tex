@@ -181,7 +181,7 @@ EM algorithm. Look at the code for EM algorithm in file
             ### Evaluate accuracy at initial iteration
             pred = self.model.viterbi_decode_corpus(seq_list.seq_list)
             acc = self.model.evaluate_corpus(seq_list.seq_list,pred)
-        for t in xrange(1,nr_iter):
+        for t in range(1,nr_iter):
             #E-Step
             total_likelihood = 0
             self.model.clear_counts(smoothing)
@@ -189,7 +189,7 @@ EM algorithm. Look at the code for EM algorithm in file
                 posteriors,likelihood = self.model.get_posteriors(seq)
                 self.model.update_counts(seq,posteriors)
                 total_likelihood += likelihood
-            print "Iter: %i - Log Likelihood %f"%(t,-1*math.log(total_likelihood))
+            print("Iter: %i - Log Likelihood %f"%(t,-1*math.log(total_likelihood)))
             #M-Step
             self.model.update_params()
 
@@ -197,7 +197,7 @@ EM algorithm. Look at the code for EM algorithm in file
                  ### Evaluate accuracy at this iteration
                 pred = self.model.viterbi_decode_corpus(seq_list.seq_list)
                 acc = self.model.evaluate_corpus(seq_list.seq_list,pred)
-                print "Iter: %i acc %f"%(t,acc)
+                print("Iter: %i acc %f"%(t,acc))
 \end{python}
 
 \end{exercise}
