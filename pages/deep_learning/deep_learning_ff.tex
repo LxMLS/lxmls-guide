@@ -316,7 +316,7 @@ class NumpyLogLinear(Model):
         z = np.dot(input, self.weight.T) + self.bias
 
         # Softmax implemented in log domain
-        log_tilde_z = z - logsumexp(z, axis=1)[:, None]
+        log_tilde_z = z - logsumexp(z, axis=1, keepdims=True)[:, None]
 
         return log_tilde_z
 
@@ -517,7 +517,7 @@ If we call the derivative of the error with respect to the $N_{th}$ linear layer
 \noindent coming back to the original \ref{eq:BPderivation1} we obtain the formula for the update of each of the weights and bias
 %
 \begin{align}
-        \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}^{N-1}}  = {\color{red} e^{N-1}_j} {\color{blue} \tilde{z}_i},  \quad \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial b_{j}^{N-1}}  = {\color{red} e^{N-1}_j}
+        \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}^{N-1}}  = {\color{red} e^{N-1}_j} {\color{blue} \tilde{z}_i^{N-2}},  \quad \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial b_{j}^{N-1}}  = {\color{red} e^{N-1}_j}
 \label{eq:BPderivation6}
 \end{align}
 %
