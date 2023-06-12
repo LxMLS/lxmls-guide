@@ -26,13 +26,15 @@ the encoder architecture can be succinctly described as stacking a number of $N$
 e^{n+1} = \mathrm{FF}(\mathrm(MHA(e^n)).
 \end{equation}
 
-The input to the first block $d^0$ is the sum of position $P$ and non-contextual embeddings $E$ of the input
+The input to the first block $d^0$ is the sum of position $P$ and non-contextual embeddings $E$ of the input. Assuming $x_1 \cdots x_T$ is a serquence of integers (indices to a vocabulary of $V$ symbols) we have that
 
 \begin{equation}
-e^{0} = \mathrm{E}(x) + \mathrm{P}(x).
+e^{0}_t = \mathrm{E}_{x_t} + \mathrm{P}_t \quad \mbox{for} \quad t=1 \cdots T
 \end{equation}
 
-the $\mathrm{FF}$ and $\mathrm{MHA}$ are given by
+where $\mathrm{E} \in \mathbb{R}^{H \times V}$ is the non-contextual embedding matrix for each symbol in the vocabulary and $P$ is the position embedding matrix.\\
+
+\noindent The $\mathrm{FF}$ and $\mathrm{MHA}$ are given by
 
 \begin{equation}
 FF(z) = W^2\cdot \mathrm{gelu}(W^1 \cdot z)
