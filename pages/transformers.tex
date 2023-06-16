@@ -26,14 +26,13 @@ the encoder architecture can be succinctly described as stacking a number of $N$
 e^{n+1} = \mathrm{FF}(\mathrm(MHA(e^n)).
 \end{equation}
 
-The input to the first block $e^0$ is the sum of position $P$ and non-contextual embeddings $E$ of the input. Assuming $x_1 \cdots x_T$ is a serquence of integers (indices to a vocabulary of $V$ symbols) we have that
+The input to the first block $e^0$ is the sum of position $P$ and non-contextual embeddings $E$ of the input. Assuming $x_1 \cdots x_T$ is a sequence of integers (indices to a vocabulary of $V$ symbols) we have that
 
 \begin{equation}
 e^{0}_t = \mathrm{E} \cdot \mathrm{1}_{x_t} + \mathrm{P} \cdot \mathrm{1}_t \quad \mbox{for} \quad t=1 \cdots T
 \end{equation}
 
 where $\mathrm{1}_{x_t}$ and $\mathrm{1}_t$ are indicator, i.e. one-hot, vectors for the token content (vocabulary symbol) and the token position. $\mathrm{E} \in \mathbb{R}^{H \times V}$ is the non-contextual embedding matrix for each symbol in the vocabulary and $P^{H \times \tau}$ is the position embedding matrix, where  $\tau-1$ is the furthest position supported.\\
-where $\mathrm{E} \in \mathbb{R}^{H \times V}$ is the non-contextual embedding matrix for each symbol in the vocabulary and $P^{H \times \tau}$ is the position embedding matrix, where  $\tau-1$ is the furthest position supported.\\
 
 \noindent The $\mathrm{FF}$ and $\mathrm{MHA}$ are given by
 
