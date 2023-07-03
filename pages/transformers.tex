@@ -65,7 +65,7 @@ Now let's explore each building block of the Transformer architecture and examin
 
 
 
-\section{Encoder Architecture}
+\section{Encoder Architecture}\label{sec:enc}
 
 \subsection{Simplified Encoder Architecture}
 
@@ -128,18 +128,32 @@ where we have $D$ attention heads. Each head contracts the hidden dimension $W^K
 
 \subsection{Adding Dropout, Layer Normalization, and Residuals}
 
-For simplicity, we have left several additional operations that can be added as a wrapper around $\mathrm{FF}$ and $\mathrm{MHA}$ operations. These can be expressed as
+%For simplicity, we have left several additional operations that can be added as a wrapper around $\mathrm{FF}$ and $\mathrm{MHA}$ operations. These can be expressed as
+
+%\begin{equation}
+%C(f)(x) = x + \mathrm{dropout}(f(\mathrm{layernorm}(x)))
+%\end{equation}
+
+%where $f = \{\mathrm{FF}, \mathrm{MHA}\}$.
+
+In the original paper for transformers \citep{vaswani2017attention}, either $\mathrm{FF}$ or $\mathrm{MHA}$ is named as a ``sub-layer``. Based on the naming, an dropout is applied to input $z$ that has been passed through a ``sub-layer``, before a residual connection is applied. Finally, a layer normalization is applied. Together, we can express the function as
 
 \begin{equation}
-C(f)(x) = x + \mathrm{dropout}(f(\mathrm{layernorm}(x)))
+C(x) = \mathrm{layernorm}(\mathrm{residual}(\mathrm{dropout}(\mathrm{sublayer}(z)), z)
 \end{equation}
 
-where $f = \{\mathrm{FF}, \mathrm{MHA}\}$.
-
-\subsection{Training with Encoders}
+where $\mathrm{sublayer} \in \{\mathrm{FF}, \mathrm{MHA}\}$.
 
 
-\section{Decoder Architecture}
+Specifically, we have
+\begin{itemize}
+    \item $\mathrm{dropout}(x) = r * x$ where $ r_j \sim \operatorname{Bernoulli}(p)$ and $*$ refers to element-wise multiplication\footnote{Note that the default $p$ is $0.1$.},
+    \item $\mathrm{residual}(x, z) = x + z$, and 
+    \item $\mathrm{layernorm}(x) = \frac{x-E(x)}{\sqrt{Var(x)+\epsilon}}*\gamma + \beta$ where $E(x)$ and $Var(x)$ are computed among dimensions other than the dimension for the batch\footnote{Note that the default $\epsilon$ is $1e-5$. $\gamma$ and $\beta$ are learnable affine parameters if we want to learn, otherwise set to $1$ and $0$}.
+\end{itemize}
+
+
+\section{Decoder Architecture}\label{sec:dec}
 
 This is identical to the Encoder architecture with two differences
 
@@ -150,28 +164,41 @@ This is identical to the Encoder architecture with two differences
 
 The implementation of training realizes 1) by masking input partial sequence $x_{<t}$ and hidden units from the corresponding positions with an attention mask. This attention mask is also applied during inference time. Note that you can obtain the attention mask by calling its field of input\_ids from huggingface.
 
-\subsection{Training with Decoders}
-
 \section{Encoder-Decoder Architecture}
 
-We need two modifications
-\begin{enumerate}
-    \item Encode the input with an encoder $e^N = \mathrm{Encoder}(x)$
-    \item Modify self-attention to use a second query input to be projected with $W^Q$ while the other two project $E^N$ $d^{m+1} = \mathrm{FF}(\mathrm(CMHA(e^N, MHA(d^m))).$
-\end{enumerate}
+In the Encoder-Decoder Architecture, the encoder is the same as section \ref{sec:enc}. Therefore, we have the encoded embeddings as $e^N = \mathrm{Encoder}(x)$.
 
+The decoder in the Encoder-Decoder Architecture is a little bit different than section \ref{sec:dec}. Each layer of the decoder will include one more Cross-Multi-Head Attention (CMHA) sub-layer, and the order of sub-layers in a decoder layer will be $\mathrm{MHA}$-$\mathrm{CMHA}$-$\mathrm{FF}$, i.e.
+
+\begin{equation}
+    d^{m+1} = \mathrm{FF}(\mathrm(CMHA(e^N, MHA(d^m))).
+\end{equation}
+
+Specifically, the query matrix is computed from the layer below it, while the key and value matrix are computed from $e^N$, which can be expressed as
+
+\begin{equation}
+    \mathrm{CMHA}(e^N, MHA(d^m)) = W^o \cdot
+\begin{bmatrix}
+    W^V_1 \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_1 e^N\right)^T W^Q_1 MHA(d^m) \right)\\
+    W^V_2 \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_2 e^N\right)^T W^Q_2 MHA(d^m) \right)\\
+    \cdots\\
+    W^V_D \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_D e^N\right)^T W^Q_D MHA(d^m) \right)\\
+\end{bmatrix}\nonumber.
+\end{equation}
+
+\section{Training different Transformers}
+\subsection{Training with Encoders}
+\subsection{Training with Decoders}
 \subsection{Training with Encoder-Decoder}
-
 \section{Misc}
-Different from models with recurrence/convolution, positional information is not encoded in Transformers. Therefore, \citet{vaswani2017attention} include the positional embedding as part of the input to Transformers. The most popular way to compute the positional embedding is to use the sinusoidal shown below.
-\begin{equation*}
-        PE_{(pos,2i)} = sin(pos / 10000^{2i/\dmodel}) \\
-        PE_{(pos,2i+1)} = cos(pos / 10000^{2i/\dmodel}),
-\end{equation*}
+Different from models with recurrence/convolution, positional information is not encoded in Transformers. Therefore, \citet{vaswani2017attention} include the positional embedding as part of the input to Transformers. The most popular way to compute the positional embedding ($PE$) is to use the sinusoidal expressed as
+\begin{equation}
+        PE_{(pos,2i)} = sin(\frac{pos}{ 10000^{2i/d_{model}}}),
+\end{equation}
+\begin{equation}
+    PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
+\end{equation}
+
+where $pos$ is the position and $i$ is the dimension.
 
 In the assignment, you will also need to write the sinusoidal embedding (this will be changed according to the design of assignments)
-
-
-\begin{enumerate}
-\end{enumerate}
-
