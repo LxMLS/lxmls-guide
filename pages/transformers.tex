@@ -2,6 +2,50 @@
 Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing pushing the performance of all tasks through models like BERT \cite{devlin2018bert} and GPT \cite{brown2020language}. In this class, we will review the architecture of Transformers. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's miniGPT library.
 
 
+\section{Before Diving into Transformers}
+Before diving into transformers, we would like to introduce two important pieces of details to defining and training transformers.
+
+
+\subsection{Positional Encoding}
+Different from models with recurrence/convolution, positional information is not encoded in Transformers. Therefore, \citet{vaswani2017attention} include the positional embedding as part of the input to Transformers. The most popular way to compute the positional embedding ($PE$) is to use the sinusoidal expressed as
+\begin{equation}
+        PE_{(pos,2i)} = sin(\frac{pos}{ 10000^{2i/d_{model}}}),
+\end{equation}
+\begin{equation}
+    PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
+\end{equation}
+
+where $pos$ is the position and $i$ is the dimension.
+
+\subsection{Tokenization}
+Transformers are trained with the byte pair encoding \citep{bpe} approach for tokenizing text sequences, enabling encoding rare and unknown words as sequences of subword units.
+
+\begin{exercise}
+Tokenization
+\begin{enumerate}
+\item Run the word-based tokenizer and try out different{\tt text}:
+\begin{python}
+text = "I travelled to Lisbon in July to attend an NLP summer school"
+text.split()
+\end{python}
+\item Run the character-based tokenizer, try out different different{\tt text} and answer the corresponding question:
+\begin{python}
+text = "I will travel to Lisbon in July..."
+tokenized = [c for c in text if c not in [",", ";", ":", "'", "!", "?"]]
+print(tokenized)
+\end{python}
+\item Run the BPE (byte-pair encoding) tokenizer, and answer corresponding questions:
+\begin{python}
+import numpy as np
+from lxmls.transformers.bpe import BPETokenizer
+
+tokenizer = BPETokenizer()
+
+sentence = "Your drawing is charmingly anachronistic."
+tokenizer.encoder.encode_and_show_work(sentence)
+\end{python}
+\end{enumerate}
+\end{exercise}
 \section{Transformer Architectures}
 
 The basic building block of the Transformer combines a large Feed forward network with a multi-head self-attention layer. We have seen feed forwards in previous days and we will focus here on multi-head self-attention. Refer to previous days for details on the basics of feed-forwards.
@@ -67,9 +111,11 @@ Now let's explore each building block of the Transformer architecture and examin
 
 \section{Encoder Architecture}\label{sec:enc}
 
+In the original paper for transformers \citep{vaswani2017attention}, a ``sub-layer`` is formed by either a Feed-Forward ($\mathrm{FF}$) or Multi-Head Attention $\mathrm{MHA}$ (or other named $\mathrm{sub-block}$s) followed by a sequence of operations. In this section, we begin by explaining the encoder architecture. Note that the notation of ``sub-layer`` also applies to the following sections.
+
 \subsection{Simplified Encoder Architecture}
 
-the encoder architecture can be succinctly described as stacking a number of $N$ blocks on top of each other combining a feed-forward $\mathrm{FF}$ and Multi-Head Attention $\mathrm{MHA}$ sub-blocks. A single block is defined as
+the encoder architecture can be succinctly described as stacking a number of $N$ blocks on top of each other combining a $\mathrm{FF}$ and $\mathrm{MHA}$ sub-blocks. A single block is defined as
 
 \begin{equation}
 e^{n+1} = \mathrm{FF}(\mathrm(MHA(e^n)).
@@ -126,7 +172,7 @@ MHA(z) =  W^o \cdot
 
 where we have $D$ attention heads. Each head contracts the hidden dimension $W^K, W^Q, W^V \in \mathbb{R}^{H / D \times H}$ into a space of size $H / D$ (this has practical implementation consequences). Outputs of all heads are concatenated and projected again with $W^o \in \mathbb{R}^{H \times H}$.
 
-\subsection{Adding Dropout, Layer Normalization, and Residuals}
+\subsection{Adding Dropout, Residuals, and Layer Normalization}
 
 %For simplicity, we have left several additional operations that can be added as a wrapper around $\mathrm{FF}$ and $\mathrm{MHA}$ operations. These can be expressed as
 
@@ -136,7 +182,7 @@ where we have $D$ attention heads. Each head contracts the hidden dimension $W^K
 
 %where $f = \{\mathrm{FF}, \mathrm{MHA}\}$.
 
-In the original paper for transformers \citep{vaswani2017attention}, either $\mathrm{FF}$ or $\mathrm{MHA}$ is named as a ``sub-layer``. Based on the naming, an dropout is applied to input $z$ that has been passed through a ``sub-layer``, before a residual connection is applied. Finally, a layer normalization is applied. Together, we can express the function as
+To complete the ``sub-layer``, an dropout followed by a residual connection and a layer normalization is applied to input $z$ that has been passed through a $\mathrm{sub-block}$, where a $\mathrm{sub-block} \in \{\mathrm{FF}, MHA\}$. Together, we can express the function as
 
 \begin{equation}
 C(x) = \mathrm{layernorm}(\mathrm{residual}(\mathrm{dropout}(\mathrm{sublayer}(z)), z)
@@ -162,7 +208,7 @@ This is identical to the Encoder architecture with two differences
     \item We mask every head of $\mathrm{MHA}$ to prevent any value of time $p$ to depend on values of $>p$
 \end{enumerate}
 
-The implementation of training realizes 1) by masking input partial sequence $x_{<t}$ and hidden units from the corresponding positions with an attention mask. This attention mask is also applied during inference time. Note that you can obtain the attention mask by calling its field of input\_ids from huggingface.
+The implementation of training realizes 1) by masking input partial sequence $x_{<t}$ and hidden units from the corresponding positions with an attention mask. This attention mask is also applied during inference time. 
 
 \section{Encoder-Decoder Architecture}
 
@@ -186,19 +232,93 @@ Specifically, the query matrix is computed from the layer below it, while the ke
 \end{bmatrix}\nonumber.
 \end{equation}
 
+\begin{exercise} 
+Cross Multi Head Attention \& Multi Head Attention
+\begin{enumerate}
+\item Complete the {\tt cross\_attention} function:
+\begin{python}
+import torch
+import torch.nn.functional as F
+
+def cross_attention(S1, S2, W_Q, W_K, W_V):
+    ## Your code here
+    return attended_values
+\end{python}
+\item Complete the {\tt CausalSelfAttention} class. First, you should create linear projections {\tt query\_proj}, {\tt key\_proj} and {\tt value\_proj}.
+\begin{python}
+import math
+import torch.nn as nn
+
+class CausalSelfAttention(nn.Module):
+
+    def __init__(self, config):
+        super().__init__()
+        
+        # Initialize layers and parameters
+        self.hidden_size = config.n_embd
+        self.num_heads = config.n_head
+
+        # TODO: Create the linear projections
+
+        self.output_proj = nn.Linear(config.n_embd, config.n_embd)
+
+        self.attn_dropout = nn.Dropout(config.attn_pdrop)
+        self.resid_dropout = nn.Dropout(config.resid_pdrop)
+
+        self.register_buffer(
+            "bias",
+            torch.tril(torch.ones(config.block_size, config.block_size)).view(
+                1, 1, config.block_size, config.block_size))
+\end{python}
+Then apply {\tt query\_proj}, {\tt key\_proj} and {\tt value\_proj} to split input into query, key, and value tensors:
+\begin{python}
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        B, T, C = x.size()
+
+        # TODO: Split input into query, key, and value tensors
+
+        # Reshape and transpose tensors for multi-head computation
+        query = query.view(B, T, self.num_heads,
+                           self.hidden_size // self.num_heads).transpose(1, 2)
+        key = key.view(B, T, self.num_heads,
+                       self.hidden_size // self.num_heads).transpose(1, 2)
+        value = value.view(B, T, self.num_heads,
+                           self.hidden_size // self.num_heads).transpose(1, 2)
+\end{python}
+Then compute the attention scores. Note that the shape of scores should be {\tt (B, num\_heads, T, T)}
+\begin{python}
+        # TODO: Compute attention scores
+
+        # Apply causal mask to restrict attention to the left in the input sequence
+        mask = self.bias[:, :, :T, :T]
+        scores = scores.masked_fill(mask == 0, float('-inf'))
+\end{python}
+Finally, apply soft-max activation and multiply attention weights with values to get attended values:
+\begin{python}
+        # TODO: Apply softmax activation to get attention weights
+
+        # TODO: Multiply attention weights with values to get attended values
+
+        # Transpose and reshape attended values to restore original shape
+        attended_values = attended_values.transpose(1, 2).contiguous().view(
+            B, T, C)
+
+        # Apply output projection and dropout
+        output = self.resid_dropout(self.output_proj(attended_values))
+
+        return output
+\end{python}
+\end{enumerate}
+\end{exercise}
+
 \section{Training different Transformers}
+We have introduced different architectures of transformers, and will introduce different variants of transformers that are trained with different objectives, thus applied to different downstream tasks. We provide a brief introduction to all these transformers, and provide the references so you can read these papers if you are interested.
+
 \subsection{Training with Encoders}
+
 \subsection{Training with Decoders}
+\paragraph{GPTs.} The class of GPTs are a series of pretained decoder-only transformers. Models are pre-trained to perform next token prediction with Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 
+\citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models have been trained with reinforcement learning with human feedback \citep{rlhf}, which enables the model to manifest interesting behaviors that you see when using ChatGPT.
 \subsection{Training with Encoder-Decoder}
-\section{Misc}
-Different from models with recurrence/convolution, positional information is not encoded in Transformers. Therefore, \citet{vaswani2017attention} include the positional embedding as part of the input to Transformers. The most popular way to compute the positional embedding ($PE$) is to use the sinusoidal expressed as
-\begin{equation}
-        PE_{(pos,2i)} = sin(\frac{pos}{ 10000^{2i/d_{model}}}),
-\end{equation}
-\begin{equation}
-    PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
-\end{equation}
-
-where $pos$ is the position and $i$ is the dimension.
-
-In the assignment, you will also need to write the sinusoidal embedding (this will be changed according to the design of assignments)
+\paragraph{BART.} BART \cite{lewis-etal-2020-bart} an encoder-decoder model pre-trained on five tasks injecting noises into the input text: i) token masking (same as BERT \cite{devlin2018bert}), ii) token deletion, iii) text infilling by replacing sampled input spans with single masks, iv) sentence permutation, and v) document rotation. The powerful pre-trained denoising autoencoder is commonly used in generation tasks.
+\paragraph{T5.}
