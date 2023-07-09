@@ -315,10 +315,44 @@ Finally, apply soft-max activation and multiply attention weights with values to
 We have introduced different architectures of transformers, and will introduce different variants of transformers that are trained with different objectives, thus applied to different downstream tasks. We provide a brief introduction to all these transformers, and provide the references so you can read these papers if you are interested.
 
 \subsection{Training with Encoders}
+Encoder models solely utilize the encoder component of a Transformer model. In each step, the attention layers have the ability to consider all the words present in the original sentence. These models are known as 'auto-encoding models' and are recognized for their 'bi-directional' attention mechanism.
+
+The pretraining of these models typically involves manipulating a given sentence, often by obscuring random words within it and assigning the model the task of identifying or reconstructing the original sentence. This objective is commonly referred to as Masked Language Modeling (MLM), and models pre-trained with this objective are known as Masked Language Models.
+
+Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, as well as extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}.
+
+\textbf{BERT} \cite{devlin2018bert} is trained on MLM(Masked Language Modeling) and NSP(Next Sentence Prediction) objectives.
+In the \textbf{MLM} objective, 15\% of the input tokens are selected. Among these selected tokens:
+\begin{itemize}
+    \item 80\% of the time, the mask token is inserted in place of the original token.
+    \item 10\% of the time, a random token is inserted in place of the original token.
+    \item 10\% of the time, the original token remains unchanged.
+\end{itemize}
+The \textbf{NSP} objective is applied to pairs of sentences, A and B, taken from the training set. In 50\% of the cases, sentence B directly follows sentence A in the input, while in other cases, the pairs are randomly selected. The objective is to perform binary classification and predict whether sentence B follows sentence A or not.
+
+\textbf{RoBERTa} \cite{liu2019roberta} builds upon BERT's pre-training by addressing its perceived undertraining. It introduces the following modifications:
+\begin{itemize}
+    \item Longer and larger-scale training: RoBERTa trains the model for an extended period using larger batches, more data, and longer sequences.
+    \item Removal of NSP objective: The next sentence prediction (NSP) objective, present in BERT, is eliminated in RoBERTa.
+    \item Dynamic masking: RoBERTa employs dynamic masking by duplicating the training data ten times and applying different mask patterns to each sample. This contrasts with BERT's static masking, where a fixed mask is used for each sample.
+\end{itemize}
+These modifications aim to enhance RoBERTa's pre-training performance and overall language understanding capabilities.
+
+
+
 
 \subsection{Training with Decoders}
 \paragraph{GPTs.} The class of GPTs are a series of pretained decoder-only transformers. Models are pre-trained to perform next token prediction with Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 
 \citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models have been trained with reinforcement learning with human feedback \citep{rlhf}, which enables the model to manifest interesting behaviors that you see when using ChatGPT.
 \subsection{Training with Encoder-Decoder}
 \paragraph{BART.} BART \cite{lewis-etal-2020-bart} an encoder-decoder model pre-trained on five tasks injecting noises into the input text: i) token masking (same as BERT \cite{devlin2018bert}), ii) token deletion, iii) text infilling by replacing sampled input spans with single masks, iv) sentence permutation, and v) document rotation. The powerful pre-trained denoising autoencoder is commonly used in generation tasks.
-\paragraph{T5.}
+\paragraph{T5.} TODO
+
+
+\begin{exercise}
+Training Transformer
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+\end{exercise}
