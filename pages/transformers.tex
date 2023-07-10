@@ -127,13 +127,13 @@ The input to the first block $e^0$ is the sum of position $P$ and non-contextual
 e^{0}_t = \mathrm{E} \cdot \mathrm{1}_{x_t} + \mathrm{P} \cdot \mathrm{1}_t \quad \mbox{for} \quad t=1 \cdots T
 \end{equation}
 
-where $\mathrm{1}_{x_t}$ and $\mathrm{1}_t$ are indicators, i.e. one-hot, vectors for the token content (vocabulary symbol) and the token position. $\mathrm{E} \in \mathbb{R}^{H \times V}$ is the non-contextual embedding matrix for each symbol in the vocabulary and $P^{H \times \tau}$ is the position embedding matrix, where  $\tau-1$ is the furthest position supported. See Figure \ref{fig:e0} for information flow. \\
+where $\mathrm{1}_{x_t}$ and $\mathrm{1}_t$ are indicators, i.e. one-hot, vectors for the token content (vocabulary symbol) and the token position. $\mathrm{E} \in \mathbb{R}^{H \times V}$ is the non-contextual embedding matrix for each symbol in the vocabulary and $P^{H \times \tau}$ is the position embedding matrix, where  $\tau-1$ is the furthest position supported. See Figure \ref{fig:e0} for the construction of the input of the first block. \\
 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=6cm]{pages/imgs/e0.png}
-    \caption{Information flow of $t$-th token in layer $e^0$}
+    \includegraphics[width=5cm]{pages/imgs/e0.png}
+    \caption{Construction of the input of the $t$-th token in layer $e^0$}
     \label{fig:e0}
 \end{figure}
 
@@ -171,6 +171,18 @@ MHA(z) =  W^o \cdot
 \end{equation}
 
 where we have $D$ attention heads. Each head contracts the hidden dimension $W^K, W^Q, W^V \in \mathbb{R}^{H / D \times H}$ into a space of size $H / D$ (this has practical implementation consequences). Outputs of all heads are concatenated and projected again with $W^o \in \mathbb{R}^{H \times H}$.
+
+TODO[give better description] Encoder's first block can be seen in Figure \ref{fig:encoder_block}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{pages/imgs/encoder_block.png}
+    \caption{Encoder's first block}
+    \label{fig:encoder_block}
+\end{figure}
+
+
+
 
 \subsection{Adding Dropout, Residuals, and Layer Normalization}
 
@@ -210,6 +222,16 @@ This is identical to the Encoder architecture with two differences
 
 The implementation of training realizes 1) by masking input partial sequence $x_{<t}$ and hidden units from the corresponding positions with an attention mask. This attention mask is also applied during inference time. 
 
+TODO[give better description] Decoder's first block can be seen in Figure \ref{fig:decoder_block}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{pages/imgs/decoder_block.png}
+    \caption{Decoder's first block}
+    \label{fig:decoder_block}
+\end{figure}
+
+
 \section{Encoder-Decoder Architecture}
 
 In the Encoder-Decoder Architecture, the encoder is the same as section \ref{sec:enc}. Therefore, we have the encoded embeddings as $e^N = \mathrm{Encoder}(x)$.
@@ -231,6 +253,18 @@ Specifically, the query matrix is computed from the layer below it, while the ke
     W^V_D \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_D e^N\right)^T W^Q_D MHA(d^m) \right)\\
 \end{bmatrix}\nonumber.
 \end{equation}
+
+
+TODO[give better description] The Encoder-Decoder architecture's final look in Figure \ref{fig:encoder_decoder}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=16cm]{pages/imgs/encoder_decoder.png}
+    \caption{Encoder-Decoder architecture}
+    \label{fig:encoder_decoder}
+\end{figure}
+
+
 
 \begin{exercise} 
 Cross Multi Head Attention \& Multi Head Attention
