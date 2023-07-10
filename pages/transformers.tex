@@ -389,13 +389,177 @@ Commonly employed members of this model family include BART \cite{lewis-etal-202
 
 \paragraph{BART.} BART \cite{lewis-etal-2020-bart} an encoder-decoder model pre-trained on five tasks injecting noises into the input text: i) token masking (same as BERT \cite{devlin2018bert}), ii) token deletion, iii) text infilling by replacing sampled input spans with single masks, iv) sentence permutation, and v) document rotation. The powerful pre-trained denoising autoencoder is commonly used in generation tasks.
 
-\paragraph{T5.} T5 (Raffel et al., 2020) utilizes a text-to-text methodology. In this approach, various tasks like translation, question answering, and classification are transformed into a unified format. The model is provided with input text and trained to generate the corresponding output text. To achieve this, a task-specific prefix(instruction) is added to the input sequence, and the model is pre-trained to produce outputs specific to each task.
+\paragraph{T5.} T5 (Raffel et al., 2020) utilizes a text-to-text methodology. In this approach, various tasks like translation, question answering, and classification are transformed into a unified format. The model is provided with input text and trained to generate the corresponding output text. To achieve this, a task-specific prefix(instruction) is added to the input sequence, and the model is pre-trained to produce outputs specific to each task.\\
 
 
-\begin{exercise}
-Training Transformer
-\begin{enumerate}
-    \item 
-\end{enumerate}
+
+\begin{exercise} Training Transformers
+
+Let's delve into practical training of a Transformer model to gain hands-on experience. Our initial step will involve creating a Decoder-based model (GPT-2 \cite{gpt-2}) and training it on a modest dataset. Once this is completed, we can visualize the attention mechanism before and after the training process. Finally, we can compare the performance of the trained model during inference with that of the smaller trained model.
+
+% TODO make these subexercises?
+\begin{exercise} Training a Weather Prediction Model Using Autoregressive Transformer.
+
+In this exercise, we will be working with a dummy weather dataset comprising sequences of weather observations and their corresponding states. The objective is to train a compact autoregressive transformer model that can predict the weather state based on previous observations.
+Let's begin by importing the required modules and classes, and setting a seed value to ensure consistent output every time we run the file.
+
+\begin{python}
+import random
+import time
+
+import numpy as np
+import torch
+from torch.utils.data.dataloader import DataLoader
+
+random.seed(42)
+
+from lxmls.transformers.bpe import BPETokenizer
+from lxmls.transformers.dataset import WeatherDataset
+from lxmls.transformers.model import GPT
+from lxmls.transformers.trainer import Trainer
+from lxmls.transformers.utils import set_seed
+\end{python}
+
+\end{exercise}
+
+To begin, we initialize the training dataset, which comprises sequences of weather observations along with their corresponding states. These sequences are transformed into indices and then concatenated to create the input and output sequences for the transformer model. For more information on this, refer to: "lxmls/transformers/dataset.py".
+
+\begin{python}
+fixed_proba = {}
+fixed_proba["initial"] = [0.5, 0.3, 0.2]
+fixed_proba["transition"] = [[0.5, 0.5, 0], [0, 0.5, 0.5], [0.5, 0, 0.5]]
+fixed_proba["emission"] = [
+    [0.5, 0, 0.2, 0, 0.3],
+    [0, 0.5, 0.4, 0, 0.1],
+    [0, 0, 0.1, 0.5, 0.4],
+]
+
+\end{python}
+
+Let's print an example instance of the dataset.
+\begin{python}
+train_dataset = WeatherDataset("train", proba=fixed_proba)
+test_dataset = WeatherDataset("test", proba=train_dataset.proba)
+x, y = train_dataset[0]
+
+print("Sampling from the dataset:")
+print(f"Input: {train_dataset.decode_obs(x.tolist()[:6])}")
+print(f"Labels: {train_dataset.decode_st(y.tolist()[5:])}")
+print("-" * 50)
+print("Tokenized sequences:")
+print(f"Input: {x.tolist()}")
+print(f"Labels: {y.tolist()}")
+\end{python}
+
+Moving forward, we construct a model using the default configuration for the GPT model, which encompasses parameters defining the model's size and structure. In this case, we employ a compact variant known as GPT Nano.
+
+\begin{python}
+model_config = GPT.get_default_config()
+model_config.model_type = "gpt-nano"
+model_config.vocab_size = train_dataset.get_vocab_size()
+model_config.block_size = train_dataset.get_block_size()
+model = GPT(model_config)
+
+print(model_config)
+\end{python}
+
+To facilitate the training of our model, we instantiate a Trainer object. The Trainer manages various aspects of the training process, such as configuring the learning rate, specifying the maximum number of iterations, and determining the number of workers for data loading. We initialize the Trainer with the model, training dataset, and validation dataset.
+
+\begin{python}
+train_config = Trainer.get_default_config()
+train_config.learning_rate = (
+    5e-4  # The model we're using is so small that we can go a bit faster
+)
+train_config.max_iters = 2000
+train_config.num_workers = 0
+train_config.device = "mps"
+trainer = Trainer(train_config, model, train_dataset)
+
+print(train_config)
+\end{python}
+
+With all these components in position, we are fully prepared to train our model using the weather dataset and leverage the acquired patterns to generate predictions.
+
+\begin{python}
+def batch_end_callback(trainer):
+    if trainer.iter_num % 100 == 0:
+        print(
+            f"iter_dt {trainer.iter_dt * 1000:.2f}ms; iter {trainer.iter_num}: train loss {trainer.loss.item():.5f}"
+        )
+
+
+trainer.set_callback("on_batch_end", batch_end_callback)
+
+start_time = time.time()
+trainer.run()
+end_time = time.time()
+elapsed_time = end_time - start_time
+
+# Print the training time
+print("Training time: {:.2f} seconds".format(elapsed_time))
+\end{python}
+
+Now, let's visualize the attention heads of our trained model. To do this, we need to install the HF transformers and bertviz packages. You can install them by running the following command: "pip install transformers bertviz".
+
+
+\begin{python}
+from transformers import BertTokenizer, BertModel
+from bertviz import head_view
+
+# Define a sample input text
+text = "I will go for a run and will jump into a lake."
+
+# Instantiate the BERT tokenizer and model
+tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+model = BertModel.from_pretrained("bert-base-uncased")
+
+# Tokenize the input text
+tokens = tokenizer.tokenize(text)
+
+# Convert tokens to token IDs
+token_ids = tokenizer.convert_tokens_to_ids(tokens)
+
+# Create attention mask
+attention_mask = [1] * len(token_ids)
+
+# Convert token IDs and attention mask to tensors
+input_ids = torch.tensor([token_ids])
+attention_mask = torch.tensor([attention_mask])
+
+# Generate the transformer output
+outputs = model(input_ids, attention_mask=attention_mask, output_attentions=True)
+
+head_view(outputs.attentions, tokens=tokens)
+\end{python}
+
+
+
+\begin{exercise} Promoting a GPT-2 model
+Now that we have trained our own Transformer model and gained some understanding of its functioning, let's explore a larger pre-trained model that has been trained on a vast amount of natural data. By doing so, we can experience generating output that closely resembles human-like responses.
+
+\begin{python}
+model_type = "gpt2"
+device = "mps"
+
+model = GPT.from_pretrained(model_type)
+
+# move model to the device(GPU if available)
+# set to eval mode to avoid gradient accumulation
+model.to(device)
+model.eval()
+
+# Random prompt, uses pooling
+for i in range(5):
+    set_seed(42)
+    model.prompt("Ramon Astudillo, the", 50, 3)
+
+# Deterministic prompt, does NOT use pooling
+for i in range(5):
+    model.prompt_topK("Ramon Astudillo, the", 50, 3)
+\end{python}
+
+Get ready to embark on an intriguing journey by playing with the input prompt and witnessing the fascinating and captivating outputs that await you!
+
+\end{exercise}
 
 \end{exercise}
