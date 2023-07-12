@@ -185,12 +185,10 @@ MHA(z) =  W^o \cdot
 
 where we have $D$ attention heads. Each head contracts the hidden dimension $W^K, W^Q, W^V \in \mathbb{R}^{H / D \times H}$ into a space of size $H / D$ (this has practical implementation consequences). Outputs of all heads are concatenated and projected again with $W^o \in \mathbb{R}^{H \times H}$.
 
-TODO[give better description] Encoder's first block can be seen in Figure \ref{fig:encoder_block}.
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=10cm]{pages/imgs/encoder_block.png}
-    \caption{Encoder's first block}
+    \caption{Encoder block}
     \label{fig:encoder_block}
 \end{figure}
 
@@ -223,6 +221,7 @@ Specifically, we have
     \item $\mathrm{layernorm}(x) = \frac{x-E(x)}{\sqrt{Var(x)+\epsilon}}*\gamma + \beta$ where $E(x)$ and $Var(x)$ are computed among dimensions other than the dimension for the batch\footnote{Note that the default $\epsilon$ is $1e-5$. $\gamma$ and $\beta$ are learnable affine parameters if we want to learn, otherwise set to $1$ and $0$}.
 \end{itemize}
 
+After incorporating all of these subcomponents, we obtain the final Encoder block, as illustrated in Figure \ref{fig:encoder_block}
 
 \section{Decoder Architecture}\label{sec:dec}
 
@@ -235,14 +234,14 @@ This is identical to the Encoder architecture with two differences
 
 The implementation of training realizes 1) by masking input partial sequence $x_{<t}$ and hidden units from the corresponding positions with an attention mask. This attention mask is also applied during inference time. 
 
-TODO[give better description] Decoder's first block can be seen in Figure \ref{fig:decoder_block}.
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=10cm]{pages/imgs/decoder_block.png}
-    \caption{Decoder's first block}
+    \caption{Decoder block}
     \label{fig:decoder_block}
 \end{figure}
+
+Once all these subcomponents are integrated, we achieve the final Decoder block, which is depicted in Figure \ref{fig:decoder_block}.
 
 
 \section{Encoder-Decoder Architecture}
@@ -268,21 +267,32 @@ Specifically, the query matrix is computed from the layer below it, while the ke
 \end{equation}
 
 
-TODO[give better description] The Encoder-Decoder architecture's final look in Figure \ref{fig:encoder_decoder}.
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=16cm]{pages/imgs/encoder_decoder.png}
-    \caption{Encoder-Decoder architecture}
+    \caption{Encoder-Decoder Architecture}
     \label{fig:encoder_decoder}
 \end{figure}
+
+
+By combining $N$ blocks of Encoder and Decoder, we obtain the complete view of the Transformer architecture, as illustrated in Figure \ref{fig:encoder_decoder}.
 
 
 
 \begin{exercise} 
 Cross Multi-Head Attention \& Multi-Head Attention
+Now let's implement our own Attention mechanism, to that end let's:
 \begin{enumerate}
-\item Complete the {\tt cross\_attention} function:
+\item Complete the {\tt cross\_attention} function. Given two input sequences $S_1$ and $S_2$ and the transformation weights $W_Q$, $W_K$, and $W_V$. You need to implement the following:
+\begin{enumerate}
+    \item Calculate the query, key, and value projections using linear transformations.
+    \item Compute the attention scores by performing the dot product between the query and key tensors.
+    \item Apply softmax activation to the attention scores to obtain the attention weights.
+    \item Multiply the attention weights with the value tensor to get the attended values.
+    \item Return the attended values.
+\end{enumerate}
+
+
 \begin{python}
 import torch
 import torch.nn.functional as F
@@ -336,7 +346,7 @@ Then compute the attention scores. Note that the shape of scores should be {\tt 
 \begin{python}
         # TODO: Compute attention scores
 
-        # Apply causal mask to restrict attention to the left in the input sequence
+        # Apply a causal mask to restrict attention to the left in the input sequence
         mask = self.bias[:, :, :T, :T]
         scores = scores.masked_fill(mask == 0, float('-inf'))
 \end{python}
@@ -430,7 +440,7 @@ Commonly employed members of this model family include BART \cite{lewis-etal-202
 
 Let's delve into practical training of a Transformer model to gain hands-on experience. Our initial step will involve creating a Decoder-based model (GPT-2 \cite{gpt-2}) and training it on a modest dataset. Once this is completed, we can visualize the attention mechanism before and after the training process. Finally, we can compare the performance of the trained model during inference with that of the smaller trained model.
 
-% TODO make these subexercises?
+
 \begin{exercise} Training a Weather Prediction Model Using Autoregressive Transformer.
 
 In this exercise, we will be working with a dummy weather dataset comprising sequences of weather observations and their corresponding states. The objective is to train a compact autoregressive transformer model that can predict the weather state based on previous observations.
