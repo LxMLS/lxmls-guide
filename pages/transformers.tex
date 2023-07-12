@@ -353,6 +353,15 @@ Encoder models solely utilize the encoder component of a Transformer model. In e
 
 The pretraining of these models typically involves manipulating a given sentence, often by obscuring random words within it and assigning the model the task of identifying or reconstructing the original sentence. This objective is commonly referred to as Masked Language Modeling (MLM), and models pre-trained with this objective are known as Masked Language Models.
 
+For a text sequence $\textbf{x}$, the BERT model first constructs a corrupted version $\hat{\textbf{x}}$. Let the masked tokens be $\bar{\textbf{x}}$. The training objective is to reconstruct $\bar{\textbf{x}}$ from $\hat{\textbf{x}}$:
+
+\begin{align}
+max_{\theta}logP_{\theta}(\bar{\textbf{x}}|\hat{\textbf{x}})\approx \sum_{t=1}^Tm_tlogP_{\theta}(x_t|\hat{\textbf{x}})
+=\sum_{t=1}^Tm_tlog\frac{exp(H_{\theta}(\hat{\textbf{x}})_t^Te(x_t))}{\sum_{x\prime} {exp(H_{\theta}(\hat{\textbf{x}})_t^Te(x\prime)}}
+\end{align}
+
+Where the $\approx$ indicates that all $\bar{\textbf{x}}$ elements are independent (seperately reconstructed), $m_t$ indicates weather or not $x_t$ is masked (1-masked, 0-not), $H_{\theta}$ is a Transformer that maps a sequence $x$ of length $T$ and contains infomation about the context on both sides $H_{\theta}(X)=[H_{\theta}(x)_1, H_{\theta}(x)_2,...H_{\theta}(x)_T]$, and $e(x)$ denotes the embedding of $x$.
+
 Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, as well as extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}.
 
 \textbf{BERT} \cite{devlin2018bert} is trained on MLM(Masked Language Modeling) and NSP(Next Sentence Prediction) objectives.
@@ -376,8 +385,19 @@ These modifications aim to enhance RoBERTa's pre-training performance and overal
 
 
 \subsection{Training with Decoders}
-\paragraph{GPTs.} The class of GPTs are a series of pretained decoder-only transformers. Models are pre-trained to perform next token prediction with Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 
-\citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models have been trained with reinforcement learning with human feedback \citep{rlhf}, which enables the model to manifest interesting behaviors that you see when using ChatGPT.
+Decoder-only or Autoregressive modeling performs
+pretraining by maximizing the likelihood under the forward autoregressive factorization:
+$$
+max_{\theta}logP_{\theta}(\textbf{x})=\sum_{t=1}^TlogP_{\theta}(x_t|\textbf{x}_{<t})
+= \sum_{t=1}^T{log\frac{exp(h_{\theta}(\textbf{x}_{1:t-1})^Te(x_t))}{\sum_{x\prime}exp(h_{\theta}(\textbf{x}_{1:t-1})^Te(x\prime))}}
+$$
+
+Where the $h_{\theta}(\textbf{x}_{1:t-1})$ is the context representation produced by the neural model, and it contains information (conditioned) about the tokens up to position $t$, and $e(x_t)$ is the embedding of a token $x_t$.
+
+A Decoder-only or Autoregressive model operates differently compared to Encoder-only or Autoencoder model by focusing on density estimation rather than reconstructing corrupted input. These models aim to estimate probability distributions, which limits their ability to capture bidirectional context. As a result, they are restricted to uni-directional processing.
+
+\paragraph{GPTs.} The class of GPTs is a series of pre-trained decoder-only transformers. Models are pre-trained to perform the next token prediction with the Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 
+\citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models has been trained with reinforcement learning with human feedback \citep{rlhf}, which enables the model to manifest interesting behaviors that you see when using ChatGPT.
 
 
 \subsection{Training with Encoder-Decoder}
