@@ -18,7 +18,7 @@ Different from models with recurrence/convolution, positional information is not
 where $pos$ is the position and $i$ is the dimension.
 
 \subsection{Tokenization}
-To break down a given input string into atomic pieces, the tokenization operation is performed. There are various techniques available for applying tokenization, with word-based and character-level tokenization being the two extremes. Each approach has its advantages and considerations for specific cases. A subword-based tokenization strikes a balance between these two approaches.
+To break down a given input string into atomic pieces, the tokenization operation is performed. There are various techniques available for applying tokenization, with word-based and character-level tokenization being the two extremes. Each approach has its advantages and considerations for specific cases. The subword tokenization strikes a balance between these two approaches.
 
 Subword tokenization operates on the idea that frequently occurring words should be included in the vocabulary, while rare words should be split into more common subwords. This approach aims to handle a wider range of word types effectively.
 
@@ -76,7 +76,7 @@ Though with very different roles the three architectures are very close to each 
 \section{Attention}
 In this section, we will delve into the intricacies of the attention mechanism, aiming to grasp its underlying intuition and motivation. We will embark on a comprehensive exploration of its inner workings, unraveling its secrets along the way.
 
-Attention mechanisms have become a crucial component in effective sequence modeling across different tasks e.g. Neural Machine Translation (NMT) \cite{vaswani2017attention}. They enable the modeling of relationships between elements in input or output sequences, regardless of their positional distance. \cite{bahdanau2014neural, kim2017structured}.
+Attention mechanisms have become a crucial component in effective sequence modeling across different tasks e.g. Neural Machine Translation (NMT) \cite{vaswani2017attention}. They enable modeling relationships between elements in input or output sequences, regardless of their positional distance. \cite{bahdanau2014neural, kim2017structured}.
 
 The state-of-the-art sequence modeling architectures that predate Transformers, such as Recurrent Neural Networks (RNN), have traditionally treated input information in a uniform manner. This means that no specific connections are established among the individual tokens to fully capture the intricate relationships between them. Essentially, each token denoted as $t_i$, receives information from all preceding tokens $t_1...t_{i-1}$ in a uniform fashion. However, as the value of $i$ increases, this approach often leads to information loss, as well as issues related to vanishing or exploding gradients \cite{hochreiter1997long}, due to the fixed dimensionality of the encoded information.
 
@@ -205,7 +205,7 @@ where we have $D$ attention heads. Each head contracts the hidden dimension $W^K
 
 %where $f = \{\mathrm{FF}, \mathrm{MHA}\}$.
 
-To complete the ``sub-layer``, an dropout followed by a residual connection and a layer normalization is applied to input $z$ that has been passed through a $\mathrm{sub-block}$, where a $\mathrm{sub-block} \in \{\mathrm{FF}, MHA\}$. Together, we can express the function as
+To complete the ``sub-layer``, a dropout followed by a residual connection and a layer normalization is applied to input $z$ that has been passed through a $\mathrm{sub-block}$, where a $\mathrm{sub-block} \in \{\mathrm{FF}, MHA\}$. Together, we can express the function as
 
 \begin{equation}
 C(x) = \mathrm{layernorm}(\mathrm{residual}(\mathrm{dropout}(\mathrm{sublayer}(z)), z)
@@ -369,12 +369,12 @@ Finally, apply soft-max activation and multiply attention weights with values to
 \end{exercise}
 
 \section{Training different Transformers}
-We have introduced different architectures of transformers and will introduce different variants of transformers that are trained with different objectives, and thus applied to different downstream tasks. We provide a brief introduction to all these transformers and provide references so you can read these papers if you are interested.
+We have introduced different architectures of transformers and will present different variants of transformers that are trained with different objectives, and thus applied to different downstream tasks. We briefly introduce all these transformers and provide references so you can read these papers if you are interested.
 
 \subsection{Training with Encoders}
 Encoder models solely utilize the encoder component of a Transformer model. In each step, the attention layers have the ability to consider all the words present in the original sentence. These models are known as 'auto-encoding models' and are recognized for their 'bi-directional' attention mechanism.
 
-The pretraining of these models typically involves manipulating a given sentence, often by obscuring random words within it and assigning the model the task of identifying or reconstructing the original sentence. This objective is commonly referred to as Masked Language Modeling (MLM), and models pre-trained with this objective are known as Masked Language Models.
+The pretraining of these models typically involves manipulating a given sentence, often by obscuring random words and assigning the model the task of identifying or reconstructing the original sentence. This objective is commonly referred to as Masked Language Modeling (MLM), and models pre-trained with this objective are known as Masked Language Models.
 
 For a text sequence $\textbf{x}$, the BERT model first constructs a corrupted version $\hat{\textbf{x}}$. Let the masked tokens be $\bar{\textbf{x}}$. The training objective is to reconstruct $\bar{\textbf{x}}$ from $\hat{\textbf{x}}$:
 
@@ -385,7 +385,7 @@ max_{\theta}logP_{\theta}(\bar{\textbf{x}}|\hat{\textbf{x}})\approx \sum_{t=1}^T
 
 Where the $\approx$ indicates that all $\bar{\textbf{x}}$ elements are independent (seperately reconstructed), $m_t$ indicates weather or not $x_t$ is masked (1-masked, 0-not), $H_{\theta}$ is a Transformer that maps a sequence $x$ of length $T$ and contains infomation about the context on both sides $H_{\theta}(X)=[H_{\theta}(x)_1, H_{\theta}(x)_2,...H_{\theta}(x)_T]$, and $e(x)$ denotes the embedding of $x$.
 
-Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, as well as extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}.
+Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, and extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}.
 
 \textbf{BERT} \cite{devlin2018bert} is trained on MLM(Masked Language Modeling) and NSP(Next Sentence Prediction) objectives.
 In the \textbf{MLM} objective, 15\% of the input tokens are selected. Among these selected tokens:
