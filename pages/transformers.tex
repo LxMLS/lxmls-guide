@@ -18,23 +18,32 @@ Different from models with recurrence/convolution, positional information is not
 where $pos$ is the position and $i$ is the dimension.
 
 \subsection{Tokenization}
-Transformers are trained with the byte pair encoding \citep{bpe} approach for tokenizing text sequences, enabling encoding rare and unknown words as sequences of subword units.
+To break down a given input string into atomic pieces, the tokenization operation is performed. There are various techniques available for applying tokenization, with word-based and character-level tokenization being the two extremes. Each approach has its advantages and considerations for specific cases. A subword-based tokenization strikes a balance between these two approaches.
+
+Subword tokenization operates on the idea that frequently occurring words should be included in the vocabulary, while rare words should be split into more common subwords. This approach aims to handle a wider range of word types effectively.
+
+Transformers utilize the byte pair encoding (BPE) approach \citep{bpe} during training. BPE enables the encoding of rare and unknown words as sequences of subword units, contributing to the overall flexibility and performance of the model.
 
 \begin{exercise}
 Tokenization
+
+Let's see how the three mostly used tokenization techniques can be applied in practice.
 \begin{enumerate}
-\item Run the word-based tokenizer and try out different{\tt text}:
+\item Run the word-based tokenizer and try out different {\tt text}:
 \begin{python}
 text = "I travelled to Lisbon in July to attend an NLP summer school"
 text.split()
 \end{python}
-\item Run the character-based tokenizer, try out different different{\tt text} and answer the corresponding question:
+\item Run the character-based tokenizer, try out different different {\tt text} and answer the corresponding question:
 \begin{python}
 text = "I will travel to Lisbon in July..."
 tokenized = [c for c in text if c not in [",", ";", ":", "'", "!", "?"]]
 print(tokenized)
 \end{python}
-\item Run the BPE (byte-pair encoding) tokenizer, and answer corresponding questions:
+Question: What other problems are character-based tokenizers posing to NLP models?
+
+
+\item Run the BPE (byte-pair encoding) tokenizer, and answer the corresponding questions:
 \begin{python}
 import numpy as np
 from lxmls.transformers.bpe import BPETokenizer
@@ -44,8 +53,12 @@ tokenizer = BPETokenizer()
 sentence = "Your drawing is charmingly anachronistic."
 tokenizer.encoder.encode_and_show_work(sentence)
 \end{python}
+Question: Do you have a guess on which word will be split subwords and which one won't?
 \end{enumerate}
 \end{exercise}
+
+
+
 \section{Transformer Architectures}
 
 The basic building block of the Transformer combines a large Feed forward network with a multi-head self-attention layer. We have seen feed forwards in previous days and we will focus here on multi-head self-attention. Refer to previous days for details on the basics of feed-forwards.
@@ -267,7 +280,7 @@ TODO[give better description] The Encoder-Decoder architecture's final look in F
 
 
 \begin{exercise} 
-Cross Multi Head Attention \& Multi Head Attention
+Cross Multi-Head Attention \& Multi-Head Attention
 \begin{enumerate}
 \item Complete the {\tt cross\_attention} function:
 \begin{python}
@@ -346,7 +359,7 @@ Finally, apply soft-max activation and multiply attention weights with values to
 \end{exercise}
 
 \section{Training different Transformers}
-We have introduced different architectures of transformers, and will introduce different variants of transformers that are trained with different objectives, thus applied to different downstream tasks. We provide a brief introduction to all these transformers, and provide the references so you can read these papers if you are interested.
+We have introduced different architectures of transformers and will introduce different variants of transformers that are trained with different objectives, and thus applied to different downstream tasks. We provide a brief introduction to all these transformers and provide references so you can read these papers if you are interested.
 
 \subsection{Training with Encoders}
 Encoder models solely utilize the encoder component of a Transformer model. In each step, the attention layers have the ability to consider all the words present in the original sentence. These models are known as 'auto-encoding models' and are recognized for their 'bi-directional' attention mechanism.
