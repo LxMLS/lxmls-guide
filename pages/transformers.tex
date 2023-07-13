@@ -9,10 +9,10 @@ Before diving into transformers, we would like to introduce two important pieces
 \subsection{Positional Encoding}
 Different from models with recurrence/convolution, positional information is not encoded in Transformers. Therefore, \citet{vaswani2017attention} include the positional embedding as part of the input to Transformers. The most popular way to compute the positional embedding ($PE$) is to use the sinusoidal expressed as
 \begin{equation}
-        PE_{(pos,2i)} = sin(\frac{pos}{ 10000^{2i/d_{model}}}),
+        PE_{(pos,2i)} = \mathrm{sin}\left(\frac{pos}{ 10000^{2i/d_{model}}}\right),
 \end{equation}
 \begin{equation}
-    PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
+    PE_{(pos,2i+1)} = \mathrm{cos}\left(\frac{pos}{ 10000^{2i/d_{model}}}\right),
 \end{equation}
 
 where $pos$ is the position and $i$ is the dimension.
@@ -594,11 +594,11 @@ model.eval()
 # Random prompt, uses pooling
 for i in range(5):
     set_seed(42)
-    model.prompt("Ramon Astudillo, the", 50, 3)
+    model.prompt("Barack Obama, the", 50, 3)
 
 # Deterministic prompt, does NOT use pooling
 for i in range(5):
-    model.prompt_topK("Ramon Astudillo, the", 50, 3)
+    model.prompt_topK("Barack Obama, the", 50, 3)
 \end{python}
 
 Get ready to embark on an intriguing journey by playing with the input prompt and witnessing the fascinating and captivating outputs that await you!
