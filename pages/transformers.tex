@@ -9,10 +9,10 @@ Before diving into transformers, we would like to introduce two important pieces
 \subsection{Positional Encoding}
 Different from models with recurrence/convolution, positional information is not encoded in Transformers. Therefore, \citet{vaswani2017attention} include the positional embedding as part of the input to Transformers. The most popular way to compute the positional embedding ($PE$) is to use the sinusoidal expressed as
 \begin{equation}
-        PE_{(pos,2i)} = \mathrm{sin}\left(\frac{pos}{ 10000^{2i/d_{model}}}\right),
+        PE_{(pos,2i)} = sin(\frac{pos}{ 10000^{2i/d_{model}}}),
 \end{equation}
 \begin{equation}
-    PE_{(pos,2i+1)} = \mathrm{cos}\left(\frac{pos}{ 10000^{2i/d_{model}}}\right),
+    PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
 \end{equation}
 
 where $pos$ is the position and $i$ is the dimension.
@@ -76,12 +76,12 @@ Though with very different roles the three architectures are very close to each 
 \section{Attention}
 In this section, we will delve into the intricacies of the attention mechanism, aiming to grasp its underlying intuition and motivation. We will embark on a comprehensive exploration of its inner workings, unraveling its secrets along the way.
 
-Attention mechanisms have become a crucial component in effective sequence modeling across different tasks e.g. Neural Machine Translation (NMT) \cite{vaswani2017attention}. They enable modeling relationships between elements in input or output sequences, regardless of their positional distance. \cite{bahdanau2014neural, kim2017structured}.
+Attention mechanisms have become a crucial component in effective sequence modeling across different tasks e.g. Neural Machine Translation (NMT) \citep{vaswani2017attention}. They enable modeling relationships between elements in input or output sequences, regardless of their positional distance \citep{bahdanau2014neural, kim2017structured}.
 
-The state-of-the-art sequence modeling architectures that predate Transformers, such as Recurrent Neural Networks (RNN), have traditionally treated input information in a uniform manner. This means that no specific connections are established among the individual tokens to fully capture the intricate relationships between them. Essentially, each token denoted as $t_i$, receives information from all preceding tokens $t_1...t_{i-1}$ in a uniform fashion. However, as the value of $i$ increases, this approach often leads to information loss, as well as issues related to vanishing or exploding gradients \cite{hochreiter1997long}, due to the fixed dimensionality of the encoded information.
+The state-of-the-art sequence modeling architectures that predate Transformers, such as Recurrent Neural Networks (RNN), have traditionally treated input information in a uniform manner. This means that no specific connections are established among the individual tokens to fully capture the intricate relationships between them. Essentially, each token denoted as $t_i$, receives information from all preceding tokens $t_1...t_{i-1}$ in a uniform fashion. However, as the value of $i$ increases, this approach often leads to information loss, as well as issues related to vanishing or exploding gradients \citep{hochreiter1997long}, due to the fixed dimensionality of the encoded information.
 
-In order to mitigate the latter challenge, Long Short-Term Memory (LSTM) models were introduced. These models proposed mechanisms to manipulate the flow of information across states by selectively adding or removing pertinent and extraneous information \cite{hochreiter1997long}. By incorporating these mechanisms, LSTM models aimed to address the aforementioned issues and enhance the handling of information within the sequence.
-The LSTM has demonstrated exceptional performance on challenging sequence prediction tasks, such as text translation, and swiftly emerged as the prevailing approach in the field \cite{cho2014learning, sutskever2014sequence}.
+In order to mitigate the latter challenge, Long Short-Term Memory (LSTM) models were introduced. These models proposed mechanisms to manipulate the flow of information across states by selectively adding or removing pertinent and extraneous information \citep{hochreiter1997long}. By incorporating these mechanisms, LSTM models aimed to address the aforementioned issues and enhance the handling of information within the sequence.
+The LSTM has demonstrated exceptional performance on challenging sequence prediction tasks, such as text translation, and swiftly emerged as the prevailing approach in the field \citep{cho2014learning, sutskever2014sequence}.
 
 However, the issue of having a fixed-length internal representation persists, and to overcome this limitation in the encoder-decoder architecture, the Attention mechanism was introduced. The Attention mechanism offers various variants, and in this context, we will delve into the "Scaled Dot-Product Attention" as outlined in \cite{vaswani2017attention}.
 
@@ -92,7 +92,7 @@ To provide a practical demonstration of the complex relationships that the model
     \caption{An example illustration}
     \label{fig:example}
 \end{figure}
-In the initial part of the example, the inner connections are relatively straightforward. However, in the subsequent segment starting from the word "because," the relationships become more intricate.
+In the initial part of the example, the inner connections are relatively straightforward. However, in the subsequent segment starting from the word "because", the relationships become more intricate.
 For a human being, the question of whether the pronoun "it" refers to the cat or the tree is relatively simple due to our prior knowledge about cats and trees. With our understanding of these concepts, we can confidently determine the intended reference of the word "it." 
 However, for a model, discerning the referent of the pronoun "it" -- whether it pertains to the cat or the tree -- is not as straightforward. Therefore, we require a mechanism that does not treat all words with equal importance but rather allocates focus to different tokens.
 
@@ -105,7 +105,7 @@ This intuitive mechanism is known as Attention, which assigns significance to sp
     \label{fig:att_self_sample}
 \end{figure}
 
-Capturing the connections between an input and an output sequence is vital for downstream tasks, like Neural Machine Translation (NMT). In this case, the Encoder-Decoder attention mechanism operates in a manner similar to Self-Attention. Let's translate our sample sentence into Portuguese and explore the significant connections it reveals. To accomplish this, we will utilize a pre-trained language model called Multilingual BERT (mBERT), which has knowledge about multiple languages, including English and Portuguese \cite{devlin2018bert}.
+Capturing the connections between an input and an output sequence is vital for downstream tasks, like Neural Machine Translation (NMT). In this case, the Encoder-Decoder attention mechanism operates in a manner similar to Self-Attention. Let's translate our sample sentence into Portuguese and explore the significant connections it reveals. To accomplish this, we will utilize a pre-trained language model called Multilingual BERT (mBERT), which has knowledge about multiple languages, including English and Portuguese \citep{devlin2018bert}.
 
 
 \begin{figure}[h]
@@ -116,7 +116,7 @@ Capturing the connections between an input and an output sequence is vital for d
     \label{fig:ed_att_sample}
 \end{figure}
 
-In the left image of Figure \ref{fig:ed_att_sample}, we can clearly see that the attention of the token 'cat' is specifically directed towards the token 'gato,' which corresponds to its accurate translation. Similarly, in the right image, the word 'it' is attentively aligned with the token 'gato' once again. These observations indicate the system's ability to effectively focus on the appropriate tokens, both in correctly selecting the appropriate translation, and accurately identifying the relevant noun.
+In the left image of Figure \ref{fig:ed_att_sample}, we can clearly see that the attention of the token `cat' is specifically directed towards the token `gato', which corresponds to its accurate translation. Similarly, in the right image, the word `it' is attentively aligned with the token `gato' once again. These observations indicate the system's ability to effectively focus on the appropriate tokens, both in correctly selecting the appropriate translation, and accurately identifying the relevant noun.
 
 Now let's explore each building block of the Transformer architecture and examine how the Attention mechanism fits in this.
 
@@ -128,7 +128,7 @@ In the original paper for transformers \citep{vaswani2017attention}, a ``sub-lay
 
 \subsection{Simplified Encoder Architecture}
 
-the encoder architecture can be succinctly described as stacking a number of $N$ blocks on top of each other combining a $\mathrm{FF}$ and $\mathrm{MHA}$ sub-blocks. A single block is defined as
+The encoder architecture can be succinctly described as stacking a number of $N$ blocks on top of each other combining a $\mathrm{FF}$ and $\mathrm{MHA}$ sub-blocks. A single block is defined as
 
 \begin{equation}
 e^{n+1} = \mathrm{FF}(\mathrm(MHA(e^n)).
@@ -160,13 +160,44 @@ FF(z) = W^2\cdot \mathrm{gelu}(W^1 \cdot z)
 
 \noindent with weight matrices $W^2 \in \mathbb{R}^{H \times 4H}$ and $W^1 \in \mathbb{R}^{4H \times H}$, that expand and contract the hidden dimension $H$.
 
-The Self-Attention ($\mathrm{SA}$) comprises three matrices extracted from the encoder’s input $z$. So, for every given input $z$, we generate a Key vector($K$), a Query vector($Q$), and a Value vector($V$). These matrices are obtained by performing matrix multiplication between the embedding and the corresponding matrix that was learned in the training process, e.g. $Q = W^Q z$.
+The Self-Attention ($\mathrm{SA}$) comprises three matrices extracted from the encoder’s input $z$. So, for every given input $z$, we generate so-called Key ($K$), Query ($Q$), and Value ($V$) matrices.
 
-The next step is to calculate the self-attention score. The Key and Query matrices are multiplied by each other and normalized by a constant value $\frac{1}{A} \left(W^K z\right)^T W^Q z$ or $\frac{1}{A} K^T Q$. The $A$ is usually chosen to be the square root of the dimension of the key matrices. This leads to having more stable gradients.
+These matrices are obtained by performing matrix multiplication between the input and the corresponding matrix that was learned in the training process, e.g. $Q = W^Q z$. See Figure \ref{fig:att_kqv}
+
+
+
+The Key, Query, and Value concept is similar to retrieval systems. When searching for an article on the web using a specific Query, the search engine maps the Query against a set of Keys or titles associated with candidate results in their database. It then presents the best-matched articles or Values to the user. To perform this process on paper, we follow these steps:
+\begin{enumerate}
+    \item Measure Similarity: First, we calculate the similarity between the two matrices, Key and Query. This is often done by taking the dot product of the two matrices.
+    \item Find Maximum Match: Next, we extract the key with the maximum match. This means identifying the Key that has the highest similarity with the Query.
+    \item Retrieve Value: Once we have the Key with the maximum match, we can retrieve the corresponding Value associated with that Key.
+\end{enumerate}
+
+\noindent This simple 3-step process is in fact the Attention mechanism. Where we are looking for the best matching tokens for the source sequence in the target sequence.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=8cm]{pages/imgs/att_kqv.png}
+    \caption{Key, Query, and Value formations from given input $z$}
+    \label{fig:att_kqv}
+\end{figure}
+
+
+Let's algorithmically calculate the self-attention score. The Key and Query matrices are multiplied by each other and normalized by a constant value $\frac{1}{A} \left(W^K z\right)^T W^Q z$ or $\frac{1}{A} K^T Q$. The $A$ is usually chosen to be the square root of the dimension of the key matrices. This leads to having more stable gradients.
 
 \noindent Then pass the result through a $softmax$ operation. The Softmax normalizes the scores so they’re all positive and add up to 1. In other words, extracts a distribution of relative scores from a given token for each token in the input sequence.
 
-\noindent After this multiply the output by the Value matrix: $W^V \cdot z \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K z\right)^T W^Q z \right)$ or simply $V \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(K \right)^T Q \right)$.
+\noindent After this multiply the output by the Value matrix: $W^V \cdot z \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K z\right)^T W^Q z \right)$ or simply $V \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(K \right)^T Q \right)$. See Figure \ref{fig:att_ops}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{pages/imgs/att_ops.png}
+    \caption{Self Attention operations}
+    \label{fig:att_ops}
+\end{figure}
+
 
 The Multi-Head Attention ($\mathrm{MHA}$) enhances the Self-Attention layer in two ways: it allows the model to focus on different positions within the input, enabling a better understanding of pronoun references; and allowing projection of input embeddings into distinct representation subspaces, thereby improving overall performance.
 
@@ -594,11 +625,11 @@ model.eval()
 # Random prompt, uses pooling
 for i in range(5):
     set_seed(42)
-    model.prompt("Barack Obama, the", 50, 3)
+    model.prompt("Ramon Astudillo, the", 50, 3)
 
 # Deterministic prompt, does NOT use pooling
 for i in range(5):
-    model.prompt_topK("Barack Obama, the", 50, 3)
+    model.prompt_topK("Ramon Astudillo, the", 50, 3)
 \end{python}
 
 Get ready to embark on an intriguing journey by playing with the input prompt and witnessing the fascinating and captivating outputs that await you!
