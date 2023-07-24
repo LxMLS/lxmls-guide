@@ -184,11 +184,11 @@ The Key, Query, and Value concept is similar to retrieval systems. When searchin
 \end{figure}
 
 
-Let's algorithmically calculate the self-attention score. The Key and Query matrices are multiplied by each other and normalized by a constant value $\frac{1}{A} \left(W^K z\right)^T W^Q z$ or $\frac{1}{A} K^T Q$. The $A$ is usually chosen to be the square root of the dimension of the key matrices. This leads to having more stable gradients.
+Let's algorithmically calculate the self-attention score. The Key and Query matrices are multiplied by each other and normalized by a constant value $\frac{1}{A} W^Q z \left(W^K z\right)^T$ or $\frac{1}{A} Q K^T$. The $A$ is usually chosen to be the square root of the dimension of the key matrices. This leads to having more stable gradients.
 
 \noindent Then pass the result through a $softmax$ operation. The Softmax normalizes the scores so they’re all positive and add up to 1. In other words, extracts a distribution of relative scores from a given token for each token in the input sequence.
 
-\noindent After this multiply the output by the Value matrix: $W^V \cdot z \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K z\right)^T W^Q z \right)$ or simply $V \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(K \right)^T Q \right)$. See Figure \ref{fig:att_ops}
+\noindent After this multiply the output by the Value matrix: $\underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q z \left(W^K z\right)^T \right) \cdot W^V \cdot z $ or simply $V \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} Q K^T \right)$. See Figure \ref{fig:att_ops}
 
 
 \begin{figure}[h]
@@ -207,14 +207,16 @@ The Multi-Head Attention ($\mathrm{MHA}$) enhances the Self-Attention layer in t
 \begin{equation}
 MHA(z) =  W^o \cdot
 \begin{bmatrix}
-    W^V_1 \cdot z \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_1 z\right)^T W^Q_1 z \right)\\
-    W^V_2 \cdot z \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_2 z\right)^T W^Q_2 z \right)\\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_1 z \left(W^K_1 z\right)^T \right) \cdot W^V_1 \cdot z \\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_2 z \left(W^K_2 z\right)^T \right) \cdot W^V_2 \cdot z \\
     \cdots\\
-    W^V_D \cdot z \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_D z\right)^T W^Q_D z \right)\\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_D z \left(W^K_D z\right)^T \right) \cdot W^V_D \cdot z \\
 \end{bmatrix}\nonumber
 \end{equation}
 
-where we have $D$ attention heads. Each head contracts the hidden dimension $W^K, W^Q, W^V \in \mathbb{R}^{H / D \times H}$ into a space of size $H / D$ (this has practical implementation consequences). Outputs of all heads are concatenated and projected again with $W^o \in \mathbb{R}^{H \times H}$.
+where we have $D$ attention heads. Each head contracts the hidden dimension $W^K, W^Q, W^V \in \mathbb{R}^{E \times H}$ into a space of size $E$ which is equal to $H / D$ (this has practical implementation consequences, $H$ and $D$ should be set properly). Outputs of all heads are concatenated and projected again with $W^o \in \mathbb{R}^{H \times H}$.
+Please note that the dimension of $W^V$ can be different in the general case. The above-mentioned dimensions are correct for the cases when the source and target sequences have equal lengths, which is mostly not the case.
+
 
 \begin{figure}[h]
     \centering
@@ -290,10 +292,10 @@ Specifically, the query matrix is computed from the layer below it, while the ke
 \begin{equation}
     \mathrm{CMHA}(e^N, MHA(d^m)) = W^o \cdot
 \begin{bmatrix}
-    W^V_1 \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_1 e^N\right)^T W^Q_1 MHA(d^m) \right)\\
-    W^V_2 \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_2 e^N\right)^T W^Q_2 MHA(d^m) \right)\\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_1 MHA(d^m) \left(W^K_1 e^N\right)^T \right) \cdot W^V_1 \cdot e^N \\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_2 MHA(d^m) \left(W^K_2 e^N\right)^T \right) \cdot W^V_2 \cdot e^N \\
     \cdots\\
-    W^V_D \cdot e^N \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} \left(W^K_D e^N\right)^T W^Q_D MHA(d^m) \right)\\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_D MHA(d^m) \left(W^K_D e^N\right)^T \right) \cdot W^V_D \cdot e^N \\
 \end{bmatrix}\nonumber.
 \end{equation}
 
