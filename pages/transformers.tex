@@ -627,11 +627,11 @@ model.eval()
 # Random prompt, uses pooling
 for i in range(5):
     set_seed(42)
-    model.prompt("Ramon Astudillo, the", 50, 3)
+    model.prompt("Alan Turing, the", 50, 3)
 
 # Deterministic prompt, does NOT use pooling
 for i in range(5):
-    model.prompt_topK("Ramon Astudillo, the", 50, 3)
+    model.prompt_topK("Alan Turing, the", 50, 3)
 \end{python}
 
 Get ready to embark on an intriguing journey by playing with the input prompt and witnessing the fascinating and captivating outputs that await you!
