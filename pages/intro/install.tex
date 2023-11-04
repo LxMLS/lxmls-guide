@@ -12,7 +12,26 @@ To install, just follow the instructions in our Github repository for the \verb+
 
 The \verb+student+ branch contains the same code as \verb+master+ branch, with some parts deleted, which you must complete in the following exercises. 
 
-The basic install instructions use miniconda. This may not be your tool of choice. There is an alternative option.
+The basic install instructions use miniconda. If this is not your tool of choice, you can install it with \texttt{pip} as an alternative. In order to do this, you first need to run
+
+ \texttt{python3 -m venv lxmls\_venv}
+
+where \texttt{lxmls\_venv} is the name (and path) to your virtual environment. Then, you activate the environment with 
+
+\texttt{source lxmls\_venv/bin/activate} 
+
+and afterwards you install jupyter with pip:
+
+\texttt{pip install jupyter}
+
+Note that, after activating the environment with the command \texttt{source}, the name of the environment should be shown between parentheses in the command line. Make sure this is the case before installing jupyter. After this, you can double check the installation worked by running the following command:
+
+\texttt{pip install ipykernel}
+
+if this installation also worked, then you just need to run the following command so your new virtual environment is also shown in the jupyter notebooks as an interpreter of your choice.
+
+\texttt{python -m ipykernel install -{}-user -{}-name lxmls\_venv -{}-display-name ``LxMLS venv"}
+
 
 \subsection{Deciding on the IDE and interactive shell to use}
 
