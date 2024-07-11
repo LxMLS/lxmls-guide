@@ -791,65 +791,68 @@ In the case of Pytorch we will have to consider following aspects
 In order to learn the differences between a numpy and a Pytorch implementation, explore the reimplementation of Ex.~\ref{exercise:exerciseNumpy1} in Pytorch. Compare the content of each of the functions, in particular the forward() and update methods(). The comments indicated as IMPORTANT will highlight common sources of errors.
 \begin{python}
 import torch
-from torch.autograd import Variable
+
 
 class PytorchLogLinear(Model):
 
-    def __init__(self, **config):
+	def __init__(self, **config):
 
-        # Initialize parameters
-        weight_shape = (config['input_size'], config['num_classes'])
-        # after Xavier Glorot et al
-        self.weight = glorot_weight_init(weight_shape, 'softmax')
-        self.bias = np.zeros((1, config['num_classes']))
-        self.learning_rate = config['learning_rate']
+		# Initialize parameters
+		weight_shape = (config['input_size'], config['num_classes'])
+		# after Xavier Glorot et al
+		weight_np = glorot_weight_init(weight_shape, 'softmax')
+		self.learning_rate = config['learning_rate']
 
-        # IMPORTANT: Cast to pytorch format
-        self.weight = Variable(torch.from_numpy(self.weight).float(), requires_grad=True)
-        self.bias = Variable(torch.from_numpy(self.bias).float(), requires_grad=True)
+		# IMPORTANT: Cast to pytorch format
+		self.weight = torch.from_numpy(weight_np).float()
+		self.weight.requires_grad = True
 
-        # Instantiate softmax and negative logkelihood in log domain
-        self.logsoftmax = torch.nn.LogSoftmax(dim=1)
-        self.loss = torch.nn.NLLLoss()
+		self.bias = torch.zeros(1, config['num_classes'], requires_grad=True)
 
-    def _log_forward(self, input=None):
-        """Forward pass of the computation graph in logarithm domain (pytorch)"""
+		self.log_softmax = torch.nn.LogSoftmax(dim=1)
+		self.loss_function = torch.nn.NLLLoss()
 
-        # IMPORTANT: Cast to pytorch format
-        input = Variable(torch.from_numpy(input).float(), requires_grad=False)
+	def _log_forward(self, input=None):
+		"""Forward pass of the computation graph in logarithm domain (pytorch)"""
 
-        # Linear transformation
-        z =  torch.matmul(input, torch.t(self.weight)) + self.bias
+		# IMPORTANT: Cast to pytorch format
+		input = torch.from_numpy(input).float()
 
-        # Softmax implemented in log domain
-        log_tilde_z = self.logsoftmax(z)
+		# Linear transformation
+		z =  torch.matmul(input, torch.t(self.weight)) + self.bias
 
-        # NOTE that this is a pytorch class!
-        return log_tilde_z
+		# Softmax implemented in log domain
+		log_tilde_z = self.log_softmax(z)
 
-    def predict(self, input=None):
-        """Most probably class index"""
-        log_forward = self._log_forward(input).data.numpy()
-        return np.argmax(np.exp(log_forward), axis=1)
+		# NOTE that this is a pytorch class!
+		return log_tilde_z
 
-    def update(self, input=None, output=None):
-        """Stochastic Gradient Descent update"""
+	def predict(self, input=None):
+		"""Most probable class index"""
+		log_forward = self._log_forward(input).data.numpy()
+		return np.argmax(log_forward, axis=1)
 
-        # IMPORTANT: Class indices need to be casted to LONG
-        true_class = Variable(torch.from_numpy(output).long(), requires_grad=False)
+	def update(self, input=None, output=None):
+		"""Stochastic Gradient Descent update"""
 
-        # Compute negative log-likelihood loss
-        loss = self.loss(self._log_forward(input), true_class)
-        # Use autograd to compute the backward pass.
-        loss.backward()
+		# IMPORTANT: Class indices need to be casted to LONG
+		true_class = torch.from_numpy(output).long()
 
-        # SGD update and zero gradients
-        self.weight.data -= self.learning_rate * self.weight.grad.data
-        self.weight.grad.data.zero_()
-        self.bias.data -= self.learning_rate * self.bias.grad.data
-        self.bias.grad.data.zero_()
+		# Compute negative log-likelihood loss
+		loss = self.loss_function(self._log_forward(input), true_class)
 
-        return loss.data.numpy()
+		# Use autograd to compute the backward pass.
+		loss.backward()
+
+		# SGD update
+		self.weight.data -= self.learning_rate * self.weight.grad.data
+		self.bias.data -= self.learning_rate * self.bias.grad.data
+
+		# Zero gradients
+		self.weight.grad.data.zero_()
+		self.bias.grad.data.zero_()
+
+		return loss.data.numpy()
 \end{python}
 Once you understand the model you can instantiate it and run it using the standard training loop we have used on previous exercises.
 \begin{python}
