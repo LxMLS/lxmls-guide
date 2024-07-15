@@ -74,52 +74,49 @@ Encoder-Decoder models are commonly used for machine translation, as well as in 
 In these exercises, we focus first on the Encoder and then explain the other two.
 
 \section{Attention}
-Attention mechanisms have become a crucial component in effective sequence modeling across different tasks like machine translation \citep{bahdanau2014neural}.
-%Neural Machine Translation (NMT) \citep{vaswani2017attention}. They enable modeling relationships between elements in input or output sequences, regardless of their positional distance \citep{bahdanau2014neural, kim2017structured}.
-
-The sequence modeling architectures that predate Transformers, such as Recurrent Neural Networks (RNN), have traditionally treated input information in a uniform manner. This means that no specific connections are established among the individual tokens to fully capture the intricate relationships between them. Essentially, each token $t_i$ receives information from all preceding tokens $t_1...t_{i-1}$ in a uniform fashion. However, as the value of $i$ increases, this approach often leads to information loss, as well as issues related to vanishing or exploding gradients \citep{hochreiter1997long}, due to the fixed dimensionality of the encoded information.
-
-%In order to mitigate the latter challenge, Long Short-Term Memory (LSTM) models were introduced. These models proposed mechanisms to manipulate the flow of information across states by selectively adding or removing pertinent and extraneous information \citep{hochreiter1997long}. By incorporating these mechanisms, LSTM models aimed to address the aforementioned issues and enhance the handling of information within the sequence.
-%The LSTM has demonstrated exceptional performance on challenging sequence prediction tasks, such as text translation, and swiftly emerged as the prevailing approach in the field \citep{cho2014learning, sutskever2014sequence}.
-
-However, the issue of having a fixed-length internal representation persists, and to overcome this limitation in the encoder-decoder architecture, the Attention mechanism was introduced. The Attention mechanism offers various variants, and in this context, we will delve into the "Scaled Dot-Product Attention" as outlined in \cite{vaswani2017attention}.
-
-To provide a practical demonstration of the complex relationships that the model needs to learn, let's consider the following example: \emph{``The cat didn't climb the tree because it was too scared.``}.
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=8cm]{pages/imgs/example.png}
-    \caption{An example illustration}
-    \label{fig:example}
-\end{figure}
-In the initial part of the example, the inner connections are relatively straightforward. However, in the subsequent segment starting from the word "because", the relationships become more intricate.
-For a human being, the question of whether the pronoun "it" refers to the cat or the tree is relatively simple due to our prior knowledge about cats and trees. With our understanding of these concepts, we can confidently determine the intended reference of the word "it." 
-However, for a model, discerning the referent of the pronoun "it" -- whether it pertains to the cat or the tree -- is not as straightforward. Therefore, we require a mechanism that does not treat all words with equal importance but rather allocates focus to different tokens.
-
-This intuitive mechanism is known as Attention, which assigns significance to specific tokens for a selected token. In Figure \ref{fig:att_self_sample}, the attention mapping of our example is demonstrated. This is commonly referred to as Self-Attention, as the connections are attained at the internal level, i.e. between input tokens.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=8cm]{pages/imgs/att_self_sample.png}
-    \caption{Self-Attention of the sample}
-    \label{fig:att_self_sample}
+	\centering
+	\includegraphics[width=8cm]{pages/imgs/att_cat_sample.png}
+	\includegraphics[width=8cm]{pages/imgs/att_it_sample.png}
+	\caption{Encoder-Decoder Attention. Attention distributions were generated with Multilingual BERT \citep{devlin2018bert}.}
+	\label{fig:ed_att_sample}
 \end{figure}
 
-Capturing the connections between an input and an output sequence is vital for downstream tasks, like Neural Machine Translation (NMT). In this case, the Encoder-Decoder attention mechanism operates in a manner similar to Self-Attention. Let's translate our sample sentence into Portuguese and explore the significant connections it reveals. To accomplish this, we will utilize a pre-trained language model called Multilingual BERT (mBERT), which has knowledge about multiple languages, including English and Portuguese \citep{devlin2018bert}.
-
-
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=8cm]{pages/imgs/att_cat_sample.png}
-    \includegraphics[width=8cm]{pages/imgs/att_it_sample.png}
-    \caption{Encoder-Decoder Attention of the sample}
-    \label{fig:ed_att_sample}
+	\centering
+	\includegraphics[width=8cm]{pages/imgs/att_self_sample.png}
+	\caption{Self-Attention}
+	\label{fig:att_self_sample}
 \end{figure}
 
-In the left image of Figure \ref{fig:ed_att_sample}, we can clearly see that the attention of the token `cat' is specifically directed towards the token `gato', which corresponds to its accurate translation. Similarly, in the right image, the word `it' is attentively aligned with the token `gato' once again. These observations indicate the system's ability to effectively focus on the appropriate tokens, both in correctly selecting the appropriate translation, and accurately identifying the relevant noun.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{pages/imgs/example.png}
+	\caption{An example illustration}
+	\label{fig:example}
+\end{figure}
+
+Attention mechanisms have become a crucial component in effective sequence modeling across different tasks like machine translation \citep{bahdanau2014neural}, and they predate transformers by several years.
+The general idea of an attention mechanism is that it assigns scores to the hidden states of a model so that it knows where to focus.
+Figure \ref{fig:ed_att_sample} shows how an attention mechanism can decide which source words to focus on when generating each target word.
+In the left image, we can clearly see that the attention of the token `cat' is specifically directed towards the token `gato', which corresponds to its accurate translation. Similarly, in the right image, the word `it' is attentively aligned with the token `gato' once again.
+Transformers \cite{vaswani2017attention} use several varieties of attention, most famously self-attention, in which scores are produced to model the relationship between all pairs of tokens in a single sequence (see Figure \ref{fig:att_self_sample}).
+
+In order to understand why attention mechanisms are such powerful tools, it is helpful to understand the architectural limitations of models like RNNs.
+In an RNN, the hidden state $h_t$ has a direct connection to the previous hidden state $h_{t-1}$, but not from all hidden states elsewhere in the sequence.
+This leads to information loss because all relevant information at time $t$ needs to be put into a single fixed-dimensionality vector -- information from several steps in the past may be lost, so these models tend to have a recency bias.
+This can be a problem in natural language applications because there are often complex relationships that depend on words far away in the sequence, as in the example in Figure \ref{fig:example}.
+For a human being, the question of whether the pronoun ``it'' refers to the cat or the tree is relatively simple due to our prior knowledge about cats and trees. With our understanding of these concepts, we can confidently determine the intended reference of the word ``it.'' 
+For a model, however, discerning the referent of the pronoun ``it'' -- whether it is the cat or the tree -- may be more of a challenge because ``the tree'' occurred more recently.
+An attention mechanism enables a model to access all hidden states $h_1 \cdots h_T$, not just the most recent.
 
 Now let's explore each building block of the Transformer architecture and examine how the Attention mechanism fits in this.
 
+%Therefore, we require a mechanism that does not treat all words with equal importance but rather allocates focus to different tokens.
 
+%However, the issue of having a fixed-length internal representation persists, and to overcome this limitation in the encoder-decoder architecture, the Attention mechanism was introduced. The Attention mechanism offers various variants, and in this context, we will delve into the "Scaled Dot-Product Attention" as outlined in \cite{vaswani2017attention}.
+
+%Capturing the connections between an input and an output sequence is vital for downstream tasks, like Neural Machine Translation (NMT). In this case, the Encoder-Decoder attention mechanism operates in a manner similar to Self-Attention. Let's translate our sample sentence into Portuguese and explore the significant connections it reveals. To accomplish this, we will utilize a pre-trained language model called Multilingual BERT (mBERT), which has knowledge about multiple languages, including English and Portuguese \citep{devlin2018bert}.
 
 \section{Encoder Architecture}\label{sec:enc}
 
