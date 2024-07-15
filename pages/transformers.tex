@@ -74,9 +74,8 @@ Encoder-Decoder models are commonly used for machine translation, as well as in 
 In these exercises, we focus first on the Encoder and then explain the other two.
 
 \section{Attention}
-In this section, we will delve into the intricacies of the attention mechanism, aiming to grasp its underlying intuition and motivation. We will embark on a comprehensive exploration of its inner workings, unraveling its secrets along the way.
-
-Attention mechanisms have become a crucial component in effective sequence modeling across different tasks e.g. Neural Machine Translation (NMT) \citep{vaswani2017attention}. They enable modeling relationships between elements in input or output sequences, regardless of their positional distance \citep{bahdanau2014neural, kim2017structured}.
+Attention mechanisms have become a crucial component in effective sequence modeling across different tasks like machine translation \citep{bahdanau2014neural}.
+%Neural Machine Translation (NMT) \citep{vaswani2017attention}. They enable modeling relationships between elements in input or output sequences, regardless of their positional distance \citep{bahdanau2014neural, kim2017structured}.
 
 The state-of-the-art sequence modeling architectures that predate Transformers, such as Recurrent Neural Networks (RNN), have traditionally treated input information in a uniform manner. This means that no specific connections are established among the individual tokens to fully capture the intricate relationships between them. Essentially, each token denoted as $t_i$, receives information from all preceding tokens $t_1...t_{i-1}$ in a uniform fashion. However, as the value of $i$ increases, this approach often leads to information loss, as well as issues related to vanishing or exploding gradients \citep{hochreiter1997long}, due to the fixed dimensionality of the encoded information.
 
