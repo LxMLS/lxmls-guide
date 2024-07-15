@@ -58,17 +58,20 @@ tokenizer.encoder.encode_and_show_work(sentence)
 
 \section{Transformer Architectures}
 
-The basic building block of the Transformer combines a large Feed forward network with a multi-head self-attention layer. We have seen feed forwards in previous days and we will focus here on multi-head self-attention. Refer to previous days for details on the basics of feed-forwards.
-
-Transformer blocks can be found in three types: Encoder, Decoder, and Encoder-Decoder 
+The basic building block of the Transformer combines a large feed-forward network with a multi-head self-attention layer. We have seen feed-forward models in previous days and we will focus here on multi-head self-attention. Refer to previous days for details on the basics of feed-forward models.
+There are three main varieties of transformer model:
 
 \begin{enumerate}
-\item Encoders: map a sequence of $T$ observations, e.g. some word or sub-word units $x_1 \cdots x_T$ to a hidden representation of size $H$, yielding a matrix of embeddings of size $(H, T)$. These contextual embeddings can be used to build other models on top by adding extra layers e.g. BERT.
-\item Decoders: given a sequence of $t$ observations, e.g. some word or sub-word units $x_{<t} = x_1 \cdots x_{t-1}$ provide a hidden representation for element $x_t$. This can be used to predict the next word given some partial sentence e.g. as in GPT. 
-\item Cross-Attention-Decoders: map a sequence $x$ to another of different size $y$. For this, they first Encode $x$ using an encoder. And then use a modified Decoder, that uses an additional attention mechanism read the Encoder values to generate embeddings for $y_t$ given $y_{<t}$ and the $\mathrm{Encoder}(x)$. The original Transformer used for machine translation is the best example.
+\item Encoders: map a sequence of $T$ observations, e.g. some word or sub-word units $x_1 \cdots x_T$ to a hidden representation of size $H$, yielding a matrix of embeddings of size $(H, T)$. These contextual embeddings can be combined with a task-specific prediction layer, as in BERT.
+\item Decoders: given a sequence of $T-1$ observations, e.g. some word or sub-word units $x_{<T} = x_1 \cdots x_{T-1}$, predict the next word $x_T$.
+This architecture is the basis of many common large language models, such as GPT. 
+\item Encoder-Decoders: map a sequence $x$ to another sequence $y$, which might be of a different length. For this, first $x$ is processed with an Encoder. 
+Then $y$ is processed with a modified Decoder which uses a cross-attention mechanism to compute attention between $x$ and $y$.
+Encoder-Decoder models are commonly used for machine translation, as well as in some general-purpose language models such as T5.
 \end{enumerate}
 
-Though with very different roles the three architectures are very close to each other and imply only minor modifications. We will focus here on the Encoder architecture first, and then we will explain the other two.
+\noindent Although these models are used for different purposes, the architectures are very similar.
+In these exercises, we focus first on the Encoder and then explain the other two.
 
 \section{Attention}
 In this section, we will delve into the intricacies of the attention mechanism, aiming to grasp its underlying intuition and motivation. We will embark on a comprehensive exploration of its inner workings, unraveling its secrets along the way.
