@@ -1,9 +1,9 @@
 \section{Today's assignment}
-Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing pushing the performance of all tasks through models like BERT \cite{devlin2018bert} and GPT \cite{brown2020language}. In this class, we will review the architecture of Transformers. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's minGPT code (\url{https://github.com/karpathy/minGPT}).
+Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing, pushing the performance of many tasks through models like BERT \cite{devlin2018bert} and GPT \cite{brown2020language}. In this class, we will review the transformer architecture. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's minGPT code (\url{https://github.com/karpathy/minGPT}).
 
 
 \section{Before Diving into Transformers}
-Before diving into transformers, we would like to introduce two important pieces of details to defining and training transformers.
+Before diving into transformers, we would like to introduce two important details of defining and training transformers.
 
 
 \subsection{Positional Encoding}
@@ -15,37 +15,35 @@ Different from models with recurrence/convolution, positional information is not
     PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
 \end{equation}
 
-where $pos$ is the position and $i$ is the dimension.
+\noindent where $pos$ is the position and $i$ is the dimension.
 
 \subsection{Tokenization}
-To break down a given input string into atomic pieces, the tokenization operation is performed. There are various techniques available for applying tokenization, with word-based and character-level tokenization being the two extremes. Each approach has its advantages and considerations for specific cases. The subword tokenization strikes a balance between these two approaches.
-
-Subword tokenization operates on the idea that frequently occurring words should be included in the vocabulary, while rare words should be split into more common subwords. This approach aims to handle a wider range of word types effectively.
-
-Transformers utilize the byte pair encoding (BPE) approach \citep{bpe} during training. BPE enables the encoding of rare and unknown words as sequences of subword units, contributing to the overall flexibility and performance of the model.
+Transformers operate on sequences of input.
+In the case of natural language, these sequences could be whole words, single characters, or something in-between.
+The process of breaking a text string into these smaller pieces is called tokenization.
+Most transformers use subword tokenization, which operates on the idea that frequently occurring words should occur as single units, while rare words should be split into smaller pieces that occur more frequently.
+The most widespread subword tokenization algorithm is byte pair encoding (BPE) \citep{bpe}, which allows \emph{any} string to be represented as a sequence of pieces from a \emph{finite} vocabulary.
 
 \begin{exercise}
 Tokenization
 
-Let's see how the three mostly used tokenization techniques can be applied in practice.
+Let's see how the three most-used tokenization techniques can be applied in practice.
 \begin{enumerate}
 \item Run the word-based tokenizer and try out different {\tt text}:
 \begin{python}
 text = "I travelled to Lisbon in July to attend an NLP summer school"
 text.split()
 \end{python}
-\item Run the character-based tokenizer, try out different different {\tt text} and answer the corresponding question:
+\item Run the character-based tokenizer and try out different different {\tt text}. Can you imagine what problems character-level tokenizers pose to NLP models?
 \begin{python}
 text = "I will travel to Lisbon in July..."
 tokenized = [c for c in text if c not in [",", ";", ":", "'", "!", "?"]]
 print(tokenized)
 \end{python}
-Question: What other problems are character-based tokenizers posing to NLP models?
 
 
-\item Run the BPE (byte-pair encoding) tokenizer, and answer the corresponding questions:
+\item Run the BPE (byte-pair encoding) tokenizer. Can you guess which words will be split subwords and which ones won't?
 \begin{python}
-import numpy as np
 from lxmls.transformers.bpe import BPETokenizer
 
 tokenizer = BPETokenizer()
@@ -53,7 +51,6 @@ tokenizer = BPETokenizer()
 sentence = "Your drawing is charmingly anachronistic."
 tokenizer.encoder.encode_and_show_work(sentence)
 \end{python}
-Question: Do you have a guess on which word will be split subwords and which one won't?
 \end{enumerate}
 \end{exercise}
 
