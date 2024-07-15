@@ -2,99 +2,36 @@
 
 If you have decided to use one of our provided desktops, all installation procedures have been carried out. You merely need to go to the \verb+lxmls-toolkit-student+ folder inside your home directory and start working! You may go directly to section \ref{sec:SolvingExercises}. If you wish to use your own laptop, you will need to install Python, the required Python libraries and download the LXMLS code base. It is important that you do this as soon as possible (before the school starts) to avoid unnecessary delays. Please follow the install instructions. 
 
-\subsection{Downloading the labs version from GitHub student branch}
+\subsection{Basic Install and Troubleshooting}
 
-The code of LxMLS is available online at GitHub. There are two branches of the code: the \verb+master+ branch contains fully functional code. \textbf{important}: The \verb+student+ branch contains the same code with some parts deleted, which you must complete in the following exercises. Download the \verb+student+ code by going to
+To install, just follow the instructions in our Github repository for the \verb+student+ version of our toolkit 
 
-\begin{verbatim}
-https://github.com/LxMLS/lxmls-toolkit
-\end{verbatim}
+\begin{itemize}
+\item \url{https://github.com/LxMLS/lxmls-toolkit/tree/student#readme}. 
+\end{itemize}
 
-\noindent and select the \verb+student+ branch in the dropdown menu. This will reload the page to the corresponding branch. Now you just need to click the \verb+clone or download + button to obtain the lab tools in a zip format:
+The \verb+student+ branch contains the same code as \verb+master+ branch, with some parts deleted, which you must complete in the following exercises. 
 
-\begin{verbatim}
-lxmls-toolkit-student.zip
-\end{verbatim}
+The basic install instructions use miniconda. If this is not your tool of choice, you can install it with \texttt{pip} as an alternative. In order to do this, you first need to run
 
-After this you can unzip the file where you want to work and enter the unzipped folder. This will be the place where you will work. 
+ \texttt{python3 -m venv lxmls\_venv}
 
-\subsection{Installing Python from Scratch with Anaconda}
+where \texttt{lxmls\_venv} is the name (and path) to your virtual environment. Then, you activate the environment with 
 
-If you are new to Python the best option right now is the Anaconda platform. You can find installers for Windows, Linux and OSX platforms here
+\texttt{source lxmls\_venv/bin/activate} 
 
-\begin{verbatim}
-https://www.anaconda.com/download/
-https://anaconda.org/pytorch/pytorch
-\end{verbatim}
+and afterwards you install jupyter with pip:
 
-Finally install the LXMLS toolkit symbolically. This will allow you to modify the code and see the changes take place immediately.
+\texttt{pip install jupyter}
 
-\begin{verbatim}
-python setup.py develop
-\end{verbatim}
+Note that, after activating the environment with the command \texttt{source}, the name of the environment should be shown between parentheses in the command line. Make sure this is the case before installing jupyter. After this, you can double check the installation worked by running the following command:
 
-\noindent The guide supports both Python2 and Python3. We strongly recommend that you use Python3 as Python2 is being deprecated. 
+\texttt{pip install ipykernel}
 
-\begin{verbatim}
-\end{verbatim}
+if this installation also worked, then you just need to run the following command so your new virtual environment is also shown in the jupyter notebooks as an interpreter of your choice.
 
-\subsection{Installing with Pip}
+\texttt{python -m ipykernel install -{}-user -{}-name lxmls\_venv -{}-display-name ``LxMLS venv"}
 
-If you are familiar with Python you will probably be used to the pip package installer. In this case it might be more easy for you to install the packages yourself using pip and a virtual environment. This will avoid conflicting with existing python installations. To install and create a virtual environment do
-
-\begin{verbatim}
-cd lxmls-toolkit-student
-sudo pip install virtualenv
-virtualenv venv 
-source venv/bin/activate
-pip install --editable .
-\end{verbatim}
-
-If you also need to install a new python version, e.g. your systems Python is still Python2 and you can not change this, you can virtualize different Python versions as well. Have a look at pyenv. This will hijack your python binary and allow you
-switch between Python 2, 3 or install concrete versions for a particular folder. To install pyenv
-
-\begin{verbatim}
-git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-\end{verbatim}
-
-\noindent and add the following to your .bashrc or .bash\_profile
-
-\begin{verbatim}
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)
-\end{verbatim}
-
-be careful if you already redefine Python's path in these files. If you do not feel comfortable with this its better to ask for help. Once installed you can do the following in the LxMLS folder
-
-\begin{verbatim}
-source ~/.bashrc
-pyenv install 3.6.0 
-pyenv local 3.6.0
-\end{verbatim}
-
-\noindent to install and set the version of python for that folder to Python 3.6.0
-
-
-\subsection{(Advanced Users) Forking and cloning the code on GitHub}
-
-It might be the case that you feel very comfortable with scientific Python, know some git/GitHub and want to extend/improve our code base. In that case you can directly clone the project with
-
-\begin{verbatim}
-git clone https://github.com/LxMLS/lxmls-toolkit.git 
-cd lxmls-toolkit/
-git checkout student
-pip install --editable .
-\end{verbatim}
-
-\textbf{Note:}
-\noindent If you are experiencing issues on Windows, you would probably have to install pytorch first.
-\begin{verbatim} 
-pip install https://download.pytorch.org/whl/cpu/torch-1.1.0-cp36-cp36m-win_amd64.whl
-pip install https://download.pytorch.org/whl/cpu/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
-\end{verbatim}
-
-\noindent If you want to contribute to the code-base, you can make pull requests to the \textit{develop} branch or raise issues.
 
 \subsection{Deciding on the IDE and interactive shell to use}
 
