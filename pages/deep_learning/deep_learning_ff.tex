@@ -316,7 +316,7 @@ class NumpyLogLinear(Model):
         z = np.dot(input, self.weight.T) + self.bias
 
         # Softmax implemented in log domain
-        log_tilde_z = z - logsumexp(z, axis=1, keepdims=True)[:, None]
+        log_tilde_z = z - logsumexp(z, axis=1, keepdims=True)
 
         return log_tilde_z
 
