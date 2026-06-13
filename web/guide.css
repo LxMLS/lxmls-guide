@@ -61,6 +61,41 @@
 .guide-sidebar nav a.toc-h2 { font-weight: 600; margin-top: 0.35rem; }
 .guide-sidebar nav a.toc-h3 { font-size: 0.86rem; }
 
+/* Mobile "Contents" toggle (hidden at >= md, where the sidebar is always shown) */
+.guide-sidebar-toggle {
+	display: block;
+	width: 100%;
+	text-align: left;
+	font-weight: 700;
+	color: var(--guide-primary);
+	background: var(--guide-code-bg);
+	border: 1px solid var(--guide-border);
+	border-radius: 6px;
+	padding: 0.6rem 0.9rem;
+	margin: 0.5rem 0 0.5rem;
+	cursor: pointer;
+}
+.guide-sidebar-toggle::before {
+	content: "\2630";
+	margin-right: 0.5rem;
+}
+@media (max-width: 767.98px) {
+	.guide-sidebar { padding-top: 1rem; }
+	.guide-sidebar-inner {
+		position: static;
+		max-height: none;
+		overflow: visible;
+		border-right: 0;
+		padding-right: 0;
+	}
+	#guide-toc {
+		border: 1px solid var(--guide-border);
+		border-radius: 6px;
+		padding: 0.5rem 1rem;
+		margin-bottom: 1rem;
+	}
+}
+
 /* ---------- Main content ---------- */
 .guide-main {
 	padding-top: 2.5rem;

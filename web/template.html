@@ -47,10 +47,13 @@ __MATHJAX_MACROS__
 
 		<div class="guide-wrap container-fluid">
 			<div class="row">
-				<aside class="col-lg-3 col-md-4 guide-sidebar d-none d-md-block">
+				<aside class="col-lg-3 col-md-4 guide-sidebar">
 					<div class="guide-sidebar-inner">
-						<a class="guide-sidebar-home" href="index.html">&larr; Guide contents</a>
+						<button class="guide-sidebar-toggle d-md-none" type="button" data-toggle="collapse" data-target="#guide-toc" aria-expanded="false" aria-controls="guide-toc">Contents</button>
+						<div class="collapse d-md-block" id="guide-toc">
+							<a class="guide-sidebar-home" href="index.html">&larr; Guide contents</a>
 __SIDEBAR__
+						</div>
 					</div>
 				</aside>
 				<main class="col-lg-9 col-md-8 guide-main">
