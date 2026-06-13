@@ -1,0 +1,299 @@
+/* LxMLS Lab Guide — web styling. Palette matches the site (primary #2B5D93). */
+
+:root {
+	--guide-primary: #2B5D93;
+	--guide-primary-dark: #1f4870;
+	--guide-accent: #F96D00;
+	--guide-border: #e3e7ee;
+	--guide-code-bg: #f6f8fa;
+	--guide-text: #2b2b2b;
+}
+
+.guide-body {
+	background: #ffffff;
+	color: var(--guide-text);
+}
+
+.guide-wrap {
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 0 15px;
+}
+
+/* ---------- Sidebar table of contents ---------- */
+.guide-sidebar {
+	padding-top: 2.5rem;
+}
+.guide-sidebar-inner {
+	position: sticky;
+	top: 1rem;
+	max-height: calc(100vh - 2rem);
+	overflow-y: auto;
+	border-right: 1px solid var(--guide-border);
+	padding-right: 1rem;
+	font-size: 0.9rem;
+}
+.guide-sidebar-home {
+	display: block;
+	font-weight: 700;
+	color: var(--guide-primary);
+	margin-bottom: 1rem;
+	text-decoration: none;
+}
+.guide-sidebar nav ul {
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 0;
+}
+.guide-sidebar nav ul ul {
+	padding-left: 0.9rem;
+}
+.guide-sidebar nav a {
+	display: block;
+	padding: 2px 0;
+	color: #4a5568;
+	text-decoration: none;
+	line-height: 1.3;
+}
+.guide-sidebar nav a:hover {
+	color: var(--guide-primary);
+}
+.guide-sidebar nav a.toc-h2 { font-weight: 600; margin-top: 0.35rem; }
+.guide-sidebar nav a.toc-h3 { font-size: 0.86rem; }
+
+/* ---------- Main content ---------- */
+.guide-main {
+	padding-top: 2.5rem;
+	padding-bottom: 4rem;
+}
+.guide-content {
+	max-width: 820px;
+	font-size: 1.02rem;
+	line-height: 1.7;
+}
+.guide-content h1, .guide-content h2, .guide-content h3,
+.guide-content h4, .guide-content h5 {
+	color: var(--guide-primary-dark);
+	font-weight: 700;
+	margin-top: 2.2rem;
+	margin-bottom: 0.9rem;
+	scroll-margin-top: 1rem;
+}
+.guide-content h1 { font-size: 2.1rem; border-bottom: 3px solid var(--guide-primary); padding-bottom: 0.4rem; }
+.guide-content h2 { font-size: 1.6rem; }
+.guide-content h3 { font-size: 1.3rem; }
+.guide-content h4 { font-size: 1.1rem; }
+.guide-content a { color: var(--guide-primary); }
+.guide-content p { margin-bottom: 1rem; }
+
+/* ---------- Code blocks ---------- */
+.guide-content pre {
+	position: relative;
+	background: var(--guide-code-bg);
+	border: 1px solid var(--guide-border);
+	border-left: 4px solid var(--guide-primary);
+	border-radius: 6px;
+	padding: 1rem 1rem 1rem 1.1rem;
+	overflow-x: auto;
+	margin: 1.2rem 0;
+}
+.guide-content pre code {
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-size: 0.86rem;
+	line-height: 1.5;
+	background: none;
+	padding: 0;
+	color: #24292e;
+}
+/* inline code */
+.guide-content code:not(pre code) {
+	background: var(--guide-code-bg);
+	border: 1px solid var(--guide-border);
+	border-radius: 4px;
+	padding: 0.1em 0.35em;
+	font-size: 0.88em;
+	color: #b5145e;
+}
+
+/* copy button */
+.guide-copy-btn {
+	position: absolute;
+	top: 0.45rem;
+	right: 0.45rem;
+	font-size: 0.72rem;
+	line-height: 1;
+	padding: 0.35rem 0.6rem;
+	border: 1px solid var(--guide-border);
+	border-radius: 4px;
+	background: #fff;
+	color: var(--guide-primary);
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.15s ease-in-out;
+}
+.guide-content pre:hover .guide-copy-btn { opacity: 1; }
+.guide-copy-btn:hover { background: var(--guide-primary); color: #fff; }
+.guide-copy-btn.copied { background: #2e7d32; color: #fff; border-color: #2e7d32; opacity: 1; }
+
+/* ---------- Theorem-like boxes ---------- */
+.guide-box {
+	border: 1px solid var(--guide-border);
+	border-left: 4px solid var(--guide-primary);
+	border-radius: 6px;
+	background: #fbfcfe;
+	padding: 1rem 1.2rem;
+	margin: 1.4rem 0;
+}
+.guide-box-title {
+	font-weight: 700;
+	color: var(--guide-primary-dark);
+	margin-bottom: 0.5rem;
+}
+.guide-box > *:last-child { margin-bottom: 0; }
+.guide-exercise { border-left-color: var(--guide-accent); background: #fff8f2; }
+.guide-exercise .guide-box-title { color: #c2530a; }
+.guide-definition { border-left-color: #2e7d32; }
+.guide-theorem { border-left-color: #6a1b9a; }
+
+/* ---------- Algorithm blocks ---------- */
+.guide-algorithm {
+	/* override the centered alignment inherited from .guide-content figure */
+	text-align: left;
+	border: 1px solid var(--guide-border);
+	border-left: 4px solid var(--guide-primary);
+	border-radius: 6px;
+	background: var(--guide-code-bg);
+	padding: 0.7rem 1rem 0.8rem;
+	margin: 1.6rem 0;
+}
+.guide-algorithm figcaption {
+	font-weight: 700;
+	color: var(--guide-primary-dark);
+	border-bottom: 1px solid var(--guide-border);
+	padding-bottom: 0.45rem;
+	margin-bottom: 0.6rem;
+	text-align: left;
+}
+.guide-algorithm .algo-body {
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-size: 0.85rem;
+	line-height: 1.6;
+}
+.guide-algorithm .algo-line {
+	text-align: left;
+	white-space: normal;
+}
+.guide-algorithm .algo-num {
+	display: inline-block;
+	min-width: 1.8em;
+	margin-right: 0.7em;
+	text-align: right;
+	color: #8895a7;
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+/* ---------- Figures ---------- */
+.guide-content figure, .guide-content .figure {
+	text-align: center;
+	margin: 1.6rem 0;
+}
+.guide-content img {
+	max-width: 100%;
+	height: auto;
+}
+.guide-content figcaption, .guide-content .caption {
+	font-size: 0.9rem;
+	color: #5a6472;
+	margin-top: 0.5rem;
+}
+
+/* ---------- Tables ---------- */
+.guide-content table {
+	border-collapse: collapse;
+	margin: 1.4rem 0;
+	width: auto;
+	font-size: 0.95rem;
+}
+.guide-content table th, .guide-content table td {
+	border: 1px solid var(--guide-border);
+	padding: 0.45rem 0.7rem;
+	text-align: left;
+}
+.guide-content table th { background: var(--guide-code-bg); }
+
+/* ---------- Math overflow ---------- */
+.guide-content mjx-container[display="true"] {
+	overflow-x: auto;
+	overflow-y: hidden;
+	max-width: 100%;
+}
+
+/* ---------- Prev/next page nav ---------- */
+.guide-pagenav {
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-top: 3rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--guide-border);
+	max-width: 820px;
+}
+.guide-pagenav a {
+	flex: 1;
+	padding: 0.8rem 1rem;
+	border: 1px solid var(--guide-border);
+	border-radius: 6px;
+	text-decoration: none;
+	color: var(--guide-primary);
+}
+.guide-pagenav a:hover { border-color: var(--guide-primary); }
+.guide-pagenav a.next { text-align: right; }
+.guide-pagenav .label { display: block; font-size: 0.75rem; color: #8895a7; text-transform: uppercase; }
+.guide-pagenav .title { font-weight: 600; }
+
+/* ---------- Landing page cards ---------- */
+.guide-landing-hero {
+	background: var(--guide-primary);
+	color: #fff;
+	padding: 3rem 0;
+	margin-bottom: 2.5rem;
+}
+.guide-landing-hero h1 { color: #fff; font-weight: 700; }
+.guide-day-card {
+	display: block;
+	height: 100%;
+	border: 1px solid var(--guide-border);
+	border-radius: 8px;
+	padding: 1.4rem;
+	text-decoration: none;
+	color: var(--guide-text);
+	transition: box-shadow 0.15s, transform 0.15s;
+}
+.guide-day-card:hover {
+	box-shadow: 0 6px 22px rgba(43, 93, 147, 0.15);
+	transform: translateY(-2px);
+	text-decoration: none;
+	color: var(--guide-text);
+}
+.guide-day-card .day-num {
+	font-size: 0.8rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--guide-accent);
+}
+.guide-day-card .day-title {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--guide-primary-dark);
+	margin: 0.3rem 0 0.6rem;
+}
+
+/* footnotes */
+.guide-content .footnotes {
+	margin-top: 3rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--guide-border);
+	font-size: 0.9rem;
+	color: #5a6472;
+}
