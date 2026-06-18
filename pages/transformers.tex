@@ -1,5 +1,5 @@
 \section{Today's assignment}
-Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing, pushing the performance of many tasks through models like BERT \cite{devlin2018bert} and GPT \cite{brown2020language}. In this class, we will review the transformer architecture. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's minGPT code (\url{https://github.com/karpathy/minGPT}).
+Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing and Artificial Intelligence more broadly, powering models such as BERT \cite{devlin2018bert}, GPT \cite{brown2020language}, LLaMA \cite{touvron2023llama}, and the current generation of large language models (LLMs) like GPT-4 \citep{gpt-4} and Claude. In this class, we will review the transformer architecture. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's minGPT code (\url{https://github.com/karpathy/minGPT}).
 
 
 \section{Before Diving into Transformers}
@@ -15,7 +15,7 @@ Different from models with recurrence/convolution, positional information is not
     PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
 \end{equation}
 
-\noindent where $pos$ is the position and $i$ is the dimension.
+\noindent where $pos$ is the position and $i$ is the dimension. Many modern LLMs instead use learned absolute positional embeddings (as in GPT-2) or Rotary Position Embedding (RoPE) \citep{su2024roformer}, which encodes relative positions directly into the attention computation and is used in models such as LLaMA \citep{touvron2023llama} and Mistral \citep{jiang2023mistral}.
 
 \subsection{Tokenization}
 Transformers operate on sequences of input.
@@ -414,7 +414,7 @@ max_{\theta}logP_{\theta}(\bar{\textbf{x}}|\hat{\textbf{x}})\approx \sum_{t=1}^T
 
 Where the $\approx$ indicates that all $\bar{\textbf{x}}$ elements are independent (seperately reconstructed), $m_t$ indicates weather or not $x_t$ is masked (1-masked, 0-not), $H_{\theta}$ is a Transformer that maps a sequence $x$ of length $T$ and contains infomation about the context on both sides $H_{\theta}(X)=[H_{\theta}(x)_1, H_{\theta}(x)_2,...H_{\theta}(x)_T]$, and $e(x)$ denotes the embedding of $x$.
 
-Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, and extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}.
+Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, and extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}. Note that while encoder-only models remain useful for classification and retrieval tasks, the field has largely shifted toward decoder-only LLMs for general-purpose language understanding.
 
 \textbf{BERT} \cite{devlin2018bert} is trained on MLM(Masked Language Modeling) and NSP(Next Sentence Prediction) objectives.
 In the \textbf{MLM} objective, 15\% of the input tokens are selected. Among these selected tokens:
@@ -448,8 +448,9 @@ Where the $h_{\theta}(\textbf{x}_{1:t-1})$ is the context representation produce
 
 A Decoder-only or Autoregressive model operates differently compared to Encoder-only or Autoencoder model by focusing on density estimation rather than reconstructing corrupted input. These models aim to estimate probability distributions, which limits their ability to capture bidirectional context. As a result, they are restricted to uni-directional processing.
 
-\paragraph{GPTs.} The class of GPTs is a series of pre-trained decoder-only transformers. Models are pre-trained to perform the next token prediction with the Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 
-\citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models has been trained with reinforcement learning with human feedback \citep{rlhf}, which enables the model to manifest interesting behaviors that you see when using ChatGPT.
+\paragraph{GPTs.} The class of GPTs is a series of pre-trained decoder-only transformers. Models are pre-trained to perform the next token prediction with the Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 \citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models has been trained with reinforcement learning from human feedback (RLHF) \citep{rlhf}, which enables the model to follow instructions and exhibit the behaviors you see when using ChatGPT.
+
+Beyond OpenAI's models, the release of LLaMA \citep{touvron2023llama} and its successors (LLaMA 2, LLaMA 3) made high-quality decoder-only transformers available to the research community. Models such as Mistral \citep{jiang2023mistral} further demonstrated that smaller, carefully trained models can match much larger ones. These open-weight models have become the dominant platform for NLP research.
 
 
 \subsection{Training with Encoder-Decoder}
@@ -544,7 +545,7 @@ train_config.learning_rate = (
 )
 train_config.max_iters = 2000
 train_config.num_workers = 0
-train_config.device = "mps"
+train_config.device = "cuda" if torch.cuda.is_available() else "cpu"
 trainer = Trainer(train_config, model, train_dataset)
 
 print(train_config)
@@ -606,12 +607,12 @@ head_view(outputs.attentions, tokens=tokens)
 
 
 
-\begin{exercise} Promoting a GPT-2 model
+\begin{exercise} Prompting a GPT-2 model
 Now that we have trained our own Transformer model and gained some understanding of its functioning, let's explore a larger pre-trained model that has been trained on a vast amount of natural data. By doing so, we can experience generating output that closely resembles human-like responses.
 
 \begin{python}
 model_type = "gpt2"
-device = "mps"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 model = GPT.from_pretrained(model_type)
 
