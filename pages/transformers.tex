@@ -1,5 +1,5 @@
 \section{Today's assignment}
-Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing, pushing the performance of many tasks through models like BERT \cite{devlin2018bert} and GPT \cite{brown2020language}. In this class, we will review the transformer architecture. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's minGPT code (\url{https://github.com/karpathy/minGPT}).
+Today's class will demystify the Transformer architecture \cite{vaswani2017attention}. Transformers have become the dominant model in Natural Language Processing and Artificial Intelligence more broadly, powering models such as BERT \cite{devlin2018bert}, GPT \cite{brown2020language}, LLaMA \cite{touvron2023llama}, and the current generation of large language models (LLMs) like GPT-4 \citep{gpt-4} and Claude. In this class, we will review the transformer architecture. The focus of the class is to understand and implement the self-attention mechanism in Pytorch. For this, we will use an annotated version of Karpathy's minGPT code (\url{https://github.com/karpathy/minGPT}).
 
 
 \section{Before Diving into Transformers}
@@ -15,7 +15,7 @@ Different from models with recurrence/convolution, positional information is not
     PE_{(pos,2i+1)} = cos(\frac{pos}{ 10000^{2i/d_{model}}}),
 \end{equation}
 
-\noindent where $pos$ is the position and $i$ is the dimension.
+\noindent where $pos$ is the position and $i$ is the dimension. Many modern LLMs instead use learned absolute positional embeddings (as in GPT-2) or Rotary Position Embedding (RoPE) \citep{su2024roformer}, which encodes relative positions directly into the attention computation and is used in models such as LLaMA \citep{touvron2023llama} and Mistral \citep{jiang2023mistral}.
 
 \subsection{Tokenization}
 Transformers operate on sequences of input.
@@ -127,7 +127,7 @@ In the original paper for transformers \citep{vaswani2017attention}, a ``sub-lay
 The encoder architecture can be succinctly described as stacking a number of $N$ blocks on top of each other combining a $\mathrm{FF}$ and $\mathrm{MHA}$ sub-blocks. A single block is defined as
 
 \begin{equation}
-e^{n+1} = \mathrm{FF}(\mathrm(MHA(e^n)).
+e^{n+1} = \mathrm{FF}(\mathrm{MHA}(e^n)).
 \end{equation}
 
 The input to the first block $e^0$ is the sum of position $P$ and non-contextual embeddings $E$ of the input. Assuming $x_1 \cdots x_T$ is a sequence of integers (indices to a vocabulary of $V$ symbols) we have that
@@ -183,7 +183,7 @@ Then, to perform attention, we follow these steps:
 \noindent This simple 3-step process is in fact the Attention mechanism. Where we are looking for the best matching tokens for the source sequence in the target sequence.
 Let's compute the cross-attention score step-by-step. The Key and Query matrices are multiplied by each other and normalized by a constant value $\frac{1}{A} W^Q z_q \left(W^K z_c\right)^T$ or $\frac{1}{A} Q K^T$. The $A$ value is usually chosen to be the square root of the dimension of the key matrices. This leads to having more stable gradients.
 
-\noindent Then pass the result through a $softmax$ operation. The Softmax normalizes the scores so they’re all positive and add up to 1. In other words, extracts a distribution of relative scores from a given token for each token in the input sequence.
+\noindent Then pass the result through a $\mathrm{softmax}$ operation. The Softmax normalizes the scores so they’re all positive and add up to 1. In other words, extracts a distribution of relative scores from a given token for each token in the input sequence.
 
 \noindent After this multiply the output by the Value matrix: $\underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q z \left(W^K z\right)^T \right) \cdot W^V \cdot z $ or simply $V \cdot \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} Q K^T \right)$. See Figure \ref{fig:att_ops}
 
@@ -201,7 +201,7 @@ The Multi-Head Attention ($\mathrm{MHA}$) enhances the Attention layer in two wa
 
 
 \begin{equation}
-MHA(z) =  W^o \cdot
+\mathrm{MHA}(z) =  W^o \cdot
 \begin{bmatrix}
     \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_1 z \left(W^K_1 z\right)^T \right) \cdot W^V_1 \cdot z \\
     \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_2 z \left(W^K_2 z\right)^T \right) \cdot W^V_2 \cdot z \\
@@ -234,7 +234,7 @@ Please note that the dimension of $W^V$ can be different in the general case. Th
 
 %where $f = \{\mathrm{FF}, \mathrm{MHA}\}$.
 
-To complete the ``sub-layer``, a dropout followed by a residual connection and a layer normalization is applied to input $z$ that has been passed through a $\mathrm{sub-block}$, where a $\mathrm{sub-block} \in \{\mathrm{FF}, MHA\}$. Together, we can express the function as
+To complete the ``sub-layer``, a dropout followed by a residual connection and a layer normalization is applied to input $z$ that has been passed through a $\mathrm{sub-block}$, where a $\mathrm{sub-block} \in \{\mathrm{FF}, \mathrm{MHA}\}$. Together, we can express the function as
 
 \begin{equation}
 C(x) = \mathrm{layernorm}(\mathrm{residual}(\mathrm{dropout}(\mathrm{sublayer}(z)), z)
@@ -280,18 +280,18 @@ In the Encoder-Decoder Architecture, the encoder is the same as section \ref{sec
 The decoder in the Encoder-Decoder Architecture is a little bit different than section \ref{sec:dec}. Each layer of the decoder will include one more Cross-Multi-Head Attention (CMHA) sub-layer, and the order of sub-layers in a decoder layer will be $\mathrm{MHA}$-$\mathrm{CMHA}$-$\mathrm{FF}$, i.e.
 
 \begin{equation}
-    d^{m+1} = \mathrm{FF}(\mathrm(CMHA(e^N, MHA(d^m))).
+    d^{m+1} = \mathrm{FF}(\mathrm{CMHA}(e^N, \mathrm{MHA}(d^m))).
 \end{equation}
 
 Specifically, the query matrix is computed from the layer below it, while the key and value matrix are computed from $e^N$, which can be expressed as
 
 \begin{equation}
-    \mathrm{CMHA}(e^N, MHA(d^m)) = W^o \cdot
+    \mathrm{CMHA}(e^N, \mathrm{MHA}(d^m)) = W^o \cdot
 \begin{bmatrix}
-    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_1 MHA(d^m) \left(W^K_1 e^N\right)^T \right) \cdot W^V_1 \cdot e^N \\
-    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_2 MHA(d^m) \left(W^K_2 e^N\right)^T \right) \cdot W^V_2 \cdot e^N \\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_1 \mathrm{MHA}(d^m) \left(W^K_1 e^N\right)^T \right) \cdot W^V_1 \cdot e^N \\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_2 \mathrm{MHA}(d^m) \left(W^K_2 e^N\right)^T \right) \cdot W^V_2 \cdot e^N \\
     \cdots\\
-    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_D MHA(d^m) \left(W^K_D e^N\right)^T \right) \cdot W^V_D \cdot e^N \\
+    \underset{i \rightarrow}{\mathrm{softmax}}\left( \frac{1}{A} W^Q_D \mathrm{MHA}(d^m) \left(W^K_D e^N\right)^T \right) \cdot W^V_D \cdot e^N \\
 \end{bmatrix}\nonumber.
 \end{equation}
 
@@ -408,13 +408,13 @@ The pretraining of these models typically involves manipulating a given sentence
 For a text sequence $\textbf{x}$, the BERT model first constructs a corrupted version $\hat{\textbf{x}}$. Let the masked tokens be $\bar{\textbf{x}}$. The training objective is to reconstruct $\bar{\textbf{x}}$ from $\hat{\textbf{x}}$:
 
 \begin{align}
-max_{\theta}logP_{\theta}(\bar{\textbf{x}}|\hat{\textbf{x}})\approx \sum_{t=1}^Tm_tlogP_{\theta}(x_t|\hat{\textbf{x}})
-=\sum_{t=1}^Tm_tlog\frac{exp(H_{\theta}(\hat{\textbf{x}})_t^Te(x_t))}{\sum_{x\prime} {exp(H_{\theta}(\hat{\textbf{x}})_t^Te(x\prime)}}
+\max_{\theta} \log P_{\theta}(\bar{\textbf{x}}|\hat{\textbf{x}})\approx \sum_{t=1}^T m_t \log P_{\theta}(x_t|\hat{\textbf{x}})
+=\sum_{t=1}^T m_t \log \frac{exp(H_{\theta}(\hat{\textbf{x}})_t^Te(x_t))}{\sum_{x\prime} {exp(H_{\theta}(\hat{\textbf{x}})_t^Te(x\prime)}}
 \end{align}
 
 Where the $\approx$ indicates that all $\bar{\textbf{x}}$ elements are independent (seperately reconstructed), $m_t$ indicates weather or not $x_t$ is masked (1-masked, 0-not), $H_{\theta}$ is a Transformer that maps a sequence $x$ of length $T$ and contains infomation about the context on both sides $H_{\theta}(X)=[H_{\theta}(x)_1, H_{\theta}(x)_2,...H_{\theta}(x)_T]$, and $e(x)$ denotes the embedding of $x$.
 
-Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, and extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}.
+Encoder models excel in tasks that demand a comprehensive understanding of the entire sentence. These tasks include sentence classification, word classification tasks e.g. named entity recognition, and extractive question answering. Widely used representatives of this model family include BERT \cite{devlin2018bert} and RoBERTa \cite{liu2019roberta}. Note that while encoder-only models remain useful for classification and retrieval tasks, the field has largely shifted toward decoder-only LLMs for general-purpose language understanding.
 
 \textbf{BERT} \cite{devlin2018bert} is trained on MLM(Masked Language Modeling) and NSP(Next Sentence Prediction) objectives.
 In the \textbf{MLM} objective, 15\% of the input tokens are selected. Among these selected tokens:
@@ -440,16 +440,17 @@ These modifications aim to enhance RoBERTa's pre-training performance and overal
 Decoder-only or Autoregressive modeling performs
 pretraining by maximizing the likelihood under the forward autoregressive factorization:
 $$
-max_{\theta}logP_{\theta}(\textbf{x})=\sum_{t=1}^TlogP_{\theta}(x_t|\textbf{x}_{<t})
-= \sum_{t=1}^T{log\frac{exp(h_{\theta}(\textbf{x}_{1:t-1})^Te(x_t))}{\sum_{x\prime}exp(h_{\theta}(\textbf{x}_{1:t-1})^Te(x\prime))}}
+\max_{\theta} \log P_{\theta}(\textbf{x})=\sum_{t=1}^T \log P_{\theta}(x_t|\textbf{x}_{<t})
+= \sum_{t=1}^T{\log\frac{exp(h_{\theta}(\textbf{x}_{1:t-1})^Te(x_t))}{\sum_{x\prime}exp(h_{\theta}(\textbf{x}_{1:t-1})^Te(x\prime))}}
 $$
 
 Where the $h_{\theta}(\textbf{x}_{1:t-1})$ is the context representation produced by the neural model, and it contains information (conditioned) about the tokens up to position $t$, and $e(x_t)$ is the embedding of a token $x_t$.
 
 A Decoder-only or Autoregressive model operates differently compared to Encoder-only or Autoencoder model by focusing on density estimation rather than reconstructing corrupted input. These models aim to estimate probability distributions, which limits their ability to capture bidirectional context. As a result, they are restricted to uni-directional processing.
 
-\paragraph{GPTs.} The class of GPTs is a series of pre-trained decoder-only transformers. Models are pre-trained to perform the next token prediction with the Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 
-\citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models has been trained with reinforcement learning with human feedback \citep{rlhf}, which enables the model to manifest interesting behaviors that you see when using ChatGPT.
+\paragraph{GPTs.} The class of GPTs is a series of pre-trained decoder-only transformers. Models are pre-trained to perform the next token prediction with the Cross-Entropy criterion. Since the release of GPT-1 \citep{gpt-1}, GPTs are being trained with more parameters and training data, with GPT-2 \citep{gpt-2}, GPT-3 \citep{gpt-3}, InstructGPT \citep{instructgpt} and GPT-4 \citep{gpt-4} being subsequently released. Note that since the release of InstructGPT \citep{instructgpt}, this class of language models has been trained with reinforcement learning from human feedback (RLHF) \citep{rlhf}, which enables the model to follow instructions and exhibit the behaviors you see when using ChatGPT.
+
+Beyond OpenAI's models, the release of LLaMA \citep{touvron2023llama} and its successors (LLaMA 2, LLaMA 3) made high-quality decoder-only transformers available to the research community. Models such as Mistral \citep{jiang2023mistral} further demonstrated that smaller, carefully trained models can match much larger ones. These open-weight models have become the dominant platform for NLP research.
 
 
 \subsection{Training with Encoder-Decoder}
@@ -544,7 +545,7 @@ train_config.learning_rate = (
 )
 train_config.max_iters = 2000
 train_config.num_workers = 0
-train_config.device = "mps"
+train_config.device = "cuda" if torch.cuda.is_available() else "cpu"
 trainer = Trainer(train_config, model, train_dataset)
 
 print(train_config)
@@ -606,12 +607,12 @@ head_view(outputs.attentions, tokens=tokens)
 
 
 
-\begin{exercise} Promoting a GPT-2 model
+\begin{exercise} Prompting a GPT-2 model
 Now that we have trained our own Transformer model and gained some understanding of its functioning, let's explore a larger pre-trained model that has been trained on a vast amount of natural data. By doing so, we can experience generating output that closely resembles human-like responses.
 
 \begin{python}
 model_type = "gpt2"
-device = "mps"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 model = GPT.from_pretrained(model_type)
 
