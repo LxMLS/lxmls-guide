@@ -1,4 +1,4 @@
-%\section{Today's assignment}
+\section{Today's assignment}
 Today's class will be focused on advanced deep learning concepts, mainly
 Recurrent Neural Networks (RNNs). In the first day we saw how the chain-rule
 allowed us to compute gradients for arbitrary computation graphs. Today we will
@@ -8,10 +8,12 @@ graph, which will correspond to different time instants. The key factor to
 consider is that, for a fixed number of time steps, this is still a computation
 graph and all what we saw on the first day applies with no need for extra math.
 
+Although RNNs have been largely superseded by Transformer-based models for most NLP tasks, understanding them remains important: they introduce the core ideas of sequence modeling, backpropagation through time, and the vanishing gradient problem that motivated many subsequent architectural innovations, including Transformers.
+
 If you managed to finish the previous day completely you should aim at finishing
 this as well. If you still have pending exercises from the first day e.g. the
 Pytorch part. It is recommended that you try to solve them first and then
-continue with this day. 
+continue with this day.
 
 \section{Recurrent Neural Networks: Backpropagation Through Time}
 
@@ -63,14 +65,22 @@ derivatives, which are not relevant when dealing with FFs
 
 Despite the lack of formal changes, the fact that we backpropagate an error
 over the length of the entire sequence often leads to numerical problems. The
-problem of \textit{vanishing} and \textit{exploding} gradients are a well know
+problem of \textit{vanishing} and \textit{exploding} gradients are a well known
 limitation. A number of solutions are used to mitigate this issue. One simple,
 yet inelegant, method is clipping the gradients to a fixed threshold. Another
 solution is to resort to more complex RNN models that are able to better handle
-long range dependencies and are less sensitive to this phenomena. It is
+long range dependencies and are less sensitive to this phenomenon, most notably
+the Long Short-Term Memory (LSTM) \citep{hochreiter1997long} and the Gated
+Recurrent Unit (GRU) \citep{cho2014learning}, both of which use gating
+mechanisms to control information flow across time steps. It is
 important to bear in mind, however, that all RNNs still use backpropagation as
 seen in the previous day, although it is often referred as
-\textit{Backpropagation through time}. 
+\textit{Backpropagation through time}.
+
+The difficulty of training RNNs over long sequences was one of the key
+motivations behind the Transformer architecture \citep{vaswani2017attention},
+which replaces recurrence with self-attention and therefore has no path-length
+dependence on sequence length during gradient flow.
 
 \begin{algorithm}[th!]
    \caption{Forward pass of a Recurrent Neural Network (RNN) with embeddings}
@@ -275,7 +285,7 @@ print("Test accuracy %2.2f %%" % accuracy)
 \clearpage
 \section{Implementing your own RNN in Pytorch}
 
-One of the big advantages of toolkits like Pytorch or Dynet is that creating computation graphs that dynamically change size is very simple. In many other tookits it is directly not possible to use a Python for loop with a variable length to define a computation graph. Again, as in other toolkits we will only need to create the forward pass of the RNN and the gradients will be computed automatically for us.
+One of the big advantages of toolkits like Pytorch is that creating computation graphs that dynamically change size is very simple. In many earlier frameworks it was not possible to use a Python for loop with a variable length to define a computation graph. Again, we will only need to define the forward pass of the RNN and the gradients will be computed automatically for us.
 
 \begin{exercise}
 As we did with the feed-forward network, we will now implement a
