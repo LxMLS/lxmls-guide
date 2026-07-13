@@ -1,12 +1,14 @@
-This day will serve as an introduction to machine learning. We will recall some fundamental concepts 
-about decision theory and classification, present some widely used models and algorithms 
-and try to provide the main motivation behind them. 
-There are several textbooks that provide a thorough description of some of the concepts introduced here: 
-for example, \citet{Mitchell1997}, \citet{Duda2001}, \citet{Schoelkopf2002}, \citet{Joachims2002}, \citet{Bishop2006}, \citet{Manning2008}, 
-to name just a few.  
-The concepts that we introduce in this chapter will be revisited in later chapters and expanded to account for 
-non-linear models and structured inputs and outputs. For now, we will concern ourselves only with multi-class classification 
-(with just a few classes) and linear classifiers. 
+This day will serve as an introduction to machine learning. We will recall some fundamental concepts
+about decision theory and classification, present some widely used models and algorithms
+and try to provide the main motivation behind them.
+There are several textbooks that provide a thorough description of some of the concepts introduced here:
+for example, \citet{Mitchell1997}, \citet{Duda2001}, \citet{Schoelkopf2002}, \citet{Joachims2002}, \citet{Bishop2006}, \citet{Manning2008},
+to name just a few.
+The concepts that we introduce in this chapter will be revisited in later chapters and expanded to account for
+non-linear models and structured inputs and outputs. For now, we will concern ourselves only with multi-class classification
+(with just a few classes) and linear classifiers.
+
+Although modern NLP has largely shifted towards deep learning and Transformer-based models for classification tasks, the methods introduced here remain important foundations. They are still widely used in resource-constrained settings, as baselines, and as components in larger systems. Understanding them also provides the conceptual groundwork for understanding neural classifiers.
 
 \section*{Today's assignment}
 
@@ -754,13 +756,12 @@ The basic rationale is that choosing the model with the highest entropy (subject
 constraints that depend on the observed data) corresponds to making the fewest possible assumptions regarding what was unobserved, making uncertainty 
 about the model as large as possible.
 
-For example, if we throw a die and want to estimate the probability of its outcomes, the distribution with the highest entropy would be the 
-uniform distribution (each outcome having of probability a $1/6$). 
-Now suppose that we are only told that outcomes $\{1,2,3\}$ occurred $10$ times in total, and 
-$\{4,5,6\}$ occurred $30$ times in total, then the principle of maximum entropy would lead us to 
-estimate $P(1)=P(2)=P(3)=1/12$ and $P(4)=P(5)=P(6)=1/4$ (i.e., outcomes would be uniform 
-within each of the two groups).\footnote{For an introduction of maximum entropy models, along with pointers to the literature, see 
-\url{http://www.cs.cmu.edu/~aberger/maxent.html}.}
+For example, if we throw a die and want to estimate the probability of its outcomes, the distribution with the highest entropy would be the
+uniform distribution (each outcome having of probability a $1/6$).
+Now suppose that we are only told that outcomes $\{1,2,3\}$ occurred $10$ times in total, and
+$\{4,5,6\}$ occurred $30$ times in total, then the principle of maximum entropy would lead us to
+estimate $P(1)=P(2)=P(3)=1/12$ and $P(4)=P(5)=P(6)=1/4$ (i.e., outcomes would be uniform
+within each of the two groups).
 
 This example could be presented in a more formal way. Suppose that we want to use binary features to represent the outcome of the die throw. We use two features: $f_{123}(x,y) = 1$ if and only if $y \in \{1,2,3\}$, and $f_{456}(x,y) = 1$ if and only if $y \in \{4,5,6\}$. Our observations state that in 40 throws, we observed $f_{123}$ 10 times (25\%) and $f_{456}$ 30 times (75\%). The maximum entropy principle states that we want to find the parameters $\boldsymbol{w}$ of our model, and consequently the probability distribution $P_{\boldsymbol{w}}(Y|X)$, which makes $f_{123}$ have an expected value of 0.25 and $f_{456}$ have an expected value of 0.75. These constraints, $E[f_{123}] = 0.25$ and $E[f_{456}] = 0.75$, are known as \emph{first moment matching constraints}.\footnote{In general, these constraints mean that
 feature expectations under that distribution $\frac{1}{M}\sum_m E_{Y \sim P_{\boldsymbol{w}}}[\boldsymbol{f}(x_m,Y)]$ 
@@ -1045,10 +1046,10 @@ the cost-augmented prediction using the current model.
 \end{algorithm}
 
 
-A variant of this algorithm was proposed by \citet{ShalevShwartz2007ICML} under the name \emph{Pegasos}, with excellent properties in large-scale settings. 
-Other algorithms and software packages for training SVMs that have become popular are SVMLight (\url{http://svmlight.joachims.org}) 
-and LIBSVM (\url{http://www.csie.ntu.edu.tw/~cjlin/libsvm/}), which allow non-linear kernels. These will generally be more suitable for smaller datasets, 
-where high accuracy optimization can be obtained without much computational effort. 
+A variant of this algorithm was proposed by \citet{ShalevShwartz2007ICML} under the name \emph{Pegasos}, with excellent properties in large-scale settings.
+Other algorithms and software packages for training SVMs include SVMLight (\url{http://svmlight.joachims.org})
+and LIBSVM (\url{http://www.csie.ntu.edu.tw/~cjlin/libsvm/}), which allow non-linear kernels. These are generally more suitable for smaller datasets.
+Note that in modern NLP, SVMs have been largely superseded by neural classifiers (in particular fine-tuned Transformers such as BERT), which tend to outperform SVMs on most text classification benchmarks without requiring manual feature engineering.
 
 
 \begin{remark}
@@ -1140,15 +1141,13 @@ Hyperparameters to tune				& 1 (smoothing) & 0 & 1 & 1 & 1\\
 
 \section{Final remarks}
 
-%\afm{Please add more if something else should be here!}
+In practice, all of the algorithms discussed in this chapter (Naive Bayes, Perceptron, MaxEnt/logistic regression, SVM) are available in \texttt{scikit-learn} (\url{https://scikit-learn.org}), which has become the standard Python library for classical machine learning. It provides efficient, well-tested implementations alongside tools for cross-validation, feature extraction, and pipeline construction.
 
-Some implementations of the discussed algorithms are available on the Web: 
+Some standalone implementations and toolkits are also available:
 \begin{itemize}
-\item SVMLight: \url{http://svmlight.joachims.org}
-\item LIBSVM: \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm/}
-\item Maximum Entropy: \url{http://homepages.inf.ed.ac.uk/lzhang10/maxent_toolkit.html}
-\item MALLET: \url{http://mallet.cs.umass.edu/}.
-\end{itemize} 
+\item LIBSVM: \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm/} (non-linear kernel SVMs)
+\item MALLET: \url{http://mallet.cs.umass.edu/} (MaxEnt, sequence models, topic models in Java)
+\end{itemize}
 
 
 %%% Local Variables: 
