@@ -91,16 +91,7 @@ print(3 / 5)
 print(3 ** 5)
 \end{python}
 
-\noindent will produce the following output in Python 2:
-\begin{python}
-8
--2
-15
-0
-243
-\end{python}
-
-\noindent and the following output in Python 3:
+\noindent will produce the following output:
 \begin{python}
 8
 -2
@@ -109,16 +100,9 @@ print(3 ** 5)
 243
 \end{python}
 
-\textbf{Important}: Notice that in Python 2 division is always considered as integer division, hence the result
-being 0 on the example above. To force a floating point division in Python 2 you can force
-one of the operands to be a floating point number: \begin{python}
-print(3 / 5.0)
-0.6
-\end{python}
+Note that division always returns a float in Python 3: \texttt{3 / 5} gives \texttt{0.6}. To perform integer (floor) division, use \texttt{//}: \texttt{3 // 5} gives \texttt{0}.
 
-For Python 3, the division is considered float point, so the operation (3 / 5) or (3 / 5.0) is always 0.6. 
-
-Also, notice that the symbol \texttt{**} is used as exponentation operator, unlike other major languages which use the symbol \texttt{\^}. In fact, the \texttt{\^} symbol has a different meaning in Python (bitwise XOR) so, in the beginning, be sure to double-check your code if it uses exponentiation and it is giving unexpected results.
+Also, notice that the symbol \texttt{**} is used as the exponentiation operator, unlike other languages that use \texttt{\^}. In Python, \texttt{\^} means bitwise XOR, so double-check your code if it uses exponentiation and gives unexpected results.
 
 \subsubsection{Data Structures}
 
@@ -274,7 +258,7 @@ During the lab sessions, there will be situations in which we will use and exten
 
 An alternative to IDEs, that can also be useful for quick debugging in Jupyter, is the pdb module. This will stop the execution at a given point (called break-point) to get a quick glimpse of the variable structures and to inspect the execution flow of your program. The ipdb is an improved version of pdb that has to be installed separately. It provides additional functionalities like larger context windows, variable auto complete and colors. Unfortunately ipdb has some compatibility problems with Jupyter. We therefore recommend to use ipdb only in spartan configurations such as vim+ipdb as IDE.
 
-\noindent In the following example, we use this module to inspect the \texttt{greet} function:
+\noindent In the following example, we use this module to inspect the \texttt{greet} function. Since Python 3.7, the built-in \texttt{breakpoint()} function is the preferred way to set a breakpoint — it calls \texttt{pdb.set\_trace()} by default but can be configured to use other debuggers:
 
 \begin{python}
 def greet(hour):
@@ -283,7 +267,7 @@ def greet(hour):
     elif hour >= 12 and hour < 20:
         print('Good afternoon!')
     else:
-        import pdb; pdb.set_trace()
+        breakpoint()  # equivalent to: import pdb; pdb.set_trace()
         print('Good evening!')
 \end{python}
 
@@ -575,5 +559,5 @@ Consider the following approximation to compute an integral
 \int_0^{1} f(x)dx \approx \sum_{i = 0}^{999} \frac{f(i/1000)}{1000}.
 \]
 
-Use numpy to implement this for $f(x) = x^2$. You should not need to use any loops. Note that integer division in Python 2.x returns the floor division (use floats -- e.g. $5.0/2.0$ -- to obtain rationals). The exact value is $1/3$. How close is the approximation?
+Use numpy to implement this for $f(x) = x^2$. You should not need to use any loops. The exact value is $1/3$. How close is the approximation?
 \end{exercise}
