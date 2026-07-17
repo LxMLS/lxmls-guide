@@ -14,6 +14,22 @@
 	color: var(--guide-text);
 }
 
+/* The main site's navbar is styled to float transparently over a hero image
+   (position: absolute, top: 20px) until the page is scrolled, on viewports
+   >= 992px (below that it's already position: relative with a solid dark
+   background, so it's left alone here). Guide pages have no hero, so that
+   invisible overlay sits directly on top of the sidebar links, making them
+   hard/impossible to click. Put the guide's navbar back in normal document
+   flow instead. */
+@media (min-width: 992px) {
+	#ftco-navbar.ftco-navbar-light {
+		position: relative;
+		top: 0;
+		background: #fff !important;
+		box-shadow: 0 1px 0 var(--guide-border);
+	}
+}
+
 .guide-wrap {
 	max-width: 1400px;
 	margin: 0 auto;

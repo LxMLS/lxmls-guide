@@ -708,6 +708,9 @@ def build_landing(template, macros_js):
         )
         sidebar_items.append('<li><a class="toc-h2" href="%s.html">%s &middot; %s</a></li>' % (slug, day, title))
     sidebar_items += ["</ul>", "</nav>"]
+    sidebar_items.append(
+        '<a class="guide-sidebar-download" href="../LxMLS_guide_2026.pdf">&#8681; Download PDF</a>'
+    )
     content = (
         '<h1>LxMLS Lab Guide</h1>'
         "<p>This is the web edition of the Lisbon Machine Learning Summer School lab "
