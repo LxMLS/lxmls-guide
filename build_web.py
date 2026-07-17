@@ -29,13 +29,14 @@ ASSETS = OUT / "assets"
 FIGS_OUT = ASSETS / "figs"
 BIB = GUIDE / "guide.bib"
 
-# slug, day label, title, source chapter file (the 5 active Days in guide.tex)
+# slug, day label, title, source chapter file (the 6 active Days in guide.tex)
 CHAPTERS = [
     ("day0", "Day 0", "Basic Tutorials", "pages/intro/intro.tex"),
     ("day1", "Day 1", "Linear Classifiers", "pages/classification/classification.tex"),
     ("day2", "Day 2", "Non-Linear Classifiers", "pages/deep_learning/deep_learning_ff.tex"),
     ("day3", "Day 3", "Sequence Models", "pages/deep_learning/deep_learning_rnn.tex"),
     ("day4", "Day 4", "Transformers", "pages/transformers.tex"),
+    ("day5", "Day 5", "Multimodal Models", "pages/multimodal.tex"),
 ]
 
 # Theorem-like environments -> CSS class + display name. Numbered per chapter.

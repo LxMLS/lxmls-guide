@@ -761,7 +761,8 @@ uniform distribution (each outcome having of probability a $1/6$).
 Now suppose that we are only told that outcomes $\{1,2,3\}$ occurred $10$ times in total, and
 $\{4,5,6\}$ occurred $30$ times in total, then the principle of maximum entropy would lead us to
 estimate $P(1)=P(2)=P(3)=1/12$ and $P(4)=P(5)=P(6)=1/4$ (i.e., outcomes would be uniform
-within each of the two groups).
+within each of the two groups).\footnote{For an introduction of maximum entropy models, along with pointers to the literature, see
+\url{http://www.cs.cmu.edu/~aberger/maxent.html}.}
 
 This example could be presented in a more formal way. Suppose that we want to use binary features to represent the outcome of the die throw. We use two features: $f_{123}(x,y) = 1$ if and only if $y \in \{1,2,3\}$, and $f_{456}(x,y) = 1$ if and only if $y \in \{4,5,6\}$. Our observations state that in 40 throws, we observed $f_{123}$ 10 times (25\%) and $f_{456}$ 30 times (75\%). The maximum entropy principle states that we want to find the parameters $\boldsymbol{w}$ of our model, and consequently the probability distribution $P_{\boldsymbol{w}}(Y|X)$, which makes $f_{123}$ have an expected value of 0.25 and $f_{456}$ have an expected value of 0.75. These constraints, $E[f_{123}] = 0.25$ and $E[f_{456}] = 0.75$, are known as \emph{first moment matching constraints}.\footnote{In general, these constraints mean that
 feature expectations under that distribution $\frac{1}{M}\sum_m E_{Y \sim P_{\boldsymbol{w}}}[\boldsymbol{f}(x_m,Y)]$ 
