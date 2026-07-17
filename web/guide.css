@@ -40,6 +40,16 @@
 	margin-bottom: 1rem;
 	text-decoration: none;
 }
+.guide-sidebar-download {
+	display: block;
+	font-weight: 600;
+	color: #4a5568;
+	margin-bottom: 1rem;
+	text-decoration: none;
+}
+.guide-sidebar-download:hover {
+	color: var(--guide-primary);
+}
 .guide-sidebar nav ul {
 	list-style: none;
 	padding-left: 0;
