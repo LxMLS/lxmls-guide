@@ -143,12 +143,69 @@ def keep_last_arg(text, name, nargs):
 
 
 # --------------------------------------------------------------------------- #
+# Strip LaTeX comments
+# --------------------------------------------------------------------------- #
+# Environments where '%' has no special meaning (verbatim-ish: shown as-is),
+# so comment-stripping must leave their contents untouched.
+VERBATIM_ENVS = ("python", "verbatim")
+_VERBATIM_BEGIN = re.compile(r"\\begin\{(?:%s)\}" % "|".join(VERBATIM_ENVS))
+_VERBATIM_END = re.compile(r"\\end\{(?:%s)\}" % "|".join(VERBATIM_ENVS))
+
+
+def strip_latex_comments(text):
+    """Drop everything from an unescaped '%' to end of line.
+
+    Skips lines inside verbatim-like environments (python/verbatim), where '%'
+    is literal (e.g. the modulo operator or format strings in example code),
+    and leaves escaped '\\%' alone.
+    """
+    out_lines = []
+    in_verbatim = False
+    for line in text.split("\n"):
+        if in_verbatim:
+            out_lines.append(line)
+            if _VERBATIM_END.search(line):
+                in_verbatim = False
+            continue
+        if _VERBATIM_BEGIN.search(line):
+            in_verbatim = True
+            out_lines.append(line)
+            continue
+        i = 0
+        truncated = False
+        while True:
+            i = line.find("%", i)
+            if i == -1:
+                break
+            bs = 0
+            j = i - 1
+            while j >= 0 and line[j] == "\\":
+                bs += 1
+                j -= 1
+            if bs % 2 == 0:
+                line = line[:i]
+                truncated = True
+                break
+            i += 1
+        # A line that is *only* a comment (e.g. a bare '%') is a common LaTeX
+        # idiom to keep two lines in the same paragraph without a visible
+        # blank line. Drop such lines outright rather than emitting an empty
+        # string, which pandoc would read as a genuine blank-line paragraph
+        # break. Lines blank in the source to begin with are left as-is.
+        if truncated and not line.strip():
+            continue
+        out_lines.append(line)
+    return "\n".join(out_lines)
+
+
+# --------------------------------------------------------------------------- #
 # Flatten \input
 # --------------------------------------------------------------------------- #
 def flatten(path, seen=None):
     seen = seen or set()
     path = path.resolve()
     text = path.read_text(encoding="utf-8", errors="replace")
+    text = strip_latex_comments(text)
 
     def repl(m):
         target = m.group(1).strip()
