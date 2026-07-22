@@ -1,0 +1,49 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{tikz}
+\input{nn_style.tex}
+
+% one unrolled RNN cell: #1 = x offset, #2 = x_t subscript, #3 = id prefix
+\newcommand{\rnncell}[3]{%
+    \node[circle, draw, thick, minimum size=16pt, inner sep=0pt] (#3wh)  at (#1+0.9, 0) {};
+    \node[sumop]                                                 (#3sum) at (#1+2.1, 0) {$+$};
+    \node[opbox, minimum size=16pt]                              (#3sig) at (#1+3.1, 0) {$\sigma$};
+    % input branch
+    \node[unit]                                                  (#3x)  at (#1+2.1, -2.4) {};
+    \node[below=1pt of #3x] {$\mathbf{x}_{#2}$};
+    \node[circle, draw, thick, minimum size=16pt, inner sep=0pt] (#3wx) at (#1+2.1, -1.1) {};
+    \draw[edge] (#3x)  -- (#3wx);
+    \draw[edge] (#3wx) -- (#3sum);
+    % output branch
+    \node[circle, draw, thick, minimum size=16pt, inner sep=0pt] (#3wy)   at (#1+3.1, 1.3) {};
+    \node[opbox, minimum width=32pt]                             (#3soft) at (#1+3.1, 2.7) {Softmax};
+    \draw[edge] (#3sig)         -- (#3wy);
+    \draw[edge] (#3wy)          -- (#3soft);
+    \draw[edge] (#3soft.north)  -- ++(0, 0.7);
+    % main row
+    \draw[edge] (#3wh)  -- (#3sum);
+    \draw[edge] (#3sum) -- (#3sig);
+    % weight labels
+    \node[below=1pt of #3wh] {$\mathbf{W}^h$};
+    \node[right=2pt of #3wx] {$\mathbf{W}^x$};
+    \node[right=2pt of #3wy] {$\mathbf{W}^y$};
+}
+
+\begin{document}
+\begin{tikzpicture}[>=Latex]
+
+    \rnncell{0}{1}{a}
+    \rnncell{5}{2}{b}
+    \rnncell{11}{T}{c}
+
+    % recurrent chain
+    \node (h0) at (-1.3, 0) {$\mathbf{h}_0$};
+    \draw[edge] (h0)   -- (awh);
+    \draw[edge] (asig) -- (bwh);
+    \draw[edge] (bsig) -- (9.0, 0) node[midway, above] {$\mathbf{h}_2$};
+    \node at (10.0, 0) {$\cdots\cdots$};
+    \draw[edge] (10.9, 0) -- (cwh);
+    \draw[edge] (csig) -- ++(1.3, 0) node[right] {$\mathbf{h}_T$};
+
+\end{tikzpicture}
+\end{document}

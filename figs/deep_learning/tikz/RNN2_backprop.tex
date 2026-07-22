@@ -1,0 +1,51 @@
+\documentclass[border=4pt]{standalone}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{tikz}
+\input{nn_style.tex}
+
+% one unrolled RNN cell, backprop view: #1 = x offset, #2 = x_t subscript, #3 = id
+\newcommand{\rnncellbp}[3]{%
+    \node[circle, draw=bpred, thick, fill=bpred!15, minimum size=16pt, inner sep=0pt]
+        (#3wh)  at (#1+0.9, 0) {};
+    \node[sumop, draw=bpred, fill=bpred!15] (#3sum) at (#1+2.1, 0)
+        {\textcolor{bpred}{$+$}};
+    \node[opbox, minimum size=16pt, draw=bpred, fill=bpred!15] (#3sig) at (#1+3.1, 0)
+        {\textcolor{bpred}{$\sigma$}};
+    % input branch (backprop points down), W^x highlighted blue/dashed
+    \node[circle, draw=fwdblue, dashed, thick, fill=white, minimum size=16pt, inner sep=0pt]
+        (#3wx) at (#1+2.1, -1.3) {};
+    \node[right=2pt of #3wx] {$\mathbf{W}^x$};
+    \node[unit, fill=fwdblue] (#3x) at (#1+2.1, -2.6) {};
+    \node[below=1pt of #3x] {$\mathbf{x}_{#2}$};
+    \draw[edge, bpred]   (#3sum) -- (#3wx);
+    \draw[edge, fwdblue] (#3wx)  -- (#3x);
+    % output branch (backprop points down)
+    \node[circle, draw=bpred, thick, fill=bpred!15, minimum size=16pt, inner sep=0pt]
+        (#3wy) at (#1+3.1, 1.3) {};
+    \node[opbox, minimum width=32pt, draw=bpred, fill=bpred!15] (#3soft) at (#1+3.1, 2.7)
+        {Softmax};
+    \draw[edge, bpred] ($(#3soft.north)+(0,0.7)$) -- (#3soft.north);
+    \draw[edge, bpred] (#3soft) -- (#3wy);
+    \draw[edge, bpred] (#3wy)   -- (#3sig);
+    % main row (backprop points left)
+    \draw[edge, bpred] (#3sig) -- (#3sum);
+    \draw[edge, bpred] (#3sum) -- (#3wh);
+}
+
+\begin{document}
+\begin{tikzpicture}[>=Latex]
+
+    \rnncellbp{0}{1}{a}
+    \rnncellbp{5}{2}{b}
+    \rnncellbp{11}{T}{c}
+
+    % recurrent chain, backprop direction (right -> left)
+    \draw[edge, bpred] (awh) -- ++(-1.2, 0);
+    \draw[edge, bpred] (bwh) -- (asig);
+    \draw[edge, bpred] (cwh) -- (10.8, 0);
+    \node at (9.9, 0) {$\cdots\cdots$};
+    \draw[edge, bpred] (9.0, 0) -- (bsig);
+    \draw[edge, bpred] ($(csig)+(1.3,0)$) -- (csig);
+
+\end{tikzpicture}
+\end{document}

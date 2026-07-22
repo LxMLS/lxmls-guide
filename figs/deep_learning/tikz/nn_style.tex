@@ -1,0 +1,23 @@
+% Shared TikZ style for the deep-learning computation-graph figures.
+% Change notation/appearance in ONE place here and rebuild all figures.
+\usetikzlibrary{arrows.meta, positioning, calc}
+
+% Colours for forward-pass / backprop highlights
+\definecolor{fwdblue}{RGB}{0,0,255}
+\definecolor{bpred}{RGB}{255,0,0}
+
+\tikzset{
+    % filled dot used for inputs, biases and indicator vectors
+    unit/.style={circle, fill=black, inner sep=0pt, minimum size=5pt},
+    % linear transformation node (weighted sum), drawn as a circled plus
+    sumop/.style={circle, draw, thick, inner sep=1pt, minimum size=16pt},
+    % non-linear transformation, a labelled box with vertical text
+    opbox/.style={draw, thick, minimum width=22pt, inner sep=6pt},
+    % directed edges
+    edge/.style={-{Latex[length=6pt]}, thick},
+    % edge labels (variable names on the wires)
+    wire/.style={font=\normalsize, inner sep=2pt},
+}
+
+% vertical text for the operation boxes
+\newcommand{\vlabel}[1]{\rotatebox{90}{#1}}
