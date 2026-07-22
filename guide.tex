@@ -1,6 +1,10 @@
 \documentclass{report}
 \usepackage[a4paper,top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 
+% T1 encoding is required by the python listings (upquote=true renders straight
+% quotes via \textquotedbl/\textquotesingle, unavailable in the default OT1).
+\usepackage[T1]{fontenc}
+
 \usepackage{url}
 
 \usepackage{palatino}
