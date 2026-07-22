@@ -7,24 +7,24 @@
 \begin{tikzpicture}[>=Latex]
 
     % ===== left cluster: forward-pass derivation for W_{K2}, b_K (blue) =====
-
-    % inputs (x_2 highlighted)
-    \node[unit, label=left:{$x_1$}] (x1) at (0, 3)  {};
+    % input/sum coordinates match LogLin.tex (Fig 2.1) for a consistent layout
+    \node[unit, label=left:{$x_1$}] (x1) at (0, 2.6)  {};
     \node[circle, draw=fwdblue, thick, fill=white, minimum size=6pt, inner sep=0pt,
-          label=left:{\textcolor{fwdblue}{$x_2$}}] (x2) at (0, 1) {};
-    \node                            (xd) at (0, -0.2) {$\vdots$};
-    \node[unit, label=left:{$x_I$}] (xI) at (0, -1.6) {};
+          label=left:{\textcolor{fwdblue}{$x_2$}}] (x2) at (0, 0.9) {};
+    \node                            (xd) at (0, -0.5) {$\vdots$};
+    \node[unit, label=left:{$x_I$}] (xI) at (0, -2.6) {};
 
-    % sum nodes: top plain, bottom highlighted
-    \node[sumop] (sA) at (3, 3) {$+$};
-    \node        (sd) at (3, 1.7) {$\vdots$};
-    \node[sumop, draw=fwdblue, fill=fwdblue!18] (sB) at (3, 0.2) {$+$};
+    \node[sumop] (sA) at (3.2, 1.6) {$+$};
+    \node        (sd) at (3.2, 0)   {$\vdots$};
+    \node[sumop, draw=fwdblue, fill=fwdblue!18] (sB) at (3.2, -1.6) {$+$};
 
-    % highlighted weight edge and bias
+    % highlighted weight edge
     \draw[edge, fwdblue, dashed] (x2) -- (sB)
-        node[wire, midway, above, sloped, black] {$W_{K2}$};
+        node[pos=0.45, above, black] {$W_{K2}$};
+
+    % bias
     \node[circle, draw=fwdblue, thick, fill=white, minimum size=6pt, inner sep=0pt]
-        (bK) at (3, -1.8) {};
+        (bK) at (3.2, -3.4) {};
     \node[right=2pt of bK] {$b_K$};
     \node[below=1pt of bK] {$1$};
     \draw[edge, fwdblue] (bK) -- (sB);
@@ -34,12 +34,12 @@
         node[right, black] {$\dfrac{\partial z_K}{\partial W_{K2}}$};
 
     % ===== right cluster: backprop through softmax / cost (red) =====
-    \node[opbox, minimum height=3.6cm, draw=bpred, fill=bpred!15]
-        (soft) at (10.5, 1.6) {\vlabel{Softmax}};
-    \node[opbox, minimum height=3.6cm] (cost) at (13.0, 1.6) {\vlabel{Cost}};
+    \node[opbox, minimum height=4.4cm, draw=bpred, fill=bpred!15]
+        (soft) at (10.5, 0) {\vlabel{Softmax}};
+    \node[opbox, minimum height=4.4cm] (cost) at (13.0, 0) {\vlabel{Cost}};
 
-    \coordinate (yT) at (0, 3.0);
-    \coordinate (yB) at (0, 0.2);
+    \coordinate (yT) at (0, 1.6);
+    \coordinate (yB) at (0, -1.6);
 
     % backprop cost -> softmax (red, leftward)
     \draw[edge, bpred] (cost.west |- yT) -- (soft.east |- yT)
@@ -47,11 +47,11 @@
     \draw[edge, bpred] (cost.west |- yB) -- (soft.east |- yB)
         node[wire, midway, above, black] {$\tilde{z}_K$};
 
-    % indicator inputs (black, leftward into cost)
+    % indicators (black, leftward into cost)
     \node[circle, draw, thick, fill=white, minimum size=6pt, inner sep=0pt,
-          label=above:{$\mathbf{1}^y_1$}] (i1) at (15.2, 3.0) {};
+          label=above:{$\mathbf{1}^y_1$}] (i1) at (15.2, 1.6)  {};
     \node[circle, draw, thick, fill=white, minimum size=6pt, inner sep=0pt,
-          label=below:{$\mathbf{1}^y_K$}] (iK) at (15.2, 0.2) {};
+          label=below:{$\mathbf{1}^y_K$}] (iK) at (15.2, -1.6) {};
     \draw[edge] (i1) -- (cost.east |- i1);
     \draw[edge] (iK) -- (cost.east |- iK);
 

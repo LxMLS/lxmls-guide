@@ -57,10 +57,10 @@
         (soft) at (12.6, 0.7) {\vlabel{Softmax}};
     \node[opbox, minimum height=3.6cm] (cost) at (14.4, 0.7) {\vlabel{Cost}};
 
-    % red backprop softmax -> final sums (leftward)
-    \draw[edge, bpred] (soft.east |- fA) -- (fA)
+    % red backprop softmax -> final sums (leftward, exit the box's left edge)
+    \draw[edge, bpred] (soft.west |- fA) -- (fA)
         node[wire, midway, above, black] {$\dfrac{\partial \mathcal{F}}{\partial z_1^N}$};
-    \draw[edge, bpred] (soft.east |- fB) -- (fB)
+    \draw[edge, bpred] (soft.west |- fB) -- (fB)
         node[wire, midway, above, black] {$\dfrac{\partial \mathcal{F}}{\partial z_K^N}$};
 
     % red backprop cost -> softmax (leftward)
