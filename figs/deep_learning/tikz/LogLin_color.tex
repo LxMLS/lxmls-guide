@@ -43,9 +43,9 @@
 
     % backprop cost -> softmax (red, leftward)
     \draw[edge, bpred] (cost.west |- yT) -- (soft.east |- yT)
-        node[wire, midway, above, black] {$\tilde{z}_1$};
+        node[wire, midway, above, black] {$h_1$};
     \draw[edge, bpred] (cost.west |- yB) -- (soft.east |- yB)
-        node[wire, midway, above, black] {$\tilde{z}_K$};
+        node[wire, midway, above, black] {$h_K$};
 
     % indicators (black, leftward into cost)
     \node[circle, draw, thick, fill=white, minimum size=6pt, inner sep=0pt,

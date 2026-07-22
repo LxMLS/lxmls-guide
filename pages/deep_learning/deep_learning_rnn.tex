@@ -105,7 +105,7 @@ $\Theta=\{\mathbf{W}^e \in \mathbb{R}^{E \times I}, \mathbf{W}^x \in \mathbb{R}^
         \STATE Apply final linear transformation to each of the recurrent variables $\mathbf{h}_1 \cdots \mathbf{h}_{M'}$ 
 $$z_{km}^y = \sum_{j=1}^{J} W_{kj}^y h_{jm}$$
 \STATE Apply final non-linear transformation e.g. softmax 
-   $$p(y_m=k|\mathbf{x}_{1:m+1}) = \tilde{z}_{km}^y  = \frac{\exp(z_{km}^y)}{\sum_{k'=1}^{K} \exp(z_{k'm}^y)}$$
+   $$p(y_m=k|\mathbf{x}_{1:m+1}) = h_{km}^y  = \frac{\exp(z_{km}^y)}{\sum_{k'=1}^{K} \exp(z_{k'm}^y)}$$
 \end{algorithmic}
 \end{algorithm}
 
@@ -126,14 +126,14 @@ $$z_{km}^y = \sum_{j=1}^{J} W_{kj}^y h_{jm}$$
 	\vspace{0.3cm}
 	\FOR{$m=1$ {\bfseries to} $M'$}
         \STATE Compute the {forward pass} for sentence $b$ ($M'$ time steps);
-        keep not only $\tilde{z}_{km}^y$ but also, the RNN layer activations $h_{jm}$ and the embedding layer activations $z^e_{dm}$.
+        keep not only $h_{km}^y$ but also, the RNN layer activations $h_{jm}$ and the embedding layer activations $z^e_{dm}$.
 	\ENDFOR	
 	\vspace{0.3cm}
 
     % Intial Error
 	\FOR{$m=1$ {\bfseries to} $M'$}
     \STATE {Initialize the error at last layer for a CE cost and backpropagate it through the output linear layer:
-        $$\mathbf{e}^m_{y} = (\mathbf{W}^y)^T \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}_{m}^y \Big).$$}
+        $$\mathbf{e}^m_{y} = (\mathbf{W}^y)^T \Big(\mathrm{\mathbf{1}}_{k(m)} - \mathbf{h}_{m}^y \Big).$$}
 	\ENDFOR	
 
     \STATE Initialize recurrent layer error $\mathbf{e}_r$ to a vector of zeros of size $J$

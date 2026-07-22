@@ -99,12 +99,12 @@ consider the output of this node as a probability distribution. The softmax in
 Fig.~\ref{fig:LogLinear} can be expressed as
 %
 \begin{equation}
-p(y=k|{x}) \equiv \tilde{z}_k = \frac{\exp(z_k)}{\sum_{k'=1}^{K} \exp(z_{k'})}.
+p(y=k|{x}) \equiv h_k = \frac{\exp(z_k)}{\sum_{k'=1}^{K} \exp(z_{k'})}.
 \label{eq:softmax}
 \end{equation}
 %
 Note that in the following sections we will also use $\mathbf{z}$ and
-$\tilde{\mathbf{z}}$ to denote the output of linear and non-linear functions
+$\mathbf{h}$ to denote the output of linear and non-linear functions
 respectively. By composing Eq.~\ref{eq:linear} and Eq.~\ref{eq:softmax} we
 obtain a log-linear model similar to the one we saw on
 Chapter~\ref{day:classification}\footnotemark\footnotetext{There are some
@@ -227,8 +227,8 @@ Eq.\ref{eq:LogLingCR1} is given by
 \begin{align}
 { \color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k}} }= - \frac{\partial }{\partial z_{k}}\left(z_{k(m)} - \log\left(\sum_{k'=1}^{K} \exp(z_{k'}) \right) \right) =
   \begin{cases}
-      -(1 - \tilde{z}_k)  &  \mbox{ if } k = k(m)\\
-      -(-\tilde{z}_k)     &  \mbox{ otherwise }.
+      -(1 - h_k)  &  \mbox{ if } k = k(m)\\
+      -(-h_k)     &  \mbox{ otherwise }.
   \end{cases}
   \label{eq:patialSoftmax}
 \end{align}
@@ -238,8 +238,8 @@ Bringing the two parts together, we obtain
 \begin{align}
 \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ki}} & =
   \begin{cases}
-      -(1 - \tilde{z}_k) x_i^m  &  \mbox{ if } k = k(m)\\
-      -(-\tilde{z}_k) x_i^m     &  \mbox{ otherwise }.
+      -(1 - h_k) x_i^m  &  \mbox{ if } k = k(m)\\
+      -(-h_k) x_i^m     &  \mbox{ otherwise }.
   \end{cases}.
 \label{eq:LogLingCR1}
 \end{align}
@@ -247,7 +247,7 @@ Bringing the two parts together, we obtain
 
 \noindent From the formula for each element and a single example, we can now obtain the gradient matrix for a batch of $M$ examples by simply averaging and expressing the previous equations in vector form as follows
 \begin{equation}
-\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}^{y^m} - \tilde{\mathbf{z}}^m \Big) \left(\mathbf{x}^m\right)^T.
+\nabla_\mathbf{W}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}^{y^m} - \mathbf{h}^m \Big) \left(\mathbf{x}^m\right)^T.
 \label{gradWeigths}
 \end{equation}
 %
@@ -268,7 +268,7 @@ bias parameters $b_{k}$, we only need to compute one additional derivative
 This leads us to the last gradient expression
 
 \begin{equation}
-\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}^{y^m} - \tilde{\mathbf{z}}^m \Big).
+\nabla_\mathbf{b}\mathcal{F}(\mathcal{D};\Theta) = -\frac{1}{M}\sum_{m=1}^{M} \Big(\mathrm{\mathbf{1}}^{y^m} - \mathbf{h}^m \Big).
 \label{eq:gradBias}
 \end{equation}
 
@@ -417,20 +417,20 @@ functions. The algorithm in \ref{algo:mlpforward} describes the Multi-Layer Perc
 \label{algo:mlpforward}
 
    \STATE {\bfseries input:} Initial parameters for an MLP of $N$ layers $\Theta=\{\mathbf{W}^1, \mathbf{b}^1, \cdots \mathbf{W}^N, \mathbf{b}^N\}$
-   \STATE {\bfseries input:} Input data vector $\mathbf{\tilde{z}}^{0}  \equiv \mathbf{x}$.
+   \STATE {\bfseries input:} Input data vector $\mathbf{h}^{0}  \equiv \mathbf{x}$.
 
 	\FOR{$n=1$ {\bfseries to} $N-1$}
      \STATE Apply  linear transformation
-        $$z_j^n = \sum_{i=1}^{I} W_{ji}^n \tilde{z}_i^{n-1} + b_j^n$$
+        $$z_j^n = \sum_{i=1}^{I} W_{ji}^n h_i^{n-1} + b_j^n$$
      \STATE Apply non-linear transformation e.g. sigmoid (hereby denoted $\sigma()$)
-     $$\tilde{z}_j^n = \sigma(z_j^n)  = \frac{1}{1+\exp(-z_j^n)}$$
+     $$h_j^n = \sigma(z_j^n)  = \frac{1}{1+\exp(-z_j^n)}$$
 
 	\ENDFOR
 
 \STATE Apply final linear transformation
-   $$z_k^N = \sum_{j=1}^{J} W_{kj}^N \tilde{z}_j^{N-1} + b_k^N$$
+   $$z_k^N = \sum_{j=1}^{J} W_{kj}^N h_j^{N-1} + b_k^N$$
 \STATE Apply final non-linear transformation e.g. softmax
-$$p(y=k|{x}) \equiv \tilde{z}_k^N = \frac{\exp(z_k^N)}{\sum_{k'=1}^{K} \exp(z_{k'}^N)}$$
+$$p(y=k|{x}) \equiv h_k^N = \frac{\exp(z_k^N)}{\sum_{k'=1}^{K} \exp(z_{k'}^N)}$$
 
 \end{algorithmic}
 \end{algorithm}
@@ -486,17 +486,17 @@ In a generic MLP we would like to compute the values of all parameters $\Theta=\
 \label{eq:BPderivation1}
 \end{align}
 %
-where, as in the case of the log-linear model, we have used the fact that the ouput of the linear layer $z_j^{N-1}$ only depends on $W_{ji}^{N-1}$. We now pick the left-most factor and apply the chain rule to split by the output of the non-linear layer $\tilde{z}_j^{N-1}$. Assuming that the non linear transformation is one-to-one, as e.g. a sigmoid, tanh, relu we have
+where, as in the case of the log-linear model, we have used the fact that the ouput of the linear layer $z_j^{N-1}$ only depends on $W_{ji}^{N-1}$. We now pick the left-most factor and apply the chain rule to split by the output of the non-linear layer $h_j^{N-1}$. Assuming that the non linear transformation is one-to-one, as e.g. a sigmoid, tanh, relu we have
 %
 \begin{align}
-        {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} = {\color{red} \bigg(\sum_{j'=1}^{J} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial \tilde{z}_{j'}^{N-1}} \frac{\partial \tilde{z}_{j'}^{N-1}}{\partial z_{j}^{N-1}}\bigg)} = {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial \tilde{z}_{j}^{N-1}} \frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}}
+        {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} = {\color{red} \bigg(\sum_{j'=1}^{J} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial h_{j'}^{N-1}} \frac{\partial h_{j'}^{N-1}}{\partial z_{j}^{N-1}}\bigg)} = {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial h_{j}^{N-1}} \frac{\partial h_{j}^{N-1}}{\partial z_{j}^{N-1}}}
 \label{eq:BPderivation2}
 \end{align}
 %
 To spot a recursion we only need to apply the chain rule a third time. The next variable to split by is the linear output of layer $N$, $z_j^{N}$. By looking at Fig.~\ref{fig:NN_color}, it is clear that the derivatives at each node in layer $N-1$ will depend on all values of layer $N$. For the linear layer the summation won't go away yielding
 %
 \begin{align}
-        {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} = {\color{red} \bigg(\sum_{k'=1}^{K} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k'}^{N}} \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{j}^{N-1}}\bigg)\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}}
+        {\color{red} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{j}^{N-1}}} = {\color{red} \bigg(\sum_{k'=1}^{K} \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial z_{k'}^{N}} \frac{\partial z_{k'}^{N}}{\partial h_{j}^{N-1}}\bigg)\frac{\partial h_{j}^{N-1}}{\partial z_{j}^{N-1}}}
 \label{eq:BPderivation3}
 \end{align}
 %
@@ -509,24 +509,24 @@ If we call the derivative of the error with respect to the $N_{th}$ linear layer
 \noindent it is easy to deduce from Eqs.~\ref{eq:BPderivation2}, \ref{eq:BPderivation3} that
 %
 \begin{align}
-        e^{N-1}_j = \bigg(\sum_{k'=1}^{K} e^N_{k'} \frac{\partial z_{k'}^{N}}{\partial \tilde{z}_{j}^{N-1}}\bigg)\frac{\partial \tilde{z}_{j}^{N-1}}{\partial z_{j}^{N-1}}.
+        e^{N-1}_j = \bigg(\sum_{k'=1}^{K} e^N_{k'} \frac{\partial z_{k'}^{N}}{\partial h_{j}^{N-1}}\bigg)\frac{\partial h_{j}^{N-1}}{\partial z_{j}^{N-1}}.
 \label{eq:BPderivation5}
 \end{align}
 %
 \noindent coming back to the original \ref{eq:BPderivation1} we obtain the formula for the update of each of the weights and bias
 %
 \begin{align}
-        \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}^{N-1}}  = {\color{red} e^{N-1}_j} {\color{blue} \tilde{z}_i^{N-2}},  \quad \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial b_{j}^{N-1}}  = {\color{red} e^{N-1}_j}
+        \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial W_{ji}^{N-1}}  = {\color{red} e^{N-1}_j} {\color{blue} h_i^{N-2}},  \quad \frac{\partial \mathcal{F}(\mathcal{D}^m;\Theta)}{\partial b_{j}^{N-1}}  = {\color{red} e^{N-1}_j}
 \label{eq:BPderivation6}
 \end{align}
 %
 These formulas are valid for any FF network with hidden layers using one-to-one non-linearities. For the network described in Algorithm~\ref{algo:mlpforward} we have
 %
 \begin{align}
-        \mathbf{e}^{N} =  \mathrm{\mathbf{1}}^{y} - \tilde{\mathbf{z}}^N,
+        \mathbf{e}^{N} =  \mathrm{\mathbf{1}}^{y} - \mathbf{h}^N,
   \quad
-        \frac{\partial z_{k'}^N}{\partial \tilde{z}_j^{N-1}} = W_{k'j}^N \quad \mbox{and} \quad
-        \frac{\partial \tilde{z}_{j}^n}{\partial z_{j}^n} = \tilde{z}^n_{j}\cdot (1-\tilde{z}^n_{j}) \quad \mbox{with} \quad n \in \{1 \cdots N-2\}
+        \frac{\partial z_{k'}^N}{\partial h_j^{N-1}} = W_{k'j}^N \quad \mbox{and} \quad
+        \frac{\partial h_{j}^n}{\partial z_{j}^n} = h^n_{j}\cdot (1-h^n_{j}) \quad \mbox{with} \quad n \in \{1 \cdots N-2\}
 \label{eq:BPderivation7}
 \end{align}
 %
@@ -535,11 +535,11 @@ A more detailed version can be seen in Algorithm~\ref{algo:backprop}
 %
 Once we get comfortable with the derivation of Backpropagation for the FF, it is simple to see that expanding to generic computations graphs is trivial. If we wanted to change the sigmoid non-linearity by a Rectified Linear Unit (ReLU) we would only need to change forward and Backpropagation derivative of the hidden non-linearities as
 \begin{align}
- \tilde{z}_j =
+ h_j =
   &\begin{cases}
       z_j  &  \mbox{ if } z_j >= 0\\
       0  &  \mbox{ otherwise }.
-  \end{cases} \quad \quad \frac{\partial \tilde{z}_{j}}{\partial z_{j}} = \begin{cases}
+  \end{cases} \quad \quad \frac{\partial h_{j}}{\partial z_{j}} = \begin{cases}
       1  &  \mbox{ if } z_j > 0\\
       0  &  \mbox{ otherwise }.
   \end{cases}
@@ -549,7 +549,7 @@ Once we get comfortable with the derivation of Backpropagation for the FF, it is
 More importantly, Backpropagation can be always defined as a direct acyclic graph with the \textit{reverse} direction of the forward-pass, where at each node we apply the transpose of the Jacobian of each linear or non linear transformation. Coming back to Eq.~\ref{eq:BPderivation7} we have the vector formula
 %
 \begin{align}
-        \mathbf{e}^{N-1} = \left(\mathbf{\mathrm{J}}_{\tilde{z}}^{N-1}\right)^T \left(\mathbf{\mathrm{J}}_{W}^N\right)^T \mathbf{e}^N.
+        \mathbf{e}^{N-1} = \left(\mathbf{\mathrm{J}}_{h}^{N-1}\right)^T \left(\mathbf{\mathrm{J}}_{W}^N\right)^T \mathbf{e}^N.
 \label{eq:BPderivation5}
 \end{align}
 %
@@ -574,7 +574,7 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 	\vspace{0.3cm}
 	\FOR{$m=1$ {\bfseries to} $M'$}
 	\STATE Compute the {forward pass} for each of the $M'$ examples in batch $b$;
-	 keep not only $p(y^m|\mathbf{x}^m) \equiv \tilde{\mathbf{z}}^{m,N}$ but also all the intermediate non-linear outputs $\tilde{\mathbf{z}}^{m,1} \cdots \tilde{\mathbf{z}}^{m,N}$.
+	 keep not only $p(y^m|\mathbf{x}^m) \equiv \mathbf{h}^{m,N}$ but also all the intermediate non-linear outputs $\mathbf{h}^{m,1} \cdots \mathbf{h}^{m,N}$.
 	\ENDFOR	
 	\vspace{0.3cm}
     %\STATE \textbf{Backpropagate} $\nabla_{\mathbf{z}^{m,n}}\mathcal{F}(\mathcal{D}_b;\Theta)$
@@ -582,7 +582,7 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
         \IF{n==N}
 		\FOR{$m=1$ {\bfseries to} $M'$}
         \STATE {Initialize the error at last layer, for each example $m$. For the softmax with CE cost this is given by:
-        $$\mathbf{e}^{m,N} = \Big(\mathrm{\mathbf{1}}_{k(m)} - \tilde{\mathbf{z}}^{m,N} \Big).$$}
+        $$\mathbf{e}^{m,N} = \Big(\mathrm{\mathbf{1}}_{k(m)} - \mathbf{h}^{m,N} \Big).$$}
 		\ENDFOR	
         \ELSE
    		\FOR{$m=1$ {\bfseries to} $M'$}
@@ -590,8 +590,8 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
         $$\mathbf{e}^{m} = \Big((\mathbf{W}^{n+1})^T \mathbf{e}^{m,n+1}\Big)$$
 
 		\STATE {Backpropagate} the error through the non-linearity, for the sigmoid this is:
-        $$\mathbf{e}^{m,n} = \mathbf{e}^{m} \odot \tilde{\mathbf{z}}^{m,n} \odot (\mathbf{\mathrm{1}}-\tilde{\mathbf{z}}^{m,n}),$$
-        where $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\tilde{\mathbf{z}}^n$.
+        $$\mathbf{e}^{m,n} = \mathbf{e}^{m} \odot \mathbf{h}^{m,n} \odot (\mathbf{\mathrm{1}}-\mathbf{h}^{m,n}),$$
+        where $\odot$ is the element-wise product and the $\mathbf{\mathrm{1}}$ is replicated to match the size of $\mathbf{h}^n$.
 
 		\ENDFOR	
         \ENDIF
@@ -599,7 +599,7 @@ Data $\mathcal{D}=\{\mathcal{D}_1,\mathcal{D}_2,...,\mathcal{D}_B\}$ split into 
 		\vspace{0.3cm}
         \STATE {Compute the gradients} using the backpropagated errors and the inputs from the forward pass
 
-        $$\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D_b};\Theta)  = -\frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^{m,n} \cdot \left(\tilde{\mathbf{z}}^{m,n-1}\right)^T,$$
+        $$\nabla_{\mathbf{W}^n}\mathcal{F}(\mathcal{D_b};\Theta)  = -\frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^{m,n} \cdot \left(\mathbf{h}^{m,n-1}\right)^T,$$
         $$\nabla_{\mathbf{b}^n}\mathcal{F}(\mathcal{D_b};\Theta)  = - \frac{1}{M'} \sum_{m=1}^{M'} \mathbf{e}^{m,n}.$$
 
 		\vspace{0.3cm}

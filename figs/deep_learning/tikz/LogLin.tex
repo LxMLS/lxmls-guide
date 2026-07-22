@@ -39,9 +39,9 @@
 
     % softmax -> cost (tilde z)
     \draw[edge] (soft.east |- sA) -- (cost.west |- sA)
-        node[wire, midway, above] {$\tilde{z}_1$};
+        node[wire, midway, above] {$h_1$};
     \draw[edge] (soft.east |- sB) -- (cost.west |- sB)
-        node[wire, midway, above] {$\tilde{z}_K$};
+        node[wire, midway, above] {$h_K$};
 
     % indicator inputs on the right, pointing into Cost
     \node[unit, label=above:{$\mathbf{1}^y_1$}] (i1) at (10.6, 1.6)  {};

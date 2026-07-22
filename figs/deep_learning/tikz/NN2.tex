@@ -53,9 +53,9 @@
     \draw[edge] (fA) -- (soft.west |- fA) node[wire, midway, above] {$z_1^N$};
     \draw[edge] (fB) -- (soft.west |- fB) node[wire, midway, above] {$z_K^N$};
     \draw[edge] (soft.east |- fA) -- (cost.west |- fA)
-        node[wire, midway, above] {$\tilde{z}_1^N$};
+        node[wire, midway, above] {$h_1^N$};
     \draw[edge] (soft.east |- fB) -- (cost.west |- fB)
-        node[wire, midway, above] {$\tilde{z}_K^N$};
+        node[wire, midway, above] {$h_K^N$};
 
     % indicators
     \node[unit, label=above:{$\mathbf{1}^y_1$}] (i1) at (15.5, 2)    {};
@@ -67,9 +67,9 @@
         node[below] {$\mathcal{F}(\mathcal{D}^m; \Theta)$};
 
     % ---- annotations ----
-    \node at (5.5, 3.7) {$\tilde{z}_i^{N-2}$};
+    \node at (5.5, 3.7) {$h_i^{N-2}$};
     \node at (7.35, 1.5) {$z_j^{N-1}$};
-    \node at (9.0, 1.5) {$\tilde{z}_j^{N-1}$};
+    \node at (9.0, 1.5) {$h_j^{N-1}$};
     \node at (6.6, 0.35) {$j$};
 
     % dotted grouping box for layer N-1
